@@ -115,6 +115,7 @@ def test_every_advanced_task_family_gets_the_same_complete_model_route_matrix(tm
     settings = RunnerSettings(
         cpu_only=True, run_hardness_screen=False, model_seeds=(0,),
         generic_profiles=("faithful", "corrected"), tasks=("all",),
+        scheduler="pressure_aware",
         include_vanilla=True, width_only_width=1, width_only_depths=(1,),
         width_to_depth_width=1, width_to_depth_depth=1,
         depth_only_widths=(1,), fold_limit=1, dry_run=True,
@@ -148,3 +149,4 @@ def test_every_advanced_task_family_gets_the_same_complete_model_route_matrix(tm
     assert summary["dry_run"] is True
     assert summary["job_count"] == len(plan.runs) == len(dry_run_jobs)
     assert {job["task_ref"]["task_id"] for job in dry_run_jobs} == set(task_specs)
+    assert plan.manifest["runner_settings"]["scheduler"] == "pressure_aware"
