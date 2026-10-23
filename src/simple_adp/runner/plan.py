@@ -318,7 +318,10 @@ class SuitePlan:
                 raise ValueError(f"dataset provider {provider_name!r} was not registered")
             provider_suites.append((provider_by_name[provider_name], suite))
 
-        task_inputs: list[tuple[DatasetProvider, DatasetTaskRef, Any, list[SplitSpec]]] = []
+        # Keep only prepared split metadata after inspecting each provider.
+        # Retaining every materialized task can hold gigabytes of windows in a
+        # complete temporal suite plan.
+        task_inputs: list[tuple[DatasetProvider, DatasetTaskRef, list[SplitSpec]]] = []
         for provider, suite in provider_suites:
             refs = provider.list_tasks(suite)
             if settings.task_limit is not None:
@@ -345,6 +348,12 @@ class SuitePlan:
                         "content_sha256": getattr(data, "content_sha256", None),
                         "rows": len(data.X) if hasattr(data, "X") else None,
                         "raw_features": int(data.X.shape[1]) if hasattr(data, "X") else None,
+                        "feature_schema": getattr(data, "feature_schema", None),
+                        "task_kind": getattr(data, "task_kind", None),
+                        "task_family": getattr(data, "task_family", None),
+                        "task_variant": getattr(data, "task_variant", None),
+                        "split_protocol": getattr(data, "split_protocol", None),
+                        "context_fields": sorted((getattr(data, "context", None) or {}).keys()),
                         "dataset_metadata": dict(source_metadata),
                     },
                 )
@@ -354,7 +363,8 @@ class SuitePlan:
                     "fold_limit": settings.fold_limit,
                 })()
                 splits = provider.list_splits(ref, data, split_settings)
-                task_inputs.append((provider, ref, data, splits))
+                task_inputs.append((provider, ref, splits))
+                del data
 
         signature_payload = {
             "protocol_version": 1,
@@ -378,7 +388,7 @@ class SuitePlan:
                     "sample": split.sample,
                     "split_sha256": split.split_sha256,
                 }
-                for provider, ref, _data, splits in task_inputs
+                for provider, ref, splits in task_inputs
                 for split in splits
             ],
             "dataset_identities": [
@@ -387,10 +397,10 @@ class SuitePlan:
                     "suite": ref.suite,
                     "task_id": ref.task_id,
                     "dataset_id": ref.dataset_id,
-                    "content_sha256": getattr(data, "content_sha256", None),
-                "metadata": ref.metadata,
+                    "content_sha256": (ref.metadata or {}).get("content_sha256"),
+                    "metadata": ref.metadata,
                 }
-                for provider, ref, data, _ in task_inputs
+                for provider, ref, _splits in task_inputs
             ],
         }
         signature = sha256_json(signature_payload)
@@ -398,7 +408,7 @@ class SuitePlan:
         has_adaptive = any(route_group(route) not in {"vanilla", "screening"} for route in routes)
         outer_repeat_count = max(settings.repeat_count, settings.missing_present_task_repeats if has_adaptive else 0, 1)
         for suite_repeat in range(1, outer_repeat_count + 1):
-            for provider, ref, data, splits in task_inputs:
+            for provider, ref, splits in task_inputs:
                 # Preserve the recorded asymmetric repeat dispatch: ADP routes
                 # use missing_present_task_repeats; fixed vanilla routes use
                 # every outer repeat.

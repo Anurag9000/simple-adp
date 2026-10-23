@@ -283,6 +283,7 @@ def test_launcher_resolves_custom_provider_suites_for_listing_and_plan(tmp_path,
 
     class TinyProvider:
         name = "tiny"
+        suites = ("demo",)
 
         def __init__(self):
             self.calls = []
@@ -305,6 +306,9 @@ def test_launcher_resolves_custom_provider_suites_for_listing_and_plan(tmp_path,
     assert launcher.main(["--list-suites", "--dataset-suites", "tiny:demo"]) == 0
     assert json.loads(capsys.readouterr().out) == {"tiny:demo": ["task-7"]}
     assert provider.calls == ["demo"]
+    assert launcher.main(["--list-suites"]) == 0
+    assert json.loads(capsys.readouterr().out) == {"tiny:demo": ["task-7"]}
+    assert provider.calls == ["demo", "demo"]
 
     observed = {}
 
@@ -325,6 +329,35 @@ def test_launcher_resolves_custom_provider_suites_for_listing_and_plan(tmp_path,
     ]) == 0
     assert observed["dataset_suites"] == (("tiny", "demo"),)
     assert observed["dataset_providers"] == (provider,)
+
+
+def test_openml_suite_listing_survives_missing_optional_benchmark_dependency(tmp_path, monkeypatch, capsys):
+    from simple_adp.runner.datasets import DatasetRegistry
+
+    class OpenMLProvider:
+        name = "openml"
+        suites = ("cc18", "tabzilla", "ctr23")
+
+        def list_tasks(self, suite):
+            raise RuntimeError(
+                "benchmark loading requires the optional dependencies: "
+                "pip install 'simple-adp[benchmark]'"
+            )
+
+    datasets = DatasetRegistry()
+    datasets.register(OpenMLProvider())
+    repository = tmp_path / "repo"
+    repository.mkdir()
+    monkeypatch.setattr(launcher, "REPOSITORY_ROOT", repository)
+    monkeypatch.setattr(launcher, "configure_console_logging", lambda: None)
+    monkeypatch.setattr(launcher, "bootstrap_runtime", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(launcher, "load_registries", lambda: (datasets, SimpleNamespace(adapters={})))
+
+    assert launcher.main(["--list-suites"]) == 0
+    listed = json.loads(capsys.readouterr().out)
+    assert set(listed) == {"cc18", "tabzilla", "ctr23"}
+    assert all(value["task_ids"] is None for value in listed.values())
+    assert all("simple-adp[benchmark]" in value["requires"] for value in listed.values())
 
 
 def test_dataset_suite_selector_keeps_openml_bare_names_and_accepts_mixed_providers():

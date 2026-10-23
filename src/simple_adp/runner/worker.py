@@ -17,7 +17,7 @@ from .artifacts import estimator_checkpoint_path
 from .datasets import DatasetTaskRef
 from .backend import enable_optional_gpu_accelerators, resolve_torch_device, seed_everything
 from .route import ModelRoute
-from .plan import RunIdentity, SplitSpec
+from .plan import RunIdentity, SplitSpec, canonical_json
 from .runtime_tuning import bootstrap_runtime
 from .state import atomic_write_json, utc_now
 from .telemetry import telemetry_callback
@@ -34,6 +34,40 @@ def _rebuild_spec(value: dict[str, Any]) -> tuple[RunIdentity, DatasetTaskRef, M
         route_value["fixed_grid"] = tuple(tuple(int(item) for item in widths) for widths in route_value["fixed_grid"])
     route = ModelRoute(**route_value)
     return identity, ref, route
+
+
+def _validate_task_data_matches_plan(task_ref: DatasetTaskRef, data: Any) -> None:
+    """Reject source/schema drift between suite planning and worker loading."""
+    expected = task_ref.metadata or {}
+    actual_context = getattr(data, "context", None) or {}
+    actual_metadata = getattr(data, "dataset_metadata", None) or {}
+    values = {
+        "dataset_name": getattr(data, "name", None),
+        "target_name": getattr(data, "target_name", None),
+        "content_sha256": getattr(data, "content_sha256", None),
+        "feature_schema": getattr(data, "feature_schema", None),
+        "task_kind": getattr(data, "task_kind", None),
+        "task_family": getattr(data, "task_family", None),
+        "task_variant": getattr(data, "task_variant", None),
+        "split_protocol": getattr(data, "split_protocol", None),
+        "context_fields": sorted(actual_context.keys()),
+        "dataset_metadata": dict(actual_metadata),
+    }
+    if "rows" in expected:
+        values["rows"] = len(data.X) if hasattr(data, "X") else None
+    if "raw_features" in expected:
+        values["raw_features"] = int(data.X.shape[1]) if hasattr(data, "X") and hasattr(data.X, "shape") else None
+    if task_ref.dataset_id is not None:
+        actual_dataset_id = getattr(data, "dataset_id", None)
+        if actual_dataset_id is None or str(task_ref.dataset_id) != str(actual_dataset_id):
+            raise ValueError(
+                f"loaded dataset {task_ref.key!r} differs from its persisted run plan at 'dataset_id'"
+            )
+    for field, actual in values.items():
+        if field in expected and canonical_json(expected[field]) != canonical_json(actual):
+            raise ValueError(
+                f"loaded dataset {task_ref.key!r} differs from its persisted run plan at {field!r}"
+            )
 
 
 def load_registries():
@@ -56,6 +90,7 @@ def run_spec(path: str | Path) -> dict[str, Any]:
     provider = datasets.get(task_ref.provider)
     adapter = models.get(spec["model_adapter"])
     data = provider.load_task(task_ref)
+    _validate_task_data_matches_plan(task_ref, data)
     split = SplitSpec.load(
         Path(spec["split_file"]),
         repeat=identity.split_repeat,
@@ -168,12 +203,17 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "screening_seed": route.screening_seed,
         "screening_architecture": list(route.screening_architecture) if route.screening_architecture else None,
         "task_kind": getattr(data, "task_kind", getattr(getattr(data, "suite", None), "task_kind", None)),
+        "task_family": getattr(data, "task_family", getattr(data, "task_kind", None)),
+        "task_variant": getattr(data, "task_variant", ""),
+        "split_protocol": getattr(data, "split_protocol", ""),
         "fixed_grid": [list(widths) for widths in route.fixed_grid] if route.fixed_grid else None,
         "seed": identity.seed,
         "status": "completed",
         "metrics": result.get("test_metrics", {}),
         "test_metrics": result.get("test_metrics", {}),
         "validation_metrics": result.get("validation_metrics", {}),
+        "primary_metric": result.get("primary_metric"),
+        "metric_directions": result.get("metric_directions", {}),
         "validation_selection_score": result.get("validation_selection_score"),
         "selected_architecture": result.get("selected_architecture"),
         "fit_seconds": result.get("fit_seconds"),

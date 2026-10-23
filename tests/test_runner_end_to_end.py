@@ -318,4 +318,8 @@ class ResumableModelAdapter:
     assert result["status"] == "completed"
     assert result["model_id"] == "PLUGIN-RESUMABLE"
     assert checkpoint_path.is_file()
-    assert int(resume_cursor_path.read_text(encoding="utf-8")) == pressure["batch_cursor"]
+    # The pressure sampler and child process are asynchronous: the current
+    # stage may persist further batches between the sampled cursor and the
+    # scheduler's pause signal. Resume must use that latest durable position,
+    # which can be equal to or ahead of the sampled cursor, but never behind.
+    assert int(resume_cursor_path.read_text(encoding="utf-8")) >= pressure["batch_cursor"]

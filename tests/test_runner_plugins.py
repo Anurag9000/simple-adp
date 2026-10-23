@@ -80,7 +80,7 @@ def test_entry_point_plugins_extend_dataset_and_model_routes_without_coordinator
     monkeypatch.setattr("simple_adp.runner.plugins.entry_points", lambda: entries)
 
     datasets, models = load_registries()
-    assert set(datasets.providers) == {"openml", "external_provider"}
+    assert set(datasets.providers) == {"openml", "movielens", "uci_temporal", "uci_sequence", "nab", "monash", "physionet_ecg", "odds", "external_provider"}
     assert set(models.adapters) == {"simple_adp", "external_model"}
 
     settings = RunnerSettings(

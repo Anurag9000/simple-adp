@@ -10,7 +10,12 @@ from typing import Any
 import pandas as pd
 
 
-LOWER_IS_BETTER = {"log_loss", "rmse", "mae"}
+LOWER_IS_BETTER = {"log_loss", "rmse", "mae", "validation_loss"}
+STANDARD_METRICS = {
+    "accuracy", "balanced_accuracy", "macro_f1", "log_loss", "rmse", "mae", "r2",
+    "precision", "recall", "f1", "pr_auc", "roc_auc", "ndcg@5", "ndcg@10",
+    "recall@5", "recall@10", "event_precision", "event_recall", "event_f1",
+}
 
 
 def summarize(results_dir: str | Path) -> dict[str, Path]:
@@ -53,29 +58,57 @@ def summarize(results_dir: str | Path) -> dict[str, Path]:
                     if selected_signature is not None and record.get("run_signature") != selected_signature:
                         continue
                     flat = {key: value for key, value in record.items() if key != "test_metrics"}
-                    flat.update(record.get("test_metrics", {}))
-                    flat["task_key"] = f"{record['suite']}:{record['task_id']}"
+                    task_metrics = record.get("test_metrics", {})
+                    declared = record.get("metric_directions") or {}
+                    # Current adapters explicitly declare every metric. Keep
+                    # the old report format readable for legacy records that
+                    # predate metric declarations, but never surface an
+                    # undeclared metric from a task-aware result.
+                    allowed = set(declared) if declared else STANDARD_METRICS
+                    flat.update({name: value for name, value in task_metrics.items() if name in allowed})
+                    flat["task_key"] = f"{record.get('provider', 'openml')}:{record['suite']}:{record['task_id']}"
                     records.append(flat)
     paths = {"dataset_screening": screen_summary_path} if screening_records else {}
     metrics: list[str] = []
     frame = pd.DataFrame.from_records(records)
     if records:
-        metrics = [metric for metric in ("accuracy", "balanced_accuracy", "macro_f1", "log_loss", "rmse", "mae", "r2") if metric in frame]
-        task_keys = ["suite", "task_id", "dataset_id", "dataset_name", "task_key", "model", "model_id", "generic_profile"]
+        declared_metrics = {
+            metric
+            for record in records
+            for metric in (record.get("metric_directions") or {})
+        }
+        metrics = sorted((STANDARD_METRICS | declared_metrics).intersection(frame.columns))
+        task_keys = [
+            key for key in (
+                "provider", "suite", "task_id", "dataset_id", "dataset_name",
+                "task_family", "task_variant", "task_key", "model", "model_id", "generic_profile",
+            ) if key in frame.columns
+        ]
         per_task = frame.groupby(task_keys, dropna=False, as_index=False)[metrics].mean(numeric_only=True)
         counts_by_task = frame.groupby(task_keys, dropna=False).size().rename("n_runs").reset_index()
         per_task = per_task.merge(counts_by_task, on=task_keys, how="left", validate="one_to_one")
+        directions_by_task: dict[tuple[Any, ...], dict[str, str]] = {}
+        direction_keys = [key for key in ("provider", "suite", "task_id", "task_family", "task_variant") if key in frame.columns]
+        for _, record in frame.iterrows():
+            key = tuple(record[name] for name in direction_keys)
+            directions_by_task.setdefault(key, {}).update(record.get("metric_directions") or {})
         for metric in metrics:
-            per_task[f"rank_{metric}"] = per_task.groupby(["suite", "task_key"])[metric].rank(
-                ascending=metric in LOWER_IS_BETTER, method="average"
-            )
+            # Metric direction can vary by adapter; rank only after applying the
+            # direction declared by that task's adapter.
+            for _, indices in per_task.groupby([key for key in ("provider", "suite", "task_id", "task_family", "task_variant") if key in per_task.columns], dropna=False).groups.items():
+                index_list = list(indices)
+                direction = directions_by_task.get(tuple(per_task.loc[index_list[0], name] for name in direction_keys), {}).get(metric)
+                ascending = direction == "min" if direction in {"min", "max"} else metric in LOWER_IS_BETTER
+                per_task.loc[index_list, f"rank_{metric}"] = per_task.loc[index_list].groupby(["suite", "task_key"])[metric].rank(ascending=ascending, method="average")
         summary_rows: list[dict[str, Any]] = []
-        for (suite, model, model_id, profile), group in per_task.groupby(
-            ["suite", "model", "model_id", "generic_profile"], dropna=False
+        summary_keys = [key for key in ("provider", "suite", "task_family", "task_variant", "model", "model_id", "generic_profile") if key in per_task.columns]
+        for group_key, group in per_task.groupby(
+            summary_keys, dropna=False
         ):
+            values = group_key if isinstance(group_key, tuple) else (group_key,)
             row: dict[str, Any] = {
-                "suite": suite, "model": model, "model_id": model_id,
-                "generic_profile": profile, "n_datasets": int(group["task_key"].nunique()),
+                **dict(zip(summary_keys, values)),
+                "n_datasets": int(group["task_key"].nunique()),
             }
             for metric in metrics:
                 row[f"macro_mean_{metric}"] = float(group[metric].mean()) if group[metric].notna().any() else None

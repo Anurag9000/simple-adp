@@ -26,6 +26,10 @@ class TaskAdapter(ABC):
     def fit_targets(self, targets: Any) -> None:
         """Learn target metadata from training targets only."""
 
+    def fit_targets_with_context(self, targets: Any, context: dict[str, Any] | None = None) -> None:
+        """Context-aware fitting hook, preserving the existing adapter API."""
+        self.fit_targets(targets)
+
     @property
     @abstractmethod
     def output_dim(self) -> int:
@@ -36,16 +40,30 @@ class TaskAdapter(ABC):
         """Output declaration; subclasses may override its semantic label."""
         return TaskOutputSpec(self.output_dim, type(self).__qualname__)
 
+    @property
+    def batch_group_key(self) -> str | None:
+        """Context key whose groups must stay intact in training batches."""
+        return None
+
+    @property
+    def metric_directions(self) -> dict[str, str]:
+        """Metric name to optimization direction for suite reporting."""
+        return {}
+
+    @property
+    def primary_metric(self) -> str:
+        return "validation_loss"
+
     @abstractmethod
     def encode_targets(self, targets: Any, *, device: torch.device) -> torch.Tensor:
         """Convert raw targets into the loss' expected tensor representation."""
 
     @abstractmethod
-    def loss(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+    def loss(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> torch.Tensor:
         """Return a scalar training objective; lower validation score is better."""
 
     @abstractmethod
-    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor) -> float:
+    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> float:
         """Return a finite scalar minimized by architecture selection."""
 
     @abstractmethod
@@ -68,6 +86,7 @@ class TaskAdapter(ABC):
 
     def auxiliary_loss_components(
         self, outputs: torch.Tensor, targets: torch.Tensor,
+        context: dict[str, torch.Tensor] | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         """Return equality and inequality penalties for generic ADP search.
 
@@ -85,14 +104,18 @@ class TaskAdapter(ABC):
         lambda_loss: float,
         lambda_eq: float,
         lambda_ineq: float,
+        context: dict[str, torch.Tensor] | None = None,
     ) -> torch.Tensor:
         """Apply the guide's penalty-gated generic-search objective."""
-        prediction = self.loss(outputs, targets)
+        prediction = self.loss(outputs, targets) if context is None else self.loss(outputs, targets, context=context)
         if lambda_eq == 0 and lambda_ineq == 0:
             # The source path bypasses lambda_loss when both penalty weights
             # are zero, yielding the pure prediction objective.
             return prediction
-        equality, inequality = self.auxiliary_loss_components(outputs, targets)
+        if context is None:
+            equality, inequality = self.auxiliary_loss_components(outputs, targets)
+        else:
+            equality, inequality = self.auxiliary_loss_components(outputs, targets, context=context)
         return (
             lambda_loss * prediction
             + lambda_eq * equality
@@ -104,6 +127,7 @@ class TaskAdapter(ABC):
         targets: Any,
         predictions: Any,
         probabilities: Any | None = None,
+        context: dict[str, Any] | None = None,
     ) -> dict[str, float | int | None]:
         """Optional test-set metrics for suite workers; custom tasks may override."""
         return {"n_samples": int(len(targets))}
@@ -114,6 +138,14 @@ class RegressionTask(TaskAdapter):
 
     def __init__(self) -> None:
         self._output_dim: int | None = None
+
+    @property
+    def primary_metric(self) -> str:
+        return "rmse"
+
+    @property
+    def metric_directions(self) -> dict[str, str]:
+        return {"rmse": "min", "mae": "min", "r2": "max"}
 
     def fit_targets(self, targets: Any) -> None:
         values = np.asarray(targets)
@@ -140,10 +172,10 @@ class RegressionTask(TaskAdapter):
             raise ValueError("regression targets must be finite")
         return torch.as_tensor(values, dtype=torch.float32, device=device)
 
-    def loss(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+    def loss(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> torch.Tensor:
         return nn.functional.mse_loss(outputs, targets)
 
-    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor) -> float:
+    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> float:
         return float(nn.functional.mse_loss(outputs, targets).detach().cpu())
 
     def predictions(self, outputs: torch.Tensor) -> np.ndarray:
@@ -155,6 +187,7 @@ class RegressionTask(TaskAdapter):
         targets: Any,
         predictions: Any,
         probabilities: Any | None = None,
+        context: dict[str, Any] | None = None,
     ) -> dict[str, float | int | None]:
         truth = np.asarray(targets, dtype=np.float64)
         predicted = np.asarray(predictions, dtype=np.float64)
@@ -200,6 +233,14 @@ class ClassificationTask(TaskAdapter):
         self.classes_: list[object] = []
         self._class_to_index: dict[tuple[str, str], int] = {}
 
+    @property
+    def primary_metric(self) -> str:
+        return "macro_f1"
+
+    @property
+    def metric_directions(self) -> dict[str, str]:
+        return {"accuracy": "max", "balanced_accuracy": "max", "macro_f1": "max", "log_loss": "min"}
+
     @staticmethod
     def _key(value: object) -> tuple[str, str]:
         scalar = value.item() if isinstance(value, np.generic) else value
@@ -232,10 +273,10 @@ class ClassificationTask(TaskAdapter):
             raise ValueError(f"target class {exc.args[0]!r} was absent from training data") from exc
         return torch.as_tensor(encoded, dtype=torch.long, device=device)
 
-    def loss(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+    def loss(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> torch.Tensor:
         return nn.functional.cross_entropy(outputs, targets)
 
-    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor) -> float:
+    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> float:
         return float(nn.functional.cross_entropy(outputs, targets).detach().cpu())
 
     def predict_proba(self, outputs: torch.Tensor) -> np.ndarray:
@@ -250,6 +291,7 @@ class ClassificationTask(TaskAdapter):
         targets: Any,
         predictions: Any,
         probabilities: Any | None = None,
+        context: dict[str, Any] | None = None,
     ) -> dict[str, float | int | None]:
         truth = self.encode_targets(targets, device=torch.device("cpu")).numpy()
         predicted = self.encode_targets(predictions, device=torch.device("cpu")).numpy()
@@ -335,10 +377,10 @@ class CallableTask(TaskAdapter):
     def encode_targets(self, targets: Any, *, device: torch.device) -> torch.Tensor:
         return self.target_encoder(targets, device)
 
-    def loss(self, outputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+    def loss(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> torch.Tensor:
         return self.loss_fn(outputs, targets)
 
-    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor) -> float:
+    def validation_score(self, outputs: torch.Tensor, targets: torch.Tensor, context: dict[str, torch.Tensor] | None = None) -> float:
         return float(self.score_fn(outputs, targets))
 
     def predictions(self, outputs: torch.Tensor) -> np.ndarray:

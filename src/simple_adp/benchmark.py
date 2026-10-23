@@ -34,20 +34,24 @@ class SuiteSpec:
     task_kind: TaskKind
     description: str
     hardness_source: str
+    expected_task_count: int
 
 
 OPENML_SUITES = {
     "cc18": SuiteSpec(
         "cc18", 99, "classification", "OpenML-CC18 Curated Classification benchmark",
         "Broad curated IID classification pool; use validation screening to remove tasks solved by shallow MLPs.",
+        72,
     ),
     "tabzilla": SuiteSpec(
         "tabzilla", 379, "classification", "TabZilla Hard Datasets",
         "Selected as the 36 hardest classification datasets in the TabZilla study; still screen for shallow-MLP saturation.",
+        36,
     ),
     "ctr23": SuiteSpec(
         "ctr23", 353, "regression", "OpenML-CTR23 curated tabular regression suite",
         "Curated IID regression tasks, including a criterion excluding tasks exactly solved by a linear model.",
+        35,
     ),
 }
 
@@ -86,6 +90,22 @@ class TaskData:
     def task_adapter(self):
         """Build a fresh mutable target adapter for each worker route."""
         return _task_adapter(self.task_kind)
+
+    @property
+    def context(self):
+        return None
+
+    @property
+    def task_family(self) -> str:
+        return self.task_kind
+
+    @property
+    def task_variant(self) -> str:
+        return self.suite.key
+
+    @property
+    def split_protocol(self) -> str:
+        return "official_openml_split_with_train_only_validation"
 
 
 def _json_default(value: Any) -> Any:
@@ -139,7 +159,16 @@ def load_suite_tasks(suite_key: str) -> list[int]:
         raise RuntimeError("benchmark loading requires the optional dependencies: pip install 'simple-adp[benchmark]'") from exc
     spec = OPENML_SUITES[suite_key]
     suite = openml.study.get_suite(spec.openml_id)
-    return [int(task_id) for task_id in suite.tasks]
+    task_ids = [int(task_id) for task_id in suite.tasks]
+    if len(task_ids) != spec.expected_task_count:
+        raise RuntimeError(
+            f"OpenML suite {suite_key!r} (study {spec.openml_id}) returned "
+            f"{len(task_ids)} tasks; expected {spec.expected_task_count}. "
+            "The benchmark catalog changed; review and update its pinned manifest explicitly."
+        )
+    if len(set(task_ids)) != len(task_ids):
+        raise RuntimeError(f"OpenML suite {suite_key!r} returned duplicate task IDs")
+    return task_ids
 
 
 def load_openml_task(suite_key: str, task_id: int) -> TaskData:

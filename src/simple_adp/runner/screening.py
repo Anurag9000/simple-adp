@@ -23,6 +23,9 @@ def build_screening_reports(
     grouped: dict[tuple[Any, ...], list[dict[str, Any]]] = defaultdict(list)
     expected_seeds: dict[tuple[Any, ...], int] = {}
     task_kinds: dict[tuple[str, str, str], str | None] = {}
+    task_families: dict[tuple[str, str, str], str | None] = {}
+    primary_metrics: dict[tuple[str, str, str], str | None] = {}
+    metric_directions: dict[tuple[str, str, str], dict[str, str]] = {}
     expected_splits: dict[tuple[str, str, str], set[tuple[int, int, int]]] = defaultdict(set)
     for spec in runs:
         identity = spec.identity
@@ -46,27 +49,45 @@ def build_screening_reports(
             continue
         grouped[architecture_key].append(record)
         task_kinds[task_key] = record.get("task_kind")
+        task_families[task_key] = record.get("task_family")
+        primary_metrics[task_key] = record.get("primary_metric")
+        metric_directions[task_key] = dict(record.get("metric_directions") or {})
 
     by_fold: dict[tuple[Any, ...], list[dict[str, Any]]] = defaultdict(list)
     for architecture_key, seed_records in sorted(grouped.items()):
         task_key = architecture_key[:3]
         depth, width = architecture_key[-2:]
         kind = task_kinds.get(task_key)
-        metric_name = "balanced_accuracy" if kind == "classification" else "r2"
+        family = task_families.get(task_key)
+        if family == "classification" or (family is None and kind == "classification"):
+            metric_name, direction = "balanced_accuracy", "max"
+        elif family == "regression" or (family is None and kind == "regression"):
+            metric_name, direction = "r2", "max"
+        else:
+            metric_name = primary_metrics.get(task_key) or "validation_selection_score"
+            direction = metric_directions.get(task_key, {}).get(metric_name, "max")
         metric_values: list[float] = []
         ceiling_values: list[bool] = []
         for record in seed_records:
             metrics = record.get("validation_metrics") or {}
             value = metrics.get(metric_name)
+            if value is None and metric_name == "validation_selection_score":
+                value = record.get("validation_selection_score")
             if value is None:
                 continue
             value = float(value)
             if not math.isfinite(value):
                 continue
             metric_values.append(value)
-            ceiling_metric = metrics.get("accuracy") if kind == "classification" else metrics.get("r2")
-            ceiling = classification_ceiling if kind == "classification" else regression_ceiling_r2
-            ceiling_values.append(ceiling_metric is not None and float(ceiling_metric) >= ceiling)
+            if family == "classification" or (family is None and kind == "classification"):
+                ceiling_metric, ceiling = metrics.get("accuracy"), classification_ceiling
+            elif family == "regression" or (family is None and kind == "regression"):
+                ceiling_metric, ceiling = metrics.get("r2"), regression_ceiling_r2
+            elif direction == "max":
+                ceiling_metric, ceiling = metrics.get(metric_name), classification_ceiling
+            else:
+                ceiling_metric, ceiling = None, None
+            ceiling_values.append(ceiling is not None and ceiling_metric is not None and float(ceiling_metric) >= ceiling)
         key = (*architecture_key[:6],)
         expected = expected_seeds.get(architecture_key, screen_seed_count)
         score = sum(metric_values) / len(metric_values) if len(metric_values) == expected else None
@@ -76,6 +97,7 @@ def build_screening_reports(
             "expected_seeds": expected,
             "completed_seeds": len(metric_values),
             "validation_score_name": metric_name,
+            "validation_score_direction": direction,
             "mean_validation_score": score,
             "shallow_ceiling_reached_all_seeds": len(ceiling_values) == expected and all(ceiling_values),
             "status": "complete" if score is not None else "incomplete",
@@ -100,9 +122,11 @@ def build_screening_reports(
         shallow = [r for r in completed if r["depth"] == 1]
         deeper = [r for r in completed if r["depth"] > 1]
         saturated = any(r["shallow_ceiling_reached_all_seeds"] for r in shallow)
-        best_shallow = max((r["mean_validation_score"] for r in shallow), default=None)
-        best_deeper = max((r["mean_validation_score"] for r in deeper), default=None)
-        gain = best_deeper - best_shallow if best_shallow is not None and best_deeper is not None else None
+        primary_metric = primary_metrics.get(task_key)
+        direction = metric_directions.get(task_key, {}).get(primary_metric, "max")
+        best_shallow = (min if direction == "min" else max)((r["mean_validation_score"] for r in shallow), default=None)
+        best_deeper = (min if direction == "min" else max)((r["mean_validation_score"] for r in deeper), default=None)
+        gain = ((best_shallow - best_deeper) if direction == "min" else (best_deeper - best_shallow)) if best_shallow is not None and best_deeper is not None else None
         complete = expected_architectures > 0 and len(completed) == expected_architectures
         complexity_sensitive = gain is not None and gain >= min_complexity_gain
         eligible = complete and not saturated and complexity_sensitive
@@ -110,6 +134,8 @@ def build_screening_reports(
             "provider": task_key[0], "suite": task_key[1], "task_id": task_key[2],
             "repeat": fold_key[3], "fold": fold_key[4], "sample": fold_key[5],
             "task_kind": kind, "expected_architectures": expected_architectures,
+            "task_family": task_families.get(task_key), "primary_metric": primary_metric,
+            "primary_metric_direction": direction,
             "completed_architectures": len(completed), "architectures": records,
             "saturated_by_shallow_mlp": saturated,
             "best_shallow_validation_score": best_shallow,

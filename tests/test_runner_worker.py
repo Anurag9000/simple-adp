@@ -20,6 +20,30 @@ _WORKER_SMOKE_ROUTES = tuple(
 )
 
 
+def test_worker_rejects_dataset_drift_against_persisted_plan_metadata():
+    data = SimpleNamespace(
+        X=np.zeros((3, 2), dtype=np.float32), y=np.array([0, 1, 0]),
+        dataset_id="ds-1", name="dataset", target_name="label",
+        feature_schema=["numeric", "numeric"], content_sha256="content-v1",
+        dataset_metadata={"version": 1}, task_kind="classification",
+        task_family="classification", task_variant="binary", split_protocol="fixed",
+        context={"group_id": np.array([0, 0, 1])},
+    )
+    planned = {
+        "dataset_name": "dataset", "target_name": "label", "content_sha256": "content-v1",
+        "rows": 3, "raw_features": 2, "feature_schema": ["numeric", "numeric"],
+        "task_kind": "classification", "task_family": "classification",
+        "task_variant": "binary", "split_protocol": "fixed",
+        "context_fields": ["group_id"], "dataset_metadata": {"version": 1},
+    }
+    task_ref = DatasetTaskRef("toy", "suite", "task", dataset_id="ds-1", metadata=planned)
+    worker._validate_task_data_matches_plan(task_ref, data)
+
+    data.content_sha256 = "content-v2"
+    with pytest.raises(ValueError, match="content_sha256"):
+        worker._validate_task_data_matches_plan(task_ref, data)
+
+
 def test_worker_uses_coordinator_checkpoint_path_for_estimator_resume(tmp_path, monkeypatch):
     identity = RunIdentity(
         provider="toy", suite="suite", task_id="task", split_repeat=0,

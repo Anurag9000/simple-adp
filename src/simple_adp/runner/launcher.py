@@ -24,6 +24,7 @@ from .logging_context import configure_console_logging
 
 LOG = logging.getLogger("simple_adp.launcher")
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_DATASET_SUITES = "cc18,tabzilla,ctr23"
 
 
 def _parse_value(raw: str) -> Any:
@@ -49,7 +50,7 @@ def _argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--settings-json", help="JSON object with any RunnerSettings field")
     parser.add_argument("--set", dest="overrides", action="append", default=[], metavar="KEY=VALUE", help="override any setting using JSON scalar/list syntax")
     parser.add_argument(
-        "--dataset-suites", default="cc18,tabzilla,ctr23",
+        "--dataset-suites", default=DEFAULT_DATASET_SUITES,
         help="comma-separated suite names (bare names use OpenML) or provider:suite selectors",
     )
     parser.add_argument("--output")
@@ -315,12 +316,31 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(str(exc))
     if args.list_suites:
         providers = _registered_dataset_providers(datasets)
-        available = {
-            f"{provider}:{suite}" if provider != "openml" else suite:
-                [ref.task_id for ref in providers[provider].list_tasks(suite)]
-            for provider, suite in provider_suites
-            if provider in providers
-        }
+        if args.dataset_suites == DEFAULT_DATASET_SUITES:
+            provider_suites = tuple(
+                (provider_name, suite)
+                for provider_name, provider in sorted(providers.items())
+                for suite in getattr(provider, "suites", ())
+            ) or provider_suites
+        available = {}
+        for provider, suite in provider_suites:
+            if provider not in providers:
+                continue
+            key = f"{provider}:{suite}" if provider != "openml" else suite
+            try:
+                available[key] = [ref.task_id for ref in providers[provider].list_tasks(suite)]
+            except RuntimeError as exc:
+                # OpenML task IDs are fetched from its live suite API. Listing
+                # the locally registered catalog should still work when the
+                # optional benchmark extra is absent; actual OpenML planning
+                # continues to fail with the provider's actionable message.
+                if provider != "openml" or "simple-adp[benchmark]" not in str(exc):
+                    raise
+                available[key] = {
+                    "task_ids": None,
+                    "task_listing": "fetched from OpenML at run time",
+                    "requires": "pip install 'simple-adp[benchmark]'",
+                }
         missing = sorted({provider for provider, _suite in provider_suites} - set(providers))
         if missing:
             parser.error(f"dataset provider(s) are not registered: {', '.join(missing)}")

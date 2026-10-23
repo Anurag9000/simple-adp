@@ -52,6 +52,20 @@ _EXPORTS = {
     "TaskOutputSpec": "tasks",
     "StageResult": "training",
     "StageTrainer": "training",
+    "ForecastingTask": "advanced_tasks",
+    "SequenceLabelingTask": "advanced_tasks",
+    "EventDetectionTask": "advanced_tasks",
+    "GroupedRankingTask": "advanced_tasks",
+    "SupervisedAnomalyTask": "advanced_tasks",
+    "SupervisedPreferenceTask": "advanced_tasks",
+    "temporal_windows": "task_preparation",
+    "chronological_split": "task_preparation",
+    "sequence_windows": "task_preparation",
+    "grouped_chronological_split": "task_preparation",
+    "stratified_split": "task_preparation",
+    "event_window_labels": "task_preparation",
+    "aami_beat_class": "task_preparation",
+    "beat_centered_windows": "task_preparation",
 }
 
 __all__ = list(_EXPORTS)

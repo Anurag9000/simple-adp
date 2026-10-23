@@ -5,6 +5,8 @@ from __future__ import annotations
 from types import MappingProxyType
 from typing import Any, Callable, Protocol, runtime_checkable
 
+import torch
+
 from ..baselines import vanilla_mlp_grid
 from ..config import SearchSettings
 from ..estimator import TabularADP
@@ -29,6 +31,10 @@ class ModelAdapter(Protocol):
 
 # Public plan terminology: an adapter resolves a route and runs one child job.
 RunAdapter = ModelAdapter
+
+
+def _call_with_context(method, *args, context=None):
+    return method(*args) if context is None else method(*args, context=context)
 
 
 class ModelRegistry:
@@ -186,9 +192,13 @@ class SimpleADPModelAdapter:
         y_train = take_rows(data.y, split.train_indices)
         X_valid = take_rows(data.X, split.validation_indices)
         y_valid = take_rows(data.y, split.validation_indices)
+        context = getattr(data, "context", None)
+        train_context = {key: take_rows(value, split.train_indices) for key, value in (context or {}).items()}
+        valid_context = {key: take_rows(value, split.validation_indices) for key, value in (context or {}).items()}
         if not route.screening_only:
             X_test = take_rows(data.X, split.test_indices)
             y_test = take_rows(data.y, split.test_indices)
+            test_context = {key: take_rows(value, split.test_indices) for key, value in (context or {}).items()}
         task = getattr(data, "task_adapter", None)
         if task is None:
             task_kind = getattr(data, "task_kind", getattr(getattr(data, "suite", None), "task_kind", None))
@@ -217,34 +227,43 @@ class SimpleADPModelAdapter:
             X_train,
             y_train,
             validation_data=(X_valid, y_valid),
+            train_context=train_context or None,
+            validation_context=valid_context or None,
             checkpoint_path=checkpoint_path,
             progress_callback=progress_callback,
         )
         fit_seconds = time.perf_counter() - started
         validation_outputs = estimator._outputs(X_valid)
         validation_targets = estimator.task.encode_targets(y_valid, device=validation_outputs.device)
-        validation_score = estimator.task.validation_score(validation_outputs, validation_targets)
+        validation_tensors = ({key: torch.as_tensor(value, device=validation_outputs.device)
+                               for key, value in valid_context.items()} if valid_context else None)
+        validation_score = _call_with_context(
+            estimator.task.validation_score, validation_outputs, validation_targets,
+            context=validation_tensors,
+        )
         task_kind = getattr(data, "task_kind", getattr(getattr(data, "suite", None), "task_kind", None))
-        if route.screening_only:
+        validation_prediction = estimator.predict(X_valid)
+        validation_probability = None
+        try:
+            validation_probability = estimator.predict_proba(X_valid)
+        except (TypeError, NotImplementedError):
+            pass
+        if hasattr(task, "select_threshold") and validation_probability is not None:
+            task.threshold_ = task.select_threshold(y_valid, validation_probability[:, 1])
             validation_prediction = estimator.predict(X_valid)
-            if task_kind == "classification":
-                validation_metrics = task.evaluation_metrics(
-                    y_valid, validation_prediction, estimator.predict_proba(X_valid),
-                )
-                validation_metrics = {
-                    key: value for key, value in validation_metrics.items()
-                    if key in {"accuracy", "balanced_accuracy"}
-                }
-            elif task_kind == "regression":
-                validation_metrics = {"r2": task.evaluation_metrics(y_valid, validation_prediction).get("r2")}
-            else:
-                validation_metrics = {"selection_score": float(validation_score)}
+        validation_metrics = _call_with_context(
+            task.evaluation_metrics, y_valid, validation_prediction, validation_probability,
+            context=valid_context or None,
+        )
+        if route.screening_only:
             return {
                 "fit_seconds": fit_seconds,
                 "history_entries": len(estimator.history_),
                 "selected_architecture": list(estimator.model_.hidden_widths),
                 "validation_selection_score": float(validation_score),
                 "validation_metrics": validation_metrics,
+                "primary_metric": getattr(task, "primary_metric", "validation_loss"),
+                "metric_directions": getattr(task, "metric_directions", {}),
                 "test_metrics": {},
                 "screening_only": True,
                 "screening_seed": route.screening_seed,
@@ -252,18 +271,14 @@ class SimpleADPModelAdapter:
                 "artifact_path": None,
             }
         prediction = estimator.predict(X_test)
-        metrics: dict[str, float | None]
-        if task_kind == "classification":
+        try:
             probabilities = estimator.predict_proba(X_test)
-            metrics = task.evaluation_metrics(y_test, prediction, probabilities)
-        elif task_kind == "regression":
-            metrics = task.evaluation_metrics(y_test, prediction)
-        else:
-            try:
-                probabilities = estimator.predict_proba(X_test)
-            except (TypeError, NotImplementedError):
-                probabilities = None
-            metrics = task.evaluation_metrics(y_test, prediction, probabilities)
+        except (TypeError, NotImplementedError):
+            probabilities = None
+        metrics = _call_with_context(
+            task.evaluation_metrics, y_test, prediction, probabilities,
+            context=test_context or None,
+        )
         artifact_path = None
         if checkpoint_path is not None:
             artifact_path = str(estimator_model_path(checkpoint_path))
@@ -274,5 +289,10 @@ class SimpleADPModelAdapter:
             "selected_architecture": list(estimator.model_.hidden_widths),
             "validation_selection_score": float(validation_score),
             "test_metrics": metrics,
+            "task_family": getattr(data, "task_family", task_kind),
+            "task_variant": getattr(data, "task_variant", ""),
+            "split_protocol": getattr(data, "split_protocol", ""),
+            "primary_metric": getattr(task, "primary_metric", "validation_loss"),
+            "metric_directions": getattr(task, "metric_directions", {}),
             "artifact_path": artifact_path,
         }

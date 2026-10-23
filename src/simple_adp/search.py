@@ -32,6 +32,8 @@ class SearchController:
         generic_deepen_fn: MutationFunction | None = None,
         generic_mutation_id: str | None = None,
         generic_artifact_store=None,
+        train_context=None,
+        valid_context=None,
     ) -> None:
         self.task = task
         self.settings = settings
@@ -41,6 +43,8 @@ class SearchController:
         self.generic_deepen_fn = generic_deepen_fn
         self.generic_mutation_id = generic_mutation_id
         self.generic_artifact_store = generic_artifact_store
+        self.train_context = train_context
+        self.valid_context = valid_context
 
     @staticmethod
     def _validate_resume_payload(config: ModelConfig, payload: dict[str, object]) -> None:
@@ -149,7 +153,10 @@ class SearchController:
             use_penalties=generic,
             checkpoint_callback=callback,
         )
-        return trainer.train_stage(model, *arrays, resume_state=resume_state)
+        return trainer.train_stage(
+            model, *arrays, resume_state=resume_state,
+            train_context=self.train_context, valid_context=self.valid_context,
+        )
 
     @staticmethod
     def _arrays(x_train, y_train, x_valid, y_valid, task, device):
@@ -183,7 +190,11 @@ class SearchController:
         fixed_grid: Sequence[Sequence[int]] | None = None,
         resume_payload: dict[str, object] | None = None,
         artifact_resume_context: dict[str, object] | None = None,
+        train_context=None,
+        valid_context=None,
     ) -> SearchResult:
+        self.train_context = train_context
+        self.valid_context = valid_context
         arrays = self._arrays(x_train, y_train, x_valid, y_valid, self.task, self.settings.device)
         if resume_payload is not None:
             self._validate_resume_payload(config, resume_payload)

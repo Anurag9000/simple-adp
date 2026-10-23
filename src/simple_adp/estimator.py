@@ -88,9 +88,11 @@ class TabularADP:
         checkpoint_path: str | os.PathLike[str] | None = None,
         candidate_artifact_dir: str | os.PathLike[str] | None = None,
         progress_callback: Callable[[dict[str, object]], None] | None = None,
+        train_context: dict[str, Any] | None = None,
+        validation_context: dict[str, Any] | None = None,
     ) -> "TabularADP":
         X_valid, y_valid = self._validation(validation_data, X_valid, y_valid)
-        self.task.fit_targets(y)
+        self.task.fit_targets_with_context(y, train_context)
         preprocessor = TabularPreprocessor(self.feature_schema)
         x_train = preprocessor.fit_transform(X)
         x_validation = preprocessor.transform(X_valid)
@@ -113,6 +115,18 @@ class TabularADP:
                 data_hasher.update(json.dumps(contiguous.tolist(), default=repr, separators=(",", ":")).encode())
             else:
                 data_hasher.update(contiguous.tobytes())
+        for label, context in (("train", train_context), ("validation", validation_context)):
+            data_hasher.update(label.encode())
+            for name, values in sorted((context or {}).items()):
+                contiguous = np.ascontiguousarray(values)
+                data_hasher.update(name.encode())
+                data_hasher.update(str(contiguous.dtype).encode())
+                data_hasher.update(str(contiguous.shape).encode())
+                if contiguous.dtype.hasobject:
+                    import json
+                    data_hasher.update(json.dumps(contiguous.tolist(), default=repr, separators=(",", ":")).encode())
+                else:
+                    data_hasher.update(contiguous.tobytes())
         signature = stable_signature({
             "config": self.config.signature_dict(),
             "settings": self.settings.as_dict(),
@@ -222,6 +236,8 @@ class TabularADP:
             generic_deepen_fn=self.generic_deepen_fn,
             generic_mutation_id=self.generic_mutation_id,
             generic_artifact_store=artifact_store,
+            train_context=train_context,
+            valid_context=validation_context,
         )
         if resume_payload is not None:
             # Signature mismatch is fatal: never continue a checkpoint against
@@ -241,6 +257,8 @@ class TabularADP:
             fixed_grid=grid,
             resume_payload=resume_payload,
             artifact_resume_context=artifact_resume_context,
+            train_context=train_context,
+            valid_context=validation_context,
         )
         if store is not None:
             current_architecture = result.state.get("current_architecture", result.state.get("current_widths", result.model.hidden_widths))

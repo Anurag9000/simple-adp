@@ -44,6 +44,39 @@ class TabularTaskData(Protocol):
     dataset_metadata: Mapping[str, Any]
     task_kind: Literal["classification", "regression"] | str
     task_adapter: TaskAdapter | None
+    context: Mapping[str, Any] | None
+    task_family: str
+    task_variant: str
+    split_protocol: str
+
+
+@dataclass(slots=True)
+class PreparedTaskData:
+    """Fixed-size examples and aligned context handed to every model route."""
+
+    dataset_id: str | int
+    name: str
+    target_name: str
+    X: Any
+    y: Any
+    feature_schema: Sequence[str] | Mapping[str, str] | None
+    content_sha256: str
+    dataset_metadata: Mapping[str, Any]
+    task_kind: str
+    task_adapter: TaskAdapter
+    context: Mapping[str, Any] | None = None
+    task_family: str = "tabular"
+    task_variant: str = ""
+    split_protocol: str = ""
+
+    def __post_init__(self) -> None:
+        import numpy as np
+
+        if len(self.X) != len(self.y):
+            raise ValueError("prepared features and targets must have equal row counts")
+        for key, value in (self.context or {}).items():
+            if len(value) != len(self.X):
+                raise ValueError(f"prepared context {key!r} must align with feature rows")
 
 
 @runtime_checkable
@@ -90,6 +123,12 @@ class OpenMLDatasetProvider:
     """Adapter around the existing split-safe OpenML benchmark primitives."""
 
     name = "openml"
+
+    @property
+    def suites(self) -> tuple[str, ...]:
+        from ..benchmark import OPENML_SUITES
+
+        return tuple(OPENML_SUITES)
 
     def list_tasks(self, suite: str) -> list[DatasetTaskRef]:
         from ..benchmark import OPENML_SUITES, load_suite_tasks

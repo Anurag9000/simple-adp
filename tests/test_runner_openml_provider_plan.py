@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 from pathlib import Path
+import sys
 
 import numpy as np
 import pandas as pd
@@ -10,6 +11,27 @@ from simple_adp.runner import DatasetTaskRef, SplitSpec as PublicSplitSpec, Tabu
 from simple_adp.runner.datasets import OpenMLDatasetProvider
 from simple_adp.runner.models import SimpleADPModelAdapter
 from simple_adp.runner.plan import SplitSpec, SuitePlan
+
+
+@pytest.mark.parametrize("suite,expected_count", [("cc18", 72), ("tabzilla", 36), ("ctr23", 35)])
+def test_openml_task_listing_enforces_catalog_pool_size(suite, expected_count, monkeypatch):
+    from simple_adp import benchmark
+
+    fake_openml = SimpleNamespace(
+        study=SimpleNamespace(
+            get_suite=lambda suite_id: SimpleNamespace(
+                tasks=list(range(1, expected_count + 1))
+                if suite_id == benchmark.OPENML_SUITES[suite].openml_id
+                else []
+            )
+        )
+    )
+    monkeypatch.setitem(sys.modules, "openml", fake_openml)
+    assert len(benchmark.load_suite_tasks(suite)) == expected_count
+
+    fake_openml.study.get_suite = lambda _suite_id: SimpleNamespace(tasks=[1, 2])
+    with pytest.raises(RuntimeError, match=f"expected {expected_count}"):
+        benchmark.load_suite_tasks(suite)
 
 
 def test_builtin_openml_task_data_satisfies_typed_provider_payload_contract():

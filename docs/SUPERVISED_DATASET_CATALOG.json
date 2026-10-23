@@ -1,0 +1,888 @@
+{
+  "catalog_version": 1,
+  "checksum_policy": "SHA-256 is computed from the exact acquired archive and persisted in the suite manifest before jobs are created; dataset payloads remain outside Git.",
+  "enabled": [
+    {
+      "provider": "monash",
+      "suite": "aus-electricity-demand",
+      "artifact": "australian_electricity_demand_dataset.zip",
+      "version": "Monash Zenodo record 4659727, record version 1",
+      "source_url": "https://zenodo.org/api/records/4659727/files/australian_electricity_demand_dataset.zip/content",
+      "schema": {
+        "input": "128 chronological half-hourly values from one of five Australian state series",
+        "target": "one value 1, 7, or 28 half-hourly steps ahead",
+        "context": [
+          "series/entity ID",
+          "target source position"
+        ]
+      },
+      "task_variants": [
+        "Australian Electricity Demand forecasting horizon 1",
+        "horizon 7",
+        "horizon 28"
+      ],
+      "split": "chronological target-position 70/10/20 independently within each of five state series",
+      "license_and_terms": "CC BY 4.0; cite the Monash record and O’Hara-Wild et al. tsibbledata. Original source extracted from tsibbledata and provenance retained.",
+      "access_policy_result": "direct public Zenodo download; no account or click-through gate",
+      "checksum": "SHA-256 computed from acquired pinned archive and stored in each run manifest",
+      "windowing": "128 lookback; stride 1 below 10,000 observations and 24 otherwise; this artifact has five long series"
+    },
+    {
+      "provider": "movielens",
+      "suite": "ml-100k",
+      "artifact": "ml-100k.zip",
+      "version": "MovieLens 100K stable archive",
+      "source_url": "https://files.grouplens.org/datasets/movielens/ml-100k.zip",
+      "loader_member": "ml-100k/u.data",
+      "schema": {
+        "user_id": "categorical",
+        "item_id": "categorical",
+        "target": "rating",
+        "timestamp_context": "integer Unix timestamp",
+        "group_context": "integer user ID"
+      },
+      "task_variants": [
+        "rating",
+        "rating-derived preference at rating >= 4",
+        "per-user grouped ranking with rating >= 4 relevance"
+      ],
+      "split": "stable per-user chronological 80/10/10",
+      "license_and_terms": "Use under the terms in the distributed MovieLens 100K README; attribution to GroupLens Research is included in run provenance.",
+      "access_policy_result": "direct public download; no account or click-through agreement",
+      "checksum": "computed from acquired archive and stored in each run manifest"
+    },
+    {
+      "provider": "movielens",
+      "suite": "ml-1m",
+      "artifact": "ml-1m.zip",
+      "version": "MovieLens 1M stable archive",
+      "source_url": "https://files.grouplens.org/datasets/movielens/ml-1m.zip",
+      "loader_member": "ml-1m/ratings.dat",
+      "schema": {
+        "user_id": "categorical",
+        "item_id": "categorical",
+        "target": "rating",
+        "timestamp_context": "integer Unix timestamp",
+        "group_context": "integer user ID"
+      },
+      "task_variants": [
+        "rating",
+        "rating-derived preference at rating >= 4",
+        "per-user grouped ranking with rating >= 4 relevance"
+      ],
+      "split": "stable per-user chronological 80/10/10",
+      "license_and_terms": "Use under the terms in the distributed MovieLens 1M README; non-commercial research restriction and GroupLens attribution are recorded in run provenance.",
+      "access_policy_result": "direct public download; no account or click-through agreement",
+      "checksum": "computed from acquired archive and stored in each run manifest"
+    },
+    {
+      "provider": "nab",
+      "suite": "v1.1",
+      "artifact": "numenta/NAB source archive at pinned commit 0dcd73007a349ca0f4128c4c9b18133ce00d9296",
+      "version": "NAB v1.1",
+      "source_url": "https://github.com/numenta/NAB/archive/0dcd73007a349ca0f4128c4c9b18133ce00d9296.zip",
+      "schema": {
+        "input": "128 chronological values, stride 24",
+        "target": "window overlaps any published anomaly interval",
+        "context": [
+          "source file ID",
+          "window index",
+          "event ID"
+        ]
+      },
+      "task_variants": [
+        "supervised binary event/window classification"
+      ],
+      "split": "seeded 60/20/20 stratification on file-level presence of anomaly; no source file crosses partitions",
+      "license_and_terms": "Pinned repository code is MIT. Source data have per-file upstream provenance described in data/README.md; respect each source attribution and terms. No single blanket dataset license is claimed.",
+      "access_policy_result": "pinned public GitHub archive; no account or agreement gate",
+      "checksum": "SHA-256 computed from downloaded pinned archive and stored in the run manifest"
+    },
+    {
+      "provider": "physionet_ecg",
+      "suite": "ltdb",
+      "artifact": "PhysioNet ltdb version 1.0.0 WFDB records",
+      "version": "1.0.0",
+      "source_url": "https://physionet.org/content/ltdb/1.0.0/",
+      "schema": {
+        "input": "first ECG lead, resampled to 360 Hz, 360 samples centered on annotated beat",
+        "target": "five AAMI groups N/S/V/F/Q",
+        "context": [
+          "record ID",
+          "patient/record group ID",
+          "beat sample"
+        ]
+      },
+      "task_variants": [
+        "supervised AAMI beat classification"
+      ],
+      "split": "seeded patient/record-group 60/20/20; 201 and 202 share one patient group; training partition includes every observed class",
+      "license_and_terms": "Open Data Commons Attribution License v1.0; cite the database-specific source publication and PhysioNet DOI.",
+      "access_policy_result": "PhysioNet Open Access, direct files; no credentialed account or data-use agreement",
+      "checksum": "SHA-256 over selected .hea/.dat/.atr source files, recorded in the run manifest"
+    },
+    {
+      "provider": "physionet_ecg",
+      "suite": "mitdb",
+      "artifact": "PhysioNet mitdb version 1.0.0 WFDB records",
+      "version": "1.0.0",
+      "source_url": "https://physionet.org/content/mitdb/1.0.0/",
+      "schema": {
+        "input": "first ECG lead, resampled to 360 Hz, 360 samples centered on annotated beat",
+        "target": "five AAMI groups N/S/V/F/Q",
+        "context": [
+          "record ID",
+          "patient/record group ID",
+          "beat sample"
+        ]
+      },
+      "task_variants": [
+        "supervised AAMI beat classification"
+      ],
+      "split": "seeded patient/record-group 60/20/20; 201 and 202 share one patient group; training partition includes every observed class",
+      "license_and_terms": "Open Data Commons Attribution License v1.0; cite the database-specific source publication and PhysioNet DOI.",
+      "access_policy_result": "PhysioNet Open Access, direct files; no credentialed account or data-use agreement",
+      "checksum": "SHA-256 over selected .hea/.dat/.atr source files, recorded in the run manifest"
+    },
+    {
+      "provider": "uci_sequence",
+      "suite": "hapt",
+      "artifact": "UCI Smartphone-based Recognition of Human Activities and Postural Transitions archive",
+      "version": "UCI Machine Learning Repository dataset 341",
+      "source_url": "https://archive.ics.uci.edu/static/public/341/smartphone+based+recognition+of+human+activities+and+postural+transitions.zip",
+      "schema": {
+        "input": "six raw accelerometer/gyroscope channels in non-overlapping 128-sample windows",
+        "target": "one activity class per sample; flattened MLP logits reshaped to steps-by-classes",
+        "context": "subject and experiment IDs"
+      },
+      "task_variants": [
+        "per-step activity labeling"
+      ],
+      "split": "source subject train/test lists; validation uses the last 20 percent of sorted source-training subjects; no subject crosses partitions",
+      "license_and_terms": "CC BY 4.0; attribute UCI Machine Learning Repository",
+      "access_policy_result": "direct public download; no account or click-through agreement",
+      "checksum": "computed from acquired archive and stored in each run manifest"
+    },
+    {
+      "provider": "uci_temporal",
+      "suite": "electricity",
+      "artifact": "electricityloaddiagrams20112014.zip / LD2011_2014.txt",
+      "version": "UCI Machine Learning Repository dataset 321",
+      "source_url": "https://archive.ics.uci.edu/static/public/321/electricityloaddiagrams20112014.zip",
+      "schema": {
+        "raw_channels": "370 client numeric series",
+        "input": "128 chronological lags per client, flattened",
+        "target": "next interval, all client channels"
+      },
+      "task_variants": [
+        "multivariate next-interval forecasting"
+      ],
+      "split": "chronological by target position 70/10/20; overlapping historical inputs are allowed across boundaries, but targets are disjoint",
+      "license_and_terms": "CC BY 4.0; attribute UCI Machine Learning Repository",
+      "access_policy_result": "direct public download; no account or click-through agreement",
+      "checksum": "computed from acquired archive and stored in each run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "cardio",
+      "artifact": "cardio.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/cardiotocogrpahy-dataset/",
+      "artifact_url": "https://www.dropbox.com/scl/fi/a1v7m3p1kbcnte1/cardio.mat?rlkey=84oboq7oqussys4iqi2b3kgv2&dl=1",
+      "schema": {
+        "rows": 1831,
+        "features": 21,
+        "outliers": 176,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. Campos and Bernardes (2000), UCI DOI 10.24432/C51S4N; Rayana (2016), ODDS",
+      "transformation": "normal fetal-state class is inlier; pathologic class is downsampled to 176 anomalies; suspect class is discarded",
+      "source_dataset_id": "cardiotocogrpahy",
+      "source_dataset_url": "https://archive.ics.uci.edu/dataset/193/cardiotocography",
+      "source_dataset_title": "Cardiotocogrpahy",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "thyroid",
+      "artifact": "thyroid.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/thyroid-disease-dataset/",
+      "artifact_url": "https://www.dropbox.com/scl/fi/bfwe561x2bvbbjq/thyroid.mat?rlkey=rrwjoqv9eymgyey3rmy5s5id1&dl=1",
+      "schema": {
+        "rows": 3772,
+        "features": 6,
+        "outliers": 93,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. Quinlan (1986), UCI DOI 10.24432/C5D010; Rayana (2016), ODDS",
+      "transformation": "six real attributes from the ODDS Thyroid training subset; hyperfunction is anomaly; normal and subnormal are inliers",
+      "source_dataset_id": "thyroid-disease",
+      "source_dataset_url": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "source_dataset_title": "Thyroid Disease",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "satimage-2",
+      "artifact": "satimage-2.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/satimage-2-dataset/",
+      "artifact_url": "https://www.dropbox.com/scl/fi/s4uymhnzj1ec1hu/satimage-2.mat?rlkey=f40h6so1cy2njmvz3nuu57vhy&dl=1",
+      "schema": {
+        "rows": 5803,
+        "features": 36,
+        "outliers": 71,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. Srinivasan (1993), UCI DOI 10.24432/C55887; Rayana (2016), ODDS",
+      "transformation": "combines source rows, downsamples class 2 to 71 anomalies, and labels all other classes inlier",
+      "source_dataset_id": "satimage-2",
+      "source_dataset_url": "https://archive.ics.uci.edu/dataset/146/statlog+landsat+satellite",
+      "source_dataset_title": "Satimage 2",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "lympho",
+      "artifact": "lympho.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/lymphography-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/ag469ssk0lmctco/lympho.mat?dl=1",
+      "schema": {
+        "rows": 148,
+        "features": 18,
+        "outliers": 6,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Lymphography; Rayana (2016), ODDS",
+      "transformation": "two smallest source classes (counts 2 and 4) are outliers; the two larger classes are inliers",
+      "source_dataset_id": "lympho",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Lymphography",
+      "source_dataset_title": "Lympho",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "glass",
+      "artifact": "glass.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/glass-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/iq3hjxw77gpbl7u/glass.mat?dl=1",
+      "schema": {
+        "rows": 214,
+        "features": 9,
+        "outliers": 9,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Glass Identification; Rayana (2016), ODDS",
+      "transformation": "source class 6 is the outlier; all other classes are inliers",
+      "source_dataset_id": "glass",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Glass+Identification",
+      "source_dataset_title": "Glass",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "vowels",
+      "artifact": "vowels.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/japanese-vowels-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/pa26odoq6atq9vx/vowels.mat?dl=1",
+      "schema": {
+        "rows": 1456,
+        "features": 12,
+        "outliers": 50,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Japanese Vowels; Rayana (2016), ODDS",
+      "transformation": "frame rows from 12-dimensional sequences; speaker 1 is downsampled to 50 outliers; speakers 6, 7, and 8 are inliers; remaining speakers are discarded",
+      "source_dataset_id": "vowels",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Japanese+Vowels",
+      "source_dataset_title": "Vowels",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "musk",
+      "artifact": "musk.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/musk-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/we6aqhb0m38i60t/musk.mat?dl=1",
+      "schema": {
+        "rows": 3062,
+        "features": 166,
+        "outliers": 97,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Musk Version 2; Rayana (2016), ODDS",
+      "transformation": "non-musk classes j146, j147, and 252 are inliers; musk classes 213 and 211 are outliers; remaining classes are discarded",
+      "source_dataset_id": "musk",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Musk+(Version+2)",
+      "source_dataset_title": "Musk",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "letter",
+      "artifact": "letter.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/letter-recognition-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/rt9i95h9jywrtiy/letter.mat?dl=1",
+      "schema": {
+        "rows": 1600,
+        "features": 32,
+        "outliers": 100,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Letter Recognition; Rayana (2016), ODDS",
+      "transformation": "constructs 1,500 inliers from three letters using paired feature concatenation and 100 outliers from other letters concatenated with normal components",
+      "source_dataset_id": "letter",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Letter+Recognition",
+      "source_dataset_title": "Letter",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "speech",
+      "artifact": "speech.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/speech-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/w6xv51ctea6uauc/speech.mat?dl=1",
+      "schema": {
+        "rows": 3686,
+        "features": 400,
+        "outliers": 61,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. VUT Brno speech corpus; Rayana (2016), ODDS",
+      "transformation": "American-accent i-vectors are inliers; the other seven accents are outliers",
+      "source_dataset_id": "speech",
+      "source_dataset_url": "http://speech.fit.vutbr.cz/",
+      "source_dataset_title": "Speech",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "satellite",
+      "artifact": "satellite.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/satellite-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/dpzxp8jyr9h93k5/satellite.mat?dl=1",
+      "schema": {
+        "rows": 6435,
+        "features": 36,
+        "outliers": 2036,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Statlog Landsat Satellite; Rayana (2016), ODDS",
+      "transformation": "the three smallest classes (2, 4, and 5) are outliers; all other classes are inliers",
+      "source_dataset_id": "satellite",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Statlog+(Landsat+Satellite)",
+      "source_dataset_title": "Satellite",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "shuttle",
+      "artifact": "shuttle.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/shuttle-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/mk8ozgisimfn3dw/shuttle.mat?dl=1",
+      "schema": {
+        "rows": 49097,
+        "features": 9,
+        "outliers": 3511,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Statlog Shuttle; Rayana (2016), ODDS",
+      "transformation": "classes 2, 3, 5, 6, and 7 are outliers; class 1 is inlier; class 4 is discarded",
+      "source_dataset_id": "shuttle",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Statlog+(Shuttle)",
+      "source_dataset_title": "Shuttle",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "breastw",
+      "artifact": "breastw.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/breast-cancer-wisconsin-original-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/g3hlnucj71kfvq4/breastw.mat?dl=1",
+      "schema": {
+        "rows": 683,
+        "features": 9,
+        "outliers": 239,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Breast Cancer Wisconsin Original; Rayana (2016), ODDS",
+      "transformation": "malignant rows are outliers and benign rows are inliers",
+      "source_dataset_id": "breastw",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)",
+      "source_dataset_title": "Breastw",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "arrhythmia",
+      "artifact": "arrhythmia.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/arrhythmia-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/lmlwuspn1sey48r/arrhythmia.mat?dl=1",
+      "schema": {
+        "rows": 452,
+        "features": 274,
+        "outliers": 66,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Arrhythmia; Rayana (2016), ODDS",
+      "transformation": "classes 3, 4, 5, 7, 8, 9, 14, and 15 are outliers; all other classes are inliers; five nominal attributes are discarded",
+      "source_dataset_id": "arrhythmia",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Arrhythmia",
+      "source_dataset_title": "Arrhythmia",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "ionosphere",
+      "artifact": "ionosphere.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/ionosphere-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/lpn4z73fico4uup/ionosphere.mat?dl=1",
+      "schema": {
+        "rows": 351,
+        "features": 33,
+        "outliers": 126,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Ionosphere; Rayana (2016), ODDS",
+      "transformation": "bad-radar returns are outliers and good returns are inliers; the all-zero feature is discarded",
+      "source_dataset_id": "ionosphere",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Ionosphere",
+      "source_dataset_title": "Ionosphere",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "mnist",
+      "artifact": "mnist.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/mnist-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/n3wurjt8v9qi6nc/mnist.mat?dl=1",
+      "schema": {
+        "rows": 7603,
+        "features": 100,
+        "outliers": 700,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. LeCun et al., MNIST; Rayana (2016), ODDS",
+      "transformation": "digit 0 examples are inliers; 700 digit 6 examples are sampled as outliers; 100 of 784 pixel features are selected",
+      "source_dataset_id": "mnist",
+      "source_dataset_url": "http://yann.lecun.com/exdb/mnist/",
+      "source_dataset_title": "Mnist",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "optdigits",
+      "artifact": "optdigits.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/optdigits-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/w52ndgz5k75s514/optdigits.mat?dl=1",
+      "schema": {
+        "rows": 5216,
+        "features": 64,
+        "outliers": 150,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Optical Recognition of Handwritten Digits; Rayana (2016), ODDS",
+      "transformation": "digit 0 is downsampled to 150 outliers; digits 1 through 9 are inliers",
+      "source_dataset_id": "optdigits",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits",
+      "source_dataset_title": "Optdigits",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "http",
+      "artifact": "http.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/http-kddcup99-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/iy9ucsifal754tp/http.mat?dl=1",
+      "schema": {
+        "rows": 567498,
+        "features": 3,
+        "outliers": 2211,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI KDD Cup 99; Rayana (2016), ODDS",
+      "transformation": "service-specific KDD Cup 99 subset; continuous source values are log(x+0.1); MAT artifact has 3 features",
+      "source_dataset_id": "http",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/machine-learning-databases/kddcup99-mld/",
+      "source_dataset_title": "Http",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest",
+      "source_count_note": "Directly downloaded MAT file is 567,498 rows; the ODDS detail text says 567,497 and the index table says 567,479. The acquired file shape is treated as the artifact contract."
+    },
+    {
+      "provider": "odds",
+      "suite": "smtp",
+      "artifact": "smtp.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/smtp-kddcup99-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/dbv2u4830xri7og/smtp.mat?dl=1",
+      "schema": {
+        "rows": 95156,
+        "features": 3,
+        "outliers": 30,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI KDD Cup 99; Rayana (2016), ODDS",
+      "transformation": "service-specific KDD Cup 99 subset; continuous source values are log(x+0.1); MAT artifact has 3 features",
+      "source_dataset_id": "smtp",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/machine-learning-databases/kddcup99-mld/",
+      "source_dataset_title": "Smtp",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "mammography",
+      "artifact": "mammography.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/mammography-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/tq2v4hhwyv17hlk/mammography.mat?dl=1",
+      "schema": {
+        "rows": 11183,
+        "features": 6,
+        "outliers": 260,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. OpenML dataset 310; Rayana (2016), ODDS",
+      "transformation": "minority calcification class is outlier; non-calcification class is inlier",
+      "source_dataset_id": "mammography",
+      "source_dataset_url": "https://www.openml.org/d/310",
+      "source_dataset_title": "Mammography",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "annthyroid",
+      "artifact": "annthyroid.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/annthyroid-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/aifk51owxbogwav/annthyroid.mat?dl=1",
+      "schema": {
+        "rows": 7200,
+        "features": 6,
+        "outliers": 534,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Thyroid Disease; Rayana (2016), ODDS",
+      "transformation": "six real features; hyperfunction and subnormal classes are outliers; the remaining class is inlier",
+      "source_dataset_id": "annthyroid",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Thyroid+Disease",
+      "source_dataset_title": "Annthyroid",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "pendigits",
+      "artifact": "pendigits.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/pendigits-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/1x8rzb4a0lia6t1/pendigits.mat?dl=1",
+      "schema": {
+        "rows": 6870,
+        "features": 16,
+        "outliers": 156,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Pen-Based Recognition of Handwritten Digits; Rayana (2016), ODDS",
+      "transformation": "equal-frequency source classes; digit 0 is reduced to approximately 10 percent as the outlier class",
+      "source_dataset_id": "pendigits",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Pen-Based+Recognition+of+Handwritten+Digits",
+      "source_dataset_title": "Pendigits",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "ecoli",
+      "artifact": "ecoli.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/ecoli-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/f38mquv0g08xxgp/ecoli.mat?dl=1",
+      "schema": {
+        "rows": 336,
+        "features": 7,
+        "outliers": 9,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Ecoli; Rayana (2016), ODDS",
+      "transformation": "omL, imL, and imS minority classes are outliers; other classes are inliers; sequence-name field is removed",
+      "source_dataset_id": "ecoli",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Ecoli",
+      "source_dataset_title": "Ecoli",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "wine",
+      "artifact": "wine.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/wine-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/uvjaudt2uto7zal/wine.mat?dl=1",
+      "schema": {
+        "rows": 129,
+        "features": 13,
+        "outliers": 10,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Wine; Rayana (2016), ODDS",
+      "transformation": "classes 2 and 3 are inliers; class 1 is downsampled to 10 outliers",
+      "source_dataset_id": "wine",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Wine",
+      "source_dataset_title": "Wine",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    },
+    {
+      "provider": "odds",
+      "suite": "vertebral",
+      "artifact": "vertebral.mat",
+      "version": "ODDS public MAT artifact; exact acquired file SHA-256 recorded per run",
+      "source_url": "https://shebuti.com/vertebral-dataset/",
+      "artifact_url": "https://www.dropbox.com/s/5kuqb387sgvwmrb/vertebral.mat?dl=1",
+      "schema": {
+        "rows": 240,
+        "features": 6,
+        "outliers": 30,
+        "target": "binary 0=inlier, 1=outlier"
+      },
+      "task_variants": [
+        "supervised binary anomaly classification"
+      ],
+      "split": "seeded stratified 60/20/20, seed 42; train-derived positive weight; threshold selected on validation only",
+      "license_and_terms": "ODDS page does not state a separate license for the derived MAT artifact. Original-source terms vary and must be followed; no payload is redistributed. UCI Vertebral Column; Rayana (2016), ODDS",
+      "transformation": "AB class is inlier; NO class is downsampled from 100 to 30 outliers",
+      "source_dataset_id": "vertebral",
+      "source_dataset_url": "https://archive.ics.uci.edu/ml/datasets/Vertebral+Column",
+      "source_dataset_title": "Vertebral",
+      "access_policy_result": "direct public file endpoint checked without account or click-through agreement; public access is not a license grant",
+      "checksum": "SHA-256 computed from exact acquired MAT file and stored in run manifest"
+    }
+  ],
+  "planned_not_enabled": [
+    {
+      "suite": "wbc",
+      "reason": "ODDS artifact page currently returns not found; no verified direct MAT artifact."
+    },
+    {
+      "suite": "forestcover",
+      "reason": "ODDS artifact page currently returns not found; no verified direct MAT artifact."
+    },
+    {
+      "suite": "pima",
+      "reason": "ODDS index link is malformed/unreachable; no verified artifact endpoint."
+    },
+    {
+      "suite": "mulcross",
+      "reason": "ODDS artifact host is unreachable; availability cannot be verified."
+    },
+    {
+      "suite": "yeast",
+      "reason": "Index points to original source data and does not provide a verified ODDS binary MAT transformation."
+    },
+    {
+      "suite": "heart",
+      "reason": "Index points to original source data and does not provide a verified ODDS binary MAT transformation."
+    },
+    {
+      "suite": "seismic",
+      "reason": "Page provides original source data but no verified ODDS MAT artifact."
+    }
+  ],
+  "odds_inventory": {
+    "index_url": "https://shebuti.com/outlier-detection-datasets-odds/",
+    "index_entries": 31,
+    "enabled_direct_artifacts": 24,
+    "not_enabled_entries": [
+      {
+        "suite": "wbc",
+        "reason": "ODDS artifact page currently returns not found; no verified direct MAT artifact."
+      },
+      {
+        "suite": "forestcover",
+        "reason": "ODDS artifact page currently returns not found; no verified direct MAT artifact."
+      },
+      {
+        "suite": "pima",
+        "reason": "ODDS index link is malformed/unreachable; no verified artifact endpoint."
+      },
+      {
+        "suite": "mulcross",
+        "reason": "ODDS artifact host is unreachable; availability cannot be verified."
+      },
+      {
+        "suite": "yeast",
+        "reason": "Index points to original source data and does not provide a verified ODDS binary MAT transformation."
+      },
+      {
+        "suite": "heart",
+        "reason": "Index points to original source data and does not provide a verified ODDS binary MAT transformation."
+      },
+      {
+        "suite": "seismic",
+        "reason": "Page provides original source data but no verified ODDS MAT artifact."
+      }
+    ],
+    "terms_note": "Public direct access is not treated as a license. The derived ODDS MAT artifact terms and original source terms are recorded separately; no artifact payload is redistributed."
+  },
+  "enabled_suite_pools": [
+    {
+      "provider": "openml",
+      "suite": "cc18",
+      "openml_suite_id": 99,
+      "task_count": 72,
+      "task_family": "classification",
+      "source_url": "https://www.openml.org/s/99",
+      "task_resolution": "Task IDs are resolved at runtime from the pinned OpenML study suite; each resolved task records its dataset/task IDs and acquired source metadata in the plan manifest.",
+      "checksum": "Per-task source and split SHA-256 values are recorded in each generated run manifest.",
+      "split": "Existing OpenML benchmark split/fold protocol, unchanged."
+    },
+    {
+      "provider": "openml",
+      "suite": "tabzilla",
+      "openml_suite_id": 379,
+      "task_count": 36,
+      "task_family": "classification",
+      "source_url": "https://www.openml.org/s/379",
+      "task_resolution": "Task IDs are resolved at runtime from the pinned OpenML study suite; each resolved task records its dataset/task IDs and acquired source metadata in the plan manifest.",
+      "checksum": "Per-task source and split SHA-256 values are recorded in each generated run manifest.",
+      "split": "Existing OpenML benchmark split/fold protocol, unchanged."
+    },
+    {
+      "provider": "openml",
+      "suite": "ctr23",
+      "openml_suite_id": 353,
+      "task_count": 35,
+      "task_family": "regression",
+      "source_url": "https://www.openml.org/s/353",
+      "task_resolution": "Task IDs are resolved at runtime from the pinned OpenML study suite; each resolved task records its dataset/task IDs and acquired source metadata in the plan manifest.",
+      "checksum": "Per-task source and split SHA-256 values are recorded in each generated run manifest.",
+      "split": "Existing OpenML benchmark split/fold protocol, unchanged."
+    }
+  ]
+}
