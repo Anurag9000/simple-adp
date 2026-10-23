@@ -1,0 +1,30 @@
+# Existing Documentation Claim Audit
+
+## Scope and evidence boundary
+
+This register captures claims from all existing root-level and `docs/` Markdown files that were read during Pass 2. It is a claim index, not a declaration that every claim is correct. Source findings below are static inspections of the current worktree as of 2026-10-18; several implementation files are modified or untracked relative to `6461b8ee8d378ef6e5c7eacee9bbc6abde63f20c`. Historical test and runtime statements are reported as claims made by the documents, not independently reproduced here.
+
+## Major claims and current cross-check status
+
+| Claim cluster | Existing documentation | Source or evidence checked | Current assessment |
+|---|---|---|---|
+| Case surface and default job grid | `CASE_RUNNERS.md`, `docs/OPF_SUITE_AUDIT.md`, `docs/opf_orchestration_report.md` | `utils/opf_massive_suite_runner.py` around manifest construction (lines 1100-1210), and the runner’s CLI defaults | The documents describe five cases, 13 adaptive families, three heads, 129 adaptive jobs, and optional 50-job vanilla grid (179 per repeat). This is plausible and partly corroborated by source structure, but the complete grid arithmetic and filters remain to be traced. |
+| Status counters | `CASE_RUNNERS.md`, `docs/OPF_SUITE_AUDIT.md`, `docs/opf_orchestration_report.md`, `docs/AGENT_RESUME_PROTOCOL.md` | `utils/opf_massive_suite_runner.py:2350-2509,2888-2920` | Source has distinct all-job and live-job batch/epoch counters. The docs correctly caution that epoch records aggregate across stages and may include completed/retried jobs. A live remote status is outside this static audit. |
+| Swap scheduling | `docs/OPF_SUITE_AUDIT.md`, `docs/opf_orchestration_report.md`, `docs/AGENT_RESUME_PROTOCOL.md` | `utils/opf_massive_suite_runner.py:790-791`; `utils/pressure_aware_wrapper.py:177-178,212-244,265-276` | The main runner and standalone wrapper retain swap CLI values and sample/report swap, but both CLI help strings explicitly say swap occupancy does not gate scheduling. The orchestration report’s statement that the standalone wrapper’s host release condition “includ[es] swap” (`docs/opf_orchestration_report.md:355-359`) conflicts with inspected source: the wrapper computes host readiness from `psutil.virtual_memory().percent`, GPU readiness from GPU usage, and external-drop values; swap is only sampled for its status message. Resolve this in the eventual map and list the source/doc mismatch; do not edit existing docs. |
+| Forced CPU after CUDA OOM | `docs/AGENT_RESUME_PROTOCOL.md`, `docs/OPF_SUITE_AUDIT.md`, `docs/opf_orchestration_report.md` | `utils/opf_massive_suite_runner.py:363,391,1744,1786` and OOM retry region around 3232-3290 | Current source retains `force_cpu_after_cuda_oom` as a legacy state field but initializes/resets it false. The inspected retry path requeues and applies batch backoff without assigning CPU fallback. This supports the documents’ claim that the legacy flag is ignored; full retry device selection still requires tracing the live scheduler path. |
+| Checkpointed exact resume | `docs/AGENT_RESUME_PROTOCOL.md`, `docs/OPF_SUITE_AUDIT.md`, `docs/opf_orchestration_report.md`, `CASE_RUNNERS.md` | Dirty worktree files `utils/resume_state.py`, `opf_loader.py`, `checkpoint_utils.py`, `run_telemetry.py`, `training_helpers.py` | Current worktree contains schema/RNG/sampler/loader-contract machinery and strict validation. This code is dirty relative to HEAD, so these features cannot be attributed to committed HEAD without history/diff review. Runtime equivalence and complete per-family coverage are not established by this static search. |
+| Checkpoint files and stage state | `docs/CASE_RUNNERS.md`, `docs/AGENT_RESUME_PROTOCOL.md`, `docs/OPF_SUITE_AUDIT.md` | `run_telemetry.py:993-1321`; `checkpoint_utils.py:144-194` | Static source has stage RNG sidecars, checkpoint validation, architecture checks, and deferred RNG restore hooks. The full write/load call graph across every model family remains open. |
+| Historical test / smoke results | `CASE_RUNNERS.md`, `docs/OPF_SUITE_AUDIT.md`, `docs/opf_orchestration_report.md`, `docs/shared_cuda_backend_audit_2026-09-28.md` | No runtime or tests run under this documentation task | Treat as dated evidence asserted in existing docs. Reports and commits cited by those docs may have been deleted or may not belong to this current worktree. Do not restate them as freshly verified. |
+| Runtime tuning and optional scopes | `docs/opf_orchestration_report.md` | `utils/` bootstrap and wrappers not yet fully traced | Existing document describes CPU affinity, priority commands, `mlockall`, and optional `systemd-run`; whether these apply to the active suite wrapper and their exact conditions remains unverified. |
+| OPF scientific context | `docs/opf_problem_guide.md` | Not independently validated against primary papers in this static repo pass | General context and external citations are existing-document content. The repository’s implemented formulation, data labels, loss, metrics, and limits must be derived from source/data code separately. |
+
+## Documentation read-through completed
+
+Read the repository’s existing `README.md`, `REPO_STRUCTURE_AND_GUIDE.md`, `USAGE_GUIDE.md`, `ADP_algorithms.md`, `CASE_RUNNERS.md`, and all five pre-existing `docs/*.md` files. No existing documentation was modified. `docs/AGENT_RESUME_PROTOCOL.md` and other existing artifacts contain historical statements; the new knowledge base will preserve their provenance and distinguish claims from source-verified behavior.
+
+## Open follow-up
+
+1. Trace the scheduler’s job graph, launch admission, retry, pause/relaunch, and terminal-state transitions directly from current source.
+2. Inspect dirty diffs before attributing resumability and pressure behavior to HEAD.
+3. Trace all checkpoint write/load paths across model families and record family-specific coverage and gaps.
+4. Verify remaining documentation statements against the relevant implementation, marking unresolved statements as unverified rather than carrying them forward as facts.

@@ -1,0 +1,288 @@
+{
+  "copy_semantics": "Exact file copies from the source worktree at snapshot time, including any source working-tree edits. Hashes are recorded in manifest.json.",
+  "files": [
+    {
+      "bytes": 156,
+      "copied_sha256": "b00152eae4ba621f52da18fd99a43c7771d8c8c0d9e32119ab6d8c97389e549e",
+      "path": "run_massive_opf_suite.sh",
+      "source_sha256": "b00152eae4ba621f52da18fd99a43c7771d8c8c0d9e32119ab6d8c97389e549e"
+    },
+    {
+      "bytes": 5822,
+      "copied_sha256": "3cccd739bcd6f32ff560ece916b17ed40b15a345ecce632789d3b94dcde6e736",
+      "path": "run_massive_opf_suite.ps1",
+      "source_sha256": "3cccd739bcd6f32ff560ece916b17ed40b15a345ecce632789d3b94dcde6e736"
+    },
+    {
+      "bytes": 213,
+      "copied_sha256": "b57a7f959b5d31a21970027db934a89295dd40d1db2a3ad716b9c7ab38f0a001",
+      "path": "run_case_suite.sh",
+      "source_sha256": "b57a7f959b5d31a21970027db934a89295dd40d1db2a3ad716b9c7ab38f0a001"
+    },
+    {
+      "bytes": 197,
+      "copied_sha256": "b670b1db69200083f93cdb170b4d5e114bd2b23699aa7d8c04989c19d252fe85",
+      "path": "run_case_14.sh",
+      "source_sha256": "b670b1db69200083f93cdb170b4d5e114bd2b23699aa7d8c04989c19d252fe85"
+    },
+    {
+      "bytes": 197,
+      "copied_sha256": "8976d8152a5d224d0791c430ab4d5b6ffcb3cd6cfe2ceda559453b48562a90ac",
+      "path": "run_case_30.sh",
+      "source_sha256": "8976d8152a5d224d0791c430ab4d5b6ffcb3cd6cfe2ceda559453b48562a90ac"
+    },
+    {
+      "bytes": 197,
+      "copied_sha256": "1131c067c12e3de66dd489a23eea6361aa6627ceb696f0ead06a51ae7fb53260",
+      "path": "run_case_57.sh",
+      "source_sha256": "1131c067c12e3de66dd489a23eea6361aa6627ceb696f0ead06a51ae7fb53260"
+    },
+    {
+      "bytes": 199,
+      "copied_sha256": "f1fe3a8c450216643fe2dc975697bf72ec834fbd21a4a0917ad2601aab158123",
+      "path": "run_case_118.sh",
+      "source_sha256": "f1fe3a8c450216643fe2dc975697bf72ec834fbd21a4a0917ad2601aab158123"
+    },
+    {
+      "bytes": 198,
+      "copied_sha256": "f0a6e668d69cfd4e510d7a4c418a8a7d33653cc0c60877a5c57635a9a1de1c44",
+      "path": "run_case_500.sh",
+      "source_sha256": "f0a6e668d69cfd4e510d7a4c418a8a7d33653cc0c60877a5c57635a9a1de1c44"
+    },
+    {
+      "bytes": 202,
+      "copied_sha256": "da3a921a01d84b4ca322b641f132d9db0c5bf6fb9ad723b60a72d78a9b1e4575",
+      "path": "run_search_suite.sh",
+      "source_sha256": "da3a921a01d84b4ca322b641f132d9db0c5bf6fb9ad723b60a72d78a9b1e4575"
+    },
+    {
+      "bytes": 197,
+      "copied_sha256": "5f718ed8965abe7c231eada16ab2577096fd1979e35b655f6c8498c9685039f2",
+      "path": "run_adp_w2d_suite_parallel.sh",
+      "source_sha256": "5f718ed8965abe7c231eada16ab2577096fd1979e35b655f6c8498c9685039f2"
+    },
+    {
+      "bytes": 258,
+      "copied_sha256": "d9dc267e667427cce38a077e956809a6ecd582a521713f0c77a8e290dfa76ded",
+      "path": "run_missing_width_stl_recovery_pressure_gpu_first.sh",
+      "source_sha256": "d9dc267e667427cce38a077e956809a6ecd582a521713f0c77a8e290dfa76ded"
+    },
+    {
+      "bytes": 2410,
+      "copied_sha256": "9a0bf5c8b89cc866ac30be557d4992f5166afd7765748c66ef887af4c5cc7f03",
+      "path": "_orphan_watchdog.sh",
+      "source_sha256": "9a0bf5c8b89cc866ac30be557d4992f5166afd7765748c66ef887af4c5cc7f03"
+    },
+    {
+      "bytes": 3724,
+      "copied_sha256": "3f64f7cc0a0e148f427104c6b828a19a954e7836fc2ae779591bba8be9286387",
+      "path": "_OrphanWatchdog.ps1",
+      "source_sha256": "3f64f7cc0a0e148f427104c6b828a19a954e7836fc2ae779591bba8be9286387"
+    },
+    {
+      "bytes": 5184,
+      "copied_sha256": "a3394a13fbafb2dd104c75fbe54596446dc3310a94ad0897a3f179d71a0bb299",
+      "path": "thermal_guard_embedded.ps1",
+      "source_sha256": "a3394a13fbafb2dd104c75fbe54596446dc3310a94ad0897a3f179d71a0bb299"
+    },
+    {
+      "bytes": 5351,
+      "copied_sha256": "ca78b78e58b36a42ac9853302b80ab135c0e13b8e4103e308d1aaf8eae175fa5",
+      "path": "utils/opf_suite_launcher.sh",
+      "source_sha256": "ca78b78e58b36a42ac9853302b80ab135c0e13b8e4103e308d1aaf8eae175fa5"
+    },
+    {
+      "bytes": 31881,
+      "copied_sha256": "0bf07073bfda3f683284f9916851a8fc1aee7728885f5a1212829763799c3920",
+      "path": "utils/opf_suite_launcher.py",
+      "source_sha256": "0bf07073bfda3f683284f9916851a8fc1aee7728885f5a1212829763799c3920"
+    },
+    {
+      "bytes": 163054,
+      "copied_sha256": "8d1cb9192deb26d286e6ff3bf42a66503f91d1da685cd468b5f3158253b6db1a",
+      "path": "utils/opf_massive_suite_runner.py",
+      "source_sha256": "8d1cb9192deb26d286e6ff3bf42a66503f91d1da685cd468b5f3158253b6db1a"
+    },
+    {
+      "bytes": 12577,
+      "copied_sha256": "31427e5ad13cc6196812c7859aaa483a4b903ff290d0d01031f86d4e01363e12",
+      "path": "utils/pressure_aware_wrapper.py",
+      "source_sha256": "31427e5ad13cc6196812c7859aaa483a4b903ff290d0d01031f86d4e01363e12"
+    },
+    {
+      "bytes": 9304,
+      "copied_sha256": "f6410ff4c883822a0fdb58ca7a04526cd3dd164698e58e2a90db66d5be319006",
+      "path": "utils/opf_shared_defaults.py",
+      "source_sha256": "f6410ff4c883822a0fdb58ca7a04526cd3dd164698e58e2a90db66d5be319006"
+    },
+    {
+      "bytes": 2908,
+      "copied_sha256": "cad853821545391bb749b0d7f69020b0c6e0123117ee2534f0ea285d3c6eb2e0",
+      "path": "utils/opf_run_defaults.sh",
+      "source_sha256": "cad853821545391bb749b0d7f69020b0c6e0123117ee2534f0ea285d3c6eb2e0"
+    },
+    {
+      "bytes": 3309,
+      "copied_sha256": "76ab2f698256f65faefba0695171383ab60603eeaf4614d3a1d8ea83519b5a93",
+      "path": "utils/opf_run_defaults.ps1",
+      "source_sha256": "76ab2f698256f65faefba0695171383ab60603eeaf4614d3a1d8ea83519b5a93"
+    },
+    {
+      "bytes": 16311,
+      "copied_sha256": "7456a55569d5c879c9658d2e65ebc998bb0ce38d0eb34122cef3687083f88f47",
+      "path": "utils/runtime_tuning.py",
+      "source_sha256": "7456a55569d5c879c9658d2e65ebc998bb0ce38d0eb34122cef3687083f88f47"
+    },
+    {
+      "bytes": 2090,
+      "copied_sha256": "30726b3361442b6cab03a794d7aacfc6b335ee0b622c8ab28b52560c792c6038",
+      "path": "utils/runtime_tuning.sh",
+      "source_sha256": "30726b3361442b6cab03a794d7aacfc6b335ee0b622c8ab28b52560c792c6038"
+    },
+    {
+      "bytes": 9015,
+      "copied_sha256": "383dcef334589120082d0140104dca07bafe7a0583abd171c55ab7b14abc7ea1",
+      "path": "utils/opf_resume_bundle.py",
+      "source_sha256": "383dcef334589120082d0140104dca07bafe7a0583abd171c55ab7b14abc7ea1"
+    },
+    {
+      "bytes": 27343,
+      "copied_sha256": "07355bd95acc706a3e8f18ccf90185ca14311dd3196c4572b9862854558a7417",
+      "path": "utils/opf_dataset_cache.py",
+      "source_sha256": "07355bd95acc706a3e8f18ccf90185ca14311dd3196c4572b9862854558a7417"
+    },
+    {
+      "bytes": 4045,
+      "copied_sha256": "c3f8a0e19eefd4bf9b8f9eda74f7a475ee0ccc171e32364e6377e6c1531e21d0",
+      "path": "utils/logging_utils.py",
+      "source_sha256": "c3f8a0e19eefd4bf9b8f9eda74f7a475ee0ccc171e32364e6377e6c1531e21d0"
+    },
+    {
+      "bytes": 11541,
+      "copied_sha256": "dc83f3d080059113fd8f997bcd424dba27513dbc60aa6ac2b5ad41b7a5410a90",
+      "path": "utils/ml_backends.py",
+      "source_sha256": "dc83f3d080059113fd8f997bcd424dba27513dbc60aa6ac2b5ad41b7a5410a90"
+    },
+    {
+      "bytes": 11637,
+      "copied_sha256": "12080a4b17aeda161e7a629c03c8a85d8337f12fb5b44130344a6f3087f7a0ef",
+      "path": "utils/verify_opf_suite_models.py",
+      "source_sha256": "12080a4b17aeda161e7a629c03c8a85d8337f12fb5b44130344a6f3087f7a0ef"
+    },
+    {
+      "bytes": 2811,
+      "copied_sha256": "2969f3e2fcff3306bc2dc569e094f6aaa494977d9223dff500ddcee3d7a4be20",
+      "path": "scripts/kill_all_runners.py",
+      "source_sha256": "2969f3e2fcff3306bc2dc569e094f6aaa494977d9223dff500ddcee3d7a4be20"
+    },
+    {
+      "bytes": 18882,
+      "copied_sha256": "6cd9b9dea2734861bb313115bc0d34584e80c3eea836f90752425ca796403bdc",
+      "path": "universal_main.py",
+      "source_sha256": "6cd9b9dea2734861bb313115bc0d34584e80c3eea836f90752425ca796403bdc"
+    },
+    {
+      "bytes": 38496,
+      "copied_sha256": "23b59a4ff85c07032c8e1763fb3af625abddbf0c9ae41ac604dc3dc2330bb197",
+      "path": "DNN/VANILLA/main.py",
+      "source_sha256": "23b59a4ff85c07032c8e1763fb3af625abddbf0c9ae41ac604dc3dc2330bb197"
+    },
+    {
+      "bytes": 41681,
+      "copied_sha256": "4b87b0c1a4b33d93f43f5f20c0a8073568564df16561dcbbf6c5bb0c8767044e",
+      "path": "DNN/VANILLA/Dyn_DNN4OPF/data/opf_loader.py",
+      "source_sha256": "4b87b0c1a4b33d93f43f5f20c0a8073568564df16561dcbbf6c5bb0c8767044e"
+    },
+    {
+      "bytes": 6302,
+      "copied_sha256": "5d8a371a03a16c4d86a8e28f827e88db34ad732db44a069bf81eba3c5431f95e",
+      "path": "DNN/VANILLA/Dyn_DNN4OPF/utils/run_defaults.py",
+      "source_sha256": "5d8a371a03a16c4d86a8e28f827e88db34ad732db44a069bf81eba3c5431f95e"
+    },
+    {
+      "bytes": 17989,
+      "copied_sha256": "994d752eb47e9db5992e3acadca10a1bb670e26e61eb899ec1486cc3e6e6102f",
+      "path": "DNN/VANILLA/Dyn_DNN4OPF/models/checkpoint_utils.py",
+      "source_sha256": "994d752eb47e9db5992e3acadca10a1bb670e26e61eb899ec1486cc3e6e6102f"
+    },
+    {
+      "bytes": 12651,
+      "copied_sha256": "3ed49deb415a528269b23ad73d9c2d3aa9339c673b02c3443208255ed037d38b",
+      "path": "DNN/VANILLA/Dyn_DNN4OPF/utils/resume_state.py",
+      "source_sha256": "3ed49deb415a528269b23ad73d9c2d3aa9339c673b02c3443208255ed037d38b"
+    },
+    {
+      "bytes": 56821,
+      "copied_sha256": "7f78c4dd7fe94be59d525aa34f1e7e0538a02a6f92bc3b8947f8893a229b52ac",
+      "path": "DNN/VANILLA/Dyn_DNN4OPF/utils/run_telemetry.py",
+      "source_sha256": "7f78c4dd7fe94be59d525aa34f1e7e0538a02a6f92bc3b8947f8893a229b52ac"
+    },
+    {
+      "bytes": 18405,
+      "copied_sha256": "87f3f639badf36e5534600f4d2c950db022b7b8ff405b8ba1dcbb0a6a96b2fb4",
+      "path": "CASE_RUNNERS.md",
+      "source_sha256": "87f3f639badf36e5534600f4d2c950db022b7b8ff405b8ba1dcbb0a6a96b2fb4"
+    },
+    {
+      "bytes": 13644,
+      "copied_sha256": "764d96bb5e0b28e76314e3d5ef2dc9c66f70db38a7a0aa109c6bdf960cb70390",
+      "path": "docs/AGENT_RESUME_PROTOCOL.md",
+      "source_sha256": "764d96bb5e0b28e76314e3d5ef2dc9c66f70db38a7a0aa109c6bdf960cb70390"
+    },
+    {
+      "bytes": 20242,
+      "copied_sha256": "73049c11d96bf23da18a8ad26baa2b06375af9b307c0aec1ad50ff2d5e78aa26",
+      "path": "docs/OPF_SUITE_AUDIT.md",
+      "source_sha256": "73049c11d96bf23da18a8ad26baa2b06375af9b307c0aec1ad50ff2d5e78aa26"
+    },
+    {
+      "bytes": 34984,
+      "copied_sha256": "00d55455c29633bc11bc7c2440dde741a7496ac30ae22977d735c09304c54167",
+      "path": "docs/opf_orchestration_report.md",
+      "source_sha256": "00d55455c29633bc11bc7c2440dde741a7496ac30ae22977d735c09304c54167"
+    },
+    {
+      "bytes": 10139,
+      "copied_sha256": "5b071e228c0d902e8969d481a735178cddafe66fc0466e7d61e8230d3db6e3ca",
+      "path": "docs/repository_knowledge/SCHEDULER_CONTROL_FLOW.md",
+      "source_sha256": "5b071e228c0d902e8969d481a735178cddafe66fc0466e7d61e8230d3db6e3ca"
+    },
+    {
+      "bytes": 6127,
+      "copied_sha256": "2e32136e5b6509521392611cd6c81f13431102750be7c2ed9aadfb89298b3f24",
+      "path": "docs/repository_knowledge/EXISTING_DOCUMENT_CLAIM_AUDIT.md",
+      "source_sha256": "2e32136e5b6509521392611cd6c81f13431102750be7c2ed9aadfb89298b3f24"
+    },
+    {
+      "bytes": 11508,
+      "copied_sha256": "e58398115389ef83ae0b59beefa7b0321efca052ad097a00575c36aabd0ab2a0",
+      "path": "tests/test_massive_scheduler_operational_contract.py",
+      "source_sha256": "e58398115389ef83ae0b59beefa7b0321efca052ad097a00575c36aabd0ab2a0"
+    },
+    {
+      "bytes": 14234,
+      "copied_sha256": "6bb424ea0c08910b11c203762b965ba995664e187ccd82a9105f9e1e1accb5fa",
+      "path": "tests/test_suite_manifest_matrix.py",
+      "source_sha256": "6bb424ea0c08910b11c203762b965ba995664e187ccd82a9105f9e1e1accb5fa"
+    },
+    {
+      "bytes": 43050,
+      "copied_sha256": "39d9c411397773733c1b8c5e66b750c9b5b53a90241a63d9b6625189a2df4900",
+      "path": "tests/test_suite_progress_accounting.py",
+      "source_sha256": "39d9c411397773733c1b8c5e66b750c9b5b53a90241a63d9b6625189a2df4900"
+    },
+    {
+      "bytes": 3260,
+      "copied_sha256": "46ad24ae38033d97a9f1581964b5e52d604ce966ac3186292f1f5f53f20130a3",
+      "path": "tests/test_opf_dataset_cache_lock.py",
+      "source_sha256": "46ad24ae38033d97a9f1581964b5e52d604ce966ac3186292f1f5f53f20130a3"
+    }
+  ],
+  "runtime_note": "Reference snapshot only. Relative imports and repository-root assumptions target the original OPF_ADP checkout; this nested copy is not configured as an executable package.",
+  "scope": "Runner orchestration, parallel scheduling, pressure handling, launcher/runtime support, persistence, telemetry contracts, related docs and tests. Model implementation files are excluded.",
+  "snapshot_time_utc": "2026-10-21T06:01:40.176147+00:00",
+  "source_head": "6461b8ee8d378ef6e5c7eacee9bbc6abde63f20c",
+  "source_repository": "/home/anurag-basistha/Projects/Untapped/OPF_ADP",
+  "source_worktree_had_local_changes": true,
+  "title": "OPF_ADP coordinated pressure-aware runner suite reference snapshot"
+}
