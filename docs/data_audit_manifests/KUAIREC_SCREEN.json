@@ -1,0 +1,79 @@
+{
+  "dataset": "KuaiRec Fully Observed Recommendation Dataset",
+  "version": "Zenodo record v1 / KuaiRec v2.0 tables",
+  "screened_at": "2026-10-23",
+  "official_sources": {
+    "dataset_site": "https://kuairec.com/",
+    "repository": "https://github.com/chongminggao/KuaiRec",
+    "zenodo_record": "https://zenodo.org/records/18164998"
+  },
+  "reuse_rights": {
+    "repository_license": "CC BY-SA 4.0, declared by the official GitHub README badge and LICENSE file",
+    "zenodo_record_rights_field": "blank in the current Zenodo record page",
+    "decision_note": "Repository declares a reuse license, but the actual Zenodo deposit does not state a per-record license in its Rights section. Record the discrepancy; full-batch infeasibility independently rejects the task."
+  },
+  "access": {
+    "official_page_instructions": "wget https://zenodo.org/records/18164998/files/KuaiRec.zip",
+    "authentication": "No account or token is listed or required by the official instructions",
+    "anonymous_probe": {
+      "method": "HTTP range GET bytes=0-0 to exact official file URL",
+      "status": 206,
+      "content_range": "bytes 0-0/431964858",
+      "content_length": 1,
+      "verified_tls": true
+    },
+    "full_payload_downloaded": false,
+    "published_archive_size_bytes": 431964858,
+    "published_md5": "261550d472c48eff4990fb13c0e5bcf7",
+    "archive_md5_verified": false
+  },
+  "official_dataset_statistics": {
+    "small_matrix": {
+      "users": 1411,
+      "items": 3327,
+      "interactions": 4676570,
+      "density_percent": 99.6
+    },
+    "big_matrix": {
+      "users": 7176,
+      "items": 10728,
+      "interactions": 12530806,
+      "density_percent": 16.3
+    },
+    "core_fields": [
+      "user_id",
+      "video_id",
+      "play_duration",
+      "video_duration",
+      "time",
+      "date",
+      "timestamp",
+      "watch_ratio"
+    ],
+    "official_target": "watch_ratio; the provider suggests this as an interaction label and states no like signal is supplied"
+  },
+  "architecture_and_task_compatibility": {
+    "task": "user-grouped video recommendation/ranking or watch-ratio regression on user/video/time interaction rows",
+    "plain_mlp_compatible": true,
+    "input_contract": "Existing categorical preprocessing can one-hot encode user_id and video_id, with numeric/context fields as dense features; a scalar TabularMLP can score each interaction; GroupedRankingTask can group rows by user_id. No text or specialized architecture is needed.",
+    "small_matrix_feature_width": 4738,
+    "target_and_split_caveats": [
+      "Small matrix is nearly fully observed and records explicit feedback for nearly every user-video pair, suitable as dense preference ground truth.",
+      "Big matrix is only 16.3% dense; missing rows cannot be treated as negatives without defining exposure semantics.",
+      "The official release does not supply a standard train/validation/test split; a user- or timestamp-aware protocol must be chosen."
+    ]
+  },
+  "full_batch_capacity_check": {
+    "device_profile": "RTX 3050 Laptop GPU, 6 GiB",
+    "suite_architecture": "vanilla [512,512,512,512,512] dense TabularMLP",
+    "assumed_training_fraction": 0.8,
+    "small_matrix_training_rows_estimate": 3741256,
+    "dense_onehot_train_features_bytes": 70904283712,
+    "dense_onehot_train_features_gib": 66.03476005792618,
+    "five_hidden_activation_lower_bound_bytes": 38310461440,
+    "five_hidden_activation_lower_bound_gib": 35.67939758300781,
+    "resource_basis": "For N training rows and five hidden layers of width 512, the five float32 hidden activation tensors alone require N*512*5*4 bytes for one full-batch step, before gradients, weights, optimizer state, logits, input features, or CUDA workspaces. At N=3,741,256 this lower bound exceeds the available 6 GiB by nearly 6x; the current dense one-hot feature matrix alone is about 66 GiB.",
+    "pilot_run": false
+  },
+  "disposition": "CROSS OUT for the requested full-batch dense-MLP suite. The interaction task and categorical user/item representation fit the plain MLP conceptually, and an anonymous download route is confirmed by an official one-byte range response. However, the small matrix alone exceeds the GPU memory profile by a wide margin under full-batch training, before other tensors. The big matrix is larger. No subset or minibatch substitution is used to claim eligibility. Full archive and MLP difficulty pilot were not run after the decisive capacity failure."
+}

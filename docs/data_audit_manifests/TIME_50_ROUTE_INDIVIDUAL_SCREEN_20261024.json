@@ -1,0 +1,1087 @@
+{
+  "audit_date": "2026-10-24",
+  "source": "https://huggingface.co/datasets/Real-TSF/TIME",
+  "processed_csv_source": "https://huggingface.co/datasets/Real-TSF/TIME-ProcessedCSV",
+  "scope": "Row-by-row repository artifact/config inventory for the TIME forecasting benchmark; each serialized time-series route is named separately below.",
+  "metadata_probe": {
+    "TIME_api_http": 200,
+    "TIME_private": false,
+    "TIME_gated": false,
+    "TIME_disabled": false,
+    "TIME_declared_license": "cc-by-nc-4.0",
+    "TIME_route_count": 50,
+    "TIME_route_total_bytes": 220196200,
+    "TIME_processed_csv_api_http": 200,
+    "TIME_processed_csv_private": false,
+    "TIME_processed_csv_gated": false,
+    "TIME_processed_csv_declared_license": "apache-2.0",
+    "TIME_processed_csv_route_count": 909,
+    "TIME_processed_csv_route_total_bytes": 466391574,
+    "anonymous_range_probe": {
+      "path": "Australia_Solar/H/item0.csv",
+      "http_status": 206,
+      "content_range": "bytes 0-1023/1777299",
+      "bytes_received": 1024
+    },
+    "full_payload_downloaded": false
+  },
+  "benchmark_card_claim": "50 datasets and 98 forecasting tasks. This release tree contains 50 Arrow routes/configs; processed-CSV tree contains 909 CSVs grouped under those dataset families.",
+  "important_license_conflict": "The parent benchmark card/API says CC BY-NC 4.0 (explicitly updated 2026-05-25 to satisfy constituent-source terms), whereas the processed-CSV child Hub API says Apache-2.0. The underlying benchmark card states source datasets are assembled; no per-source rights proof has been established here. Treat rights as not cleared for the requested open-use suite until reconciled.",
+  "disposition": "CROSS OUT all listed task routes from the requested non-gated, open-use benchmark suite pending rights reconciliation. They are publicly accessible and structurally compatible with flattened-window MLP forecasting, but license evidence is conflicting/restrictive; no saturation pilots were run.",
+  "datasets": [
+    {
+      "dataset": "Australia_Solar",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Australia_Solar/H/data-00000-of-00001.arrow",
+      "route_bytes": 422312,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 1777299,
+      "csv_examples": [
+        {
+          "path": "Australia_Solar/H/item0.csv",
+          "bytes": 1777299
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Auto_Production_SF",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Auto_Production_SF/M/data-00000-of-00001.arrow",
+      "route_bytes": 2536,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 6812,
+      "csv_examples": [
+        {
+          "path": "Auto_Production_SF/M/item0.csv",
+          "bytes": 6812
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "CPHL",
+      "frequency_or_route": "15T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "CPHL/15T/data-00000-of-00001.arrow",
+      "route_bytes": 84240,
+      "processed_csv_routes_for_dataset": 8,
+      "processed_csv_total_bytes_for_dataset": 1864036,
+      "csv_examples": [
+        {
+          "path": "CPHL/15T/NRSROT.csv",
+          "bytes": 291165
+        },
+        {
+          "path": "CPHL/15T/WATR20.csv",
+          "bytes": 268079
+        },
+        {
+          "path": "CPHL/30T/NRSDAR.csv",
+          "bytes": 317081
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "CPHL",
+      "frequency_or_route": "30T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "CPHL/30T/data-00000-of-00001.arrow",
+      "route_bytes": 118584,
+      "processed_csv_routes_for_dataset": 8,
+      "processed_csv_total_bytes_for_dataset": 1864036,
+      "csv_examples": [
+        {
+          "path": "CPHL/15T/NRSROT.csv",
+          "bytes": 291165
+        },
+        {
+          "path": "CPHL/15T/WATR20.csv",
+          "bytes": 268079
+        },
+        {
+          "path": "CPHL/30T/NRSDAR.csv",
+          "bytes": 317081
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "CPHL",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "CPHL/H/data-00000-of-00001.arrow",
+      "route_bytes": 80680,
+      "processed_csv_routes_for_dataset": 8,
+      "processed_csv_total_bytes_for_dataset": 1864036,
+      "csv_examples": [
+        {
+          "path": "CPHL/15T/NRSROT.csv",
+          "bytes": 291165
+        },
+        {
+          "path": "CPHL/15T/WATR20.csv",
+          "bytes": 268079
+        },
+        {
+          "path": "CPHL/30T/NRSDAR.csv",
+          "bytes": 317081
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Coastal_T_S",
+      "frequency_or_route": "15T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Coastal_T_S/15T/data-00000-of-00001.arrow",
+      "route_bytes": 1253992,
+      "processed_csv_routes_for_dataset": 48,
+      "processed_csv_total_bytes_for_dataset": 63943165,
+      "csv_examples": [
+        {
+          "path": "Coastal_T_S/15T/NRSMAI.csv",
+          "bytes": 937067
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSNSI.csv",
+          "bytes": 986980
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSROT.csv",
+          "bytes": 940748
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Coastal_T_S",
+      "frequency_or_route": "20T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Coastal_T_S/20T/data-00000-of-00001.arrow",
+      "route_bytes": 99896,
+      "processed_csv_routes_for_dataset": 48,
+      "processed_csv_total_bytes_for_dataset": 63943165,
+      "csv_examples": [
+        {
+          "path": "Coastal_T_S/15T/NRSMAI.csv",
+          "bytes": 937067
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSNSI.csv",
+          "bytes": 986980
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSROT.csv",
+          "bytes": 940748
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Coastal_T_S",
+      "frequency_or_route": "5T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Coastal_T_S/5T/data-00000-of-00001.arrow",
+      "route_bytes": 14821296,
+      "processed_csv_routes_for_dataset": 48,
+      "processed_csv_total_bytes_for_dataset": 63943165,
+      "csv_examples": [
+        {
+          "path": "Coastal_T_S/15T/NRSMAI.csv",
+          "bytes": 937067
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSNSI.csv",
+          "bytes": 986980
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSROT.csv",
+          "bytes": 940748
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Coastal_T_S",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Coastal_T_S/H/data-00000-of-00001.arrow",
+      "route_bytes": 1583752,
+      "processed_csv_routes_for_dataset": 48,
+      "processed_csv_total_bytes_for_dataset": 63943165,
+      "csv_examples": [
+        {
+          "path": "Coastal_T_S/15T/NRSMAI.csv",
+          "bytes": 937067
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSNSI.csv",
+          "bytes": 986980
+        },
+        {
+          "path": "Coastal_T_S/15T/NRSROT.csv",
+          "bytes": 940748
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Commodity_Import",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Commodity_Import/M/data-00000-of-00001.arrow",
+      "route_bytes": 23752,
+      "processed_csv_routes_for_dataset": 8,
+      "processed_csv_total_bytes_for_dataset": 93531,
+      "csv_examples": [
+        {
+          "path": "Commodity_Import/M/BananaImportsforUnitedStates_m.csv",
+          "bytes": 6976
+        },
+        {
+          "path": "Commodity_Import/M/CoffeeImportsforUnitedStates_m.csv",
+          "bytes": 15526
+        },
+        {
+          "path": "Commodity_Import/M/CrudeRubberImportsforUnitedStates_m.csv",
+          "bytes": 9617
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Commodity_Production",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Commodity_Production/M/data-00000-of-00001.arrow",
+      "route_bytes": 44736,
+      "processed_csv_routes_for_dataset": 32,
+      "processed_csv_total_bytes_for_dataset": 176505,
+      "csv_examples": [
+        {
+          "path": "Commodity_Production/M/AnthraciteCoalProductionforUnitedStates_m.csv",
+          "bytes": 9250
+        },
+        {
+          "path": "Commodity_Production/M/AutomobileProduction_PassengerCars_FactoryProductionforUnitedStates_m.csv",
+          "bytes": 6314
+        },
+        {
+          "path": "Commodity_Production/M/AutomobileTireInnerTubes_ProductionforUnitedStates_m.csv",
+          "bytes": 9014
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Crypto",
+      "frequency_or_route": "D",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Crypto/D/data-00000-of-00001.arrow",
+      "route_bytes": 47048,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 117025,
+      "csv_examples": [
+        {
+          "path": "Crypto/D/cryptocurrencies_d.csv",
+          "bytes": 117025
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "ECDC_COVID",
+      "frequency_or_route": "D",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "ECDC_COVID/D/data-00000-of-00001.arrow",
+      "route_bytes": 41480,
+      "processed_csv_routes_for_dataset": 25,
+      "processed_csv_total_bytes_for_dataset": 235931,
+      "csv_examples": [
+        {
+          "path": "ECDC_COVID/D/Austria.csv",
+          "bytes": 21743
+        },
+        {
+          "path": "ECDC_COVID/D/Belgium.csv",
+          "bytes": 20340
+        },
+        {
+          "path": "ECDC_COVID/D/Cyprus.csv",
+          "bytes": 17161
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "ECDC_COVID",
+      "frequency_or_route": "W",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "ECDC_COVID/W/data-00000-of-00001.arrow",
+      "route_bytes": 12080,
+      "processed_csv_routes_for_dataset": 25,
+      "processed_csv_total_bytes_for_dataset": 235931,
+      "csv_examples": [
+        {
+          "path": "ECDC_COVID/D/Austria.csv",
+          "bytes": 21743
+        },
+        {
+          "path": "ECDC_COVID/D/Belgium.csv",
+          "bytes": 20340
+        },
+        {
+          "path": "ECDC_COVID/D/Cyprus.csv",
+          "bytes": 17161
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "EWELD_Load",
+      "frequency_or_route": "15T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "EWELD_Load/15T/data-00000-of-00001.arrow",
+      "route_bytes": 823416,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 2056028,
+      "csv_examples": [
+        {
+          "path": "EWELD_Load/15T/item0.csv",
+          "bytes": 2056028
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Finland_Traffic",
+      "frequency_or_route": "15T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Finland_Traffic/15T/data-00000-of-00001.arrow",
+      "route_bytes": 141592,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 827378,
+      "csv_examples": [
+        {
+          "path": "Finland_Traffic/15T/1.csv",
+          "bytes": 827378
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Global_Influenza",
+      "frequency_or_route": "W",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Global_Influenza/W/data-00000-of-00001.arrow",
+      "route_bytes": 52352,
+      "processed_csv_routes_for_dataset": 15,
+      "processed_csv_total_bytes_for_dataset": 106987,
+      "csv_examples": [
+        {
+          "path": "Global_Influenza/W/Australia.csv",
+          "bytes": 7702
+        },
+        {
+          "path": "Global_Influenza/W/Brazil.csv",
+          "bytes": 7229
+        },
+        {
+          "path": "Global_Influenza/W/France.csv",
+          "bytes": 7573
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Global_Price",
+      "frequency_or_route": "Q",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Global_Price/Q/data-00000-of-00001.arrow",
+      "route_bytes": 37472,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 141061,
+      "csv_examples": [
+        {
+          "path": "Global_Price/Q/item0.csv",
+          "bytes": 141061
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Housing_Inventory",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Housing_Inventory/M/data-00000-of-00001.arrow",
+      "route_bytes": 3392,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 3986,
+      "csv_examples": [
+        {
+          "path": "Housing_Inventory/M/item0.csv",
+          "bytes": 3986
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "JOLTS",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "JOLTS/M/data-00000-of-00001.arrow",
+      "route_bytes": 8760,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 12305,
+      "csv_examples": [
+        {
+          "path": "JOLTS/M/item0.csv",
+          "bytes": 12305
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Job_Claims",
+      "frequency_or_route": "W",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Job_Claims/W/data-00000-of-00001.arrow",
+      "route_bytes": 3168,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 5788,
+      "csv_examples": [
+        {
+          "path": "Job_Claims/W/item0.csv",
+          "bytes": 5788
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "MetroPT-3",
+      "frequency_or_route": "5T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "MetroPT-3/5T/data-00000-of-00001.arrow",
+      "route_bytes": 429000,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 1881116,
+      "csv_examples": [
+        {
+          "path": "MetroPT-3/5T/item0.csv",
+          "bytes": 1881116
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "NE_China_Wind",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "NE_China_Wind/H/data-00000-of-00001.arrow",
+      "route_bytes": 141800,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 863828,
+      "csv_examples": [
+        {
+          "path": "NE_China_Wind/H/item0.csv",
+          "bytes": 863828
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Oil_Price",
+      "frequency_or_route": "B",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Oil_Price/B/data-00000-of-00001.arrow",
+      "route_bytes": 243560,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 397812,
+      "csv_examples": [
+        {
+          "path": "Oil_Price/B/item0.csv",
+          "bytes": 397812
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Online_Retail_2_UCI",
+      "frequency_or_route": "D",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Online_Retail_2_UCI/D/data-00000-of-00001.arrow",
+      "route_bytes": 4008,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 14798,
+      "csv_examples": [
+        {
+          "path": "Online_Retail_2_UCI/D/item0.csv",
+          "bytes": 14798
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "OpenElectricity_NEM",
+      "frequency_or_route": "5T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "OpenElectricity_NEM/5T/data-00000-of-00001.arrow",
+      "route_bytes": 1741208,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 3943474,
+      "csv_examples": [
+        {
+          "path": "OpenElectricity_NEM/5T/item0.csv",
+          "bytes": 3943474
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Port_Activity",
+      "frequency_or_route": "D",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Port_Activity/D/data-00000-of-00001.arrow",
+      "route_bytes": 1691624,
+      "processed_csv_routes_for_dataset": 198,
+      "processed_csv_total_bytes_for_dataset": 10159398,
+      "csv_examples": [
+        {
+          "path": "Port_Activity/D/port1016_raw.csv",
+          "bytes": 79077
+        },
+        {
+          "path": "Port_Activity/D/port1035_raw.csv",
+          "bytes": 88722
+        },
+        {
+          "path": "Port_Activity/D/port1057_raw.csv",
+          "bytes": 85618
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Port_Activity",
+      "frequency_or_route": "W",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Port_Activity/W/data-00000-of-00001.arrow",
+      "route_bytes": 248408,
+      "processed_csv_routes_for_dataset": 198,
+      "processed_csv_total_bytes_for_dataset": 10159398,
+      "csv_examples": [
+        {
+          "path": "Port_Activity/D/port1016_raw.csv",
+          "bytes": 79077
+        },
+        {
+          "path": "Port_Activity/D/port1035_raw.csv",
+          "bytes": 88722
+        },
+        {
+          "path": "Port_Activity/D/port1057_raw.csv",
+          "bytes": 85618
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "SG_Carpark",
+      "frequency_or_route": "15T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "SG_Carpark/15T/data-00000-of-00001.arrow",
+      "route_bytes": 20535400,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 30174311,
+      "csv_examples": [
+        {
+          "path": "SG_Carpark/15T/item0.csv",
+          "bytes": 30174311
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "SG_PM25",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "SG_PM25/H/data-00000-of-00001.arrow",
+      "route_bytes": 775312,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 1860233,
+      "csv_examples": [
+        {
+          "path": "SG_PM25/H/item0.csv",
+          "bytes": 1860233
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "SG_Weather",
+      "frequency_or_route": "D",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "SG_Weather/D/data-00000-of-00001.arrow",
+      "route_bytes": 285512,
+      "processed_csv_routes_for_dataset": 6,
+      "processed_csv_total_bytes_for_dataset": 539943,
+      "csv_examples": [
+        {
+          "path": "SG_Weather/D/S104.csv",
+          "bytes": 89359
+        },
+        {
+          "path": "SG_Weather/D/S107.csv",
+          "bytes": 89556
+        },
+        {
+          "path": "SG_Weather/D/S115.csv",
+          "bytes": 90923
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Smart_Manufacturing",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Smart_Manufacturing/H/data-00000-of-00001.arrow",
+      "route_bytes": 1138408,
+      "processed_csv_routes_for_dataset": 34,
+      "processed_csv_total_bytes_for_dataset": 2701777,
+      "csv_examples": [
+        {
+          "path": "Smart_Manufacturing/H/machine_12.csv",
+          "bytes": 78882
+        },
+        {
+          "path": "Smart_Manufacturing/H/machine_13.csv",
+          "bytes": 79416
+        },
+        {
+          "path": "Smart_Manufacturing/H/machine_15.csv",
+          "bytes": 80274
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Supply_Chain_Customer",
+      "frequency_or_route": "D",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Supply_Chain_Customer/D/data-00000-of-00001.arrow",
+      "route_bytes": 291528,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 511298,
+      "csv_examples": [
+        {
+          "path": "Supply_Chain_Customer/D/item0.csv",
+          "bytes": 511298
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Supply_Chain_Location",
+      "frequency_or_route": "D",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Supply_Chain_Location/D/data-00000-of-00001.arrow",
+      "route_bytes": 412424,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 716626,
+      "csv_examples": [
+        {
+          "path": "Supply_Chain_Location/D/item0.csv",
+          "bytes": 716626
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "US_Labor",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "US_Labor/M/data-00000-of-00001.arrow",
+      "route_bytes": 23232,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 35932,
+      "csv_examples": [
+        {
+          "path": "US_Labor/M/item0.csv",
+          "bytes": 35932
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "US_Term_Structure",
+      "frequency_or_route": "B",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "US_Term_Structure/B/data-00000-of-00001.arrow",
+      "route_bytes": 1494544,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 2617844,
+      "csv_examples": [
+        {
+          "path": "US_Term_Structure/B/item0.csv",
+          "bytes": 2617844
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Uncertainty_1M",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Uncertainty_1M/M/data-00000-of-00001.arrow",
+      "route_bytes": 10912,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 50244,
+      "csv_examples": [
+        {
+          "path": "Uncertainty_1M/M/item0.csv",
+          "bytes": 50244
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Vehicle_Sales",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Vehicle_Sales/M/data-00000-of-00001.arrow",
+      "route_bytes": 25640,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 45052,
+      "csv_examples": [
+        {
+          "path": "Vehicle_Sales/M/item0.csv",
+          "bytes": 45052
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Vehicle_Supply",
+      "frequency_or_route": "M",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Vehicle_Supply/M/data-00000-of-00001.arrow",
+      "route_bytes": 11040,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 18928,
+      "csv_examples": [
+        {
+          "path": "Vehicle_Supply/M/item0.csv",
+          "bytes": 18928
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "WUI_Global",
+      "frequency_or_route": "Q",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "WUI_Global/Q/data-00000-of-00001.arrow",
+      "route_bytes": 19432,
+      "processed_csv_routes_for_dataset": 1,
+      "processed_csv_total_bytes_for_dataset": 38246,
+      "csv_examples": [
+        {
+          "path": "WUI_Global/Q/item0.csv",
+          "bytes": 38246
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "Water_Quality_Darwin",
+      "frequency_or_route": "15T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "Water_Quality_Darwin/15T/data-00000-of-00001.arrow",
+      "route_bytes": 2560688,
+      "processed_csv_routes_for_dataset": 7,
+      "processed_csv_total_bytes_for_dataset": 11520764,
+      "csv_examples": [
+        {
+          "path": "Water_Quality_Darwin/15T/item_0.csv",
+          "bytes": 1656444
+        },
+        {
+          "path": "Water_Quality_Darwin/15T/item_1.csv",
+          "bytes": 1882558
+        },
+        {
+          "path": "Water_Quality_Darwin/15T/item_2.csv",
+          "bytes": 998375
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "azure2019_D",
+      "frequency_or_route": "5T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "azure2019_D/5T/data-00000-of-00001.arrow",
+      "route_bytes": 102457672,
+      "processed_csv_routes_for_dataset": 504,
+      "processed_csv_total_bytes_for_dataset": 326932113,
+      "csv_examples": [
+        {
+          "path": "azure2019_D/5T/item_0.csv",
+          "bytes": 643755
+        },
+        {
+          "path": "azure2019_D/5T/item_10.csv",
+          "bytes": 643789
+        },
+        {
+          "path": "azure2019_D/5T/item_1000.csv",
+          "bytes": 651499
+        }
+      ],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "azure2019_I",
+      "frequency_or_route": "5T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "azure2019_I/5T/data-00000-of-00001.arrow",
+      "route_bytes": 50990400,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "azure2019_U",
+      "frequency_or_route": "5T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "azure2019_U/5T/data-00000-of-00001.arrow",
+      "route_bytes": 1323160,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "current_velocity",
+      "frequency_or_route": "10T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "current_velocity/10T/data-00000-of-00001.arrow",
+      "route_bytes": 4963488,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "current_velocity",
+      "frequency_or_route": "15T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "current_velocity/15T/data-00000-of-00001.arrow",
+      "route_bytes": 1022576,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "current_velocity",
+      "frequency_or_route": "20T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "current_velocity/20T/data-00000-of-00001.arrow",
+      "route_bytes": 4192016,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "current_velocity",
+      "frequency_or_route": "5T",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "current_velocity/5T/data-00000-of-00001.arrow",
+      "route_bytes": 637296,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "current_velocity",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "current_velocity/H/data-00000-of-00001.arrow",
+      "route_bytes": 1769920,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    },
+    {
+      "dataset": "epf_electricity_price",
+      "frequency_or_route": "H",
+      "published_task_category": "time-series forecasting",
+      "official_hf_serialized_route": "epf_electricity_price/H/data-00000-of-00001.arrow",
+      "route_bytes": 1049456,
+      "processed_csv_routes_for_dataset": 0,
+      "processed_csv_total_bytes_for_dataset": 0,
+      "csv_examples": [],
+      "dense_mlp_fit": "Numeric time-indexed target route is structurally convertible to fixed-lookback input/forecast regression by sliding-window extraction; exact task windows/splits must be reconstructed and verified before use.",
+      "no_gate_access": "Public Hugging Face API/repository; no gate in repository metadata.",
+      "rights_disposition": "CROSS OUT: benchmark parent declares CC BY-NC 4.0 because constituent-provider terms require it; processed-CSV child repository separately declares Apache-2.0, so the data-rights relationship is ambiguous and not sufficient to certify unrestricted open reuse.",
+      "difficulty_pilot": "Not run: rights gate fails/unresolved before model evaluation."
+    }
+  ]
+}

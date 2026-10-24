@@ -1,0 +1,80 @@
+{
+  "dataset": "Packaging Industry Anomaly DEtection (PIADE)",
+  "retrieved_at": "2026-10-23",
+  "sources": {
+    "official_university_data_record": "https://researchdata.cab.unipd.it/1459/",
+    "zenodo_record": "https://zenodo.org/records/7071747",
+    "rights": "The official University of Padua Research Data record lists the data files as visible to anyone under Creative Commons Attribution 4.0. Zenodo's record page exposes direct files but leaves its own Rights/License field blank; rights are attributed to the official University record.",
+    "zenodo_description": "Five packaging machines, 429,394 raw production intervals, and a provided one-hour sequence aggregate table."
+  },
+  "access": {
+    "login_required": false,
+    "artifact": "sequences_1h_data.csv",
+    "downloaded_full_file": true,
+    "bytes": 11663660,
+    "zenodo_md5_advertised": "5edf8a6806f272228d522c76825d955c",
+    "md5_computed": "5edf8a6806f272228d522c76825d955c",
+    "sha256": "3488092fa9ec552967f8851df25c1d51fefa60be21091d4bfca342ed4c002691",
+    "raw_data_csv": "Not fully downloaded or used; this audit screens the released one-hour sequence artifact only."
+  },
+  "parsed_artifact": {
+    "rows": 23376,
+    "columns": 164,
+    "machines": {
+      "s_1": 8973,
+      "s_2": 2725,
+      "s_3": 2976,
+      "s_4": 3959,
+      "s_5": 4743
+    },
+    "alarm_code_columns": 130,
+    "operational_aggregate_columns": 31,
+    "missing_values": "Missing values occur in alarm-code count columns; the screened route treats them as zero counts. No missing timestamp or machine IDs.",
+    "duplicate_machine_timestamp_rows": 0,
+    "one_hour_target_rows": 17668,
+    "hour_gap_handling": "Only adjacent rows exactly 3,600 seconds apart form a one-hour input/target pair. No samples cross a missing-hour gap or machine boundary.",
+    "source_metadata_discrepancy": "The source description reports 133 alert types, while the provided hourly sequence CSV contains 130 A_<code> columns. The tested scalar target is count_sum, and the CSV's count_sum equaled the sum of its 130 A_<code> columns on all 23,376 rows."
+  },
+  "pilot": {
+    "task": "Predict the next recorded hour's total alarm count (count_sum) from the previous contiguous hour's alarm counts, state percentages and transition/change aggregates.",
+    "input_features": 166,
+    "input_definition": "The previous hour's 161 numeric sequence fields (130 A_<code> counts, #changes, five state-time percentages and 25 state-transition counts) plus one-hot equipment_ID over the five machines.",
+    "target": "One scalar count_sum; the source target is almost always positive (99.84%), so binary alarm occurrence is not used as the task.",
+    "split": "For each machine independently, sort all eligible adjacent-hour examples by target timestamp and divide in chronological order into first 70% train, next 15% validation, final 15% test; integer cutoffs use floor. Each machine appears in every partition, but time does not cross backward.",
+    "split_counts": {
+      "train": 12366,
+      "validation": 2650,
+      "test": 2652,
+      "by_machine_train_val_test": {
+        "s_1": [4811, 1031, 1031],
+        "s_2": [1446, 310, 310],
+        "s_3": [1424, 305, 306],
+        "s_4": [2173, 466, 466],
+        "s_5": [2512, 538, 539]
+      },
+      "test_target_mean": 4.249245643615723,
+      "test_target_std_population": 3.84642242799845,
+      "test_target_rmse_for_zero_forecast": 5.731584072113037
+    },
+    "preprocessing": "Alarm-code missing values filled with zero. Input and target means/stds fit only on train examples. Predictions are inverse-scaled and clipped to nonnegative counts.",
+    "training": "NVIDIA GeForce RTX 3050 Laptop GPU (6 GB); TabularMLP; Adam learning rate 0.001; MSE; 30 epochs; entire training partition in one batch each epoch; seeds 20261023/20261024/20261025 for increasing architectures; minimum validation standardized MSE selects checkpoint; test evaluated once per architecture.",
+    "baselines": {
+      "predict_zero": {"test_mae": 4.249245643615723, "test_rmse": 5.731584072113037, "test_r2": -1.2204210758209229},
+      "predict_training_mean": {"test_mae": 2.7267372608184814, "test_rmse": 3.846970319747925, "test_r2": -0.0002847909927368164},
+      "previous_hour_persistence": {"test_mae": 2.7209653092006034, "test_rmse": 4.088574375295474, "test_r2": -0.12987352257160145}
+    },
+    "results": [
+      {"hidden_widths": [16, 16], "best_epoch": 30, "test_mae": 2.5659117698669434, "test_rmse": 3.7443034648895264, "test_r2": 0.05239337682723999, "peak_cuda_gib": 0.030636310577392578},
+      {"hidden_widths": [128, 128], "best_epoch": 30, "test_mae": 2.379122257232666, "test_rmse": 3.420944929122925, "test_r2": 0.20899689197540283, "peak_cuda_gib": 0.05779695510864258},
+      {"hidden_widths": [512, 512, 512, 512, 512], "best_epoch": 23, "test_mae": 2.399556875228882, "test_rmse": 3.4334042072296143, "test_r2": 0.20322459936141968, "peak_cuda_gib": 0.20968055725097656}
+    ],
+    "disposition": "KEEP PROVISIONALLY for next-hour total alarm count forecasting only: the route is fixed-width, fully batchable, open/no-gate on the official University source, and tested models remain far from saturation. The width-128 model improves held-out MAE/RMSE/R2 over zero, train-mean, persistence, and the width-16 model; width-512 does not improve further. This is a one-split/one-seed standalone vanilla pilot and has no ADP or central-runner integration.",
+    "limitations": [
+      "The raw_data.csv artifact was not fully downloaded; this screen relies on the separately released one-hour aggregate file.",
+      "The primary Zenodo metadata page leaves the license blank, so CC BY 4.0 was checked on the separate official University of Padua Research Data record.",
+      "The provider's 133-alert description differs from 130 A_<code> columns present in the downloaded sequence artifact.",
+      "The one-hour aggregate table contains gaps; the split and window builder discard transitions not exactly one hour apart.",
+      "No repeated seeds, rolling-origin folds, ADP models, or runner provider were tested."
+    ]
+  }
+}

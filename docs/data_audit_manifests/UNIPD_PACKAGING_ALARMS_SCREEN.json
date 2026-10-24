@@ -1,0 +1,53 @@
+{
+  "dataset": "Alarm logs of industrial packaging machines",
+  "source": "University of Padua Research Data record 1031 / DOI 10.21227/nfv6-k750",
+  "retrieved_at": "2026-10-23",
+  "access": {
+    "login_required": false,
+    "official_archive_url": "https://researchdata.cab.unipd.it/1031/3/alarms_log_data.zip",
+    "http_status": 200,
+    "content_length_bytes": 8517314,
+    "downloaded_and_zip_validated": true,
+    "archive_sha256": "72f556ef6742a1a64472b96d2254c3645be255254cbe4852a08e1ff79ffcbcac",
+    "raw_csv_bytes": 13180280,
+    "raw_csv_sha256": "53bd4414a6fb5b6875a9535f1be622dfb2dfba69de407d071a52d0d304160d1a",
+    "provided_npz_bytes": 2335663,
+    "provided_npz_sha256": "6107f837b055661b050d8db3c6d7ba9bf3326efd2d6f0f468a1a5026103219"
+  },
+  "license": "CC BY 4.0, recorded separately for the data archive, code archive, and README on the official repository page",
+  "parsed_source": {
+    "raw_rows": 444834,
+    "columns": ["timestamp", "alarm", "serial"],
+    "machines": 20,
+    "distinct_alarm_codes": 154,
+    "date_range": ["2019-02-21T10:16:18.130", "2020-06-17T03:53:51.885"],
+    "provided_processed_npz_shapes": {
+      "x_train": [41045, 109],
+      "y_train": [41045, 556],
+      "x_test": [17955, 109],
+      "y_test": [17955, 556]
+    },
+    "note": "The provider README says both X and Y have length 109, but the downloaded NPZ has 556 output columns. This inconsistency is preserved; the pilot below used raw alarms.csv rather than the supplied processed split."
+  },
+  "pilot": {
+    "task": "Six-hour per-alarm count vector -> binary label indicating at least one alarm in the next hour",
+    "input_features": 154,
+    "architecture": "plain dense TabularMLP; no recurrence, convolution, attention, embedding, or class balancing",
+    "split": "Group-disjoint machines using NumPy RNG seed 20261023; train serials [0,2,5,6,7,8,10,12,13,14,15,16], validation [1,4,18,19], test [3,9,11,17]",
+    "examples": {"train": 119484, "validation": 25761, "test": 31271},
+    "positive_fraction": {"train": 0.3539469719795119, "validation": 0.16688016769535344, "test": 0.3647468900898596},
+    "preprocessing": "Counts standardized with training examples only; full training split in one batch; no windows cross machine groups.",
+    "training": "CUDA RTX 3050 Laptop 6 GiB; Adam 1e-3; cross-entropy; seed 20261023+j; 30 full-batch epochs; validation minimum cross-entropy selects checkpoint; test touched once per configuration.",
+    "results": [
+      {"hidden_widths": [16, 16], "test_accuracy": 0.6800869815483995, "test_balanced_accuracy": 0.5817682296055979, "test_macro_f1": 0.5610004190348001, "test_positive_f1": 0.3323545114789108, "peak_cuda_gib": 0.148919582221508},
+      {"hidden_widths": [128, 128], "test_accuracy": 0.765085862300534, "test_balanced_accuracy": 0.726304539245024, "test_macro_f1": 0.734413772094433, "test_positive_f1": 0.6441581088936252, "peak_cuda_gib": 0.3490605354309082},
+      {"hidden_widths": [512, 512, 512, 512, 512], "test_accuracy": 0.7702663809919734, "test_balanced_accuracy": 0.7403127365194636, "test_macro_f1": 0.7456686167814169, "test_positive_f1": 0.6665738420124386, "peak_cuda_gib": 1.7370829582214355}
+    ],
+    "test_baselines": {
+      "majority_negative": {"accuracy": 0.6352531099101404, "balanced_accuracy": 0.5, "positive_f1": 0.0},
+      "predict_next_hour_positive_if_previous_hour_had_any_alarm": {"accuracy": 0.8490934092289981, "balanced_accuracy": 0.8372072245150823, "positive_f1": 0.7931623931623931},
+      "predict_next_hour_positive_if_any_alarm_in_previous_six_hours": {"accuracy": 0.7980237280547472, "balanced_accuracy": 0.8324215921082951, "positive_f1": 0.7760760121959868}
+    }
+  },
+  "disposition": "KEEP PROVISIONALLY as a non-saturated supervised event-occurrence stress task only. Open access, CC BY 4.0, fixed-width MLP compatibility, group split, and whole-batch fit were verified. The test group's event rate differs greatly from validation, and simple previous-hour persistence beats every tested MLP; do not treat this as a strong predictive benchmark without a better task/protocol. The provider's next-alarm-type and multi-label future-alarm tasks were not MLP-piloted; the supplied sequence targets have a README/NPZ length mismatch and need a separate screen. This is not runner-integrated. Only three vanilla architectures, one group split and one seed were piloted; no ADP variants or full vanilla grid were tested."
+}

@@ -1,0 +1,82 @@
+{
+  "audit_date": "2026-10-24",
+  "device": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "method": "Exact ODDS source-transformed MAT tasks loaded through repository ODDSProvider; deterministic runner 60/20/20 stratified split (seed 42); train-only numeric standardization (lympho training-fit one-hot for source categorical features); SupervisedAnomalyTask training-derived positive_weight BCE; full batch per step, Adam 1e-3, 30 epochs; validation-loss epoch selection; test metrics from selected epoch; representative [128,128] and [512]*5 only. Pilot for difficulty screening, not full architecture grid or ADP suite. Results are retained only as aggregate metadata and scores; all downloaded MAT files were in a temporary directory deleted at process exit.",
+  "results": [
+    {
+      "dataset": "http",
+      "rows": 567498,
+      "raw_input_dim": 3,
+      "outliers": 2211,
+      "prevalence": 0.003896048972859816,
+      "split_counts": {
+        "train": 340500,
+        "validation": 113499,
+        "test": 113499
+      },
+      "split_prevalence": {
+        "train": 0.0038972099853157123,
+        "validation": 0.00389430743883206,
+        "test": 0.00389430743883206
+      },
+      "artifact_sha256": "81d689cfec5407305ab98cd26794e2cefb3aef5a521bf9c59744107aabcaed7e",
+      "source_dataset_id": "http",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.6760969161987305,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.20756356418132782,
+            "test": {
+              "accuracy": 0.9998766508956026,
+              "balanced_accuracy": 0.9976844859860663,
+              "macro_f1": 0.9921390631667508,
+              "anomaly_precision": 0.9734513274336283,
+              "anomaly_recall": 0.995475113122172,
+              "pr_auc": 0.9931627783639451,
+              "roc_auc": 0.9954811265866491
+            }
+          },
+          "final_train_loss": 0.22384929656982422
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 4.59052848815918,
+          "best": {
+            "best_epoch": 19,
+            "validation_loss": 0.014811662025749683,
+            "test": {
+              "accuracy": 0.9993656331773848,
+              "balanced_accuracy": 0.9985547773783432,
+              "macro_f1": 0.9621048899145699,
+              "anomaly_precision": 0.861328125,
+              "anomaly_recall": 0.997737556561086,
+              "pr_auc": 0.9882111305832647,
+              "roc_auc": 0.9999758360786817
+            }
+          },
+          "final_train_loss": 0.0031061957124620676
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 3,
+      "majority_baseline": {
+        "accuracy": 0.9961027900146843,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.00389430743883206
+      }
+    }
+  ]
+}

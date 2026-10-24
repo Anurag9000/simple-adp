@@ -1,0 +1,67 @@
+{
+  "dataset": "UEA EthanolConcentration",
+  "zenodo_record": "https://zenodo.org/records/11206212",
+  "uea_page": "https://www.timeseriesclassification.com/description.php?Dataset=EthanolConcentration",
+  "record_id": 11206212,
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {"file": "EthanolConcentration_TRAIN.ts", "bytes": 10105014, "sha256": "3255f7f6c2e0f3f6b4dbb53fee55460baf60c634de54088d6f69660f0b360ba8"},
+    {"file": "EthanolConcentration_TEST.ts", "bytes": 10171799, "sha256": "66a1ed323a73366b7544b3f980c1a33722beaaabecb87a6a060755ea08a96913"}
+  ],
+  "parsed": {
+    "train_rows": 261,
+    "test_rows": 263,
+    "dimensions": 3,
+    "points_per_dimension": 1751,
+    "input_width": 5253,
+    "classes": ["E35", "E38", "E40", "E45"],
+    "train_class_counts": {"E35": 65, "E38": 65, "E40": 66, "E45": 65},
+    "test_class_counts": {"E35": 66, "E38": 66, "E40": 65, "E45": 66},
+    "non_finite_values": false,
+    "bottle_ids_available_in_data_rows": false
+  },
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU (6 GiB)",
+    "seed": 20261023,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "loss": "cross entropy",
+    "maximum_epochs": 100,
+    "early_stop_patience": 20,
+    "fullbatch_each_epoch": true,
+    "validation": "seeded stratified utterance-row holdout, 52 rows; 209 training rows; source rows expose no bottle identity, so this is not bottle-grouped",
+    "preprocessing": "per-feature mean/std fitted only on the 209 training rows",
+    "test_used_for_model_selection": false,
+    "chance_accuracy": 0.25,
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epochs_run": 25,
+        "selected_epoch": 5,
+        "best_validation_accuracy": 0.44230771,
+        "test_accuracy": 0.31939163,
+        "test_balanced_accuracy": 0.32004662,
+        "test_macro_f1": 0.26141131,
+        "test_cross_entropy": 1.37468588,
+        "last_train_loss": 0.95084161,
+        "peak_cuda_allocated_mib": 39.91
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epochs_run": 63,
+        "selected_epoch": 43,
+        "best_validation_accuracy": 0.53846157,
+        "test_accuracy": 0.32319392,
+        "test_balanced_accuracy": 0.32360140,
+        "test_macro_f1": 0.31970059,
+        "test_cross_entropy": 2.16910577,
+        "last_train_loss": 0.52322769,
+        "peak_cuda_allocated_mib": 98.29
+      }
+    ]
+  },
+  "disposition": "Cross out from the benchmark shortlist. It passes fixed-width MLP compatibility, open CC BY 4.0 rights, anonymous download, full-payload parsing, and full-batch GPU execution. However, the tested MLPs reach only 31.9-32.3% on a balanced 4-class test set versus 25% chance, showing weak held-out skill. The task's intended arbitrary-bottle generalization cannot be verified because bottle IDs are absent from the released rows, despite documentation mentioning leave-one-bottle-out folds."
+}

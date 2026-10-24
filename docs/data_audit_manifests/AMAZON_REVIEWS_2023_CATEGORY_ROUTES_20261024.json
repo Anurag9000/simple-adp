@@ -1,0 +1,709 @@
+{
+  "audit_date": "2026-10-24",
+  "source": "https://amazon-reviews-2023.github.io/",
+  "source_artifact_directory": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/",
+  "candidate_definition": "33 domain-specific supervised rating/recommendation datasets, one raw review JSONL.gz artifact per category.",
+  "task_and_architecture": "Ratings (1-5), user IDs, parent item IDs and timestamps form a direct supervised rating-regression/classification task after text/images are excluded. A plain dense MLP can represent user/item categories via one-hot features, but dense user/item input width ranges from thousands to tens of millions, which makes the registered `[512]*5` full-batch profile infeasible for most categories. For the smallest categories it may fit activation-only estimates; however rights fail before an empirical difficulty pilot.",
+  "splits": "Official 2023 benchmark scripts advertise 0-core and 5-core processed datasets, per-user leave-last-out train/validation/test splits, and timestamp-based 8:1:1 train/validation/test at fixed global cut points. Exact category splits were not downloaded/parsed in this audit.",
+  "rights": "No dataset license is stated on the official card/page; it identifies itself as research-collected and carries McAuley Lab copyright. The linked MIT license applies to benchmark-processing code, not the review data. Permissive data reuse therefore remains unverified; all categories are crossed out under the strict open-license criterion.",
+  "probe_method": "Unauthenticated HTTP GET with Range bytes=0-0 against every official category review artifact; stream closed without retaining payload.",
+  "summary": {
+    "source_categories": 33,
+    "range_http_206": 34,
+    "range_failures": 0,
+    "total_ratings_reported": "571.54M",
+    "total_users_reported": "54.51M",
+    "total_items_reported": "48.19M",
+    "standard_split_available": true,
+    "exact_splits_parsed": false,
+    "full_payloads_downloaded": false,
+    "difficulty_pilots": "Not run; all categories fail unresolved data-rights gate.",
+    "number_of_review_artifact_routes_including_Unknown_bucket": 34,
+    "published_domain_categories": 33,
+    "unknown_category_bucket": 1,
+    "source_artifact_routes_including_unknown": 34
+  },
+  "categories": [
+    {
+      "category": "All_Beauty",
+      "users": "632.0K",
+      "items": "112.6K",
+      "ratings": "701.5K",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/All_Beauty.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/94441517",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 94441517
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 5.352,
+        "dense_one_hot_user_item_input_gib": 1556.6853,
+        "dense_input_width_approx": 744600
+      }
+    },
+    {
+      "category": "Amazon_Fashion",
+      "users": "2.0M",
+      "items": "825.9K",
+      "ratings": "2.5M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Amazon_Fashion.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/292425439",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 292425439
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 19.0735,
+        "dense_one_hot_user_item_input_gib": 21054.5957,
+        "dense_input_width_approx": 2825900
+      }
+    },
+    {
+      "category": "Appliances",
+      "users": "1.8M",
+      "items": "94.3K",
+      "ratings": "2.1M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Appliances.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/270209794",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 270209794
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 16.0217,
+        "dense_one_hot_user_item_input_gib": 11855.4533,
+        "dense_input_width_approx": 1894300
+      }
+    },
+    {
+      "category": "Arts_Crafts_and_Sewing",
+      "users": "4.6M",
+      "items": "801.3K",
+      "ratings": "9.0M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Arts_Crafts_and_Sewing.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/1028821037",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 1028821037
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 68.6646,
+        "dense_one_hot_user_item_input_gib": 144874.1555,
+        "dense_input_width_approx": 5401300
+      }
+    },
+    {
+      "category": "Automotive",
+      "users": "8.0M",
+      "items": "2.0M",
+      "ratings": "20.0M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Automotive.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2292893292",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2292893292
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 152.5879,
+        "dense_one_hot_user_item_input_gib": 596046.4478,
+        "dense_input_width_approx": 10000000
+      }
+    },
+    {
+      "category": "Baby_Products",
+      "users": "3.4M",
+      "items": "217.7K",
+      "ratings": "6.0M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Baby_Products.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/837501465",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 837501465
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 45.7764,
+        "dense_one_hot_user_item_input_gib": 64689.517,
+        "dense_input_width_approx": 3617700
+      }
+    },
+    {
+      "category": "Beauty_and_Personal_Care",
+      "users": "11.3M",
+      "items": "1.0M",
+      "ratings": "23.9M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Beauty_and_Personal_Care.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2960355713",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2960355713
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 182.3425,
+        "dense_one_hot_user_item_input_gib": 876098.8712,
+        "dense_input_width_approx": 12300000
+      }
+    },
+    {
+      "category": "Books",
+      "users": "10.3M",
+      "items": "4.4M",
+      "ratings": "29.5M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Books.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/6216820644",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 6216820644
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 225.0671,
+        "dense_one_hot_user_item_input_gib": 1292377.7103,
+        "dense_input_width_approx": 14700000
+      }
+    },
+    {
+      "category": "CDs_and_Vinyl",
+      "users": "1.8M",
+      "items": "701.7K",
+      "ratings": "4.8M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/CDs_and_Vinyl.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/1027985017",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 1027985017
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 36.6211,
+        "dense_one_hot_user_item_input_gib": 35787.1056,
+        "dense_input_width_approx": 2501700
+      }
+    },
+    {
+      "category": "Cell_Phones_and_Accessories",
+      "users": "11.6M",
+      "items": "1.3M",
+      "ratings": "20.8M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Cell_Phones_and_Accessories.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2532539010",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2532539010
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 158.6914,
+        "dense_one_hot_user_item_input_gib": 799655.9143,
+        "dense_input_width_approx": 12900000
+      }
+    },
+    {
+      "category": "Clothing_Shoes_and_Jewelry",
+      "users": "22.6M",
+      "items": "7.2M",
+      "ratings": "66.0M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Clothing_Shoes_and_Jewelry.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/7109695439",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 7109695439
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 503.54,
+        "dense_one_hot_user_item_input_gib": 5861520.7672,
+        "dense_input_width_approx": 29800000
+      }
+    },
+    {
+      "category": "Digital_Music",
+      "users": "101.0K",
+      "items": "70.5K",
+      "ratings": "130.4K",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Digital_Music.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/26071111",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 26071111
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 0.9949,
+        "dense_one_hot_user_item_input_gib": 66.6487,
+        "dense_input_width_approx": 171500
+      }
+    },
+    {
+      "category": "Electronics",
+      "users": "18.3M",
+      "items": "1.6M",
+      "ratings": "43.9M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Electronics.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/6474438619",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 6474438619
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 334.9304,
+        "dense_one_hot_user_item_input_gib": 2603560.6861,
+        "dense_input_width_approx": 19900000
+      }
+    },
+    {
+      "category": "Gift_Cards",
+      "users": "132.7K",
+      "items": "1.1K",
+      "ratings": "152.4K",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Gift_Cards.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/12292543",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 12292543
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 1.1627,
+        "dense_one_hot_user_item_input_gib": 60.7703,
+        "dense_input_width_approx": 133800
+      }
+    },
+    {
+      "category": "Grocery_and_Gourmet_Food",
+      "users": "7.0M",
+      "items": "603.2K",
+      "ratings": "14.3M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Grocery_and_Gourmet_Food.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/1630860152",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 1630860152
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 109.1003,
+        "dense_one_hot_user_item_input_gib": 324028.0151,
+        "dense_input_width_approx": 7603200
+      }
+    },
+    {
+      "category": "Handmade_Products",
+      "users": "586.6K",
+      "items": "164.7K",
+      "ratings": "664.2K",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Handmade_Products.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/77803288",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 77803288
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 5.0674,
+        "dense_one_hot_user_item_input_gib": 1487.176,
+        "dense_input_width_approx": 751300
+      }
+    },
+    {
+      "category": "Health_and_Household",
+      "users": "12.5M",
+      "items": "797.4K",
+      "ratings": "25.6M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Health_and_Household.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/3199685282",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 3199685282
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 195.3125,
+        "dense_one_hot_user_item_input_gib": 1014511.1084,
+        "dense_input_width_approx": 13297400
+      }
+    },
+    {
+      "category": "Health_and_Personal_Care",
+      "users": "461.7K",
+      "items": "60.3K",
+      "ratings": "494.1K",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Health_and_Personal_Care.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/69510493",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 69510493
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 3.7697,
+        "dense_one_hot_user_item_input_gib": 768.6621,
+        "dense_input_width_approx": 522000
+      }
+    },
+    {
+      "category": "Home_and_Kitchen",
+      "users": "23.2M",
+      "items": "3.7M",
+      "ratings": "67.4M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Home_and_Kitchen.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/8307664299",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 8307664299
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 514.2212,
+        "dense_one_hot_user_item_input_gib": 5403339.8628,
+        "dense_input_width_approx": 26900000
+      }
+    },
+    {
+      "category": "Industrial_and_Scientific",
+      "users": "3.4M",
+      "items": "427.5K",
+      "ratings": "5.2M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Industrial_and_Scientific.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/675586079",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 675586079
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 39.6729,
+        "dense_one_hot_user_item_input_gib": 59315.5622,
+        "dense_input_width_approx": 3827500
+      }
+    },
+    {
+      "category": "Kindle_Store",
+      "users": "5.6M",
+      "items": "1.6M",
+      "ratings": "25.6M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Kindle_Store.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/4569437440",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 4569437440
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 195.3125,
+        "dense_one_hot_user_item_input_gib": 549316.4062,
+        "dense_input_width_approx": 7200000
+      }
+    },
+    {
+      "category": "Magazine_Subscriptions",
+      "users": "60.1K",
+      "items": "3.4K",
+      "ratings": "71.5K",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Magazine_Subscriptions.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/9986670",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 9986670
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 0.5455,
+        "dense_one_hot_user_item_input_gib": 13.531,
+        "dense_input_width_approx": 63500
+      }
+    },
+    {
+      "category": "Movies_and_TV",
+      "users": "6.5M",
+      "items": "747.8K",
+      "ratings": "17.3M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Movies_and_TV.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2396672075",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2396672075
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 131.9885,
+        "dense_one_hot_user_item_input_gib": 373682.2009,
+        "dense_input_width_approx": 7247800
+      }
+    },
+    {
+      "category": "Musical_Instruments",
+      "users": "1.8M",
+      "items": "213.6K",
+      "ratings": "3.0M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Musical_Instruments.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/458632324",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 458632324
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 22.8882,
+        "dense_one_hot_user_item_input_gib": 18002.9869,
+        "dense_input_width_approx": 2013600
+      }
+    },
+    {
+      "category": "Office_Products",
+      "users": "7.6M",
+      "items": "710.4K",
+      "ratings": "12.8M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Office_Products.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/1616649135",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 1616649135
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 97.6562,
+        "dense_one_hot_user_item_input_gib": 317016.6016,
+        "dense_input_width_approx": 8310400
+      }
+    },
+    {
+      "category": "Patio_Lawn_and_Garden",
+      "users": "8.6M",
+      "items": "851.7K",
+      "ratings": "16.5M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Patio_Lawn_and_Garden.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2160005181",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2160005181
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 125.885,
+        "dense_one_hot_user_item_input_gib": 464776.3073,
+        "dense_input_width_approx": 9451700
+      }
+    },
+    {
+      "category": "Pet_Supplies",
+      "users": "7.8M",
+      "items": "492.7K",
+      "ratings": "16.8M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Pet_Supplies.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2329691237",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2329691237
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 128.1738,
+        "dense_one_hot_user_item_input_gib": 415198.0877,
+        "dense_input_width_approx": 8292700
+      }
+    },
+    {
+      "category": "Software",
+      "users": "2.6M",
+      "items": "89.2K",
+      "ratings": "4.9M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Software.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/496076370",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 496076370
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 37.384,
+        "dense_one_hot_user_item_input_gib": 39270.7586,
+        "dense_input_width_approx": 2689200
+      }
+    },
+    {
+      "category": "Sports_and_Outdoors",
+      "users": "10.3M",
+      "items": "1.6M",
+      "ratings": "19.6M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Sports_and_Outdoors.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2634864204",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2634864204
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 149.5361,
+        "dense_one_hot_user_item_input_gib": 695109.3674,
+        "dense_input_width_approx": 11900000
+      }
+    },
+    {
+      "category": "Subscription_Boxes",
+      "users": "15.2K",
+      "items": "641",
+      "ratings": "16.2K",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Subscription_Boxes.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/2702022",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 2702022
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 0.1236,
+        "dense_one_hot_user_item_input_gib": 0.7648,
+        "dense_input_width_approx": 15841
+      }
+    },
+    {
+      "category": "Tools_and_Home_Improvement",
+      "users": "12.2M",
+      "items": "1.5M",
+      "ratings": "27.0M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Tools_and_Home_Improvement.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/3509652638",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 3509652638
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 205.9937,
+        "dense_one_hot_user_item_input_gib": 1102387.9051,
+        "dense_input_width_approx": 13700000
+      }
+    },
+    {
+      "category": "Toys_and_Games",
+      "users": "8.1M",
+      "items": "890.7K",
+      "ratings": "16.3M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Toys_and_Games.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/1948910944",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 1948910944
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 124.3591,
+        "dense_one_hot_user_item_input_gib": 436748.296,
+        "dense_input_width_approx": 8990700
+      }
+    },
+    {
+      "category": "Video_Games",
+      "users": "2.8M",
+      "items": "137.2K",
+      "ratings": "4.6M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Video_Games.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/814206092",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 814206092
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 35.0952,
+        "dense_one_hot_user_item_input_gib": 40266.2754,
+        "dense_input_width_approx": 2937200
+      }
+    },
+    {
+      "category": "Unknown",
+      "users": "23.1M",
+      "items": "13.2M",
+      "ratings": "63.8M",
+      "review_url": "https://mcauleylab.ucsd.edu/public_datasets/data/amazon_2023/raw/review_categories/Unknown.jsonl.gz",
+      "anonymous_review_artifact_probe": {
+        "http_status": 206,
+        "content_range": "bytes 0-0/8369944027",
+        "content_length": "1",
+        "accept_ranges": "bytes",
+        "artifact_bytes": 8369944027
+      },
+      "approx_resource_lower_bounds_80pct_timestamp_train": {
+        "assumption": "Official table counts are rounded; assumes 80% of reported rows are train, float32, 5 hidden layers × 512 units; lower bounds omit input gradients, model parameters, optimizer state and workspace.",
+        "hidden_activations_gib": 486.7554,
+        "dense_one_hot_user_item_input_gib": 6902039.0511,
+        "dense_input_width_approx": 36300000
+      }
+    }
+  ],
+  "disposition": "CROSS OUT every individually listed category: public no-login downloadability passes; rating prediction is in principle a plain-MLP task; but no explicit open data license/reuse grant was found. In addition, dense one-hot user/item features make every category but the tiny Subscription_Boxes route fail even activation-only full-batch estimates for the registered maximum model; Subscription_Boxes may fit the rough memory lower bound but is small/sparse and cannot be admitted without rights clearance and empirical difficulty validation."
+}

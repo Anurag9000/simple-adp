@@ -1,0 +1,63 @@
+{
+  "dataset": "UEA LSST / PLAsTiCC 36-point fixed-length snapshot",
+  "zenodo_record": "https://zenodo.org/records/11206243",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "LSST_TRAIN.ts",
+      "bytes": 4003924,
+      "sha256": "34cd6eedbf0d555d737a052b1836d0247a699e254dafc8d2d87522301d6cd7fd"
+    },
+    {
+      "file": "LSST_TEST.ts",
+      "bytes": 4013881,
+      "sha256": "cfbd8e01f6229dbaf0b9bbdd8bd2d263c24089ce40688566defac3638eeb4894"
+    }
+  ],
+  "total_bytes": 8017805,
+  "parsed": {
+    "train_rows": 2459,
+    "test_rows": 2466,
+    "channels": 6,
+    "points_per_channel": 36,
+    "input_width": 216,
+    "classes": ["15", "16", "42", "52", "53", "6", "62", "64", "65", "67", "88", "90", "92", "95"],
+    "train_class_counts": {"15": 123, "16": 270, "42": 381, "52": 62, "53": 7, "6": 34, "62": 153, "64": 23, "65": 313, "67": 68, "88": 120, "90": 777, "92": 77, "95": 51},
+    "test_class_counts": {"15": 124, "16": 270, "42": 382, "52": 63, "53": 7, "6": 35, "62": 153, "64": 24, "65": 313, "67": 68, "88": 121, "90": 777, "92": 77, "95": 52},
+    "missing_values": false,
+    "test_majority_accuracy": 0.3150851582
+  },
+  "task_note": "The UEA sample is a fixed-length snapshot derived from the simulated PLAsTiCC astronomical light-curve challenge. It is a 14-class object-type classification task; it is not direct real-survey deployment validation.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 2459,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "None; fixed 100 epochs, official test used only for descriptive reporting, not epoch selection",
+    "preprocessing": "per-feature mean/std fitted on all 2459 training rows only",
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epoch_100_train_loss": 1.4430924654,
+        "epoch_100_test_accuracy": 0.4330900243,
+        "epoch_100_test_balanced_accuracy": 0.2164677279,
+        "epoch_100_test_macro_f1": 0.2365671928,
+        "epoch_100_test_cross_entropy": 2.3725552559
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epoch_100_train_loss": 1.1109269857,
+        "epoch_100_test_accuracy": 0.5113544201,
+        "epoch_100_test_balanced_accuracy": 0.3336013535,
+        "epoch_100_test_macro_f1": 0.3568228935,
+        "epoch_100_test_cross_entropy": 4.8014340401
+      }
+    ]
+  },
+  "disposition": "Keep provisionally as a difficult, non-saturated fixed-width multivariate classification benchmark. Severe class imbalance, simulated source data, and single split/seed limit the evidence; assess with class-sensitive metrics and additional seeds before final benchmark adoption."
+}

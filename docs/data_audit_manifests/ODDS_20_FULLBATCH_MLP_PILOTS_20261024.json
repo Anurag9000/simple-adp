@@ -1,0 +1,1436 @@
+{
+  "audit_date": "2026-10-24",
+  "device": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "method": "Exact ODDS source-transformed MAT tasks loaded through repository ODDSProvider; deterministic runner 60/20/20 stratified split (seed 42); train-only numeric standardization (lympho training-fit one-hot for source categorical features); SupervisedAnomalyTask training-derived positive_weight BCE; full batch per step, Adam 1e-3, 30 epochs; validation-loss epoch selection; test metrics from selected epoch; representative [128,128] and [512]*5 only. Pilot for difficulty screening, not full architecture grid or ADP suite. Results are retained only as aggregate metadata and scores; all downloaded MAT files were in a temporary directory deleted at process exit.",
+  "results": [
+    {
+      "dataset": "cardio",
+      "rows": 1831,
+      "raw_input_dim": 21,
+      "outliers": 176,
+      "prevalence": 0.0961223375204806,
+      "split_counts": {
+        "train": 1099,
+        "validation": 366,
+        "test": 366
+      },
+      "split_prevalence": {
+        "train": 0.09645131938125569,
+        "validation": 0.09562841530054644,
+        "test": 0.09562841530054644
+      },
+      "artifact_sha256": "5e568b6a73711012c481fa6cc984ab9c68e9a4fa44d6aeb3b43efa381c3f695b",
+      "source_dataset_id": "cardiotocogrpahy",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.018980026245117188,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.30114322900772095,
+            "test": {
+              "accuracy": 0.953551912568306,
+              "balanced_accuracy": 0.9359948208890807,
+              "macro_f1": 0.882004892757581,
+              "anomaly_precision": 0.6956521739130435,
+              "anomaly_recall": 0.9142857142857143,
+              "pr_auc": 0.9327481279497516,
+              "roc_auc": 0.9883470004315926
+            }
+          },
+          "final_train_loss": 0.2970590591430664
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.045855045318603516,
+          "best": {
+            "best_epoch": 7,
+            "validation_loss": 0.2952578067779541,
+            "test": {
+              "accuracy": 0.9644808743169399,
+              "balanced_accuracy": 0.9292619766940009,
+              "macro_f1": 0.9034398782343988,
+              "anomaly_precision": 0.775,
+              "anomaly_recall": 0.8857142857142857,
+              "pr_auc": 0.9365893068017573,
+              "roc_auc": 0.9839447561501942
+            }
+          },
+          "final_train_loss": 0.04563453793525696
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 21,
+      "majority_baseline": {
+        "accuracy": 0.9035486806187443,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.09562841530054644
+      }
+    },
+    {
+      "dataset": "thyroid",
+      "rows": 3772,
+      "raw_input_dim": 6,
+      "outliers": 93,
+      "prevalence": 0.024655355249204668,
+      "split_counts": {
+        "train": 2264,
+        "validation": 755,
+        "test": 753
+      },
+      "split_prevalence": {
+        "train": 0.024734982332155476,
+        "validation": 0.025165562913907286,
+        "test": 0.02390438247011952
+      },
+      "artifact_sha256": "49155d7861b977e90808faf68343ff67a67f63090c2744d514dbb67ac68e7e33",
+      "source_dataset_id": "thyroid-disease",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.021677494049072266,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.31933051347732544,
+            "test": {
+              "accuracy": 0.9814077025232404,
+              "balanced_accuracy": 0.9633786848072563,
+              "macro_f1": 0.8493655692729767,
+              "anomaly_precision": 0.5666666666666667,
+              "anomaly_recall": 0.9444444444444444,
+              "pr_auc": 0.8615803980477836,
+              "roc_auc": 0.9953892668178382
+            }
+          },
+          "final_train_loss": 0.2513017952442169
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.06344985961914062,
+          "best": {
+            "best_epoch": 7,
+            "validation_loss": 0.22709059715270996,
+            "test": {
+              "accuracy": 0.9800796812749004,
+              "balanced_accuracy": 0.9626984126984126,
+              "macro_f1": 0.8417912120235878,
+              "anomaly_precision": 0.5483870967741935,
+              "anomaly_recall": 0.9444444444444444,
+              "pr_auc": 0.8525163135076927,
+              "roc_auc": 0.9953136810279667
+            }
+          },
+          "final_train_loss": 0.27263250946998596
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 6,
+      "majority_baseline": {
+        "accuracy": 0.9752650176678446,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.02390438247011952
+      }
+    },
+    {
+      "dataset": "satimage-2",
+      "rows": 5803,
+      "raw_input_dim": 36,
+      "outliers": 71,
+      "prevalence": 0.0122350508357746,
+      "split_counts": {
+        "train": 3483,
+        "validation": 1160,
+        "test": 1160
+      },
+      "split_prevalence": {
+        "train": 0.012345679012345678,
+        "validation": 0.01206896551724138,
+        "test": 0.01206896551724138
+      },
+      "artifact_sha256": "95c37a07cea2cb201f6900d14f521510e10b6b2f0074c06ac46d3157440ec67b",
+      "source_dataset_id": "satimage-2",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.025673389434814453,
+          "best": {
+            "best_epoch": 23,
+            "validation_loss": 0.41065436601638794,
+            "test": {
+              "accuracy": 0.9801724137931035,
+              "balanced_accuracy": 0.9194091249065071,
+              "macro_f1": 0.7502597560633149,
+              "anomaly_precision": 0.36363636363636365,
+              "anomaly_recall": 0.8571428571428571,
+              "pr_auc": 0.8782361516034985,
+              "roc_auc": 0.9952630266766392
+            }
+          },
+          "final_train_loss": 0.11990141868591309
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.08330488204956055,
+          "best": {
+            "best_epoch": 7,
+            "validation_loss": 0.47039279341697693,
+            "test": {
+              "accuracy": 0.9862068965517241,
+              "balanced_accuracy": 0.9224632261281476,
+              "macro_f1": 0.7964912280701755,
+              "anomaly_precision": 0.46153846153846156,
+              "anomaly_recall": 0.8571428571428571,
+              "pr_auc": 0.8425128755955823,
+              "roc_auc": 0.9646596858638743
+            }
+          },
+          "final_train_loss": 0.013716711662709713
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 36,
+      "majority_baseline": {
+        "accuracy": 0.9876543209876543,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.01206896551724138
+      }
+    },
+    {
+      "dataset": "lympho",
+      "rows": 148,
+      "raw_input_dim": 18,
+      "outliers": 6,
+      "prevalence": 0.04054054054054054,
+      "split_counts": {
+        "train": 90,
+        "validation": 29,
+        "test": 29
+      },
+      "split_prevalence": {
+        "train": 0.044444444444444446,
+        "validation": 0.034482758620689655,
+        "test": 0.034482758620689655
+      },
+      "artifact_sha256": "031b907ecb50347720b08b38f8139d05635adeca9335a064d89d5569c27a5834",
+      "source_dataset_id": "lympho",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.016370296478271484,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.1789177805185318,
+            "test": {
+              "accuracy": 0.9655172413793104,
+              "balanced_accuracy": 0.5,
+              "macro_f1": 0.49122807017543857,
+              "anomaly_precision": 0.0,
+              "anomaly_recall": 0.0,
+              "pr_auc": 0.07692307692307693,
+              "roc_auc": 0.5714285714285714
+            }
+          },
+          "final_train_loss": 0.07921814918518066
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.036058902740478516,
+          "best": {
+            "best_epoch": 5,
+            "validation_loss": 0.4513930678367615,
+            "test": {
+              "accuracy": 0.9655172413793104,
+              "balanced_accuracy": 0.5,
+              "macro_f1": 0.49122807017543857,
+              "anomaly_precision": 0.0,
+              "anomaly_recall": 0.0,
+              "pr_auc": 0.034482758620689655,
+              "roc_auc": 0.0
+            }
+          },
+          "final_train_loss": 9.224467530957406e-41
+        }
+      ],
+      "encoding": "training-fitted per-feature one-hot",
+      "input_dim": 59,
+      "majority_baseline": {
+        "accuracy": 0.9555555555555556,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.034482758620689655
+      }
+    },
+    {
+      "dataset": "glass",
+      "rows": 214,
+      "raw_input_dim": 9,
+      "outliers": 9,
+      "prevalence": 0.04205607476635514,
+      "split_counts": {
+        "train": 129,
+        "validation": 43,
+        "test": 42
+      },
+      "split_prevalence": {
+        "train": 0.046511627906976744,
+        "validation": 0.046511627906976744,
+        "test": 0.023809523809523808
+      },
+      "artifact_sha256": "2c506e6e1e2ca1e82a905d10a90773151ff812c4bd969c71a12db5b2bb6e7921",
+      "source_dataset_id": "glass",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.016330242156982422,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.566655158996582,
+            "test": {
+              "accuracy": 0.8809523809523809,
+              "balanced_accuracy": 0.9390243902439024,
+              "macro_f1": 0.6103896103896104,
+              "anomaly_precision": 0.16666666666666666,
+              "anomaly_recall": 1.0,
+              "pr_auc": 0.25,
+              "roc_auc": 0.926829268292683
+            }
+          },
+          "final_train_loss": 0.3242487907409668
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.03555774688720703,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 6.3706931914607294e-15,
+            "test": {
+              "accuracy": 0.9761904761904762,
+              "balanced_accuracy": 0.9878048780487805,
+              "macro_f1": 0.8271604938271604,
+              "anomaly_precision": 0.5,
+              "anomaly_recall": 1.0,
+              "pr_auc": 0.5,
+              "roc_auc": 0.9878048780487805
+            }
+          },
+          "final_train_loss": 1.51020345208319e-25
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 9,
+      "majority_baseline": {
+        "accuracy": 0.9534883720930233,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.023809523809523808
+      }
+    },
+    {
+      "dataset": "vowels",
+      "rows": 1456,
+      "raw_input_dim": 12,
+      "outliers": 50,
+      "prevalence": 0.034340659340659344,
+      "split_counts": {
+        "train": 874,
+        "validation": 291,
+        "test": 291
+      },
+      "split_prevalence": {
+        "train": 0.034324942791762014,
+        "validation": 0.03436426116838488,
+        "test": 0.03436426116838488
+      },
+      "artifact_sha256": "51d5397bad1ceeda22b7cd44fd58125c5d603c9c2edb53aa59933330e259ac7b",
+      "source_dataset_id": "vowels",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.01782083511352539,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.39763540029525757,
+            "test": {
+              "accuracy": 0.9450171821305842,
+              "balanced_accuracy": 0.8750889679715304,
+              "macro_f1": 0.7354545454545456,
+              "anomaly_precision": 0.36363636363636365,
+              "anomaly_recall": 0.8,
+              "pr_auc": 0.7614392402729118,
+              "roc_auc": 0.9711743772241993
+            }
+          },
+          "final_train_loss": 0.32332947850227356
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.039769649505615234,
+          "best": {
+            "best_epoch": 15,
+            "validation_loss": 0.04831751808524132,
+            "test": {
+              "accuracy": 0.979381443298969,
+              "balanced_accuracy": 0.8928825622775801,
+              "macro_f1": 0.8582792207792207,
+              "anomaly_precision": 0.6666666666666666,
+              "anomaly_recall": 0.8,
+              "pr_auc": 0.8964194373401534,
+              "roc_auc": 0.992526690391459
+            }
+          },
+          "final_train_loss": 0.0006911367527209222
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 12,
+      "majority_baseline": {
+        "accuracy": 0.965675057208238,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.03436426116838488
+      }
+    },
+    {
+      "dataset": "musk",
+      "rows": 3062,
+      "raw_input_dim": 166,
+      "outliers": 97,
+      "prevalence": 0.03167864141084259,
+      "split_counts": {
+        "train": 1838,
+        "validation": 612,
+        "test": 612
+      },
+      "split_prevalence": {
+        "train": 0.032100108813928184,
+        "validation": 0.03104575163398693,
+        "test": 0.03104575163398693
+      },
+      "artifact_sha256": "50bbf414caceb66cfe6f6b1eb7c1ff7c6eb1e6d87173f7bb597ba55cd3dc5493",
+      "source_dataset_id": "musk",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.023429393768310547,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.0016927324468269944,
+            "test": {
+              "accuracy": 1.0,
+              "balanced_accuracy": 1.0,
+              "macro_f1": 1.0,
+              "anomaly_precision": 1.0,
+              "anomaly_recall": 1.0,
+              "pr_auc": 1.0,
+              "roc_auc": 1.0
+            }
+          },
+          "final_train_loss": 0.001974091399461031
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.0595855712890625,
+          "best": {
+            "best_epoch": 14,
+            "validation_loss": 0.0,
+            "test": {
+              "accuracy": 1.0,
+              "balanced_accuracy": 1.0,
+              "macro_f1": 1.0,
+              "anomaly_precision": 1.0,
+              "anomaly_recall": 1.0,
+              "pr_auc": 1.0,
+              "roc_auc": 1.0
+            }
+          },
+          "final_train_loss": 0.0
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 166,
+      "majority_baseline": {
+        "accuracy": 0.9678998911860718,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.03104575163398693
+      }
+    },
+    {
+      "dataset": "letter",
+      "rows": 1600,
+      "raw_input_dim": 32,
+      "outliers": 100,
+      "prevalence": 0.0625,
+      "split_counts": {
+        "train": 960,
+        "validation": 320,
+        "test": 320
+      },
+      "split_prevalence": {
+        "train": 0.0625,
+        "validation": 0.0625,
+        "test": 0.0625
+      },
+      "artifact_sha256": "f4a229b0e2a6b0c9157ce27fa760bcbac0f948cd690b2f5d51c120e5450f2195",
+      "source_dataset_id": "letter",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.018139362335205078,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.7582244873046875,
+            "test": {
+              "accuracy": 0.875,
+              "balanced_accuracy": 0.7466666666666666,
+              "macro_f1": 0.6527777777777778,
+              "anomaly_precision": 0.2727272727272727,
+              "anomaly_recall": 0.6,
+              "pr_auc": 0.29314084042465344,
+              "roc_auc": 0.8806666666666667
+            }
+          },
+          "final_train_loss": 0.6591660380363464
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.040830135345458984,
+          "best": {
+            "best_epoch": 18,
+            "validation_loss": 0.589505672454834,
+            "test": {
+              "accuracy": 0.909375,
+              "balanced_accuracy": 0.765,
+              "macro_f1": 0.7017132204043586,
+              "anomaly_precision": 0.36363636363636365,
+              "anomaly_recall": 0.6,
+              "pr_auc": 0.4942746379818967,
+              "roc_auc": 0.9285
+            }
+          },
+          "final_train_loss": 0.006325175520032644
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 32,
+      "majority_baseline": {
+        "accuracy": 0.9375,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.0625
+      }
+    },
+    {
+      "dataset": "satellite",
+      "rows": 6435,
+      "raw_input_dim": 36,
+      "outliers": 2036,
+      "prevalence": 0.3163947163947164,
+      "split_counts": {
+        "train": 3862,
+        "validation": 1287,
+        "test": 1286
+      },
+      "split_prevalence": {
+        "train": 0.31641636457793887,
+        "validation": 0.3162393162393162,
+        "test": 0.3164852255054432
+      },
+      "artifact_sha256": "6feac3112b9c14e1c3e60afc437f2f3d29dc1000119c9f950c628078778d6aa0",
+      "source_dataset_id": "satellite",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.026329994201660156,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.4707674980163574,
+            "test": {
+              "accuracy": 0.8639191290824261,
+              "balanced_accuracy": 0.8199749547872415,
+              "macro_f1": 0.8346576152639563,
+              "anomaly_precision": 0.8431952662721893,
+              "anomaly_recall": 0.7002457002457002,
+              "pr_auc": 0.8937364272906778,
+              "roc_auc": 0.9316288053489419
+            }
+          },
+          "final_train_loss": 0.5014897584915161
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.08945894241333008,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.3193298578262329,
+            "test": {
+              "accuracy": 0.8786936236391913,
+              "balanced_accuracy": 0.8809178399622085,
+              "macro_f1": 0.8651168669806069,
+              "anomaly_precision": 0.7664543524416136,
+              "anomaly_recall": 0.8869778869778869,
+              "pr_auc": 0.932446967170484,
+              "roc_auc": 0.9591142492166383
+            }
+          },
+          "final_train_loss": 0.33379220962524414
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 36,
+      "majority_baseline": {
+        "accuracy": 0.6835836354220611,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.3164852255054432
+      }
+    },
+    {
+      "dataset": "shuttle",
+      "rows": 49097,
+      "raw_input_dim": 9,
+      "outliers": 3511,
+      "prevalence": 0.0715114976475141,
+      "split_counts": {
+        "train": 29459,
+        "validation": 9819,
+        "test": 9819
+      },
+      "split_prevalence": {
+        "train": 0.07152313384704165,
+        "validation": 0.07149404216315307,
+        "test": 0.07149404216315307
+      },
+      "artifact_sha256": "b6e396c92354d5dcf5036901e36dc58e2913f2d1a5e138c35a2bedf9c69db899",
+      "source_dataset_id": "shuttle",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.07587862014770508,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.27952539920806885,
+            "test": {
+              "accuracy": 0.9978612893369997,
+              "balanced_accuracy": 0.9883297755953235,
+              "macro_f1": 0.9918868114207651,
+              "anomaly_precision": 0.9927641099855282,
+              "anomaly_recall": 0.9772079772079773,
+              "pr_auc": 0.9836312091460796,
+              "roc_auc": 0.9865890307921678
+            }
+          },
+          "final_train_loss": 0.2776837944984436
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.42614030838012695,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.13133420050144196,
+            "test": {
+              "accuracy": 0.9980649760668092,
+              "balanced_accuracy": 0.9930413175724133,
+              "macro_f1": 0.992717400872416,
+              "anomaly_precision": 0.9857752489331437,
+              "anomaly_recall": 0.9871794871794872,
+              "pr_auc": 0.9929066174216803,
+              "roc_auc": 0.9981719132755658
+            }
+          },
+          "final_train_loss": 0.053501322865486145
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 9,
+      "majority_baseline": {
+        "accuracy": 0.9284768661529583,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.07149404216315307
+      }
+    },
+    {
+      "dataset": "breastw",
+      "rows": 683,
+      "raw_input_dim": 9,
+      "outliers": 239,
+      "prevalence": 0.34992679355783307,
+      "split_counts": {
+        "train": 411,
+        "validation": 137,
+        "test": 135
+      },
+      "split_prevalence": {
+        "train": 0.35036496350364965,
+        "validation": 0.35036496350364965,
+        "test": 0.34814814814814815
+      },
+      "artifact_sha256": "a2e3f7c7f61ddde87c4373f0c0539de996227b9659c70b3c227948ebf0c6062b",
+      "source_dataset_id": "breastw",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.01688671112060547,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.09038262814283371,
+            "test": {
+              "accuracy": 0.9555555555555556,
+              "balanced_accuracy": 0.946083172147002,
+              "macro_f1": 0.9505373717635565,
+              "anomaly_precision": 0.9555555555555556,
+              "anomaly_recall": 0.9148936170212766,
+              "pr_auc": 0.9881864206592443,
+              "roc_auc": 0.9941972920696325
+            }
+          },
+          "final_train_loss": 0.14708685874938965
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.03557634353637695,
+          "best": {
+            "best_epoch": 13,
+            "validation_loss": 0.01124136708676815,
+            "test": {
+              "accuracy": 0.9481481481481482,
+              "balanced_accuracy": 0.9354448742746615,
+              "macro_f1": 0.9419853889127632,
+              "anomaly_precision": 0.9545454545454546,
+              "anomaly_recall": 0.8936170212765957,
+              "pr_auc": 0.9908616824234908,
+              "roc_auc": 0.9954061895551257
+            }
+          },
+          "final_train_loss": 0.05671928450465202
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 9,
+      "majority_baseline": {
+        "accuracy": 0.6496350364963503,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.34814814814814815
+      }
+    },
+    {
+      "dataset": "arrhythmia",
+      "rows": 452,
+      "raw_input_dim": 274,
+      "outliers": 66,
+      "prevalence": 0.14601769911504425,
+      "split_counts": {
+        "train": 272,
+        "validation": 90,
+        "test": 90
+      },
+      "split_prevalence": {
+        "train": 0.14705882352941177,
+        "validation": 0.14444444444444443,
+        "test": 0.14444444444444443
+      },
+      "artifact_sha256": "e4d47e499591ae31e5d7f0cd983367092353eac240f48e14c9b36457edb3460d",
+      "source_dataset_id": "arrhythmia",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.017436981201171875,
+          "best": {
+            "best_epoch": 12,
+            "validation_loss": 0.9996887445449829,
+            "test": {
+              "accuracy": 0.7333333333333333,
+              "balanced_accuracy": 0.7482517482517483,
+              "macro_f1": 0.6390374331550802,
+              "anomaly_precision": 0.3225806451612903,
+              "anomaly_recall": 0.7692307692307693,
+              "pr_auc": 0.6927981363345005,
+              "roc_auc": 0.8641358641358642
+            }
+          },
+          "final_train_loss": 0.1915992796421051
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.038539886474609375,
+          "best": {
+            "best_epoch": 4,
+            "validation_loss": 0.9720821380615234,
+            "test": {
+              "accuracy": 0.6444444444444445,
+              "balanced_accuracy": 0.7602397602397603,
+              "macro_f1": 0.5852534562211982,
+              "anomaly_precision": 0.27906976744186046,
+              "anomaly_recall": 0.9230769230769231,
+              "pr_auc": 0.6945378801566093,
+              "roc_auc": 0.8921078921078921
+            }
+          },
+          "final_train_loss": 5.974611849524081e-05
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 274,
+      "majority_baseline": {
+        "accuracy": 0.8529411764705882,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.14444444444444443
+      }
+    },
+    {
+      "dataset": "ionosphere",
+      "rows": 351,
+      "raw_input_dim": 33,
+      "outliers": 126,
+      "prevalence": 0.358974358974359,
+      "split_counts": {
+        "train": 211,
+        "validation": 70,
+        "test": 70
+      },
+      "split_prevalence": {
+        "train": 0.36018957345971564,
+        "validation": 0.35714285714285715,
+        "test": 0.35714285714285715
+      },
+      "artifact_sha256": "8ac5dfa6f47db4acdfe10615489b7f7dd015d79d5b381ce641e72baca3cfefb0",
+      "source_dataset_id": "ionosphere",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.01655721664428711,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.41939860582351685,
+            "test": {
+              "accuracy": 0.9571428571428572,
+              "balanced_accuracy": 0.9577777777777778,
+              "macro_f1": 0.9537343027098479,
+              "anomaly_precision": 0.9230769230769231,
+              "anomaly_recall": 0.96,
+              "pr_auc": 0.979594336098684,
+              "roc_auc": 0.9884444444444445
+            }
+          },
+          "final_train_loss": 0.27869126200675964
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.03582286834716797,
+          "best": {
+            "best_epoch": 10,
+            "validation_loss": 0.4644288718700409,
+            "test": {
+              "accuracy": 0.8857142857142857,
+              "balanced_accuracy": 0.8844444444444444,
+              "macro_f1": 0.8776223776223776,
+              "anomaly_precision": 0.8148148148148148,
+              "anomaly_recall": 0.88,
+              "pr_auc": 0.9566634535680245,
+              "roc_auc": 0.9662222222222222
+            }
+          },
+          "final_train_loss": 0.03975560516119003
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 33,
+      "majority_baseline": {
+        "accuracy": 0.6398104265402843,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.35714285714285715
+      }
+    },
+    {
+      "dataset": "optdigits",
+      "rows": 5216,
+      "raw_input_dim": 64,
+      "outliers": 150,
+      "prevalence": 0.028757668711656442,
+      "split_counts": {
+        "train": 3130,
+        "validation": 1043,
+        "test": 1043
+      },
+      "split_prevalence": {
+        "train": 0.02875399361022364,
+        "validation": 0.028763183125599234,
+        "test": 0.028763183125599234
+      },
+      "artifact_sha256": "30c664cd6f3740a173277a27cd1028d471b06f0835a9902c9712749cec58c1c4",
+      "source_dataset_id": "optdigits",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.02563953399658203,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.09281359612941742,
+            "test": {
+              "accuracy": 0.9952061361457335,
+              "balanced_accuracy": 0.9975320829220138,
+              "macro_f1": 0.9603014501579568,
+              "anomaly_precision": 0.8571428571428571,
+              "anomaly_recall": 1.0,
+              "pr_auc": 0.9952380952380953,
+              "roc_auc": 0.999835472194801
+            }
+          },
+          "final_train_loss": 0.08700863271951675
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.07803583145141602,
+          "best": {
+            "best_epoch": 7,
+            "validation_loss": 0.03662045672535896,
+            "test": {
+              "accuracy": 0.9980824544582934,
+              "balanced_accuracy": 0.9828397499177361,
+              "macro_f1": 0.9828397499177361,
+              "anomaly_precision": 0.9666666666666667,
+              "anomaly_recall": 0.9666666666666667,
+              "pr_auc": 0.9952380952380953,
+              "roc_auc": 0.999835472194801
+            }
+          },
+          "final_train_loss": 1.1882370087867855e-10
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 64,
+      "majority_baseline": {
+        "accuracy": 0.9712460063897763,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.028763183125599234
+      }
+    },
+    {
+      "dataset": "smtp",
+      "rows": 95156,
+      "raw_input_dim": 3,
+      "outliers": 30,
+      "prevalence": 0.0003152717642607928,
+      "split_counts": {
+        "train": 57094,
+        "validation": 19031,
+        "test": 19031
+      },
+      "split_prevalence": {
+        "train": 0.0003152695554699268,
+        "validation": 0.0003152750775051232,
+        "test": 0.0003152750775051232
+      },
+      "artifact_sha256": "5b6d13dd23e8c5e4235081ea58b606df216a2b9b86e7f5403cde26f62dafc0d8",
+      "source_dataset_id": "smtp",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.12714338302612305,
+          "best": {
+            "best_epoch": 15,
+            "validation_loss": 1.0355420112609863,
+            "test": {
+              "accuracy": 0.9632179076244023,
+              "balanced_accuracy": 0.7316819973718791,
+              "macro_f1": 0.4948799802952497,
+              "anomaly_precision": 0.004285714285714286,
+              "anomaly_recall": 0.5,
+              "pr_auc": 0.500830529569946,
+              "roc_auc": 0.7699693385895752
+            }
+          },
+          "final_train_loss": 0.5092552900314331
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.7949733734130859,
+          "best": {
+            "best_epoch": 17,
+            "validation_loss": 0.5578585267066956,
+            "test": {
+              "accuracy": 0.9097262361410331,
+              "balanced_accuracy": 0.8715418309242225,
+              "macro_f1": 0.4792517504775652,
+              "anomaly_precision": 0.0029036004645760743,
+              "anomaly_recall": 0.8333333333333334,
+              "pr_auc": 0.5032069804208142,
+              "roc_auc": 0.9712746386333772
+            }
+          },
+          "final_train_loss": 0.29862359166145325
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 3,
+      "majority_baseline": {
+        "accuracy": 0.9996847304445301,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.0003152750775051232
+      }
+    },
+    {
+      "dataset": "annthyroid",
+      "rows": 7200,
+      "raw_input_dim": 6,
+      "outliers": 534,
+      "prevalence": 0.07416666666666667,
+      "split_counts": {
+        "train": 4321,
+        "validation": 1440,
+        "test": 1439
+      },
+      "split_prevalence": {
+        "train": 0.07428835917611663,
+        "validation": 0.07430555555555556,
+        "test": 0.07366226546212648
+      },
+      "artifact_sha256": "17a1012d005f2179eca3b87c0028eb5ca807794b359c33fa1f8ca5ac846c514f",
+      "source_dataset_id": "annthyroid",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.026673316955566406,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.8278789520263672,
+            "test": {
+              "accuracy": 0.8679638637943016,
+              "balanced_accuracy": 0.8245268864385908,
+              "macro_f1": 0.6939997492993814,
+              "anomaly_precision": 0.33064516129032256,
+              "anomaly_recall": 0.7735849056603774,
+              "pr_auc": 0.6590925464304903,
+              "roc_auc": 0.9076844682868831
+            }
+          },
+          "final_train_loss": 0.7364709377288818
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.09294986724853516,
+          "best": {
+            "best_epoch": 29,
+            "validation_loss": 0.21552641689777374,
+            "test": {
+              "accuracy": 0.9701181375955524,
+              "balanced_accuracy": 0.966503418307407,
+              "macro_f1": 0.9047836677915295,
+              "anomaly_precision": 0.723404255319149,
+              "anomaly_recall": 0.9622641509433962,
+              "pr_auc": 0.8895619278440633,
+              "roc_auc": 0.9922150348907982
+            }
+          },
+          "final_train_loss": 0.17276795208454132
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 6,
+      "majority_baseline": {
+        "accuracy": 0.9257116408238834,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.07366226546212648
+      }
+    },
+    {
+      "dataset": "pendigits",
+      "rows": 6870,
+      "raw_input_dim": 16,
+      "outliers": 156,
+      "prevalence": 0.022707423580786028,
+      "split_counts": {
+        "train": 4123,
+        "validation": 1374,
+        "test": 1373
+      },
+      "split_prevalence": {
+        "train": 0.022798932815910746,
+        "validation": 0.022561863173216887,
+        "test": 0.022578295702840496
+      },
+      "artifact_sha256": "7bc32ac83b3d583443acea8b1342a54aaa59eaedb9996af405322f473f3c22bc",
+      "source_dataset_id": "pendigits",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.026467323303222656,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.1590455174446106,
+            "test": {
+              "accuracy": 0.9679533867443554,
+              "balanced_accuracy": 0.9678501033604154,
+              "macro_f1": 0.7801345134804635,
+              "anomaly_precision": 0.410958904109589,
+              "anomaly_recall": 0.967741935483871,
+              "pr_auc": 0.9253810100321427,
+              "roc_auc": 0.9967790010095668
+            }
+          },
+          "final_train_loss": 0.22798971831798553
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.0909872055053711,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.00015562065527774394,
+            "test": {
+              "accuracy": 0.9978150036416606,
+              "balanced_accuracy": 0.9673693572424402,
+              "macro_f1": 0.9748511768476966,
+              "anomaly_precision": 0.9666666666666667,
+              "anomaly_recall": 0.9354838709677419,
+              "pr_auc": 0.9979513527575442,
+              "roc_auc": 0.9999519253882025
+            }
+          },
+          "final_train_loss": 0.01625806838274002
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 16,
+      "majority_baseline": {
+        "accuracy": 0.9772010671840893,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.022578295702840496
+      }
+    },
+    {
+      "dataset": "ecoli",
+      "error": "ValueError: ODDS anomaly labels must contain exactly 0=inlier and 1=outlier"
+    },
+    {
+      "dataset": "wine",
+      "rows": 129,
+      "raw_input_dim": 13,
+      "outliers": 10,
+      "prevalence": 0.07751937984496124,
+      "split_counts": {
+        "train": 78,
+        "validation": 26,
+        "test": 25
+      },
+      "split_prevalence": {
+        "train": 0.07692307692307693,
+        "validation": 0.07692307692307693,
+        "test": 0.08
+      },
+      "artifact_sha256": "d1b7cc643379e14397ee25bc1125ba08e4c929f2ec44d8782b1340d7045d4cf7",
+      "source_dataset_id": "wine",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.016260623931884766,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.17868299782276154,
+            "test": {
+              "accuracy": 0.96,
+              "balanced_accuracy": 0.9782608695652174,
+              "macro_f1": 0.8888888888888888,
+              "anomaly_precision": 0.6666666666666666,
+              "anomaly_recall": 1.0,
+              "pr_auc": 1.0,
+              "roc_auc": 1.0
+            }
+          },
+          "final_train_loss": 0.12001350522041321
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.035593509674072266,
+          "best": {
+            "best_epoch": 10,
+            "validation_loss": 0.0013921636855229735,
+            "test": {
+              "accuracy": 1.0,
+              "balanced_accuracy": 1.0,
+              "macro_f1": 1.0,
+              "anomaly_precision": 1.0,
+              "anomaly_recall": 1.0,
+              "pr_auc": 1.0,
+              "roc_auc": 1.0
+            }
+          },
+          "final_train_loss": 5.006027663512214e-07
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 13,
+      "majority_baseline": {
+        "accuracy": 0.9230769230769231,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.08
+      }
+    },
+    {
+      "dataset": "vertebral",
+      "rows": 240,
+      "raw_input_dim": 6,
+      "outliers": 30,
+      "prevalence": 0.125,
+      "split_counts": {
+        "train": 144,
+        "validation": 48,
+        "test": 48
+      },
+      "split_prevalence": {
+        "train": 0.125,
+        "validation": 0.125,
+        "test": 0.125
+      },
+      "artifact_sha256": "84b50b055f118f54b5c976650ccd284ab7c1adee822f8b3eb517c7e2c890d15e",
+      "source_dataset_id": "vertebral",
+      "models": [
+        {
+          "widths": [
+            128,
+            128
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.01635265350341797,
+          "best": {
+            "best_epoch": 30,
+            "validation_loss": 0.8633244037628174,
+            "test": {
+              "accuracy": 0.7708333333333334,
+              "balanced_accuracy": 0.7261904761904762,
+              "macro_f1": 0.6390977443609023,
+              "anomaly_precision": 0.3076923076923077,
+              "anomaly_recall": 0.6666666666666666,
+              "pr_auc": 0.4325957992624659,
+              "roc_auc": 0.753968253968254
+            }
+          },
+          "final_train_loss": 0.6571097373962402
+        },
+        {
+          "widths": [
+            512,
+            512,
+            512,
+            512,
+            512
+          ],
+          "epochs": 30,
+          "peak_cuda_gib": 0.03552722930908203,
+          "best": {
+            "best_epoch": 11,
+            "validation_loss": 0.6473075151443481,
+            "test": {
+              "accuracy": 0.75,
+              "balanced_accuracy": 0.7142857142857142,
+              "macro_f1": 0.6210526315789473,
+              "anomaly_precision": 0.2857142857142857,
+              "anomaly_recall": 0.6666666666666666,
+              "pr_auc": 0.6357142857142857,
+              "roc_auc": 0.8095238095238095
+            }
+          },
+          "final_train_loss": 0.16853581368923187
+        }
+      ],
+      "encoding": "numeric",
+      "input_dim": 6,
+      "majority_baseline": {
+        "accuracy": 0.875,
+        "balanced_accuracy": 0.5,
+        "pr_auc": 0.125
+      }
+    }
+  ]
+}

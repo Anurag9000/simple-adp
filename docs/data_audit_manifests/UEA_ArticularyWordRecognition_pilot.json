@@ -1,0 +1,76 @@
+{
+  "dataset": "UEA ArticularyWordRecognition",
+  "zenodo_record": "https://zenodo.org/records/11204924",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "ArticularyWordRecognition_TRAIN.ts",
+      "bytes": 2884471,
+      "sha256": "40c54640f20aa094115a47ad1f4745f5adcc08a65085659a4a042aee1c32a6d5"
+    },
+    {
+      "file": "ArticularyWordRecognition_TEST.ts",
+      "bytes": 3148724,
+      "sha256": "b4431c96e04310c55b8f50b6f93b0e20cfa019a2d25ab2a5c844e5e0b1375995"
+    }
+  ],
+  "total_bytes": 6033195,
+  "parsed": {
+    "train_rows": 275,
+    "test_rows": 300,
+    "channels": 9,
+    "points_per_channel": 144,
+    "input_width": 1296,
+    "classes": 25,
+    "train_per_class": 11,
+    "test_per_class": 12,
+    "missing_values": false
+  },
+  "split_risk": "Original release describes multiple native English speakers, but the .ts partitions retain no speaker IDs; speaker disjointness cannot be checked.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 702,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "class-stratified 20% from official train (50 rows, 2/class)",
+    "preprocessing": "per-feature mean/std fitted on 225 train rows only",
+    "majority_test_accuracy": 0.04,
+    "architectures": [
+      {
+        "hidden_widths": [
+          128,
+          128
+        ],
+        "selected_epoch": 28,
+        "train_loss": 0.00726018,
+        "validation_accuracy": 0.96,
+        "test_accuracy": 0.95666667,
+        "test_balanced_accuracy": 0.95666667,
+        "test_macro_f1": 0.95669095,
+        "test_cross_entropy": 0.18206741
+      },
+      {
+        "hidden_widths": [
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "selected_epoch": 21,
+        "train_loss": 0.01417717,
+        "validation_accuracy": 0.94,
+        "test_accuracy": 0.93666667,
+        "test_balanced_accuracy": 0.93666667,
+        "test_macro_f1": 0.9351856,
+        "test_cross_entropy": 0.55665576
+      }
+    ],
+    "assessment": "High near-ceiling performance from plain dense MLPs on 25 balanced classes; single seed and 50-row validation (2/class); split speaker generalization is unverified. Cross out for hard benchmark suite."
+  }
+}

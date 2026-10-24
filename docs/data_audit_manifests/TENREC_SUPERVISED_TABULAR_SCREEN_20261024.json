@@ -1,0 +1,65 @@
+{
+  "dataset": "Tenrec: Tencent recommender benchmark",
+  "screened_at": "2026-10-24",
+  "scope": "Supervised dense feed-forward MLP task compatibility, anonymous access, reuse rights, full-training-partition batch feasibility, and demonstrated non-saturation.",
+  "primary_sources": [
+    {
+      "url": "https://tenrec0.github.io/",
+      "evidence": "Official benchmark page reports approximately 5 million users and 140 million interactions, multiple feedback signals and four scenarios; download is for research purposes and instructs users to read terms before downloading."
+    },
+    {
+      "url": "https://arxiv.org/abs/2210.10629",
+      "evidence": "Tenrec paper and dataset description; reports CC BY-NC 4.0 terms and four data files/scenarios."
+    },
+    {
+      "url": "https://github.com/yuangh-x/2022-NIPS-Tenrec",
+      "evidence": "Official code/data landing reference. Download page says use official source and accept license agreement."
+    }
+  ],
+  "candidate_routes": [
+    {
+      "name": "QK-video.csv",
+      "route": "scenario file linked from official Tencent download page",
+      "individual_payload_probe": "Not completed: official endpoint timed out when opened during web-source inspection; no authenticated or form acceptance used."
+    },
+    {
+      "name": "QB-video.csv",
+      "route": "scenario file linked from official Tencent download page",
+      "individual_payload_probe": "Not completed: official endpoint timed out when opened during web-source inspection; no authenticated or form acceptance used."
+    },
+    {
+      "name": "QK-article.csv",
+      "route": "scenario file linked from official Tencent download page",
+      "individual_payload_probe": "Not completed: official endpoint timed out when opened during web-source inspection; no authenticated or form acceptance used."
+    },
+    {
+      "name": "QB-article.csv",
+      "route": "scenario file linked from official Tencent download page",
+      "individual_payload_probe": "Not completed: official endpoint timed out when opened during web-source inspection; no authenticated or form acceptance used."
+    }
+  ],
+  "compatibility": {
+    "fit": "Yes in principle for row-level click/engagement classification using observed interaction plus true negatives and numeric/categorical context; no sequence/RNN required. Must avoid post-outcome features and use grouped/chronological split appropriate to row semantics.",
+    "task_limit": "It is a logged recommendation dataset; pointwise response classification does not itself establish counterfactual ranking accuracy."
+  },
+  "rights_and_access": {
+    "rights": "Fails user requirement: source grants research-purpose use and points to terms/license agreement; paper identifies CC BY-NC 4.0, which is noncommercial, not unrestricted open reuse.",
+    "access": "Official site directs users to terms before download; endpoint was not independently payload-verified this turn. Classify as terms-gated, not anonymous/no-gate."
+  },
+  "full_batch": {
+    "published_scale": "About 140,000,000 interactions total",
+    "illustrative_train_rows": 98000000,
+    "architecture": "five hidden layers of width 512, float32",
+    "hidden_activation_lower_bound_bytes": 100352000000,
+    "hidden_activation_lower_bound_gib": 93.46,
+    "device_limit_gib": 6,
+    "result": "Fails full-batch capacity by hidden activations alone; excludes input, gradients, parameters, optimizer state and workspace."
+  },
+  "difficulty": "No pilot run: rights/access and full-batch gates fail before difficulty screening.",
+  "decision": "CROSS OUT all four scenarios from this suite under current constraints.",
+  "limitations": [
+    "No scenario-specific row counts or checksums were obtained because the official payload route timed out and terms gate applies.",
+    "A hypothetical licensed subset/streamed-minibatch experiment would violate current no-gate and full-training-batch requirements.",
+    "No MLP accuracy/headroom conclusion is claimed."
+  ]
+}

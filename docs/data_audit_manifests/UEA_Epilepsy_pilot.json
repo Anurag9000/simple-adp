@@ -1,0 +1,92 @@
+{
+  "dataset": "UEA/TSML Epilepsy (controlled human activity classification, not clinical seizure detection)",
+  "zenodo_record": "https://zenodo.org/records/11206204",
+  "source_page": "https://www.timeseriesclassification.com/description.php?Dataset=Epilepsy",
+  "downloaded_anonymously": true,
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "files": [
+    {
+      "file": "Epilepsy_TRAIN.ts",
+      "bytes": 463710,
+      "sha256": "e2555afb91b2484831bcc66b3b5db3a362ba0697e855cfbb041eac165e371022"
+    },
+    {
+      "file": "Epilepsy_TEST.ts",
+      "bytes": 471837,
+      "sha256": "e68e220e31a9235fd7da23bbae2e59bd8315a3cc4c2b12f803885235b61b52ac"
+    }
+  ],
+  "total_bytes": 935547,
+  "parsed": {
+    "train_rows": 137,
+    "test_rows": 138,
+    "channels": 3,
+    "points_per_channel": 206,
+    "input_width": 618,
+    "classes": [
+      "EPILEPSY",
+      "RUNNING",
+      "SAWING",
+      "WALKING"
+    ],
+    "train_counts": [
+      34,
+      36,
+      30,
+      37
+    ],
+    "test_counts": [
+      34,
+      37,
+      30,
+      37
+    ],
+    "missing_values": false
+  },
+  "task_provenance": "Six healthy participants simulated the four activities; EPILEPSY class is a controlled seizure mimic. UEA split is three people train / three people test; identifiers have been removed.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 619,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "20% stratified rows from official train (27 rows); identifiers removed, so validation can include represented train participants",
+    "preprocessing": "per-feature mean/std fitted on remaining 110 training rows only",
+    "majority_test_accuracy": 0.26811594,
+    "architectures": [
+      {
+        "hidden_widths": [
+          128,
+          128
+        ],
+        "selected_epoch": 15,
+        "train_loss": 0.24406528,
+        "validation_accuracy": 0.66666669,
+        "test_accuracy": 0.66666667,
+        "test_balanced_accuracy": 0.67172761,
+        "test_macro_f1": 0.64215731,
+        "test_cross_entropy": 0.87360555
+      },
+      {
+        "hidden_widths": [
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "selected_epoch": 7,
+        "train_loss": 0.44939652,
+        "validation_accuracy": 0.74074078,
+        "test_accuracy": 0.63768116,
+        "test_balanced_accuracy": 0.62935877,
+        "test_macro_f1": 0.64296218,
+        "test_cross_entropy": 0.77467209
+      }
+    ],
+    "assessment": "Unsaturated, low-to-moderate held-out skill on small source split; candidate is a stress route, not robustly established. Do not interpret it as clinical seizure event detection."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "audit_date": "2026-10-24",
+  "method": "Fetched through repository ODDSProvider in a TemporaryDirectory, no credentials; load_task parser and artifact count checks; deleted payloads when process exited. Rights remain unresolved per primary-source audit.",
+  "results": [
+    {
+      "dataset": "mnist",
+      "download": "complete via provider anonymous HTTPS",
+      "rows": 7603,
+      "features": 100,
+      "positives": 700,
+      "artifact_sha256": "9479e221f236684c09f3e11c7ad124725d34ecd301b9450425e8b113368413a6",
+      "parse": "valid X/y and expected provider checks passed"
+    },
+    {
+      "dataset": "speech",
+      "download": "complete via provider anonymous HTTPS",
+      "rows": 3686,
+      "features": 400,
+      "positives": 61,
+      "artifact_sha256": "193d85404c5aff8b33e7e0540a8be211a7c94948d1a33162ce500b7e526ea937",
+      "parse": "valid X/y and expected provider checks passed"
+    },
+    {
+      "dataset": "mammography",
+      "download": "complete via provider anonymous HTTPS",
+      "rows": 11183,
+      "features": 6,
+      "positives": 260,
+      "artifact_sha256": "271ebb568314a856666d3504b4882e21b0ea6e1ba9e648ad256d572a36df597e",
+      "parse": "valid X/y and expected provider checks passed"
+    }
+  ]
+}

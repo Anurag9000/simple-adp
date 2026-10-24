@@ -1,0 +1,2816 @@
+{
+  "audit_date": "2026-10-24",
+  "source": "Monash Time Series Forecasting Repository / 58 Zenodo variant records",
+  "source_url": "https://forecastingdata.org/",
+  "source_intent": "Monash says all datasets are intended for research use. The 50 successful Zenodo records separately report open access and CC BY 4.0; honor the research-purpose notice pending clarification of any conflict.",
+  "method": {
+    "metadata_source": "Zenodo public record API for each record ID extracted individually from the repository audit table.",
+    "payload_method": "Anonymous full HTTP GET of each record file through its official Zenodo content endpoint; no login or token.",
+    "parser": "ZIP CRC validation followed by a TSF header/attribute and full series-row parse; count each record, observation, missing token, and per-series length min/median/max.",
+    "limitations": "This pass verifies archive retrieval and raw series parsing, not a task-specific split, complete window count, GPU full-batch fit, or MLP non-saturation for every variant. Those remain separate gates.",
+    "retry_note": "Eight first-pass HTTP 504 artifacts were retried on 2026-10-24; all eight subsequent full anonymous downloads passed ZIP CRC and TSF parsing."
+  },
+  "summary": {
+    "listed_variants": 58,
+    "full_anonymous_downloads": 58,
+    "full_zip_crc_pass": 58,
+    "tsf_parse_pass": 58,
+    "first_attempt_http_504_then_retry_success": 8,
+    "bytes_downloaded_total": 1134114909,
+    "open_cc_by_4_0_records": 58
+  },
+  "records": [
+    {
+      "record_id": "4654722",
+      "title": "Sunspot Daily Dataset (without Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "sunspot_dataset_without_missing_values.zip",
+          "advertised_bytes": 68476,
+          "download_bytes": 68476,
+          "http_status": 200,
+          "sha256": "e47ca44f2046a95eb539ada9f1eab7c0091483b4b872f8b6682987f67342cca8",
+          "parsed_tsf": [
+            {
+              "name": "sunspot_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 1,
+              "min_length": 73924,
+              "median_length": 73924,
+              "max_length": 73924,
+              "total_values": 73924,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "sunspot_dataset_without_missing_values.tsf",
+              "size": 236090
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4654773",
+      "title": "Sunspot Daily Dataset (with Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "sunspot_dataset_with_missing_values.zip",
+          "advertised_bytes": 68865,
+          "download_bytes": 68865,
+          "http_status": 200,
+          "sha256": "f83d60e56830b30890d0c938dd87e3446658d5fc2b65164b8b3003d8d52ca19e",
+          "parsed_tsf": [
+            {
+              "name": "sunspot_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "true",
+                "equallength": "true"
+              },
+              "records": 1,
+              "min_length": 73924,
+              "median_length": 73924,
+              "max_length": 73924,
+              "total_values": 73924,
+              "missing_values": 3240
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "sunspot_dataset_with_missing_values.tsf",
+              "size": 231660
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4654802",
+      "title": "Dominick Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "dominick_dataset.zip",
+          "advertised_bytes": 12328941,
+          "download_bytes": 12328941,
+          "http_status": 200,
+          "sha256": "3025a5e6abc152b700b13cc84d9056c99398651e508803b20f2fe76156f7bd96",
+          "parsed_tsf": [
+            {
+              "name": "dominick_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ]
+              ],
+              "metadata": {
+                "frequency": "weekly",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 115704,
+              "min_length": 28,
+              "median_length": 138,
+              "max_length": 393,
+              "total_values": 19092987,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "dominick_dataset.tsf",
+              "size": 75954427
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4654822",
+      "title": "Weather Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "weather_dataset.zip",
+          "advertised_bytes": 38820451,
+          "download_bytes": 38820451,
+          "http_status": 200,
+          "sha256": "adc9195b4b842673892fec1ba22cced9c42d5c4cba9a261f455ffbe96db7847b",
+          "parsed_tsf": [
+            {
+              "name": "weather_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "series_type",
+                  "string"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 3010,
+              "min_length": 1332,
+              "median_length": 10828,
+              "max_length": 65981,
+              "total_values": 43032000,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "weather_dataset.tsf",
+              "size": 212401586
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4654833",
+      "title": "FRED-MD Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "fred_md_dataset.zip",
+          "advertised_bytes": 169107,
+          "download_bytes": 169107,
+          "http_status": 200,
+          "sha256": "305c0edd2b5e97159c6339be4990ea97fdf86772c1edef2a0dfc836bf29f45c3",
+          "parsed_tsf": [
+            {
+              "name": "fred_md_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 107,
+              "min_length": 728,
+              "median_length": 728,
+              "max_length": 728,
+              "total_values": 77896,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "fred_md_dataset.tsf",
+              "size": 487237
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4654858",
+      "title": "Wind Farms Dataset (without Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "wind_farms_minutely_dataset_without_missing_values.zip",
+          "advertised_bytes": 71369048,
+          "download_bytes": 71369048,
+          "http_status": 200,
+          "sha256": "61eb6d911ce30f1799276a15d4b5fd688c72cb37429687622062bf17b14422eb",
+          "parsed_tsf": [
+            {
+              "name": "wind_farms_minutely_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "minutely",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 339,
+              "min_length": 6345,
+              "median_length": 527040,
+              "max_length": 527040,
+              "total_values": 172178060,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "wind_farms_minutely_dataset_without_missing_values.tsf",
+              "size": 561515793
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4654909",
+      "title": "Wind Farms Dataset (with Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "wind_farms_minutely_dataset_with_missing_values.zip",
+          "advertised_bytes": 71383130,
+          "download_bytes": 71383130,
+          "http_status": 200,
+          "sha256": "4633a7255b6720347fc682003b5441e7bbd1a1097a4834cac0492852fb42e47a",
+          "parsed_tsf": [
+            {
+              "name": "wind_farms_minutely_dataset_with_missing_values.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "minutely",
+                "missing": "true",
+                "equallength": "false"
+              },
+              "records": 339,
+              "min_length": 6345,
+              "median_length": 527040,
+              "max_length": 527040,
+              "total_values": 172178060,
+              "missing_values": 29345673
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "4656009",
+      "title": "COVID-19 Deaths Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "covid_deaths_dataset.zip",
+          "advertised_bytes": 27335,
+          "download_bytes": 27335,
+          "http_status": 200,
+          "sha256": "baf11e0982c307f2dae25ff0a6faeb70ac14db8f2dcc71da75ff57563008f1b2",
+          "parsed_tsf": [
+            {
+              "name": "covid_deaths_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 266,
+              "min_length": 212,
+              "median_length": 212,
+              "max_length": 212,
+              "total_values": 56392,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "covid_deaths_dataset.tsf",
+              "size": 158234
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656014",
+      "title": "Hospital Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "hospital_dataset.zip",
+          "advertised_bytes": 78110,
+          "download_bytes": 78110,
+          "http_status": 200,
+          "sha256": "8fd4085efb4517508e30fc69247eee9b74b300765bc6e94482c5d250efba66e5",
+          "parsed_tsf": [
+            {
+              "name": "hospital_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 767,
+              "min_length": 84,
+              "median_length": 84,
+              "max_length": 84,
+              "total_values": 64428,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "hospital_dataset.tsf",
+              "size": 233355
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656021",
+      "title": "Car Parts Dataset (without Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "car_parts_dataset_without_missing_values.zip",
+          "advertised_bytes": 39609,
+          "download_bytes": 39609,
+          "http_status": 200,
+          "sha256": "a0b1e87e2329098837e5cfd020e16a36e30efa9a29a1fae8d1bd3603dfefcfea",
+          "parsed_tsf": [
+            {
+              "name": "car_parts_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 2674,
+              "min_length": 51,
+              "median_length": 51,
+              "max_length": 51,
+              "total_values": 136374,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "car_parts_dataset_without_missing_values.tsf",
+              "size": 344870
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656022",
+      "title": "Car Parts Dataset (with Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "car_parts_dataset_with_missing_values.zip",
+          "advertised_bytes": 39656,
+          "download_bytes": 39656,
+          "http_status": 200,
+          "sha256": "80557703397c7dca6c007bd28930b0e213e529f428afd02e5af87804fdc38ee1",
+          "parsed_tsf": [
+            {
+              "name": "car_parts_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "missing": "true",
+                "equallength": "true"
+              },
+              "records": 2674,
+              "min_length": 51,
+              "median_length": 51,
+              "max_length": 51,
+              "total_values": 136374,
+              "missing_values": 6122
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "car_parts_dataset_with_missing_values.tsf",
+              "size": 344783
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656027",
+      "title": "Solar Power Dataset (4 Seconds Observations)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "solar_4_seconds_dataset.zip",
+          "advertised_bytes": 794502,
+          "download_bytes": 794502,
+          "http_status": 200,
+          "sha256": "9aff580f3cce6b8864572117b2b1cbbf410cc46e9ec40a90201c14bd0296f4fd",
+          "parsed_tsf": [
+            {
+              "name": "solar_4_seconds_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "4_seconds",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 1,
+              "min_length": 7397222,
+              "median_length": 7397222,
+              "max_length": 7397222,
+              "total_values": 7397222,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "solar_4_seconds_dataset.tsf",
+              "size": 25140061
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656032",
+      "title": "Wind Power Dataset (4 Seconds Observations)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "wind_4_seconds_dataset.zip",
+          "advertised_bytes": 2226184,
+          "download_bytes": 2226184,
+          "http_status": 200,
+          "sha256": "4214cbf21c1b0f27e4ce06e5ed4fe3b900d49ce81b57c27b1495cf3d81792bca",
+          "parsed_tsf": [
+            {
+              "name": "wind_4_seconds_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "4_seconds",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 1,
+              "min_length": 7397147,
+              "median_length": 7397147,
+              "max_length": 7397147,
+              "total_values": 7397147,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "wind_4_seconds_dataset.tsf",
+              "size": 34561070
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656042",
+      "title": "CIF 2016 Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "cif_2016_dataset.zip",
+          "advertised_bytes": 53344,
+          "download_bytes": 53344,
+          "http_status": 200,
+          "sha256": "e0a7d93d6fb66dd2bb3ceb23bec73c2f39fe9cec909b4599ca35fef22b8d8f59",
+          "parsed_tsf": [
+            {
+              "name": "cif_2016_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "horizon",
+                  "numeric"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 72,
+              "min_length": 28,
+              "median_length": 120,
+              "max_length": 120,
+              "total_values": 7108,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "cif_2016_dataset.tsf",
+              "size": 108787
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656049",
+      "title": "US Births Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "us_births_dataset.zip",
+          "advertised_bytes": 16332,
+          "download_bytes": 16332,
+          "http_status": 200,
+          "sha256": "cca9ebce263e6a8cd7c776c002e01ff1f904d8bce5dd2c8103cbed8bc6f8b391",
+          "parsed_tsf": [
+            {
+              "name": "us_births_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 1,
+              "min_length": 7305,
+              "median_length": 7305,
+              "max_length": 7305,
+              "total_values": 7305,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "us_births_dataset.tsf",
+              "size": 40088
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656058",
+      "title": "Saugeen River Flow (SaugeenDay) Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "saugeenday_dataset.zip",
+          "advertised_bytes": 28721,
+          "download_bytes": 28721,
+          "http_status": 200,
+          "sha256": "061cb56ee6829d5686e5e08f1a61f4c0af682e32c37824e79926fc11148747df",
+          "parsed_tsf": [
+            {
+              "name": "saugeenday_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 1,
+              "min_length": 23741,
+              "median_length": 23741,
+              "max_length": 23741,
+              "total_values": 23741,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "saugeenday_dataset.tsf",
+              "size": 107508
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656072",
+      "title": "London Smart Meters Dataset (with Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "london_smart_meters_dataset_with_missing_values.zip",
+          "advertised_bytes": 219673439,
+          "download_bytes": 219673439,
+          "http_status": 200,
+          "sha256": "20a0ead3ad2ed7c073a9372062cbd473fdbbcf5d86d73d1c97bd3909a0cf7ac8",
+          "parsed_tsf": [
+            {
+              "name": "london_smart_meters_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "half_hourly",
+                "missing": "true",
+                "equallength": "false"
+              },
+              "records": 5560,
+              "min_length": 288,
+              "median_length": 30864,
+              "max_length": 39648,
+              "total_values": 166528896,
+              "missing_values": 5486
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "london_smart_meters_dataset_with_missing_values.tsf",
+              "size": 977761099
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656075",
+      "title": "Kaggle Wikipedia Web Traffic Daily Dataset (without Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "kaggle_web_traffic_dataset_without_missing_values.zip",
+          "advertised_bytes": 145140849,
+          "download_bytes": 145140849,
+          "http_status": 200,
+          "sha256": "29912f202cb81c782a33b16691eac2afc70c2fb7c68592409c4d3358b25b0e48",
+          "parsed_tsf": [
+            {
+              "name": "kaggle_web_traffic_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "horizon": "59",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 145063,
+              "min_length": 803,
+              "median_length": 803,
+              "max_length": 803,
+              "total_values": 116485589,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "kaggle_web_traffic_dataset_without_missing_values.tsf",
+              "size": 409136806
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656080",
+      "title": "Kaggle Wikipedia Web Traffic Daily Dataset (with Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "kaggle_web_traffic_dataset_with_missing_values.zip",
+          "advertised_bytes": 145485324,
+          "download_bytes": 145485324,
+          "http_status": 200,
+          "sha256": "44e10fc187475f673e2aac837f5f54cf32333fed25222d006f287355ec8699a9",
+          "parsed_tsf": [
+            {
+              "name": "kaggle_web_traffic_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "horizon": "59",
+                "missing": "true",
+                "equallength": "true"
+              },
+              "records": 145063,
+              "min_length": 803,
+              "median_length": 803,
+              "max_length": 803,
+              "total_values": 116485589,
+              "missing_values": 7006608
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "kaggle_web_traffic_dataset_with_missing_values.tsf",
+              "size": 409136715
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656091",
+      "title": "London Smart Meters Dataset (without Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "london_smart_meters_dataset_without_missing_values.zip",
+          "advertised_bytes": 219651092,
+          "download_bytes": 219651092,
+          "http_status": 200,
+          "sha256": "a1bce05764a90fde8fb43d084fcddda1739bc6c3be70f44ef151b436a311d974",
+          "parsed_tsf": [
+            {
+              "name": "london_smart_meters_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "half_hourly",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 5560,
+              "min_length": 288,
+              "median_length": 30864,
+              "max_length": 39648,
+              "total_values": 166528896,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "london_smart_meters_dataset_without_missing_values.tsf",
+              "size": 977782457
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656093",
+      "title": "Tourism Quarterly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "tourism_quarterly_dataset.zip",
+          "advertised_bytes": 93833,
+          "download_bytes": 93833,
+          "http_status": 200,
+          "sha256": "fa16da64f29aa04df447756cb65a5d58f8bc3d860fc22751c76850a3ffb048c3",
+          "parsed_tsf": [
+            {
+              "name": "tourism_quarterly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "quarterly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 427,
+              "min_length": 30,
+              "median_length": 110,
+              "max_length": 130,
+              "total_values": 42544,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "tourism_quarterly_dataset.tsf",
+              "size": 226526
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656096",
+      "title": "Tourism Monthly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "tourism_monthly_dataset.zip",
+          "advertised_bytes": 199791,
+          "download_bytes": 199791,
+          "http_status": 200,
+          "sha256": "6e434ad8a0ef6acb55ebee0e1d1ffe22707ea4e62c05e091326267f3a5b4a93c",
+          "parsed_tsf": [
+            {
+              "name": "tourism_monthly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "horizon": "24",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 366,
+              "min_length": 91,
+              "median_length": 330,
+              "max_length": 333,
+              "total_values": 109280,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "tourism_monthly_dataset.tsf",
+              "size": 516457
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656103",
+      "title": "Tourism Yearly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "tourism_yearly_dataset.zip",
+          "advertised_bytes": 36749,
+          "download_bytes": 36749,
+          "http_status": 200,
+          "sha256": "20238ddb9b11465b061bbfadcc398ef01f0896a8791199381b3edc706abf0263",
+          "parsed_tsf": [
+            {
+              "name": "tourism_yearly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "yearly",
+                "horizon": "4",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 518,
+              "min_length": 11,
+              "median_length": 27,
+              "max_length": 47,
+              "total_values": 12757,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "tourism_yearly_dataset.tsf",
+              "size": 88771
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656110",
+      "title": "NN5 Daily Dataset (with Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "nn5_daily_dataset_with_missing_values.zip",
+          "advertised_bytes": 287708,
+          "download_bytes": 287708,
+          "http_status": 200,
+          "sha256": "7022d158f6e49e323f3bd76f48fb18ba78b6d013972a97980af01c56f6f4c74b",
+          "parsed_tsf": [
+            {
+              "name": "nn5_daily_dataset_with_missing_values.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "daily",
+                "horizon": "56",
+                "missing": "true",
+                "equallength": "true"
+              },
+              "records": 111,
+              "min_length": 791,
+              "median_length": 791,
+              "max_length": 791,
+              "total_values": 87801,
+              "missing_values": 1677
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "4656117",
+      "title": "NN5 Daily Dataset (without Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "nn5_daily_dataset_without_missing_values.zip",
+          "advertised_bytes": 289779,
+          "download_bytes": 289779,
+          "http_status": 200,
+          "sha256": "14d504384a97f7730a4b2595da9f35f77ee82b1974ffcf515eb17d607f7a07bb",
+          "parsed_tsf": [
+            {
+              "name": "nn5_daily_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "horizon": "56",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 111,
+              "min_length": 791,
+              "median_length": 791,
+              "max_length": 791,
+              "total_values": 87801,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "nn5_daily_dataset_without_missing_values.tsf",
+              "size": 1479606
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656125",
+      "title": "NN5 Weekly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "nn5_weekly_dataset.zip",
+          "advertised_bytes": 62043,
+          "download_bytes": 62043,
+          "http_status": 200,
+          "sha256": "ce6ad3aee8cb6b665a587a40c7884e9e23d1b0f238a32dc2bdc34de7a57f3d54",
+          "parsed_tsf": [
+            {
+              "name": "nn5_weekly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "weekly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 111,
+              "min_length": 113,
+              "median_length": 113,
+              "max_length": 113,
+              "total_values": 12543,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "nn5_weekly_dataset.tsf",
+              "size": 215630
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656132",
+      "title": "Traffic Hourly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "traffic_hourly_dataset.zip",
+          "advertised_bytes": 22868806,
+          "download_bytes": 22868806,
+          "http_status": 200,
+          "sha256": "3db12ba866a9c9d3c8109b7b6d189a990c38d0e5002fa2617022157358d08299",
+          "parsed_tsf": [
+            {
+              "name": "traffic_hourly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "hourly",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 862,
+              "min_length": 17544,
+              "median_length": 17544,
+              "max_length": 17544,
+              "total_values": 15122928,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "traffic_hourly_dataset.tsf",
+              "size": 103476945
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656135",
+      "title": "Traffic Weekly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "traffic_weekly_dataset.zip",
+          "advertised_bytes": 245126,
+          "download_bytes": 245126,
+          "http_status": 200,
+          "sha256": "df3fc458fb1d6f770451fc45c43b930c091e69e86d508410dae4843918851525",
+          "parsed_tsf": [
+            {
+              "name": "traffic_weekly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "weekly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 862,
+              "min_length": 104,
+              "median_length": 104,
+              "max_length": 104,
+              "total_values": 89648,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "traffic_weekly_dataset.tsf",
+              "size": 676465
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656140",
+      "title": "Electricity Hourly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "electricity_hourly_dataset.zip",
+          "advertised_bytes": 11823931,
+          "download_bytes": 11823931,
+          "http_status": 200,
+          "sha256": "eff447075dde68dca0105ab7e2851c5637967ae3bb21556fd8b931f196d5968c",
+          "parsed_tsf": [
+            {
+              "name": "electricity_hourly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "hourly",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 321,
+              "min_length": 26304,
+              "median_length": 26304,
+              "max_length": 26304,
+              "total_values": 8443584,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "electricity_hourly_dataset.tsf",
+              "size": 35932338
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656141",
+      "title": "Electricity Weekly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "electricity_weekly_dataset.zip",
+          "advertised_bytes": 147816,
+          "download_bytes": 147816,
+          "http_status": 200,
+          "sha256": "841c9c1be3f8a89558f5d8ebd652238264deca4f2562d2799e8bc0ee99c10d53",
+          "parsed_tsf": [
+            {
+              "name": "electricity_weekly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "weekly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 321,
+              "min_length": 156,
+              "median_length": 156,
+              "max_length": 156,
+              "total_values": 50076,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "electricity_weekly_dataset.tsf",
+              "size": 334919
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656144",
+      "title": "Solar Dataset (10 Minutes Observations)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "solar_10_minutes_dataset.zip",
+          "advertised_bytes": 4559353,
+          "download_bytes": 4559353,
+          "http_status": 200,
+          "sha256": "63ec43cefc45d87af17f06255daad8343cc2593d3572e4d7178d791ab9387390",
+          "parsed_tsf": [
+            {
+              "name": "solar_10_minutes_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "10_minutes",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 137,
+              "min_length": 52560,
+              "median_length": 52560,
+              "max_length": 52560,
+              "total_values": 7200720,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "solar_10_minutes_dataset.tsf",
+              "size": 24110029
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656151",
+      "title": "Solar Weekly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "solar_weekly_dataset.zip",
+          "advertised_bytes": 24375,
+          "download_bytes": 24375,
+          "http_status": 200,
+          "sha256": "421426b22c22997697aeeaadb8e71cc73a7a0a36ed8097037ff6b378650f428f",
+          "parsed_tsf": [
+            {
+              "name": "solar_weekly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "weekly",
+                "horizon": "5",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 137,
+              "min_length": 52,
+              "median_length": 52,
+              "max_length": 52,
+              "total_values": 7124,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "solar_weekly_dataset.tsf",
+              "size": 57779
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656154",
+      "title": "M1 Quarterly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m1_quarterly_dataset.zip",
+          "advertised_bytes": 21290,
+          "download_bytes": 21290,
+          "http_status": 200,
+          "sha256": "2820f7fab538a4789541468949e52156c72b37a283f5a9d71e4e38a19b60e8c2",
+          "parsed_tsf": [
+            {
+              "name": "m1_quarterly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "quarterly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 203,
+              "min_length": 18,
+              "median_length": 48,
+              "max_length": 114,
+              "total_values": 9944,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m1_quarterly_dataset.tsf",
+              "size": 53754
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656159",
+      "title": "M1 Monthly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m1_monthly_dataset.zip",
+          "advertised_bytes": 120931,
+          "download_bytes": 120931,
+          "http_status": 200,
+          "sha256": "2780e591d1a0e3fb105575b413fcd218d59eac264af045356dbe5f85c9ff470f",
+          "parsed_tsf": [
+            {
+              "name": "m1_monthly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "horizon": "18",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 617,
+              "min_length": 48,
+              "median_length": 84,
+              "max_length": 150,
+              "total_values": 55998,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m1_monthly_dataset.tsf",
+              "size": 313600
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656193",
+      "title": "M1 Yearly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m1_yearly_dataset.zip",
+          "advertised_bytes": 13179,
+          "download_bytes": 13179,
+          "http_status": 200,
+          "sha256": "334ecda7a9bb5ca15764716958e0087b0db3229ec40d253ffa7603f2ae7d0cf1",
+          "parsed_tsf": [
+            {
+              "name": "m1_yearly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "yearly",
+                "horizon": "6",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 181,
+              "min_length": 15,
+              "median_length": 21,
+              "max_length": 58,
+              "total_values": 4515,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m1_yearly_dataset.tsf",
+              "size": 30557
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656222",
+      "title": "M3 Yearly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m3_yearly_dataset.zip",
+          "advertised_bytes": 50178,
+          "download_bytes": 50178,
+          "http_status": 200,
+          "sha256": "08a23f5bcc4dc47acc67c8b6f08ad44c04ffcb9d714181a1744f73cdbf8d8510",
+          "parsed_tsf": [
+            {
+              "name": "m3_yearly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "yearly",
+                "horizon": "6",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 645,
+              "min_length": 20,
+              "median_length": 25,
+              "max_length": 47,
+              "total_values": 18319,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m3_yearly_dataset.tsf",
+              "size": 125743
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656262",
+      "title": "M3 Quarterly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m3_quarterly_dataset.zip",
+          "advertised_bytes": 96124,
+          "download_bytes": 96124,
+          "http_status": 200,
+          "sha256": "c59f208d1ad3d38ff039e0bdc9e356fe7c83019ecd2dcae0a930b607c22b50c2",
+          "parsed_tsf": [
+            {
+              "name": "m3_quarterly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "quarterly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 756,
+              "min_length": 24,
+              "median_length": 52,
+              "max_length": 72,
+              "total_values": 37004,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m3_quarterly_dataset.tsf",
+              "size": 253744
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656298",
+      "title": "M3 Monthly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m3_monthly_dataset.zip",
+          "advertised_bytes": 336324,
+          "download_bytes": 336324,
+          "http_status": 200,
+          "sha256": "80b0c1c92b6273f12d346256d3ee29489a7b081823430ad8b3a1cc01e06ccafd",
+          "parsed_tsf": [
+            {
+              "name": "m3_monthly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "horizon": "18",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 1428,
+              "min_length": 66,
+              "median_length": 133,
+              "max_length": 144,
+              "total_values": 167562,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m3_monthly_dataset.tsf",
+              "size": 960208
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656335",
+      "title": "M3 Other Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m3_other_dataset.zip",
+          "advertised_bytes": 33018,
+          "download_bytes": 33018,
+          "http_status": 200,
+          "sha256": "0bf0e3a260e8ebfe361e3ccb60f5d1c7fbc2b9918afff1805bccec61a221b43f",
+          "parsed_tsf": [
+            {
+              "name": "m3_other_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ]
+              ],
+              "metadata": {
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 174,
+              "min_length": 71,
+              "median_length": 71,
+              "max_length": 104,
+              "total_values": 13325,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m3_other_dataset.tsf",
+              "size": 80003
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656379",
+      "title": "M4 Yearly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m4_yearly_dataset.zip",
+          "advertised_bytes": 2785010,
+          "download_bytes": 2785010,
+          "http_status": 200,
+          "sha256": "4a260dc865e9b746dda7ea3a3168db4163c858f8eb494b502128e98a4175f6aa",
+          "parsed_tsf": [
+            {
+              "name": "m4_yearly_dataset.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "yearly",
+                "horizon": "6",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 23000,
+              "min_length": 19,
+              "median_length": 35,
+              "max_length": 841,
+              "total_values": 858458,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "4656410",
+      "title": "M4 Quarterly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m4_quarterly_dataset.zip",
+          "advertised_bytes": 7031886,
+          "download_bytes": 7031886,
+          "http_status": 200,
+          "sha256": "0a41bd81bd8d18ee51df83b29832d8909dc4edae9aeb2ac6f7ef21b7ef561a23",
+          "parsed_tsf": [
+            {
+              "name": "m4_quarterly_dataset.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "quarterly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 24000,
+              "min_length": 24,
+              "median_length": 96,
+              "max_length": 874,
+              "total_values": 2406108,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "4656480",
+      "title": "M4 Monthly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m4_monthly_dataset.zip",
+          "advertised_bytes": 28235874,
+          "download_bytes": 28235874,
+          "http_status": 200,
+          "sha256": "473aa4fc814b625174be2b5615959f35f85f566fbed09c30acf44c350b2a1efe",
+          "parsed_tsf": [
+            {
+              "name": "m4_monthly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "monthly",
+                "horizon": "18",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 48000,
+              "min_length": 60,
+              "median_length": 220,
+              "max_length": 2812,
+              "total_values": 11246411,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "m4_monthly_dataset.tsf",
+              "size": 77554719
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656522",
+      "title": "M4 Weekly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m4_weekly_dataset.zip",
+          "advertised_bytes": 1077913,
+          "download_bytes": 1077913,
+          "http_status": 200,
+          "sha256": "5144147e7e02830f6afb9543e798a06caa9e7dc10db00cc7502af23a51f45942",
+          "parsed_tsf": [
+            {
+              "name": "m4_weekly_dataset.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "weekly",
+                "horizon": "13",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 359,
+              "min_length": 93,
+              "median_length": 947,
+              "max_length": 2610,
+              "total_values": 371579,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "4656548",
+      "title": "M4 Daily Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m4_daily_dataset.zip",
+          "advertised_bytes": 27963288,
+          "download_bytes": 27963288,
+          "http_status": 200,
+          "sha256": "0f07fc3b67a93be1865de7853e06d8ad212f1a8cb8436ba859920cfe5625d889",
+          "parsed_tsf": [
+            {
+              "name": "m4_daily_dataset.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "daily",
+                "horizon": "14",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 4227,
+              "min_length": 107,
+              "median_length": 2954,
+              "max_length": 9933,
+              "total_values": 10023836,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "4656589",
+      "title": "M4 Hourly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "m4_hourly_dataset.zip",
+          "advertised_bytes": 485448,
+          "download_bytes": 485448,
+          "http_status": 200,
+          "sha256": "18085bd3c34e41cdc07441aa61c5610dac9e916b9489a6a381f8e89fd01c8a66",
+          "parsed_tsf": [
+            {
+              "name": "m4_hourly_dataset.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "hourly",
+                "horizon": "48",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 414,
+              "min_length": 748,
+              "median_length": 1008,
+              "max_length": 1008,
+              "total_values": 373372,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "4656626",
+      "title": "Melbourne Pedestrian Counts Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "pedestrian_counts_dataset.zip",
+          "advertised_bytes": 4587054,
+          "download_bytes": 4587054,
+          "http_status": 200,
+          "sha256": "6e81cb8cad43650e7e0f754a1103fc75c960e03387bae9b91146aa3241c9aa50",
+          "parsed_tsf": [
+            {
+              "name": "pedestrian_counts_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "hourly",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 66,
+              "min_length": 576,
+              "median_length": 45976,
+              "max_length": 96424,
+              "total_values": 3132346,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "pedestrian_counts_dataset.tsf",
+              "size": 11901419
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656664",
+      "title": "Kaggle Wikipedia Web Traffic Weekly Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "kaggle_web_traffic_weekly_dataset.zip",
+          "advertised_bytes": 28930900,
+          "download_bytes": 28930900,
+          "http_status": 200,
+          "sha256": "5d286ff0c9e4485eae74525edec9540ff4b689ec9b580cf9e85c8ab7225d29c1",
+          "parsed_tsf": [
+            {
+              "name": "kaggle_web_traffic_weekly_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "weekly",
+                "horizon": "8",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 145063,
+              "min_length": 114,
+              "median_length": 114,
+              "max_length": 114,
+              "total_values": 16537182,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "kaggle_web_traffic_weekly_dataset.tsf",
+              "size": 74880015
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656719",
+      "title": "KDD Cup Dataset (with Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "kdd_cup_2018_dataset_with_missing_values.zip",
+          "advertised_bytes": 2456948,
+          "download_bytes": 2456948,
+          "http_status": 200,
+          "sha256": "3d0d2dbec3621b20c7a8ae6e6f00a63bfaebb962dca34d9f60f0ddbbde03e9bd",
+          "parsed_tsf": [
+            {
+              "name": "kdd_cup_2018_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "city",
+                  "string"
+                ],
+                [
+                  "station",
+                  "string"
+                ],
+                [
+                  "air_quality_measurement",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "hourly",
+                "missing": "true",
+                "equallength": "false"
+              },
+              "records": 270,
+              "min_length": 9504,
+              "median_length": 10898,
+              "max_length": 10920,
+              "total_values": 2942364,
+              "missing_values": 503697
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "kdd_cup_2018_dataset_with_missing_values.tsf",
+              "size": 9181958
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4656756",
+      "title": "KDD Cup Dataset (without Missing Values)",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "kdd_cup_2018_dataset_without_missing_values.zip",
+          "advertised_bytes": 2432429,
+          "download_bytes": 2432429,
+          "http_status": 200,
+          "sha256": "2ababea948fb1179eb3c5e0bed63611251278f5e8dca30dd8e8d658652720b01",
+          "parsed_tsf": [
+            {
+              "name": "kdd_cup_2018_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "city",
+                  "string"
+                ],
+                [
+                  "station",
+                  "string"
+                ],
+                [
+                  "air_quality_measurement",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "hourly",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 270,
+              "min_length": 9504,
+              "median_length": 10898,
+              "max_length": 10920,
+              "total_values": 2942364,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "kdd_cup_2018_dataset_without_missing_values.tsf",
+              "size": 9925024
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "4659727",
+      "title": "Australian Electricity Demand Dataset",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "australian_electricity_demand_dataset.zip",
+          "advertised_bytes": 5770526,
+          "download_bytes": 5770526,
+          "http_status": 200,
+          "sha256": "b1439c28a631766bd05ee327f1f430a887b9f53b38a8cd5c0769ded1fd4aaf5a",
+          "parsed_tsf": [
+            {
+              "name": "australian_electricity_demand_dataset.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "state",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "half_hourly",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 5,
+              "min_length": 230736,
+              "median_length": 230736,
+              "max_length": 232272,
+              "total_values": 1155264,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "australian_electricity_demand_dataset.tsf",
+              "size": 13422464
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "5121965",
+      "title": "Bitcoin Dataset with Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "bitcoin_dataset_with_missing_values.zip",
+          "advertised_bytes": 220403,
+          "download_bytes": 220403,
+          "http_status": 200,
+          "sha256": "aca43bae943dbf24617e885b5165f2493578fb195a888702ec85947e727f015f",
+          "parsed_tsf": [
+            {
+              "name": "bitcoin_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "true",
+                "equallength": "false"
+              },
+              "records": 18,
+              "min_length": 4581,
+              "median_length": 4581,
+              "max_length": 4581,
+              "total_values": 82458,
+              "missing_values": 8072
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "bitcoin_dataset_with_missing_values.tsf",
+              "size": 593102
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "5122101",
+      "title": "Bitcoin Dataset without Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "bitcoin_dataset_without_missing_values.zip",
+          "advertised_bytes": 220635,
+          "download_bytes": 220635,
+          "http_status": 200,
+          "sha256": "0da1727e15b6c332d37500553dcfabd9a096a9af10de95e503baad6ccdb538c4",
+          "parsed_tsf": [
+            {
+              "name": "bitcoin_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 18,
+              "min_length": 2659,
+              "median_length": 4199,
+              "max_length": 4581,
+              "total_values": 75364,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "bitcoin_dataset_without_missing_values.tsf",
+              "size": 583250
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "5122114",
+      "title": "Rideshare Dataset with Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "rideshare_dataset_with_missing_values.zip",
+          "advertised_bytes": 1031826,
+          "download_bytes": 1031826,
+          "http_status": 200,
+          "sha256": "5f83feec4970ff306108f50ac3c13f1adddbf96274226bc0b03655dfdab04567",
+          "parsed_tsf": [
+            {
+              "name": "rideshare_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "source_location",
+                  "string"
+                ],
+                [
+                  "provider_name",
+                  "string"
+                ],
+                [
+                  "provider_service",
+                  "string"
+                ],
+                [
+                  "type",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "hourly",
+                "missing": "true",
+                "equallength": "true"
+              },
+              "records": 2304,
+              "min_length": 541,
+              "median_length": 541,
+              "max_length": 541,
+              "total_values": 1246464,
+              "missing_values": 494649
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "rideshare_dataset_with_missing_values.tsf",
+              "size": 6081008
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "5122232",
+      "title": "Rideshare Dataset without Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "rideshare_dataset_without_missing_values.zip",
+          "advertised_bytes": 1073443,
+          "download_bytes": 1073443,
+          "http_status": 200,
+          "sha256": "20582f9cde2729048da9dcefb2004284ca3d74a91d5285fc8afe8572a0f18cb5",
+          "parsed_tsf": [
+            {
+              "name": "rideshare_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "source_location",
+                  "string"
+                ],
+                [
+                  "provider_name",
+                  "string"
+                ],
+                [
+                  "provider_service",
+                  "string"
+                ],
+                [
+                  "type",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "hourly",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 2304,
+              "min_length": 541,
+              "median_length": 541,
+              "max_length": 541,
+              "total_values": 1246464,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "rideshare_dataset_without_missing_values.tsf",
+              "size": 7072724
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "5122535",
+      "title": "Vehicle Trips Dataset with Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "vehicle_trips_dataset_with_missing_values.zip",
+          "advertised_bytes": 44914,
+          "download_bytes": 44914,
+          "http_status": 200,
+          "sha256": "f0e4df4d85705567cfe5489267f3fdbb398155e1d29796d2b4690cbbfd054730",
+          "parsed_tsf": [
+            {
+              "name": "vehicle_trips_dataset_with_missing_values.tsf",
+              "attributes": [],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "true",
+                "equallength": "false"
+              },
+              "records": 329,
+              "min_length": 70,
+              "median_length": 122,
+              "max_length": 243,
+              "total_values": 42382,
+              "missing_values": 7274
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": []
+        }
+      ],
+      "first_attempt_http_504_then_retry_success": true,
+      "retry_http_status": 200
+    },
+    {
+      "record_id": "5122537",
+      "title": "Vehicle Trips Dataset without Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "vehicle_trips_dataset_without_missing_values.zip",
+          "advertised_bytes": 44452,
+          "download_bytes": 44452,
+          "http_status": 200,
+          "sha256": "5dc76bccf892e6eb09c48450d4061b199459f0b1b046c3b6e7296df20e1cdae0",
+          "parsed_tsf": [
+            {
+              "name": "vehicle_trips_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "base_number",
+                  "string"
+                ],
+                [
+                  "base_name",
+                  "string"
+                ],
+                [
+                  "type",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "false"
+              },
+              "records": 329,
+              "min_length": 70,
+              "median_length": 122,
+              "max_length": 243,
+              "total_values": 42382,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "vehicle_trips_dataset_without_missing_values.tsf",
+              "size": 147792
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "5129073",
+      "title": "Temperature Rain Dataset with Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "temperature_rain_dataset_with_missing_values.zip",
+          "advertised_bytes": 25747139,
+          "download_bytes": 25747139,
+          "http_status": 200,
+          "sha256": "36a8c8cce2a99a8372ff8f82450b50dcc1b5eff653820c7a828d56730fe325fb",
+          "parsed_tsf": [
+            {
+              "name": "temperature_rain_dataset_with_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "station_id",
+                  "string"
+                ],
+                [
+                  "obs_or_fcst",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "true",
+                "equallength": "true"
+              },
+              "records": 32072,
+              "min_length": 725,
+              "median_length": 725,
+              "max_length": 725,
+              "total_values": 23252200,
+              "missing_values": 598837
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "temperature_rain_dataset_with_missing_values.tsf",
+              "size": 113556041
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "record_id": "5129091",
+      "title": "Temperature Rain Dataset without Missing Values",
+      "access_right": "open",
+      "license_id": "cc-by-4.0",
+      "files": [
+        {
+          "key": "temperature_rain_dataset_without_missing_values.zip",
+          "advertised_bytes": 25201952,
+          "download_bytes": 25201952,
+          "http_status": 200,
+          "sha256": "f250ae9b7090e757ab9edd6169cf97c5892a2e6558f4f17c2ac8127e714363a7",
+          "parsed_tsf": [
+            {
+              "name": "temperature_rain_dataset_without_missing_values.tsf",
+              "attributes": [
+                [
+                  "series_name",
+                  "string"
+                ],
+                [
+                  "station_id",
+                  "string"
+                ],
+                [
+                  "obs_or_fcst",
+                  "string"
+                ],
+                [
+                  "start_timestamp",
+                  "date"
+                ]
+              ],
+              "metadata": {
+                "frequency": "daily",
+                "missing": "false",
+                "equallength": "true"
+              },
+              "records": 32072,
+              "min_length": 725,
+              "median_length": 725,
+              "max_length": 725,
+              "total_values": 23252200,
+              "missing_values": 0
+            }
+          ],
+          "zip_valid": true,
+          "zip_members": [
+            {
+              "name": "temperature_rain_dataset_without_missing_values.tsf",
+              "size": 114753808
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

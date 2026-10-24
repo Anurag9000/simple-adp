@@ -1,0 +1,67 @@
+{
+  "dataset": "UEA PhonemeSpectra (39-class phoneme classification)",
+  "zenodo_record": "https://zenodo.org/records/11206261",
+  "uea_page": "https://timeseriesclassification.com/description.php?Dataset=PhonemeSpectra",
+  "record_id": 11206261,
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {"file": "PhonemeSpectra_TRAIN.ts", "bytes": 66078480, "sha256": "395e370dc1d2e6f34483b5fcf981b1aa9516772abfeefe5ea16c63919dffd1b7"},
+    {"file": "PhonemeSpectra_TEST.ts", "bytes": 66825148, "sha256": "24f1f7b85759334501bcf5a96fde497faec0c456f1d247c62d850be9329ea261"}
+  ],
+  "parsed": {
+    "train_rows": 3315,
+    "test_rows": 3353,
+    "channels": 11,
+    "points_per_channel": 217,
+    "input_width": 2387,
+    "classes": 39,
+    "train_class_counts": {"all_classes": 39, "min": 85, "max": 85},
+    "test_class_counts": {"all_classes": 39, "min": 85, "max": 86},
+    "test_majority_accuracy": 0.02564867,
+    "non_finite_values": false,
+    "speaker_ids_available": false
+  },
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU (6 GiB)",
+    "seed": 20261023,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "loss": "cross entropy",
+    "maximum_epochs": 100,
+    "early_stop_patience": 20,
+    "fullbatch_each_epoch": true,
+    "validation": "seeded class-stratified 20% utterance-row holdout from official train: 663 validation rows (17/class), 2652 training rows (68/class); no speaker IDs are available",
+    "preprocessing": "per-feature mean/std fitted only on the 2652 training rows",
+    "test_used_for_model_selection": false,
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epochs_run": 38,
+        "selected_epoch": 18,
+        "best_validation_accuracy": 0.06334842,
+        "test_accuracy": 0.07336713,
+        "test_balanced_accuracy": 0.07336631,
+        "test_macro_f1": 0.06657254,
+        "test_cross_entropy": 3.52121186,
+        "last_train_loss": 1.92562568,
+        "peak_cuda_allocated_mib": 88.61
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epochs_run": 77,
+        "selected_epoch": 57,
+        "best_validation_accuracy": 0.09351433,
+        "test_accuracy": 0.09871757,
+        "test_balanced_accuracy": 0.09872321,
+        "test_macro_f1": 0.08555951,
+        "test_cross_entropy": 4.34044409,
+        "last_train_loss": 1.07032406,
+        "peak_cuda_allocated_mib": 146.94
+      }
+    ]
+  },
+  "disposition": "Keep provisionally as a difficult, non-saturated 39-class classification stress task. Both fixed-width MLPs fit on GPU with a full training batch; test accuracy is 7.3-9.9% versus 2.6% majority, and the larger MLP improves about 2.5 percentage points. Speaker/group independence cannot be verified, results are one seed and two architectures, and no ADP variants have been piloted."
+}

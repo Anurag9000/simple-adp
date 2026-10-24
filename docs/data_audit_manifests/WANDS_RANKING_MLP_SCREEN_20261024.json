@@ -1,0 +1,205 @@
+{
+  "snapshot_date": "2026-10-24",
+  "dataset": "Wayfair WANDS product-search relevance",
+  "source": {
+    "repository": "https://github.com/wayfair/WANDS",
+    "git_commit": "3b74dcf4ba29ab8ff3e6a50b5b09fc627cb882b5",
+    "access": "Anonymous shallow git clone completed without authentication.",
+    "repository_license": "MIT",
+    "data_files": [
+      {
+        "name": "label.csv",
+        "format": "tab-separated despite suffix",
+        "bytes": 5736234,
+        "sha256": "c11fe81ad62f17f56f316b0ec9630ebe8fbe1393578cb0ca4f05c17253a180ef"
+      },
+      {
+        "name": "product.csv",
+        "format": "tab-separated despite suffix",
+        "bytes": 90621131,
+        "sha256": "d993926254572e6eba96c8fd87cc549a17fb91ad3748308036eee4cf92b10ac6"
+      },
+      {
+        "name": "query.csv",
+        "format": "tab-separated despite suffix",
+        "bytes": 19942,
+        "sha256": "63b61660560fecc33ec490804c7e2b81402ee3e7c31a9cbb5e03736639f68e95"
+      }
+    ],
+    "license_file_sha256": "e3ce14610132897db9f64e21d7871a7a60c0bc04364ec61e4faa99643c5072d6"
+  },
+  "parsed_schema": {
+    "labels": {
+      "rows": 233448,
+      "columns": [
+        "id",
+        "query_id",
+        "product_id",
+        "label"
+      ],
+      "label_counts": {
+        "Irrelevant": 61201,
+        "Partial": 146633,
+        "Exact": 25614
+      },
+      "unique_queries": 480,
+      "unique_products": 42986
+    },
+    "queries": {
+      "rows": 480,
+      "columns": [
+        "query_id",
+        "query",
+        "query_class"
+      ],
+      "missing_query_class": 6
+    },
+    "products": {
+      "rows": 42994,
+      "columns": [
+        "product_id",
+        "product_name",
+        "product_class",
+        "category hierarchy",
+        "product_description",
+        "product_features",
+        "rating_count",
+        "average_rating",
+        "review_count"
+      ],
+      "missing_product_class": 2852,
+      "missing_category_hierarchy": 1556,
+      "missing_description": 6008,
+      "missing_rating_fields": 9452
+    }
+  },
+  "task_and_protocol": {
+    "task": "query-grouped product search relevance ranking",
+    "split": "random seed 20261024; query-disjoint 336/72/72 groups for train/validation/test",
+    "rows_by_partition": {
+      "train": 160615,
+      "validation": 35783,
+      "test": 37050
+    },
+    "group_split": "no query group crosses partitions",
+    "label_grades": {
+      "Irrelevant": 0,
+      "Partial": 1,
+      "Exact": 2
+    },
+    "ndcg_gain_mapping": {
+      "Irrelevant": 0,
+      "Partial": 1,
+      "Exact": 3
+    },
+    "input_excluded": [
+      "query_id",
+      "product_id",
+      "label"
+    ]
+  },
+  "screening_pilots": {
+    "common": {
+      "framework": "PyTorch 2.14.1+cu130",
+      "device": "NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB",
+      "batch": "one entire train partition batch each epoch",
+      "epochs": 30,
+      "optimizer": "Adam lr=0.001",
+      "loss": "cross-entropy over 3 ordinal relevance classes",
+      "seed": 20261024,
+      "model_selection": "best validation NDCG@10",
+      "random_test_NDCG@10": 0.5398542939,
+      "train_majority_class_test_accuracy": 0.6211875843
+    },
+    "simple_feature_engineering": {
+      "input_width": 1055,
+      "features": "one-hot query_class/product_class/top-level product category (with train-fitted unknown buckets); top 32 train-query vocabulary terms crossed against product name/description/attribute terms; 16 numeric lexical-overlap, length, category-match and rating/count statistics; continuous scalers fit on train rows only.",
+      "results": [
+        {
+          "architecture": "[128,128]",
+          "best_epoch": 28,
+          "validation": {
+            "accuracy": 0.5452030294,
+            "balanced_accuracy": 0.3769001171,
+            "macro_f1": 0.3105674321,
+            "ndcg10": 0.7670705324
+          },
+          "test": {
+            "accuracy": 0.6364642375,
+            "balanced_accuracy": 0.3968373556,
+            "macro_f1": 0.3644502256,
+            "ndcg10": 0.7998419711
+          },
+          "peak_gpu_mib": 1275.7
+        },
+        {
+          "architecture": "[512]*5",
+          "best_epoch": 29,
+          "validation": {
+            "accuracy": 0.5418494816,
+            "balanced_accuracy": 0.44598014,
+            "macro_f1": 0.3786538483,
+            "ndcg10": 0.8174343572
+          },
+          "test": {
+            "accuracy": 0.6368151147,
+            "balanced_accuracy": 0.4523324314,
+            "macro_f1": 0.4153616998,
+            "ndcg10": 0.8188540958
+          },
+          "peak_gpu_mib": 3176.5
+        }
+      ],
+      "interpretation": "Useful, unsaturated ranking signal, but depends on custom text-derived lexical features rather than the repo tabular-only input path."
+    },
+    "structured_fields_only": {
+      "input_width": 1010,
+      "features": "train-fitted one-hot query_class, product_class, top-level product category (unknown buckets), and rating_count, average_rating, review_count; all query/title/description/product-feature text excluded.",
+      "results": [
+        {
+          "architecture": "[128,128]",
+          "best_epoch": 28,
+          "validation": {
+            "accuracy": 0.5344716765,
+            "balanced_accuracy": 0.3333333333,
+            "macro_f1": 0.2322066001,
+            "ndcg10": 0.4400191271
+          },
+          "test": {
+            "accuracy": 0.6211875843,
+            "balanced_accuracy": 0.3333333333,
+            "macro_f1": 0.2554454896,
+            "ndcg10": 0.4869392545
+          },
+          "peak_gpu_mib": 1234.3
+        },
+        {
+          "architecture": "[512]*5",
+          "best_epoch": 17,
+          "validation": {
+            "accuracy": 0.5344716765,
+            "balanced_accuracy": 0.3333333333,
+            "macro_f1": 0.2322066001,
+            "ndcg10": 0.4867043751
+          },
+          "test": {
+            "accuracy": 0.6211875843,
+            "balanced_accuracy": 0.3333333333,
+            "macro_f1": 0.2554454896,
+            "ndcg10": 0.4962015769
+          },
+          "peak_gpu_mib": 3134.9
+        }
+      ],
+      "interpretation": "Both models predicted only the majority Partial label on test; NDCG was below the random-order baseline. The structured-only task lacks useful ranking signal."
+    }
+  },
+  "disposition": "CROSS OUT for this tabular-only suite. Open repository access and MIT repository license pass. The direct structured categorical/rating MLP screen fails useful grouped ranking; the non-saturated, better result uses text-derived lexical features, which are outside the approved tabular-only preprocessing contract. Representative vanilla architectures only; no ADP variants or full width/depth grid tested.",
+  "limitations": [
+    "One deterministic query-disjoint split and one seed.",
+    "Two representative vanilla architectures only; no full vanilla grid or ADP variants.",
+    "No provider/runner integration.",
+    "The simple lexical feature pipeline was standalone and is not shipped in repo code.",
+    "The repository MIT license is reported as declared; no separate seller-content rights investigation was performed."
+  ]
+}

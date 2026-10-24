@@ -1,0 +1,81 @@
+{
+  "dataset": "UEA BasicMotions (four-class wearable activity classification)",
+  "zenodo_record": "https://zenodo.org/records/11206179",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "BasicMotions_TRAIN.ts",
+      "bytes": 227792,
+      "sha256": "3dcb66b389ba93ed2de7879bceb27548e0ea7a5ffb59888d0db36b59af2a0e28"
+    },
+    {
+      "file": "BasicMotions_TEST.ts",
+      "bytes": 227715,
+      "sha256": "ea93ab9f58faa6869c18bbe16a6dca0b02f174aa676af7568788a1a2a8e7e8da"
+    }
+  ],
+  "total_bytes": 455507,
+  "parsed": {
+    "train_rows": 40,
+    "test_rows": 40,
+    "channels": 6,
+    "points_per_channel": 100,
+    "input_width": 600,
+    "classes": [
+      "Badminton",
+      "Running",
+      "Standing",
+      "Walking"
+    ],
+    "train_per_class": 10,
+    "test_per_class": 10,
+    "missing_values": false
+  },
+  "split_risk": "UEA source paper says four students performed four activities five times each (80 cases total), but the released train/test files contain no subject IDs or grouping metadata. The fixed split cannot be verified subject-disjoint; subject leakage risk.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 612,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "20% stratified holdout from train (8 rows; 2/class)",
+    "preprocessing": "feature mean/std fitted on 32 train rows only",
+    "majority_test_accuracy": 0.25,
+    "architectures": [
+      {
+        "hidden_widths": [
+          128,
+          128
+        ],
+        "selected_epoch": 34,
+        "train_loss": 0.00276448,
+        "validation_accuracy": 0.75,
+        "test_accuracy": 0.75,
+        "test_balanced_accuracy": 0.75,
+        "test_macro_f1": 0.70075758,
+        "test_cross_entropy": 0.81618291
+      },
+      {
+        "hidden_widths": [
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "selected_epoch": 16,
+        "train_loss": 5.84e-05,
+        "validation_accuracy": 0.75,
+        "test_accuracy": 0.725,
+        "test_balanced_accuracy": 0.725,
+        "test_macro_f1": 0.71002063,
+        "test_cross_entropy": 2.25810766
+      }
+    ],
+    "assessment": "Not saturated, but tiny data, 8-row validation, 40-row test, no verifiable subject-disjoint split, and near-zero train loss with much lower held-out scores indicate overfit/weak evidence rather than a robust hard benchmark."
+  }
+}

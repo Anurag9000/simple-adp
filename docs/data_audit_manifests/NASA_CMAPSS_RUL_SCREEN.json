@@ -1,0 +1,75 @@
+{
+  "dataset": "NASA C-MAPSS turbofan degradation benchmark",
+  "screened_at": "2026-10-23",
+  "source": {
+    "official_data_record": "https://data.nasa.gov/dataset/cmapss-jet-engine-simulated-data",
+    "artifact_url": "https://data.nasa.gov/docs/legacy/CMAPSSData.zip",
+    "official_record_access_level": "public",
+    "official_record_license": "not specified",
+    "legacy_catalog_notice": "Currently unavailable for download; this conflicts with the tested NASA API endpoint, which returned the complete archive.",
+    "nasa_general_license_policy": "https://science.data.nasa.gov/about/license",
+    "rights_conclusion": "NASA's policy says NASA may not be the original source of data and users should validate source rights; no explicit license for this dataset was found. It is not treated as CC0."
+  },
+  "acquisition": {
+    "anonymous_full_get_succeeded": true,
+    "http_status": 200,
+    "archive_bytes": 12425978,
+    "archive_sha256": "74bef434a34db25c7bf72e668ea4cd52afe5f2cf8e44367c55a82bfd91a5a34f",
+    "zip_integrity_test": "passed; no errors detected",
+    "archive_members": 14,
+    "archive_uncompressed_bytes": 45349906,
+    "members": [
+      "Damage Propagation Modeling.pdf",
+      "readme.txt",
+      "RUL_FD001.txt",
+      "RUL_FD002.txt",
+      "RUL_FD003.txt",
+      "RUL_FD004.txt",
+      "test_FD001.txt",
+      "test_FD002.txt",
+      "test_FD003.txt",
+      "test_FD004.txt",
+      "train_FD001.txt",
+      "train_FD002.txt",
+      "train_FD003.txt",
+      "train_FD004.txt"
+    ]
+  },
+  "task_compatibility": {
+    "task": "Supervised sequence-to-one remaining-useful-life regression at each cycle, with official test scoring at the final observed cycle per engine.",
+    "fixed_window": 30,
+    "features_per_cycle": 24,
+    "feature_definition": "Three operating settings plus 21 sensor values; engine ID and cycle index are excluded from the feature vector.",
+    "mlp_input_width": 720,
+    "target": "Training RUL is derived from final train cycle minus current cycle and clipped at the conventional cap of 125; official test final-cycle labels come from the supplied per-engine RUL file. Earlier test-cycle labels can be derived from the final label and cycle distance only for a separately specified task.",
+    "split": "For each subset, sort training engine IDs and hold out the final 20% of engines for validation; retain the official per-engine test set. Never split overlapping windows across engines or partitions.",
+    "all_parsed_values_finite": true,
+    "constant_training_features": {
+      "FD001": ["op3", "s1", "s5", "s10", "s16", "s18", "s19"],
+      "FD002": [],
+      "FD003": ["op3", "s1", "s5", "s16", "s18", "s19"],
+      "FD004": []
+    }
+  },
+  "subsets": {
+    "FD001": {"train_engines": 100, "test_engines": 100, "train_cycles": 20631, "test_cycles": 13096, "train_windows_30": 17731, "train_engines_for_fit": 80, "validation_engines": 20, "fit_windows": 13818, "validation_windows": 3913, "official_rul_labels": 100, "full_batch_512x5_activation_lower_bound_gib": 0.1318},
+    "FD002": {"train_engines": 260, "test_engines": 259, "train_cycles": 53759, "test_cycles": 33991, "train_windows_30": 46219, "train_engines_for_fit": 208, "validation_engines": 52, "fit_windows": 37071, "validation_windows": 9148, "official_rul_labels": 259, "full_batch_512x5_activation_lower_bound_gib": 0.3535},
+    "FD003": {"train_engines": 100, "test_engines": 100, "train_cycles": 24720, "test_cycles": 16596, "train_windows_30": 21820, "train_engines_for_fit": 80, "validation_engines": 20, "fit_windows": 17459, "validation_windows": 4361, "official_rul_labels": 100, "full_batch_512x5_activation_lower_bound_gib": 0.1665},
+    "FD004": {"train_engines": 249, "test_engines": 248, "train_cycles": 61249, "test_cycles": 41214, "train_windows_30": 54028, "train_engines_for_fit": 199, "validation_engines": 50, "fit_windows": 43301, "validation_windows": 10727, "official_rul_labels": 248, "full_batch_512x5_activation_lower_bound_gib": 0.4130}
+  },
+  "difficulty": {
+    "source_characteristics": "Four simulation regimes differ in operating-condition count (one vs six) and fault-mode count (one vs two); the source describes sensor noise and progressive degradation.",
+    "empirical_mlp_pilot_run": false,
+    "reason": "Reuse license is unspecified, so the dataset fails the open-license admission gate before training.",
+    "non_saturation": "Not empirically established; source complexity alone is insufficient evidence."
+  },
+  "disposition": {
+    "each_subset_screened_individually": true,
+    "FD001": "cross out: license unspecified; no empirical non-saturation pilot",
+    "FD002": "cross out: license unspecified; no empirical non-saturation pilot",
+    "FD003": "cross out: license unspecified; no empirical non-saturation pilot",
+    "FD004": "cross out: license unspecified; no empirical non-saturation pilot",
+    "suite_result": "Cross out C-MAPSS for this open-license benchmark suite. Task architecture, public anonymous download, parsed data, and estimated full-batch scale pass; rights and empirical difficulty gates do not."
+  },
+  "evidence_boundary": "The complete artifact was downloaded and parsed in this audit. No train, validation, or test model run was performed, and no claim is made that C-MAPSS would or would not saturate a plain MLP."
+}

@@ -1,0 +1,64 @@
+{
+  "dataset": "UEA HandMovementDirection (MEG joystick direction classification)",
+  "zenodo_record": "https://zenodo.org/records/11206224",
+  "uea_page": "https://www.timeseriesclassification.com/description.php?Dataset=HandMovementDirection",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "HandMovementDirection_TRAIN.ts",
+      "bytes": 6976068,
+      "sha256": "aa7c172ae3e770cb2e9750d6eb1e4b0266f109e6eba1291283cd89789bd7dffe"
+    },
+    {
+      "file": "HandMovementDirection_TEST.ts",
+      "bytes": 3229786,
+      "sha256": "8cb7061e499596eead63c85a5c460e81163e84b0b59e31b74ee20435a15958fb"
+    }
+  ],
+  "total_bytes": 10205854,
+  "parsed": {
+    "train_rows": 160,
+    "test_rows": 74,
+    "channels": 10,
+    "points_per_channel": 400,
+    "input_width": 4000,
+    "classes": ["backward", "forward", "left", "right"],
+    "train_class_counts": [40, 40, 40, 40],
+    "test_class_counts": [15, 30, 15, 14],
+    "missing_values": false,
+    "test_majority_accuracy": 0.4054054054
+  },
+  "provenance": "Two healthy right-handed subjects; ten MEG channels; trials from the two subjects are merged in the .ts artifact, while source files were grouped by subject. Subject IDs are absent from the parsed benchmark rows, so subject-disjointness cannot be verified from these splits.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 160,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "None; fixed 100 epochs, official test used only for descriptive reporting, not epoch selection",
+    "preprocessing": "per-feature mean/std fitted on all 160 official training rows only",
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epoch_100_train_loss": 0.0000019282,
+        "epoch_100_test_accuracy": 0.5540540541,
+        "epoch_100_test_balanced_accuracy": 0.575,
+        "epoch_100_test_macro_f1": 0.5568439902,
+        "epoch_100_test_cross_entropy": 2.3545255661
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epoch_100_train_loss": 0.0000050110,
+        "epoch_100_test_accuracy": 0.5,
+        "epoch_100_test_balanced_accuracy": 0.4690476190,
+        "epoch_100_test_macro_f1": 0.4542423421,
+        "epoch_100_test_cross_entropy": 10.3726434708
+      }
+    ]
+  },
+  "disposition": "Keep provisionally as a difficult four-class dense-MEG classification stress test: both models substantially exceed the 25% chance level but remain far from saturation. Only two subjects and unverifiable subject split limit generalization claims."
+}

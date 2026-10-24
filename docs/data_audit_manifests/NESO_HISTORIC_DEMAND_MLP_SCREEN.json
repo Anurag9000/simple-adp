@@ -1,0 +1,47 @@
+{
+  "dataset": "NESO Historic Demand Data / Electrical Load Forecasting Benchmark task",
+  "retrieved_at": "2026-10-23",
+  "source": {
+    "official_dataset": "https://www.neso.energy/data-portal/historic-demand-data",
+    "official_api": "https://api.neso.energy/api/3/action/datapackage_show?id=historic-demand-data",
+    "benchmark_protocol": "https://github.com/Strooms/Electrical-Load-Forecasting-Benchmark",
+    "license": "NESO Open Data Licence; reuse and adaptation, including commercial reuse, with attribution 'Supported by National Energy SO Open Data.'",
+    "license_url": "https://www.neso.energy/data-portal/neso-open-licence",
+    "anonymous_access": true,
+    "credentials_or_registration_required": false
+  },
+  "artifacts": [
+    {"year": 2022, "resource_id": "bb44a1b5-75b1-4db2-8491-257f23385006", "name": "historic_demand_data_2022", "http_status": 200, "bytes": 1682356, "sha256": "fc6bd5d5a8e8b9094ae748ae6f62d688797577ca3be8e66acbffdda771a5b6c4", "rows": 17520, "columns": 21},
+    {"year": 2023, "resource_id": "bf5ab335-9b40-4ea4-b93a-ab4af7bce003", "name": "historic_demand_data_2023", "http_status": 200, "bytes": 1732679, "sha256": "cb6f7b91dd6a5defbdd918e3db440b8e6cec5855ef18a8715bb8e294b50cfa23", "rows": 17520, "columns": 22},
+    {"year": 2024, "resource_id": "f6d02c0f-957b-48cb-82ee-09003f2ba759", "name": "historic_demand_data_2024", "http_status": 200, "bytes": 1809707, "sha256": "fa7895b6e9ab5eb1b450949d969cb18ffeb6005359fc71c79c87e1c47e59cac6", "rows": 17568, "columns": 22},
+    {"year": 2025, "resource_id": "b2bde559-3455-4021-b179-dfe60c0337b0", "name": "historic_demand_data_2025", "http_status": 200, "bytes": 1869771, "sha256": "8b8be946bbb084bc28fbf95a71fad0fceb5543b98e02755235130a42beaee4e0", "rows": 17520, "columns": 22},
+    {"year": 2026, "resource_id": "8a4a771c-3929-4e56-93ad-cdf13219dea5", "name": "historic_demand_data_2026", "http_status": 200, "bytes": 1407995, "sha256": "8f7d98558f40b73a86f2e766ab50e8d2fe6c8c6d4664330c47c3e282793f4fb7", "rows": 13198, "columns": 23, "coverage_end": "2026-10-02", "extra_column": "FORECAST_ACTUAL_INDICATOR", "non_null_indicator_values": ["A"]}
+  ],
+  "parse_and_data_quality": {
+    "formats": "2022-2024 use day-first textual dates; 2025-2026 use ISO YYYY-MM-DD. Parse formats separately. A dayfirst=True mixed-format parse silently moves some ISO dates and creates spurious gaps; that incorrect initial pilot was discarded.",
+    "timestamp": "Settlement date is Europe/London local midnight; map SETTLEMENT_PERIOD (1-based, 30 minutes each) to UTC, preserving 46/50-period DST days.",
+    "target": "ND only; do not use TSD or forecast/actual indicator as model inputs.",
+    "raw_rows": 83326,
+    "duplicate_half_hour_timestamps": 0,
+    "missing_or_nonpositive_ND": 0,
+    "half_hour_intervals": 83325,
+    "hourly_series": {"rows": 41663, "start_utc": "2022-01-01T00:00:00Z", "end_utc": "2026-10-02T22:00:00Z", "missing_values": 0, "min_MW": 12726.0, "max_MW": 47310.5},
+    "features": "At each UTC midnight origin, previous 168 hourly ND values plus six local-calendar sine/cosine signals for each of the next 24 UTC target hours; 312 float32 inputs and 24 continuous outputs. Hourly 30-minute MW observations are averaged, not summed."
+  },
+  "pilot": {
+    "task": "Day-ahead 24-hour national Great Britain demand forecast",
+    "split": "Chronological by target origin year: train 2022-2024, validation 2025, test 2026 through October 1 origins (2026 file ends October 2). No random row split.",
+    "examples": {"train": 1089, "validation": 365, "test": 274},
+    "preprocessing": "Input and target standardization fit using training windows only. Full training partition in one batch per epoch.",
+    "training": "Repository TabularMLP; CUDA RTX 3050 Laptop 6 GiB; Adam 1e-3; MSE; 30 epochs; seed 151/152/153 by architecture; best validation MSE checkpoint; test evaluated once.",
+    "metric": "Test RMSE normalized by training target standard deviation (NRMSE); test MAE likewise normalized; MAPE; peak allocated CUDA memory.",
+    "weekly_naive_test_nrmse": 0.48285761773051594,
+    "persistence_test_nrmse": 0.8400768453022315,
+    "results": [
+      {"hidden_widths": [16, 16], "best_epoch": 30, "test_nrmse": 0.7858049116464602, "test_nmae": 0.6180337, "test_mape_pct": 15.7185335, "peak_cuda_gib": 0.018279075622558594},
+      {"hidden_widths": [128, 128], "best_epoch": 30, "test_nrmse": 0.4283698690100637, "test_nmae": 0.32432792, "test_mape_pct": 8.474839, "peak_cuda_gib": 0.02118682861328125},
+      {"hidden_widths": [512, 512, 512, 512, 512], "best_epoch": 28, "test_nrmse": 0.4470175847563508, "test_nmae": 0.33808818, "test_mape_pct": 8.724473, "peak_cuda_gib": 0.04934215545654297}
+    ]
+  },
+  "disposition": "KEEP PROVISIONALLY. The official data are anonymously downloadable under a permissive open licence; the fixed-window multi-output task is directly compatible with the repository's plain feedforward MLP; all 2022-2026 payloads were fully downloaded, parsed, hashed, and checked for row gaps; and full-batch MLP pilots beat simple baselines while remaining far from zero error. One chronological split, one seed per architecture, three vanilla architectures, partial-year 2026 test coverage, and no ADP/provider/runner integration limit the claim. No comparative ADP benefit is established."
+}

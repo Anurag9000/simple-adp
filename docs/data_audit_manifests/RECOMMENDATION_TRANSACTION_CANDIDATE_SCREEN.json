@@ -1,0 +1,115 @@
+{
+  "audit_date": "2026-10-24",
+  "suite_constraints": {
+    "full_training_partition_single_batch": true,
+    "largest_vanilla_architecture": [512, 512, 512, 512, 512],
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB",
+    "assumed_train_fraction_for_lower_bounds": 0.7,
+    "bytes_per_float": 4
+  },
+  "candidates": [
+    {
+      "name": "Goodbooks-10k",
+      "source": "https://github.com/zygmuntz/goodbooks-10k",
+      "license_record": "Repository LICENSE declares CC BY-SA 4.0; Goodreads-derived data provenance not separately resolved",
+      "anonymous_artifact": {
+        "url": "https://github.com/zygmuntz/goodbooks-10k/releases/download/v1.0/ratings.zip",
+        "http_download_without_account": true,
+        "bytes": 23566305,
+        "sha256": "2dd0ea8e800860279d7305e88a481ff12090fe5bb54b1321a3854a3b651ebd2e",
+        "zip_crc_passed": true,
+        "member": "ratings.csv",
+        "member_bytes": 72126826
+      },
+      "parsed_data": {
+        "rows": 5976479,
+        "columns": ["user_id", "book_id", "rating"],
+        "rating_values": {"1": 124195, "2": 359257, "3": 1370916, "4": 2139018, "5": 1983093},
+        "users": 53424,
+        "books": 10000,
+        "duplicate_user_book_pairs": 0,
+        "rows_have_timestamps": false,
+        "source_provides_standard_train_validation_test_split": false
+      },
+      "task_screen": {
+        "explicit_rating_regression": "direct label; scalar MLP output",
+        "recommendation_task_quality": "rating rows do not directly encode exposure negatives",
+        "split_limit": "README says ratings are time-sorted but ratings.csv has no timestamp field"
+      },
+      "capacity_lower_bounds": {
+        "train_rows_70_percent": 4183535,
+        "user_plus_item_onehot_width": 63424,
+        "float32_input_gib": 988.4556,
+        "512x5_hidden_activation_gib": 39.8973
+      },
+      "disposition": "cross out: public download and repository CC BY-SA record verified, but required full-batch dense execution is far beyond device capacity; no standard split; no MLP pilot after hard failure"
+    },
+    {
+      "name": "UCI Online Retail",
+      "source": "https://archive.ics.uci.edu/dataset/352/online+retail",
+      "license": "CC BY 4.0 (official UCI record)",
+      "anonymous_artifact": {
+        "url": "https://archive.ics.uci.edu/static/public/352/online%2Bretail.zip",
+        "http_range_probe": "HTTP 200 without authentication; server ignored Range",
+        "full_download_without_account": true,
+        "bytes": 23715478,
+        "sha256": "f5385cbb54bbebf7196389109c6b0621faab0c304e3702548165e71c84aede8b",
+        "zip_crc_passed": true,
+        "member": "Online Retail.xlsx",
+        "member_bytes": 23715344
+      },
+      "parsed_data": {
+        "rows": 541909,
+        "columns": ["InvoiceNo", "StockCode", "Description", "Quantity", "InvoiceDate", "UnitPrice", "CustomerID", "Country"],
+        "product_codes": 4070,
+        "customers": 4372,
+        "missing_customer_id_rows": 135080,
+        "source_provides_impression_or_non_click_labels": false,
+        "source_provides_standard_recommendation_split": false
+      },
+      "derived_next_item_task_capacity_lower_bounds": {
+        "train_rows_70_percent": 379336,
+        "item_class_count": 4070,
+        "full_class_output_logits_gib": 5.7515,
+        "512x5_hidden_activation_gib": 3.6176,
+        "dense_customer_plus_item_onehot_input_gib": 11.9297
+      },
+      "disposition": "cross out: open download and CC BY 4.0 pass, but no exposure negatives and full-batch dense recommendation model exceeds GPU capacity; no pilot"
+    },
+    {
+      "name": "UCI Online Retail II",
+      "source": "https://archive.ics.uci.edu/dataset/502/online+retail+ii",
+      "license": "CC BY 4.0 (official UCI record)",
+      "anonymous_artifact": {
+        "url": "https://archive.ics.uci.edu/static/public/502/online%2Bretail%2Bii.zip",
+        "http_range_probe": "HTTP 200 without authentication; server ignored Range",
+        "full_download_without_account": true,
+        "bytes": 45622418,
+        "sha256": "572e36277c2390fbfde10664750731e0a86f55e33470d91919085f0408e67bfb",
+        "zip_crc_passed": true,
+        "member": "online_retail_II.xlsx",
+        "member_bytes": 45622278
+      },
+      "official_schema": {
+        "rows": 1067371,
+        "columns": ["Invoice", "StockCode", "Description", "Quantity", "InvoiceDate", "Price", "Customer ID", "Country"],
+        "years": ["2009-2010", "2010-2011"],
+        "official_source_rows": 1067371
+      },
+      "parsed_subset": {
+        "sheet": "Year 2009-2010",
+        "rows": 525461,
+        "product_codes_at_least": 4632,
+        "customers_at_least": 4383,
+        "second_sheet_identified_but_not_row_parsed": true
+      },
+      "derived_next_item_task_capacity_lower_bounds": {
+        "train_rows_70_percent": 747159,
+        "minimum_item_classes": 4632,
+        "full_class_output_logits_gib": 12.8926,
+        "512x5_hidden_activation_gib": 7.1255
+      },
+      "disposition": "cross out: official open download and CC BY 4.0 pass, but transaction positives need derived negatives and even activation-only maximum model capacity exceeds the 6 GiB GPU; no MLP pilot"
+    }
+  ]
+}

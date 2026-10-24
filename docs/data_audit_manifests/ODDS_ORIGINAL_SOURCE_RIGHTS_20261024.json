@@ -1,0 +1,455 @@
+{
+  "audit_date": "2026-10-24",
+  "purpose": "resolve original-source rights for each ODDS transformed artifact; API and official source pages only; no data payload downloaded in this pass",
+  "method": "Unauthenticated UCI dataset API query by exact source name, then official source-page HTML checks for displayed license/restriction text. OpenML 310 queried via public API. KDD Cup 1999 source identity and CC BY 4.0 rights were separately verified from the current UCI record; the official KDD Cup data mirror answered anonymous Range with HTTP 206.",
+  "results": [
+    {
+      "odds_route": "cardio",
+      "source_query": "Cardiotocography",
+      "source_name": "Cardiotocography",
+      "source_id": 193,
+      "source_url": "https://archive.ics.uci.edu/dataset/193/cardiotocography",
+      "data_url": "https://archive.ics.uci.edu/static/public/193/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "78962df4253f7be806016fe732205ea34e17241280fb96936eeb7385b337320b",
+      "instances": 2126,
+      "features": 21,
+      "abstract": "The dataset consists of measurements of fetal heart rate (FHR) and uterine contraction (UC) features on cardiotocograms classified by expert obstetricians.",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/193/cardiotocography",
+      "source_page_sha256": "581e4176b9e65fbb8bb21f075aa123cbeb956ffdbab985539c75bb02bff48685",
+      "license_snippets": [
+        "APA MLA Chicago Vancouver IEEE BibTeX Creators D. Campos J. Bernardes DOI 10.24432/C51S4N License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "r IEEE BibTeX Creators D. Campos J. Bernardes DOI 10.24432/C51S4N License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "thyroid",
+      "source_query": "Thyroid Disease",
+      "source_name": "Thyroid Disease",
+      "source_id": 102,
+      "source_url": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "data_url": null,
+      "source_api_status": 200,
+      "source_api_sha256": "a7ed6d6111a8f5a3d6650ac1858d2ae0d2e70d2e245cec2af63795471b0d572f",
+      "instances": 7200,
+      "features": 5,
+      "abstract": "10 separate databases from Garavan Institute",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "source_page_sha256": "4ac73a8ec9eae7b0207e0e44f423e14580c94d624f72a4c00e4cfe82dedbb749",
+      "license_snippets": [
+        "0. Style: APA MLA Chicago Vancouver IEEE BibTeX Creators Ross Quinlan DOI 10.24432/C5D010 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "o Vancouver IEEE BibTeX Creators Ross Quinlan DOI 10.24432/C5D010 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "satimage-2",
+      "source_query": "Statlog (Landsat Satellite)",
+      "source_name": "Statlog (Landsat Satellite)",
+      "source_id": 146,
+      "source_url": "https://archive.ics.uci.edu/dataset/146/statlog+landsat+satellite",
+      "data_url": "https://archive.ics.uci.edu/static/public/146/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "9d7bcda7b77194cfa7c0ee8c9629b3c14a3a6a15ce3b94a0170232f9806b3491",
+      "instances": 6435,
+      "features": 36,
+      "abstract": "Multi-spectral values of pixels in 3x3 neighbourhoods in a satellite image, and the classification associated with the central pixel in each neighbourhood",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/146/statlog+landsat+satellite",
+      "source_page_sha256": "49fe75aa33a7d2fca9df40d480c2a8960122981f69075bdf98e6f5914a797821",
+      "license_snippets": [
+        "uver IEEE BibTeX Keywords image processing Creators Ashwin Srinivasan DOI 10.24432/C55887 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "s image processing Creators Ashwin Srinivasan DOI 10.24432/C55887 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "lympho",
+      "source_query": "Lymphography",
+      "source_name": "Lymphography",
+      "source_id": 63,
+      "source_url": "https://archive.ics.uci.edu/dataset/63/lymphography",
+      "data_url": "https://archive.ics.uci.edu/static/public/63/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "999f5e36111f999bef4cc86b65e89542a54bd782d8d2c7034f8f0eb687db6371",
+      "instances": 148,
+      "features": 19,
+      "abstract": "This lymphography domain was obtained from the University Medical Centre, Institute of Oncology, Ljubljana, Yugoslavia.  (Restricted access)",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/63/lymphography",
+      "source_page_sha256": "21fa96fe088f70b0468a8dd5545c300518ca45e90803625d498185a1ae111c6a",
+      "license_snippets": [
+        ": APA MLA Chicago Vancouver IEEE BibTeX Creators M. Zwitter M. Soklic DOI 10.24432/C54598 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "ver IEEE BibTeX Creators M. Zwitter M. Soklic DOI 10.24432/C54598 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D",
+        "tained from the University Medical Centre, Institute of Oncology, Ljubljana, Yugoslavia. (Restricted access) Dataset Characteristics Multivariate Subject Area Health and Medicine Associated Tasks Classification Feature Type Categorical # Instances 148 # Features 19 Dataset Information Additional Information This is one of three domains provided by the Oncology Institute that has repeatedly appeared in the machine learning literature. (See also breast-cancer and primary-tumor.) Has Missing Values? No Variables Table Variable Name Role Type Description Units Missing Values class Target Integer no lymphatics Feature Integer no block of"
+      ]
+    },
+    {
+      "odds_route": "glass",
+      "source_query": "Glass Identification",
+      "source_name": "Glass Identification",
+      "source_id": 42,
+      "source_url": "https://archive.ics.uci.edu/dataset/42/glass+identification",
+      "data_url": "https://archive.ics.uci.edu/static/public/42/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "67bcb40304226b900d8395160873e657c4e2972d864e500ee726bd5223688091",
+      "instances": 214,
+      "features": 9,
+      "abstract": "From USA Forensic Science Service; 6 types of glass; defined in terms of their oxide content (i.e. Na, Fe, K, etc)",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/42/glass+identification",
+      "source_page_sha256": "88a88d6e41a328c2b04dfa746221ae84d6bf249a82370dfdf7f16704123dd41c",
+      "license_snippets": [
+        "A Chicago Vancouver IEEE BibTeX Keywords Chemistry Creators B. German DOI 10.24432/C5WW2P License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        " BibTeX Keywords Chemistry Creators B. German DOI 10.24432/C5WW2P License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "vowels",
+      "source_query": "Japanese Vowels",
+      "source_name": "Japanese Vowels",
+      "source_id": 128,
+      "source_url": "https://archive.ics.uci.edu/dataset/128/japanese+vowels",
+      "data_url": null,
+      "source_api_status": 200,
+      "source_api_sha256": "5d55886f887fdc72d8b2ab04692f3e03aa3a38348a1eb0bdfa72f439be7acb5d",
+      "instances": 640,
+      "features": 0,
+      "abstract": "This dataset records 640 time series of 12 LPC cepstrum coefficients taken from nine male speakers.",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/128/japanese+vowels",
+      "source_page_sha256": "7dce63655a2f060f762f661a633b3101902443f5a411d9a0146c00373dcc3f25",
+      "license_snippets": [
+        "Vancouver IEEE BibTeX Creators Mineichi Kudo Jun Toyama Masaru Shimbo DOI 10.24432/C5NS47 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "eators Mineichi Kudo Jun Toyama Masaru Shimbo DOI 10.24432/C5NS47 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "musk",
+      "source_query": "Musk (Version 2)",
+      "source_name": "Musk (Version 2)",
+      "source_id": 75,
+      "source_url": "https://archive.ics.uci.edu/dataset/75/musk+version+2",
+      "data_url": "https://archive.ics.uci.edu/static/public/75/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "841c93181d1e65136c199a367a9f9fe9722b38b1aa5cc2ed6e362c545d2d1ba9",
+      "instances": 6598,
+      "features": 166,
+      "abstract": "The goal is to learn to predict whether new molecules will be musks or non-musks",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/75/musk+version+2",
+      "source_page_sha256": "0b5239cf01cb8fe7c03c904705a3a5b9416a2c963a0812009685c6ef3b3bd098",
+      "license_snippets": [
+        "PA MLA Chicago Vancouver IEEE BibTeX Creators David Chapman Ajay Jain DOI 10.24432/C51608 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        " IEEE BibTeX Creators David Chapman Ajay Jain DOI 10.24432/C51608 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "letter",
+      "source_query": "Letter Recognition",
+      "source_name": "Letter Recognition",
+      "source_id": 59,
+      "source_url": "https://archive.ics.uci.edu/dataset/59/letter+recognition",
+      "data_url": "https://archive.ics.uci.edu/static/public/59/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "6927f27f6caca2e154acc0b741968f6869dcea10a14fd8eb971326a0054dccc1",
+      "instances": 20000,
+      "features": 16,
+      "abstract": "Database of character image features; try to identify the letter",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/59/letter+recognition",
+      "source_page_sha256": "1d96505ab750517a62a0bf0c99ba1d9153396e2fea2e5f6ac88a6561c3cd5a08",
+      "license_snippets": [
+        "ancouver IEEE BibTeX Keywords object recognition Creators David Slate DOI 10.24432/C5ZP40 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "words object recognition Creators David Slate DOI 10.24432/C5ZP40 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "satellite",
+      "source_query": "Statlog (Landsat Satellite)",
+      "source_name": "Statlog (Landsat Satellite)",
+      "source_id": 146,
+      "source_url": "https://archive.ics.uci.edu/dataset/146/statlog+landsat+satellite",
+      "data_url": "https://archive.ics.uci.edu/static/public/146/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "9d7bcda7b77194cfa7c0ee8c9629b3c14a3a6a15ce3b94a0170232f9806b3491",
+      "instances": 6435,
+      "features": 36,
+      "abstract": "Multi-spectral values of pixels in 3x3 neighbourhoods in a satellite image, and the classification associated with the central pixel in each neighbourhood",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/146/statlog+landsat+satellite",
+      "source_page_sha256": "4c567c9acc76a0a285dd83174f11e4aec296bb20922bc53f599aea1514b943e2",
+      "license_snippets": [
+        "uver IEEE BibTeX Keywords image processing Creators Ashwin Srinivasan DOI 10.24432/C55887 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "s image processing Creators Ashwin Srinivasan DOI 10.24432/C55887 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "shuttle",
+      "source_query": "Statlog (Shuttle)",
+      "source_name": "Statlog (Shuttle)",
+      "source_id": 148,
+      "source_url": "https://archive.ics.uci.edu/dataset/148/statlog+shuttle",
+      "data_url": "https://archive.ics.uci.edu/static/public/148/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "b97b7a8e84c4a00056e50dc4b41a24eda209fd1ef0d76a25eb525ed822caf701",
+      "instances": 58000,
+      "features": 7,
+      "abstract": "The shuttle dataset contains 9 attributes all of which are numerical. Approximately 80% of the data belongs to class 1",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/148/statlog+shuttle",
+      "source_page_sha256": "b91b7ad88f8c0ffb055baad0f86d29557d941160a619b4ba99313d4f74c353bc",
+      "license_snippets": [
+        "doi.org/10.24432/C5WS31. Style: APA MLA Chicago Vancouver IEEE BibTeX DOI 10.24432/C5WS31 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        " Style: APA MLA Chicago Vancouver IEEE BibTeX DOI 10.24432/C5WS31 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "breastw",
+      "source_query": "Breast Cancer Wisconsin (Original)",
+      "source_name": "Breast Cancer Wisconsin (Original)",
+      "source_id": 15,
+      "source_url": "https://archive.ics.uci.edu/dataset/15/breast+cancer+wisconsin+original",
+      "data_url": "https://archive.ics.uci.edu/static/public/15/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "ee82afd3ad879061a46f47eeead396f4d875abad2295eafb2327c66531c20013",
+      "instances": 699,
+      "features": 9,
+      "abstract": "Original Wisconsin Breast Cancer Database",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/15/breast+cancer+wisconsin+original",
+      "source_page_sha256": "33496bc445ec3729656fcaa996bb2cf352808e74b0d761086371abce799de61f",
+      "license_snippets": [
+        "Vancouver IEEE BibTeX Keywords health cancer Creators WIlliam Wolberg DOI 10.24432/C5HP4Z License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "ywords health cancer Creators WIlliam Wolberg DOI 10.24432/C5HP4Z License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "arrhythmia",
+      "source_query": "Arrhythmia",
+      "source_name": "Arrhythmia",
+      "source_id": 5,
+      "source_url": "https://archive.ics.uci.edu/dataset/5/arrhythmia",
+      "data_url": null,
+      "source_api_status": 200,
+      "source_api_sha256": "cd4bd0adc355d29d6ba34f477d3c53787816c89070f6a703ebf52897924d0620",
+      "instances": 452,
+      "features": 279,
+      "abstract": "Distinguish between the presence and absence of cardiac arrhythmia and classify it in one of the 16 groups.",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/5/arrhythmia",
+      "source_page_sha256": "6a126ffed697f9c143579b323207d359d2119fc23c87d1e4a2b77b2e6daedb08",
+      "license_snippets": [
+        " BibTeX Creators H. Guvenir Burak Acar Haldun Muderrisoglu R. Quinlan DOI 10.24432/C5BS32 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "nir Burak Acar Haldun Muderrisoglu R. Quinlan DOI 10.24432/C5BS32 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "ionosphere",
+      "source_query": "Ionosphere",
+      "source_name": "Ionosphere",
+      "source_id": 52,
+      "source_url": "https://archive.ics.uci.edu/dataset/52/ionosphere",
+      "data_url": "https://archive.ics.uci.edu/static/public/52/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "b9659d2e4129196c80a56587b9b14932c1d3b2e988925b51fe0e31f867862ae9",
+      "instances": 351,
+      "features": 34,
+      "abstract": "Classification of radar returns from the ionosphere",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/52/ionosphere",
+      "source_page_sha256": "60be7623f78a26b5d5dd0e9983600b087710bca2c1dcb09fe7cdb1c7084c74f4",
+      "license_snippets": [
+        "ancouver IEEE BibTeX Creators V. Sigillito S. Wing L. Hutton K. Baker DOI 10.24432/C5W01B License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "ators V. Sigillito S. Wing L. Hutton K. Baker DOI 10.24432/C5W01B License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "mnist",
+      "source_query": "MNIST",
+      "source_name": null,
+      "source_id": null,
+      "source_url": null,
+      "data_url": null,
+      "source_api_status": 200,
+      "source_api_sha256": "ed00dd4880be345af4a7e63aedad0666ca78dead3044d70f35898c307cdcc610",
+      "instances": null,
+      "features": null,
+      "abstract": null
+    },
+    {
+      "odds_route": "optdigits",
+      "source_query": "Optical Recognition of Handwritten Digits",
+      "source_name": "Optical Recognition of Handwritten Digits",
+      "source_id": 80,
+      "source_url": "https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits",
+      "data_url": "https://archive.ics.uci.edu/static/public/80/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "3cd30d08daa235f503dee650d25ff4a8ae0088ffaaa01fa4712364ab872dc656",
+      "instances": 5620,
+      "features": 64,
+      "abstract": "Two versions of this database available; see folder",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits",
+      "source_page_sha256": "39c21c3cad04b2c97390f697d5a1a42588aa43af890b07bde6d3ea9a182193e7",
+      "license_snippets": [
+        "ds object recognition image processing Creators E. Alpaydin C. Kaynak DOI 10.24432/C50P49 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "age processing Creators E. Alpaydin C. Kaynak DOI 10.24432/C50P49 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "http",
+      "source_query": "KDD Cup 1999 Data (service-specific HTTP/SMTP rows)",
+      "source_name": "KDD Cup 1999 Data",
+      "source_id": 130,
+      "source_url": "https://archive.ics.uci.edu/dataset/130/kdd+cup+1999+data",
+      "data_url": null,
+      "source_api_status": 200,
+      "source_api_sha256": "ab59ba6a75d655a82bfa5ddabefd132593fd2866e50b65b4a27a4c7177826211",
+      "instances": null,
+      "features": null,
+      "abstract": null,
+      "source_license": "CC BY 4.0; permits sharing and adaptation with attribution",
+      "source_license_primary_page": "https://archive.ics.uci.edu/dataset/130/kdd+cup+1999+data",
+      "source_license_basis": "UCI current dataset record 130; service-specific rows are from the KDD Cup 1999 release",
+      "source_artifact_download_url": "https://www.kdd.org/cupfiles/KDDCupData/1999/kddcup.data.zip",
+      "source_artifact_anonymous_range_status": 206,
+      "source_artifact_role": "full 1999 competition data; filter the service field for http or smtp and derive the three numeric features per ODDS transformation"
+    },
+    {
+      "odds_route": "smtp",
+      "source_query": "KDD Cup 1999 Data (service-specific HTTP/SMTP rows)",
+      "source_name": "KDD Cup 1999 Data",
+      "source_id": 130,
+      "source_url": "https://archive.ics.uci.edu/dataset/130/kdd+cup+1999+data",
+      "data_url": null,
+      "source_api_status": 200,
+      "source_api_sha256": "ab59ba6a75d655a82bfa5ddabefd132593fd2866e50b65b4a27a4c7177826211",
+      "instances": null,
+      "features": null,
+      "abstract": null,
+      "source_license": "CC BY 4.0; permits sharing and adaptation with attribution",
+      "source_license_primary_page": "https://archive.ics.uci.edu/dataset/130/kdd+cup+1999+data",
+      "source_license_basis": "UCI current dataset record 130; service-specific rows are from the KDD Cup 1999 release",
+      "source_artifact_download_url": "https://www.kdd.org/cupfiles/KDDCupData/1999/kddcup.data.zip",
+      "source_artifact_anonymous_range_status": 206,
+      "source_artifact_role": "full 1999 competition data; filter the service field for http or smtp and derive the three numeric features per ODDS transformation"
+    },
+    {
+      "odds_route": "mammography",
+      "source_query": "OpenML dataset 310",
+      "source_name": "mammography",
+      "source_id": 310,
+      "source_url": "https://openml.org/data/v1/download/52214/mammography.arff",
+      "source_license": "Public",
+      "source_status": 200,
+      "source_api_sha256": "164110c6e817c05eb27200c85d7c34c5b179451927b37ffc47b4d7b651aa5953",
+      "source_description": "**Author**:   \n  \n**Source**: Unknown -   \n**Please cite**:   \n\nMammography dataset\n\nPast Usage:\n1. Woods, K., Doss, C., Bowyer, K., Solka, J., Priebe, C.,"
+    },
+    {
+      "odds_route": "annthyroid",
+      "source_query": "Thyroid Disease",
+      "source_name": "Thyroid Disease",
+      "source_id": 102,
+      "source_url": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "data_url": null,
+      "source_api_status": 200,
+      "source_api_sha256": "a7ed6d6111a8f5a3d6650ac1858d2ae0d2e70d2e245cec2af63795471b0d572f",
+      "instances": 7200,
+      "features": 5,
+      "abstract": "10 separate databases from Garavan Institute",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "source_page_sha256": "f19d51252561b7587ab6684be3c482e31b118523ef0ef7e14e06de8a41ea029e",
+      "license_snippets": [
+        "0. Style: APA MLA Chicago Vancouver IEEE BibTeX Creators Ross Quinlan DOI 10.24432/C5D010 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "o Vancouver IEEE BibTeX Creators Ross Quinlan DOI 10.24432/C5D010 License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "pendigits",
+      "source_query": "Pen-Based Recognition of Handwritten Digits",
+      "source_name": "Pen-Based Recognition of Handwritten Digits",
+      "source_id": 81,
+      "source_url": "https://archive.ics.uci.edu/dataset/81/pen+based+recognition+of+handwritten+digits",
+      "data_url": "https://archive.ics.uci.edu/static/public/81/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "42fd34636f5859e9269b9cc963643b029e380c4c08ca575e365131a7e5de88b2",
+      "instances": 10992,
+      "features": 16,
+      "abstract": "Digit database of 250 samples from 44 writers",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/81/pen+based+recognition+of+handwritten+digits",
+      "source_page_sha256": "4e060256800f38dd8d2fe86b2ede061f2c57b10de4fa3a485d9d148db8908c43",
+      "license_snippets": [
+        "LA Chicago Vancouver IEEE BibTeX Creators E. Alpaydin Fevzi. Alimoglu DOI 10.24432/C5MG6K License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "E BibTeX Creators E. Alpaydin Fevzi. Alimoglu DOI 10.24432/C5MG6K License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "ecoli",
+      "source_query": "Ecoli",
+      "source_name": "Ecoli",
+      "source_id": 39,
+      "source_url": "https://archive.ics.uci.edu/dataset/39/ecoli",
+      "data_url": "https://archive.ics.uci.edu/static/public/39/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "abc17b27cac614b5338299f030e8f70fbe1a92f74c9045cac65f666cf50cdba1",
+      "instances": 336,
+      "features": 7,
+      "abstract": "This data contains protein localization sites",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/39/ecoli",
+      "source_page_sha256": "1f8223c4ddde4ca66ab1f5b5fdf045ac60153e298a775776fbc342d4badc1c86",
+      "license_snippets": [
+        "8M. Style: APA MLA Chicago Vancouver IEEE BibTeX Creators Kenta Nakai DOI 10.24432/C5388M License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "go Vancouver IEEE BibTeX Creators Kenta Nakai DOI 10.24432/C5388M License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "wine",
+      "source_query": "Wine",
+      "source_name": "Wine",
+      "source_id": 109,
+      "source_url": "https://archive.ics.uci.edu/dataset/109/wine",
+      "data_url": "https://archive.ics.uci.edu/static/public/109/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "ac0e877a4f06e3e9e686e2cc3d61f65577dcafa3c808049af03e95c110aeeccb",
+      "instances": 178,
+      "features": 13,
+      "abstract": "Using chemical analysis to determine the origin of wines",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/109/wine",
+      "source_page_sha256": "1ffc8bd18057beb548f0cf2784c2e80183f8307140441b5ccc37e8a33d50e88e",
+      "license_snippets": [
+        "er IEEE BibTeX Keywords Chemistry Creators Stefan Aeberhard M. Forina DOI 10.24432/C5PC7J License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "Chemistry Creators Stefan Aeberhard M. Forina DOI 10.24432/C5PC7J License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    },
+    {
+      "odds_route": "vertebral",
+      "source_query": "Vertebral Column",
+      "source_name": "Vertebral Column",
+      "source_id": 212,
+      "source_url": "https://archive.ics.uci.edu/dataset/212/vertebral+column",
+      "data_url": "https://archive.ics.uci.edu/static/public/212/data.csv",
+      "source_api_status": 200,
+      "source_api_sha256": "bbe4c36b146310babef26bfc1705da4740a851ffe8b0a16d8a2df8807d9a1d9f",
+      "instances": 310,
+      "features": 6,
+      "abstract": "Data set containing values for six biomechanical features used to classify orthopaedic patients into 3 classes (normal, disk hernia or spondilolysthesis) or 2 classes (normal or abnormal).",
+      "source_page_status": 200,
+      "source_page_final_url": "https://archive.ics.uci.edu/dataset/212/vertebral+column",
+      "source_page_sha256": "a6a48529b446d5fcc0475fb934ef34ddb4ff6cf1c974eab4429cdf86a4ee912f",
+      "license_snippets": [
+        "Chicago Vancouver IEEE BibTeX Creators Guilherme Barreto Ajalmar Neto DOI 10.24432/C5K89B License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Reques",
+        "ibTeX Creators Guilherme Barreto Ajalmar Neto DOI 10.24432/C5K89B License This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. This allows for the sharing and adaptation of the datasets for any purpose, provided that the appropriate credit is given. By using the UCI Machine Learning Repository, you acknowledge and accept the cookies and privacy practices used by the UCI Machine Learning Repository. Accept Read Policy The Project About Us CML National Science Foundation Navigation Home View Datasets Donate a Dataset Logistics Contact Privacy Notice Feature Request or Bug Report Browse D"
+      ]
+    }
+  ],
+  "unresolved_non_uci_sources": [
+    "MNIST original author page (no reliable explicit license evidence gathered for the ODDS-derived artifact)",
+    "VUT Brno speech corpus (reuse license and anonymous full payload not established)",
+    "OpenML Mammography 310 (license field is Public, not a standard open-data license)"
+  ]
+}

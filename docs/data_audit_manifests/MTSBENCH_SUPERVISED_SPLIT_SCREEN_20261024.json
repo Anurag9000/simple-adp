@@ -1,0 +1,810 @@
+{
+  "audit_date": "2026-10-24",
+  "scope": "All 19 mTSBench configurations and all file-level split rows in upstream Datasets/data_summary.csv; screening only, no model training.",
+  "anonymous_api": {
+    "url": "https://huggingface.co/api/datasets/PLAN-Lab/mTSBench",
+    "http_status": 200,
+    "private": false,
+    "gated": false,
+    "disabled": false,
+    "hub_license": "cc-by-nc-4.0",
+    "response_bytes": 37628,
+    "response_sha256": "5725f723a475252b2b0a9de1459c84e7e73c00a37d427cf55ea052bcf3514297"
+  },
+  "repository_tree": {
+    "url": "https://huggingface.co/api/datasets/PLAN-Lab/mTSBench/tree/main?recursive=true&expand=false",
+    "http_status": 200,
+    "files_and_directories": 743,
+    "file_count": 724,
+    "sum_file_bytes": 4149573739,
+    "sha256": "42df9286fde2465e381426fd2112ef68cfc46bfcef2b8763e2d32dd6490e26c0"
+  },
+  "dataset_summary": {
+    "url": "https://raw.githubusercontent.com/PLAN-Lab/mTSBench/main/Datasets/data_summary.csv",
+    "http_status": 200,
+    "bytes": 54791,
+    "sha256": "7daa470a62b95d8ab59913348db6661a59b480f02ae1fbb9bbb246d6dd63efa7",
+    "rows": 716,
+    "configurations": 19,
+    "training_files": 349,
+    "training_files_with_any_anomaly": 0,
+    "training_anomaly_points": 0,
+    "training_anomaly_sequences": 0,
+    "validation_anomaly_points": 3248,
+    "validation_anomaly_sequences": 4769,
+    "test_anomaly_points": 16962,
+    "test_anomaly_sequences": 28481
+  },
+  "per_config": [
+    {
+      "config": "CalIt2",
+      "source_license_reported_by_project": "CC BY 4.0",
+      "files_by_split": {
+        "validation": 1,
+        "train": 1,
+        "test": 1
+      },
+      "rows_by_split": {
+        "validation": 1008,
+        "train": 940,
+        "test": 4032
+      },
+      "series_files_by_split": {
+        "validation": 1,
+        "train": 1,
+        "test": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        3
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "validation": {
+          "points": 0,
+          "sequences": 8
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 21
+        }
+      }
+    },
+    {
+      "config": "cicids",
+      "source_license_reported_by_project": "Citation required",
+      "files_by_split": {
+        "train": 6,
+        "test": 6,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 278722,
+        "test": 1343920,
+        "validation": 138281
+      },
+      "series_files_by_split": {
+        "train": 6,
+        "test": 6,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        73
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 11474,
+          "sequences": 4843
+        },
+        "validation": {
+          "points": 381,
+          "sequences": 3782
+        }
+      }
+    },
+    {
+      "config": "creditcard",
+      "source_license_reported_by_project": "Citation required",
+      "files_by_split": {
+        "validation": 1,
+        "test": 1,
+        "train": 1
+      },
+      "rows_by_split": {
+        "validation": 56961,
+        "test": 170885,
+        "train": 56804
+      },
+      "series_files_by_split": {
+        "validation": 1,
+        "test": 1,
+        "train": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        30
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "validation": {
+          "points": 79,
+          "sequences": 1
+        },
+        "test": {
+          "points": 219,
+          "sequences": 10
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        }
+      }
+    },
+    {
+      "config": "Daphnet",
+      "source_license_reported_by_project": "CC BY 4.0",
+      "files_by_split": {
+        "train": 26,
+        "test": 26,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 137565,
+        "test": 613530,
+        "validation": 3892
+      },
+      "series_files_by_split": {
+        "train": 26,
+        "test": 26,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        10
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 188
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 5
+        }
+      }
+    },
+    {
+      "config": "Exathlon",
+      "source_license_reported_by_project": "Apache-2.0",
+      "files_by_split": {
+        "train": 30,
+        "test": 30,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 164153,
+        "test": 669920,
+        "validation": 25839
+      },
+      "series_files_by_split": {
+        "train": 30,
+        "test": 30,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        21
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 11,
+          "sequences": 72
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 2
+        }
+      }
+    },
+    {
+      "config": "GECCO",
+      "source_license_reported_by_project": "Citation required",
+      "files_by_split": {
+        "validation": 1,
+        "train": 1,
+        "test": 1
+      },
+      "rows_by_split": {
+        "validation": 27704,
+        "train": 27560,
+        "test": 83113
+      },
+      "series_files_by_split": {
+        "validation": 1,
+        "train": 1,
+        "test": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        10
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "validation": {
+          "points": 0,
+          "sequences": 6
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 37
+        }
+      }
+    },
+    {
+      "config": "Genesis",
+      "source_license_reported_by_project": "CC BY-NC-SA 4.0",
+      "files_by_split": {
+        "validation": 1,
+        "train": 1,
+        "test": 1
+      },
+      "rows_by_split": {
+        "validation": 3644,
+        "train": 3244,
+        "test": 9332
+      },
+      "series_files_by_split": {
+        "validation": 1,
+        "train": 1,
+        "test": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        19
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "validation": {
+          "points": 0,
+          "sequences": 1
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 2
+        }
+      }
+    },
+    {
+      "config": "GHL",
+      "source_license_reported_by_project": "Contact authors",
+      "files_by_split": {
+        "train": 14,
+        "test": 14,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 1645137,
+        "test": 1154014,
+        "validation": 86000
+      },
+      "series_files_by_split": {
+        "train": 14,
+        "test": 14,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        17
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 26
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 1
+        }
+      }
+    },
+    {
+      "config": "GutenTAG",
+      "source_license_reported_by_project": "MIT",
+      "files_by_split": {
+        "train": 30,
+        "test": 30,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 30000,
+        "test": 300000,
+        "validation": 4000
+      },
+      "series_files_by_split": {
+        "train": 30,
+        "test": 30,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        21
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 59
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 1
+        }
+      }
+    },
+    {
+      "config": "metro",
+      "source_license_reported_by_project": "CC BY 4.0",
+      "files_by_split": {
+        "validation": 1,
+        "test": 1,
+        "train": 1
+      },
+      "rows_by_split": {
+        "validation": 24102,
+        "test": 24102,
+        "train": 24072
+      },
+      "series_files_by_split": {
+        "validation": 1,
+        "test": 1,
+        "train": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        6
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "validation": {
+          "points": 26,
+          "sequences": 2
+        },
+        "test": {
+          "points": 20,
+          "sequences": 5
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        }
+      }
+    },
+    {
+      "config": "MITDB",
+      "source_license_reported_by_project": "ODC-By 1.0",
+      "files_by_split": {
+        "train": 47,
+        "test": 47,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 5415890,
+        "test": 24440000,
+        "validation": 130000
+      },
+      "series_files_by_split": {
+        "train": 47,
+        "test": 47,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        3
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 6840
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 143
+        }
+      }
+    },
+    {
+      "config": "MSL",
+      "source_license_reported_by_project": "BSD-3-Clause",
+      "files_by_split": {
+        "train": 26,
+        "test": 26,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 57878,
+        "test": 71418,
+        "validation": 1215
+      },
+      "series_files_by_split": {
+        "train": 26,
+        "test": 26,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        56
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 33
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 1
+        }
+      }
+    },
+    {
+      "config": "room-occupancy",
+      "source_license_reported_by_project": "CC BY 4.0",
+      "files_by_split": {
+        "train": 2,
+        "test": 2,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 2565,
+        "test": 14317,
+        "validation": 1628
+      },
+      "series_files_by_split": {
+        "train": 2,
+        "test": 2,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        6
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 5,
+          "sequences": 22
+        },
+        "validation": {
+          "points": 1,
+          "sequences": 9
+        }
+      }
+    },
+    {
+      "config": "OPPORTUNITY",
+      "source_license_reported_by_project": "CC BY 4.0",
+      "files_by_split": {
+        "test": 13,
+        "train": 13,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "test": 310466,
+        "train": 67777,
+        "validation": 5026
+      },
+      "series_files_by_split": {
+        "test": 13,
+        "train": 13,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        33
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "test": {
+          "points": 0,
+          "sequences": 13
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 1
+        }
+      }
+    },
+    {
+      "config": "PSM",
+      "source_license_reported_by_project": "CC BY 4.0",
+      "files_by_split": {
+        "validation": 1,
+        "test": 1,
+        "train": 1
+      },
+      "rows_by_split": {
+        "validation": 17568,
+        "test": 70273,
+        "train": 132481
+      },
+      "series_files_by_split": {
+        "validation": 1,
+        "test": 1,
+        "train": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        27
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "validation": {
+          "points": 0,
+          "sequences": 17
+        },
+        "test": {
+          "points": 0,
+          "sequences": 39
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        }
+      }
+    },
+    {
+      "config": "SMAP",
+      "source_license_reported_by_project": "BSD-3-Clause",
+      "files_by_split": {
+        "test": 51,
+        "train": 52,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "test": 408160,
+        "train": 136202,
+        "validation": 4014
+      },
+      "series_files_by_split": {
+        "test": 51,
+        "train": 52,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        26
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "test": {
+          "points": 0,
+          "sequences": 64
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 1
+        }
+      }
+    },
+    {
+      "config": "SMD",
+      "source_license_reported_by_project": "MIT",
+      "files_by_split": {
+        "train": 18,
+        "test": 18,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "train": 436573,
+        "test": 256589,
+        "validation": 3286
+      },
+      "series_files_by_split": {
+        "train": 18,
+        "test": 18,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        39
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "test": {
+          "points": 0,
+          "sequences": 196
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 3
+        }
+      }
+    },
+    {
+      "config": "SVDB",
+      "source_license_reported_by_project": "ODC-By 1.0",
+      "files_by_split": {
+        "test": 78,
+        "train": 78,
+        "validation": 1
+      },
+      "rows_by_split": {
+        "test": 14330880,
+        "train": 3102197,
+        "validation": 46080
+      },
+      "series_files_by_split": {
+        "test": 78,
+        "train": 78,
+        "validation": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        3
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "test": {
+          "points": 0,
+          "sequences": 14629
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        },
+        "validation": {
+          "points": 0,
+          "sequences": 200
+        }
+      }
+    },
+    {
+      "config": "swan",
+      "source_license_reported_by_project": "MIT",
+      "files_by_split": {
+        "test": 1,
+        "validation": 1,
+        "train": 1
+      },
+      "rows_by_split": {
+        "test": 72000,
+        "validation": 24000,
+        "train": 19672
+      },
+      "series_files_by_split": {
+        "test": 1,
+        "validation": 1,
+        "train": 1
+      },
+      "train_anomaly_point_count": 0,
+      "train_anomaly_sequence_count": 0,
+      "train_files_with_anomalies": 0,
+      "channel_counts": [
+        39
+      ],
+      "decision": "CROSS OUT: source split has no positive anomaly labels in training; cannot train requested supervised detector without redesigning split and leaking/altering protocol",
+      "anomaly_counts_by_split": {
+        "test": {
+          "points": 5233,
+          "sequences": 1382
+        },
+        "validation": {
+          "points": 2761,
+          "sequences": 585
+        },
+        "train": {
+          "points": 0,
+          "sequences": 0
+        }
+      }
+    }
+  ],
+  "sample_payload_check": {
+    "url": "https://huggingface.co/datasets/PLAN-Lab/mTSBench/resolve/main/CalIt2/CalIt2_traffic_train.csv",
+    "http_status": 200,
+    "bytes": 24678,
+    "sha256": "c6594e95fb7da2a4057d287bf6a98919bd0489fa7e8b423d87139be61c3dfa26",
+    "header": "timestamp,in_count,out_count,is_anomaly",
+    "parse_and_label_check": "full file downloaded anonymously; 940 rows and no positive is_anomaly values, consistent with published summary"
+  },
+  "overall_decision": "CROSS OUT all 19 mTSBench configurations for the requested supervised time-series anomaly task: all 349 training segments in the official split summary contain zero point and zero sequence anomalies. The Hub declares CC BY-NC-4.0 for its aggregate rehost; that release-level noncommercial condition also fails the strict open-license gate. This does not reject the upstream datasets independently under their own terms or alternate supervised splits.",
+  "limitations": "The 716-row summary is source-provided metadata, not a full payload parse of all 742 files. Only CalIt2 train CSV was fully retrieved as a payload sanity check. The benchmark is intentionally built for unsupervised anomaly detection/model selection; no MLP difficulty pilot is relevant to a dataset with no labeled positive training examples."
+}

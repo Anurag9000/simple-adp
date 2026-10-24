@@ -1,0 +1,456 @@
+{
+  "audit_date": "2026-10-24",
+  "source": "https://nijianmo.github.io/amazon/index.html",
+  "original_ucsd_page": "https://cseweb.ucsd.edu/~jmcauley/datasets/amazon_v2/",
+  "scope": "All 29 Amazon Reviews 2018 per-category rating-only CSV routes listed by the official page.",
+  "official_rights_statement": "Official page says the authors do not own the data and cannot offer a license or control its use, but request research-only use. This is not an explicit permissive open-data license. The page says complete review and per-category files direct users to a form; rating-only CSV links are presented separately as directly downloadable small subsets.",
+  "task_and_architecture": "All categories supply rating labels and user/item IDs; scalar rating prediction fits an MLP structurally if IDs are one-hot. Text is not needed. Dense one-hot width and full-batch tensor costs are category-specific; user cardinalities were not provided in the page table, so input tensor/optimizer estimates are incomplete.",
+  "split": "No standard category train/validation/test split is documented in the source page; any benchmark split would need to be constructed or sourced separately.",
+  "probe_method": "Range GET bytes=0-0 to each official rating-only CSV endpoint, no authorization headers; responses closed without saving content.",
+  "summary": {
+    "category_routes": 29,
+    "anonymous_http_206": 0,
+    "range_failures": 29,
+    "full_downloads": 0,
+    "hard_license_gate": "No explicit permissive license; publisher only requests research use.",
+    "admitted": 0
+  },
+  "categories": [
+    {
+      "category": "Amazon Fashion",
+      "rating_only_rows": 883636,
+      "five_core_rows": 3176,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/AMAZON_FASHION.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/AMAZON_FASHION.csv (Caused by ConnectTimeoutError(<HTTPSC"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 6.7416,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "All Beauty",
+      "rating_only_rows": 371345,
+      "five_core_rows": 5269,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/All_Beauty.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/All_Beauty.csv (Caused by ConnectTimeoutError(<HTTPSConne"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 2.8331,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Appliances",
+      "rating_only_rows": 602777,
+      "five_core_rows": 2277,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Appliances.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Appliances.csv (Caused by ConnectTimeoutError(<HTTPSConne"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 4.5988,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Arts, Crafts and Sewing",
+      "rating_only_rows": 2875917,
+      "five_core_rows": 494485,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Arts_Crafts_and_Sewing.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Arts_Crafts_and_Sewing.csv (Caused by ConnectTimeoutError"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 21.9415,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Automotive",
+      "rating_only_rows": 7990166,
+      "five_core_rows": 1711519,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Automotive.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Automotive.csv (Caused by ConnectTimeoutError(<HTTPSConne"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 60.9601,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Books",
+      "rating_only_rows": 51311621,
+      "five_core_rows": 27164983,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Books.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Books.csv (Caused by ConnectTimeoutError(<HTTPSConnection"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 391.4766,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "CDs and Vinyl",
+      "rating_only_rows": 4543369,
+      "five_core_rows": 1443755,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/CDs_and_Vinyl.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/CDs_and_Vinyl.csv (Caused by ConnectTimeoutError(<HTTPSCo"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 34.6632,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Cell Phones and Accessories",
+      "rating_only_rows": 10063255,
+      "five_core_rows": 1128437,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Cell_Phones_and_Accessories.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Cell_Phones_and_Accessories.csv (Caused by ConnectTimeout"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 76.7765,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Clothing, Shoes and Jewelry",
+      "rating_only_rows": 32292099,
+      "five_core_rows": 11285464,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Clothing_Shoes_and_Jewelry.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Clothing_Shoes_and_Jewelry.csv (Caused by ConnectTimeoutE"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 246.3692,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Digital Music",
+      "rating_only_rows": 1584082,
+      "five_core_rows": 169781,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Digital_Music.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Digital_Music.csv (Caused by ConnectTimeoutError(<HTTPSCo"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 12.0856,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Electronics",
+      "rating_only_rows": 20994353,
+      "five_core_rows": 6739590,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Electronics.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Electronics.csv (Caused by ConnectTimeoutError(<HTTPSConn"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 160.1742,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Gift Cards",
+      "rating_only_rows": 147194,
+      "five_core_rows": 2972,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Gift_Cards.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Gift_Cards.csv (Caused by ConnectTimeoutError(<HTTPSConne"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 1.123,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Grocery and Gourmet Food",
+      "rating_only_rows": 5074160,
+      "five_core_rows": 1143860,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Grocery_and_Gourmet_Food.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Grocery_and_Gourmet_Food.csv (Caused by ConnectTimeoutErr"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 38.7128,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Home and Kitchen",
+      "rating_only_rows": 21928568,
+      "five_core_rows": 6898955,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Home_and_Kitchen.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Home_and_Kitchen.csv (Caused by ConnectTimeoutError(<HTTP"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 167.3017,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Industrial and Scientific",
+      "rating_only_rows": 1758333,
+      "five_core_rows": 77071,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Industrial_and_Scientific.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Industrial_and_Scientific.csv (Caused by ConnectTimeoutEr"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 13.415,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Kindle Store",
+      "rating_only_rows": 5722988,
+      "five_core_rows": 2222983,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Kindle_Store.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Kindle_Store.csv (Caused by ConnectTimeoutError(<HTTPSCon"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 43.6629,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Luxury Beauty",
+      "rating_only_rows": 574628,
+      "five_core_rows": 34278,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Luxury_Beauty.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Luxury_Beauty.csv (Caused by ConnectTimeoutError(<HTTPSCo"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 4.3841,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Magazine Subscriptions",
+      "rating_only_rows": 89689,
+      "five_core_rows": 2375,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Magazine_Subscriptions.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Magazine_Subscriptions.csv (Caused by ConnectTimeoutError"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 0.6843,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Movies and TV",
+      "rating_only_rows": 8765568,
+      "five_core_rows": 3410019,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Movies_and_TV.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Movies_and_TV.csv (Caused by ConnectTimeoutError(<HTTPSCo"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 66.876,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Musical Instruments",
+      "rating_only_rows": 1512530,
+      "five_core_rows": 231392,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Musical_Instruments.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Musical_Instruments.csv (Caused by ConnectTimeoutError(<H"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 11.5397,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Office Products",
+      "rating_only_rows": 5581313,
+      "five_core_rows": 800357,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Office_Products.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Office_Products.csv (Caused by ConnectTimeoutError(<HTTPS"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 42.582,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Patio, Lawn and Garden",
+      "rating_only_rows": 5236058,
+      "five_core_rows": 798415,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Patio_Lawn_and_Garden.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Patio_Lawn_and_Garden.csv (Caused by ConnectTimeoutError("
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 39.948,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Pet Supplies",
+      "rating_only_rows": 6542483,
+      "five_core_rows": 2098325,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Pet_Supplies.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Pet_Supplies.csv (Caused by ConnectTimeoutError(<HTTPSCon"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 49.9152,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Prime Pantry",
+      "rating_only_rows": 471614,
+      "five_core_rows": 137788,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Prime_Pantry.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Prime_Pantry.csv (Caused by ConnectTimeoutError(<HTTPSCon"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 3.5981,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Software",
+      "rating_only_rows": 459436,
+      "five_core_rows": 12805,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Software.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Software.csv (Caused by ConnectTimeoutError(<HTTPSConnect"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 3.5052,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Sports and Outdoors",
+      "rating_only_rows": 12980837,
+      "five_core_rows": 2839940,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Sports_and_Outdoors.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Sports_and_Outdoors.csv (Caused by ConnectTimeoutError(<H"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 99.0359,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Tools and Home Improvement",
+      "rating_only_rows": 9015203,
+      "five_core_rows": 2070831,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Tools_and_Home_Improvement.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Tools_and_Home_Improvement.csv (Caused by ConnectTimeoutE"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 68.7805,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Toys and Games",
+      "rating_only_rows": 8201231,
+      "five_core_rows": 1828971,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Toys_and_Games.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Toys_and_Games.csv (Caused by ConnectTimeoutError(<HTTPSC"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 62.5704,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    },
+    {
+      "category": "Video Games",
+      "rating_only_rows": 2565349,
+      "five_core_rows": 497577,
+      "rating_file_url": "https://jmcauley.ucsd.edu/data/amazon_v2/categoryFilesSmall/Video_Games.csv",
+      "anonymous_endpoint_probe": {
+        "error": "ConnectTimeout: HTTPSConnectionPool(host='jmcauley.ucsd.edu', port=443): Max retries exceeded with url: /data/amazon_v2/categoryFilesSmall/Video_Games.csv (Caused by ConnectTimeoutError(<HTTPSConn"
+      },
+      "mlp_screen": {
+        "task": "rating regression/classification",
+        "features": "user and item IDs, optional timestamp features; plain dense MLP needs one-hot/preprocessed categorical IDs",
+        "hidden_activations_gib_at_80pct_train_for_512x5": 19.5721,
+        "difficulty": "Not tested. No data license; no pilot."
+      }
+    }
+  ],
+  "disposition": "CROSS OUT every category: task shape is compatible with scalar MLP scoring and ratings-only files are presented as direct public downloads, but source explicitly cannot grant a license and requests research-only use. Direct endpoint probing from this machine timed out/failed; landing-page links alone do not establish current downloadability. The five smallest rows also lack a licensed and verified split/difficulty screen; no MLP pilots were run."
+}

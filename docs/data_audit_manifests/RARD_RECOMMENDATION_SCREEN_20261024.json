@@ -1,0 +1,82 @@
+{
+  "audit_date": "2026-10-24",
+  "source": "https://www.dlib.org/dlib/july17/beel/07beel.html",
+  "paper": "https://arxiv.org/abs/1706.03428",
+  "dataverse_search_api": "https://dataverse.harvard.edu/api/search?q=RARD&types=dataset&per_page=100",
+  "scope": "RARD I and RARD II logged recommendation benchmark variants.",
+  "method": "Read source paper/Dataverse search metadata; inspect file search result and probe anonymous Range on filtered matrix file. No full payload downloaded.",
+  "probe": {
+    "public_search_http": 200,
+    "filtered_matrix_file_name": "rating_matrix_fitered.csv",
+    "file_id": 3027416,
+    "file_metadata_restricted": false,
+    "file_metadata_can_download": false,
+    "anonymous_range_http": 403,
+    "response_excerpt": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<html><head>\n<title>403 Forbidden</title>\n</head><body>\n<h1>Forbidden</h1>\n<p>You don't have permission to ac",
+    "summary": "Dataverse public search API returned HTTP 200. It lists the RARD dataset and the filtered matrix as unrestricted metadata, but the file metadata says canDownloadFile=false and the direct byte-range endpoint returned HTTP 403. This does not prove a user access gate; it means payload downloadability is unverified in this environment."
+  },
+  "variants": [
+    {
+      "dataset": "RARD: The Related-Article Recommendation Dataset [Data]",
+      "doi": "doi:10.7910/DVN/HA8EAH",
+      "source_date": "2017-06-15T00:04:01Z",
+      "publisher": "Mr. DLib Dataverse",
+      "source_reported_recommendations": 57435086,
+      "source_reported_requests": 7360026,
+      "source_reported_clicked": 77468,
+      "source_reported_click_rate": 0.00135,
+      "source_reported_unique_corpus_items": 9500000,
+      "direct_features": [
+        "recommendation set ID",
+        "recommendation rank",
+        "source document ID",
+        "recommended document ID",
+        "request/response/click timestamps",
+        "algorithm class/ID",
+        "algorithm parameters",
+        "text relevance score",
+        "popularity metric"
+      ],
+      "supervised_target": "clicked versus non-clicked recommendation, with important crawler/no-click-label noise; filtered matrix retains only sets where at least one item was clicked and contains 63,923 source documents.",
+      "plain_mlp_fit": "Pointwise click scoring is possible in principle from fixed numerical/categorical log fields, but item IDs span a 9.5M-document corpus. Dense one-hot item inputs violate the architecture/resource profile; article metadata are not included. The unfiltered log has 57,435,086 rows and is also far beyond full-batch capacity.",
+      "license": "CC BY 3.0 stated by the dataset paper and Dataverse search description.",
+      "access_status": "Dataverse public search API returned HTTP 200 and exposes a non-restricted file entry, but the anonymous range GET of filtered matrix file ID 3027416 returned HTTP 403 from this machine. Public metadata/search is not proof that the artifact bytes can be downloaded here; distinguish endpoint/network block from a real access gate.",
+      "difficulty_pilot": "Not run; source task fails full-batch scale and artifact bytes were not acquired.",
+      "disposition": "CROSS OUT for this repo profile: no full-batch-compatible all-pairs candidate representation, 9.5M item cardinality, and direct payload download not verified.",
+      "full_batch_activation_lower_bound": {
+        "assumption": "80% of reported candidate rows in train; float32 [512]*5 hidden activations; excludes inputs, parameters, gradients, optimizer state and workspace.",
+        "gib": 438.195
+      },
+      "filtered_rating_matrix": {
+        "reported_file": "rating_matrix_fitered.csv",
+        "reported_size_bytes": 7502182,
+        "reported_rows": 63923,
+        "anonymous_search_api_http": 200,
+        "file_metadata_restricted": false,
+        "file_metadata_can_download": false,
+        "anonymous_range_api_http": 403,
+        "meaning": "Dataverse search API exposes a public file entry, but download endpoint was forbidden from this environment; cannot distinguish provider restriction from network/anti-bot behavior."
+      }
+    },
+    {
+      "dataset": "RARD II: The 2nd Related-Article Recommendation Dataset",
+      "doi": "doi:10.7910/DVN/AT4MNE",
+      "source_date": "2019-01-08T12:11:25Z",
+      "publisher": "Mr. DLib Dataverse",
+      "source_reported_recommendations": 94000000,
+      "source_reported_unique_items": 24000000,
+      "source_reported_clicked": "Not established in sources inspected during this screen",
+      "supervised_target": "Logged related-article recommendation and click fields; dataset paper describes implicit item-item ratings.",
+      "plain_mlp_fit": "Pointwise MLP click scoring is structurally possible after a candidate-row transform, but 94M rows and 24M items make dense one-hot all-batch training infeasible. Metadata are not supplied in the recommendation log, and the native rating matrix is relational/sparse rather than a ready dense tabular input.",
+      "license": "CC BY 3.0 reported for RARD II by project publication; per-version Dataverse metadata not independently retrieved.",
+      "access_status": "The public Dataverse search API lists the dataset; exact file listing and anonymous payload access were not verified from this machine.",
+      "difficulty_pilot": "Not run; hard batch-size and feature-representation gates fail first.",
+      "disposition": "CROSS OUT for this suite profile due to full-batch scale/item cardinality and unverified direct payload access.",
+      "full_batch_activation_lower_bound": {
+        "assumption": "80% of reported candidate rows in train; float32 [512]*5 hidden activations; excludes inputs, parameters, gradients, optimizer state and workspace.",
+        "gib": 717.163
+      }
+    }
+  ],
+  "limits": "Dataset is crossed out on the large whole-batch dense-ID task even before artifact retrieval. Public search listing and CC BY 3.0 statement pass visibility/license checks, but actual downloadable payload is not established from this machine."
+}

@@ -1,0 +1,53 @@
+{
+  "snapshot_date": "2026-10-24",
+  "dataset": "RecGaze Click Feedback Dataset",
+  "version_reviewed": "v2",
+  "source_urls": {
+    "record": "https://zenodo.org/records/22142293",
+    "dataset_repository": "https://github.com/santideleon/RecGaze_Dataset",
+    "zenodo_api": "https://zenodo.org/api/records/22142293"
+  },
+  "direct_metadata_probe": {
+    "method": "anonymous GET to Zenodo public record API",
+    "http_status": 200,
+    "record_access_right": "open",
+    "record_license": "CC BY-NC-SA 4.0",
+    "record_terms": "By downloading, users agree to non-commercial research use in specified fields, no user re-identification, citation, and responsibility for third-party rights.",
+    "file_entries": [
+      {
+        "filename": "free_browsing_one_click_v2.csv",
+        "bytes": 4185003,
+        "published_md5": "c3e97bd6fe15932f566da2f798e120eb"
+      },
+      {
+        "filename": "free_browsing_one_click_impressed_v2.csv",
+        "bytes": 2398214,
+        "published_md5": "8884eca3f5b6fc4294eb1bf5414aab39"
+      }
+    ],
+    "payload_downloaded_or_hashed": false
+  },
+  "officially_described_task_data": {
+    "sessions": 2387,
+    "users": 87,
+    "unique_movies": 1307,
+    "free_browsing_screens": 30,
+    "positions_per_screen": 150,
+    "target": "clicked",
+    "other_labels": ["impressed", "impressed_by_cascade", "Observed_by_fixation"],
+    "grouping": "User-screen/session groups; the same screen composition and ordering is shared across users",
+    "version_note": "v2 corrects impression omissions in fewer than five percent of cases; official record recommends v2"
+  },
+  "architecture_and_task_assessment": {
+    "dense_mlp_compatibility": "Structurally compatible after fixed-width encoding of numeric positions and categorical user/movie/genre/session fields; retain session/screen IDs as grouping metadata rather than ordinal features.",
+    "candidate_task": "Pointwise click-response classification among exposed/impressed carousel items.",
+    "split_requirement": "Group by user and screen/session; never random-split rows because users share identical screens and each session yields many correlated item rows.",
+    "full_batch_estimate": "Expected to fit due to small released files, but exact parsed row count, transformed one-hot width, and measured peak GPU memory were not established."
+  },
+  "difficulty_assessment": {
+    "mlp_pilot_run": false,
+    "saturation_status": "Not empirically determined",
+    "reason": "The release fails the explicit no-dataset-specific-agreement and open-license criteria before model training; only 87 users and 30 repeated screens also make independent-group difficulty uncertain."
+  },
+  "disposition": "CROSS OUT. Public/free record metadata and listed files are not sufficient: the dataset is CC BY-NC-SA 4.0 and its download terms impose non-commercial research conditions and other obligations. No payload GET, parse, or MLP pilot is claimed. The separate non-public full dataset is request-controlled and is also excluded."
+}

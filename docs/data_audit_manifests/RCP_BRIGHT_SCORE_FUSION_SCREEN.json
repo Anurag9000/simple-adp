@@ -1,0 +1,53 @@
+{
+  "dataset": "RCP-nDCG BRIGHT release",
+  "screened_at": "2026-10-23",
+  "primary_source": "https://huggingface.co/datasets/fabianschmidt-cohere/rcp-ndcg-bright",
+  "upstream_source": "https://github.com/UKPLab/bright",
+  "variant": "AOPS subset score-fusion files previously fetched and parsed",
+  "access_and_rights": {
+    "hub_card_license": "CC BY 4.0 for the released derived BRIGHT data",
+    "anonymous_access": "Anonymous full GETs succeeded for the three inspected AOPS Parquet files; file sizes and SHA-256 hashes are listed in the supplemental audit.",
+    "card_caveat": "The card says provenance-runs scores come from third-party reranker models/APIs and calibrated gains come from an LLM judge; those providers' terms must also be checked before public or commercial reuse.",
+    "rights_decision": "Unresolved third-party terms mean the numeric score features and calibrated targets do not meet the strict verified-open-reuse requirement."
+  },
+  "verified_artifacts": [
+    {
+      "path": "aops/qrels.parquet",
+      "bytes": 279990,
+      "rows": 12205,
+      "sha256": "cf67708a5c0219e09a4d324c27d92db8d522af1f5e6c516042fcb0181c3c8d48"
+    },
+    {
+      "path": "aops/top_ranked.parquet",
+      "bytes": 54889,
+      "rows": 111,
+      "sha256": "7a0e40826b5d26f31f056a3fe15944c842558fb7438cb622096141699f685233"
+    },
+    {
+      "path": "provenance/runs/aops.parquet",
+      "bytes": 1061101,
+      "rows": 195280,
+      "sha256": "2e95117f093d7a8c56db67708ae944b7f50942f1cda835dbe6e3c4eb25e53fa2"
+    }
+  ],
+  "task_and_architecture": {
+    "task_route": "score-fusion supervised query-document ranking only",
+    "plain_mlp_compatible": true,
+    "candidate_input": "Numeric ranker score/rank features from provenance-runs; retain query group_id for the grouped-ranking objective and metrics. Exclude query/document text and target-derived fields.",
+    "candidate_target": "qrels score or calibrated gain; these define different ranking targets and metrics and must not be mixed.",
+    "limitations": [
+      "This is not a conventional hand-engineered tabular ranking dataset; features are outputs of third-party retrieval/reranker systems.",
+      "The inspected AOPS payload covers 111 queries, and does not itself provide train/validation/test splits.",
+      "A valid pilot would require query-disjoint grouping, likely across all 12 subsets, and must verify that no query appears in more than one partition.",
+      "The full card describes 1,366 evaluated queries and 150-document judged pools, but those overall release counts do not establish the size or quality of an MLP train split for the selected score-fusion protocol."
+    ]
+  },
+  "capacity_and_difficulty": {
+    "maximum_architecture": "[512,512,512,512,512]",
+    "resource_estimate": "For a hypothetical 163,800-row train split and 14 numeric score features, the five float32 hidden activations alone would require 1,677,312,000 bytes (about 1.562 GiB). This is only an illustrative estimate based on 1,092 of 1,366 queries \u00d7 150 candidates; actual candidate coverage varies and no official split is supplied.",
+    "measured_peak_memory": false,
+    "query_disjoint_mlp_pilot": false,
+    "non_saturation": "unknown; no MLP test score or non-MLP comparator was run"
+  },
+  "disposition": "CROSS OUT under the current strict open-dataset benchmark filter. Although numeric score fusion is structurally compatible with a dense MLP and a grouped ranking task, third-party run/judge reuse terms are unresolved and the inspected subset has no established query-disjoint train/validation/test protocol or difficulty pilot. Do not count this as an admitted ranking dataset. A later route may be reconsidered only after provider rights are clarified, full intended feature/label files are parsed, and a query-disjoint vanilla MLP pilot is run."
+}

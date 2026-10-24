@@ -1,0 +1,99 @@
+{
+  "dataset": "Batch Distillation Data for Developing Machine Learning Anomaly Detection Methods",
+  "retrieved_at": "2026-10-23",
+  "source": {
+    "version_record": "https://zenodo.org/records/22250958",
+    "canonical_dataset_doi": "10.5281/zenodo.17395543",
+    "article": "https://www.nature.com/articles/s41597-026-07124-3",
+    "article_license_statement": "CC BY 4.0",
+    "article_split_guidance": "Split by entire experiments to avoid temporal leakage and overly optimistic scores.",
+    "access": {
+      "login_required": false,
+      "metadata_archive_bytes": 1726509,
+      "metadata_archive_sha256": "2fc22d8d5aba3600d13b13029c73e9142c42e8cbf36b45a4cfcbf85205bdd1cb",
+      "operation_sensor_archive_bytes": 36470058,
+      "operation_sensor_archive_sha256": "1f53b67401458735f4e12c51e84415a52a04104e150e4cc9d560ab9d39545d01",
+      "zip_integrity_validated": true,
+      "payload_scope": "Operation-phase 18-channel sensor CSVs and matching YAML annotations; other modalities were not downloaded."
+    }
+  },
+  "parsed_data": {
+    "operation_experiments": 119,
+    "sensor_columns_per_experiment": 18,
+    "parsed_sensor_rows": 693790,
+    "unique_mixture_operating_point_groups": 50,
+    "groups_with_non_negligible_class_anomaly": 22,
+    "groups_without_positive_anomaly": 28,
+    "accepted_non_negligible_interval_instances_after_per_experiment_deduplication": 80,
+    "annotation_classes_seen": {
+      "Anomaly": 181,
+      "ConfirmedAnomaly": 325,
+      "None": 19
+    },
+    "label_policy": "Only class=Anomaly intervals without the explicit comment 'assessed as negligible and treated as normal' are positives. ConfirmedAnomaly is documented by the data as negligible and treated as normal and is not labeled positive. Duplicate sensor observations of the same interval are deduplicated.",
+    "parser_correction": "The initial regex handled only unindented scalar entries and missed indented YAML list entries. It was rejected. This manifest records the corrected indentation-aware parser, which reads direct anomaly-entry hasBeginning/hasEnd fields, including list-valued fields, and excludes nested PerturbationMode fields."
+  },
+  "pilot": {
+    "task": "60-second historical sensor summaries predict whether any accepted expert anomaly interval overlaps the following 60 seconds.",
+    "input_features": 72,
+    "features": "For each of 18 sensor channels, mean, standard deviation, minimum, and maximum across the preceding 60 seconds.",
+    "windows": 11393,
+    "positive_windows": 969,
+    "grouping": "Mixture/operating-point groups kept intact. Positive-bearing and negative-only groups were separately shuffled with NumPy RNG seed 20261023, then allocated approximately 70/15/15 percent to train/validation/test.",
+    "split": {
+      "train_groups": 35,
+      "validation_groups": 7,
+      "test_groups": 8,
+      "train_windows": 7373,
+      "validation_windows": 1954,
+      "test_windows": 2066,
+      "train_positive_windows": 640,
+      "validation_positive_windows": 206,
+      "test_positive_windows": 123,
+      "train_positive_fraction": 0.086803200868032,
+      "validation_positive_fraction": 0.10542476970317298,
+      "test_positive_fraction": 0.05953533397870281
+    },
+    "preprocessing": "Mean and standard deviation fit using training windows only; one entire training partition per batch; no windows cross operating-point groups.",
+    "training": "NVIDIA GeForce RTX 3050 Laptop GPU (6 GB); Adam learning rate 0.001; 30 epochs; seeds 20261023, 20261024 and 20261025 by architecture; inverse-frequency class-weighted cross-entropy; validation weighted cross-entropy selected checkpoint; test evaluated after checkpoint selection.",
+    "architectures": [
+      {
+        "hidden_widths": [16, 16],
+        "test_accuracy": 0.6776379477250726,
+        "test_balanced_accuracy": 0.41738322684307644,
+        "test_positive_f1": 0.04310344827586207,
+        "test_positive_prediction_fraction": 0.27734753146176183,
+        "peak_cuda_gib": 0.020871639251708984
+      },
+      {
+        "hidden_widths": [128, 128],
+        "test_accuracy": 0.6776379477250726,
+        "test_balanced_accuracy": 0.5125758926143045,
+        "test_positive_f1": 0.10723860589812331,
+        "test_positive_prediction_fraction": 0.3015488867376573,
+        "peak_cuda_gib": 0.03718090057373047
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "test_accuracy": 0.579864472410455,
+        "test_balanced_accuracy": 0.5291331400189967,
+        "test_positive_f1": 0.11788617886178862,
+        "test_positive_prediction_fraction": 0.41674733785091966,
+        "peak_cuda_gib": 0.13631439208984375
+      }
+    ],
+    "majority_negative_baseline": {
+      "test_accuracy": 0.9404646660212972,
+      "test_balanced_accuracy": 0.5,
+      "test_positive_f1": 0.0
+    },
+    "limitations": [
+      "This is one group split and one seed per architecture; no repeated-group cross-validation was run.",
+      "The best balanced accuracy is only 0.529 and all positive F1 scores are at most 0.118, showing weak held-out skill.",
+      "Validation-based checkpoint selection used weighted loss; the architecture rankings and test results are unstable across width.",
+      "No ADP variant or central runner integration was tested.",
+      "The initially tried onset-only label had 73 positive windows and all models predicted the negative class; it was discarded in favor of the documented next-minute interval-overlap task."
+    ],
+    "disposition": "CROSS OUT from the current benchmark shortlist: technically compatible, openly downloadable, and licensed, but the group-held-out MLP screen shows near-chance balanced accuracy and weak positive-event F1."
+  }
+}

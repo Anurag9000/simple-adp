@@ -1,0 +1,79 @@
+{
+  "dataset": "UEA InsectWingbeat equal-length v2 (ten-class insect wingbeat classification)",
+  "zenodo_record": "https://zenodo.org/records/21871184",
+  "uea_page": "https://www.timeseriesclassification.com/description.php?Dataset=InsectWingbeat",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "InsectWingbeat_eq_TRAIN.ts",
+      "bytes": 734148663,
+      "sha256": "2c41474b937eb6a5df948475e129790c6789079cdd41cd46f7b96c8a365abff6"
+    },
+    {
+      "file": "InsectWingbeat_eq_TEST.ts",
+      "bytes": 734251622,
+      "sha256": "ea08f96ce23faf5b6dd4466f082b355088300ffac6734074e8b0fa21d1e3f9bf"
+    }
+  ],
+  "total_bytes": 1468400285,
+  "parsed": {
+    "train_rows": 25000,
+    "test_rows": 25000,
+    "channels": 200,
+    "points_per_channel": 20,
+    "input_width": 4000,
+    "classes": ["aedes_female", "aedes_male", "fruit_flies", "house_flies", "quinx_female", "quinx_male", "stigma_female", "stigma_male", "tarsalis_female", "tarsalis_male"],
+    "train_class_counts": [2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500],
+    "test_class_counts": [2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500],
+    "missing_values": false,
+    "test_majority_accuracy": 0.1
+  },
+  "task_note": "Multivariate power spectrum/features of insect wingbeat signals; classes split mosquito species by sex and include fly types. Each official sample is described as frequency-band channels derived from a spectrogram. The current Zenodo equal-length v2 has 20 points/channel. UEA page gives current 25,000/25,000 split; older 2018 archive statistics differ.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU (6 GiB)",
+    "seed": 501,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "train_rows_after_validation_holdout": 20000,
+    "validation_rows": 5000,
+    "validation_split": "class-stratified 20% from official train (500/class); test untouched for model selection",
+    "preprocessing": "per-feature mean/std fitted on 20,000 train rows only",
+    "synthetic_shape_feasibility_check": {
+      "architecture": "[512]*5",
+      "rows": 20000,
+      "features": 4000,
+      "fullbatch_forward_backward_adam_step": "passed on CUDA",
+      "peak_allocated_mib": 614.27
+    },
+    "actual_data_pilot_peak_cuda_allocated_mib": 1110.18,
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "selected_epoch": 53,
+        "best_validation_accuracy": 0.4574,
+        "epoch_100_train_loss": 0.0542385243,
+        "selected_model_test_accuracy": 0.45164,
+        "selected_model_test_balanced_accuracy": 0.45164,
+        "selected_model_test_macro_f1": 0.4485256833,
+        "selected_model_test_cross_entropy": 2.7057378292
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "selected_epoch": 93,
+        "best_validation_accuracy": 0.5044,
+        "epoch_100_train_loss": 0.0684765726,
+        "selected_model_test_accuracy": 0.50068,
+        "selected_model_test_balanced_accuracy": 0.50068,
+        "selected_model_test_macro_f1": 0.4984098610,
+        "selected_model_test_cross_entropy": 4.4036111832
+      }
+    ]
+  },
+  "provenance_limit": "No specimen/recording-group IDs were present in the parsed .ts files; whether the random-looking official split separates individual insects/recordings cannot be verified.",
+  "disposition": "Keep provisionally as a difficult non-saturated 10-class classification benchmark: full-batch MLPs score about 45-50% versus 10% majority and execute comfortably on the target GPU. One seed and unavailable specimen IDs limit generalization claims."
+}

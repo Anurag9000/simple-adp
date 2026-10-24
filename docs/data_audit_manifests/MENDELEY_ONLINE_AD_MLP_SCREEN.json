@@ -1,0 +1,111 @@
+{
+  "dataset": "Online Advertisement Click-Through Rates",
+  "doi": "10.17632/wrvjmdtjd9.1",
+  "source": "https://data.mendeley.com/datasets/wrvjmdtjd9/1",
+  "file": "Dataset_Ads.csv",
+  "artifact": {
+    "anonymous_zip_download": true,
+    "zip_bytes": 197046,
+    "zip_sha256": "ffa1a6f1c1d520e1f373952c687b68acc19f395e43f914e3dc50947583eac56c",
+    "zip_crc_passed": true,
+    "csv_bytes": 941439,
+    "csv_sha256": "0b8cf4bbb9232dc298748b4a7c3ae42918b6c5db30b797091707aa39acfdd9cc"
+  },
+  "license": "CC BY 4.0 (official Mendeley record)",
+  "schema": {
+    "rows": 10000,
+    "columns": [
+      "Age",
+      "Gender",
+      "Income",
+      "Location",
+      "Ad Type",
+      "Ad Topic",
+      "Ad Placement",
+      "Clicks",
+      "Click Time",
+      "Conversion Rate",
+      "CTR"
+    ],
+    "numeric_columns": [
+      "Age",
+      "Income",
+      "Clicks",
+      "Conversion Rate",
+      "CTR"
+    ],
+    "categorical_columns": [
+      "Gender",
+      "Location",
+      "Ad Type",
+      "Ad Topic",
+      "Ad Placement",
+      "Click Time"
+    ],
+    "missing_cells": 0,
+    "description": "Mendeley describes user/ad/context data and explicitly says behavior metrics are simulated.",
+    "value_anomalies": {
+      "Age": {
+        "min": -21,
+        "max": 92,
+        "negative_count": 76
+      },
+      "Income": {
+        "min": -38932.64,
+        "max": 126635.8,
+        "negative_count": 70
+      }
+    }
+  },
+  "candidate_task": {
+    "name": "binary clicked-vs-no-click row classification",
+    "label": "Clicks > 0",
+    "features": [
+      "Age",
+      "Gender",
+      "Income",
+      "Location",
+      "Ad Type",
+      "Ad Topic",
+      "Ad Placement"
+    ],
+    "excluded_post_outcome_fields": [
+      "Clicks",
+      "Click Time",
+      "Conversion Rate",
+      "CTR"
+    ],
+    "architecture_compatible": true,
+    "split": "chronological 70/15/15 ordered by Click Time; no source-provided train/validation/test split"
+  },
+  "split_screen": {
+    "train": {
+      "rows": 7000,
+      "click_rows": 6950,
+      "no_click_rows": 50,
+      "click_prevalence": 0.9928571428571429,
+      "majority_accuracy": 0.9928571428571429,
+      "first_time": "2023-04-22 20:45:56.899351",
+      "last_time": "2024-01-02 20:45:56.911437"
+    },
+    "validation": {
+      "rows": 1500,
+      "click_rows": 1484,
+      "no_click_rows": 16,
+      "click_prevalence": 0.9893333333333333,
+      "majority_accuracy": 0.9893333333333333,
+      "first_time": "2024-01-02 20:45:56.911437",
+      "last_time": "2024-02-25 20:45:56.921459"
+    },
+    "test": {
+      "rows": 1500,
+      "click_rows": 1482,
+      "no_click_rows": 18,
+      "click_prevalence": 0.988,
+      "majority_accuracy": 0.988,
+      "first_time": "2024-02-25 20:45:56.922468",
+      "last_time": "2024-04-19 20:45:56.927349"
+    }
+  },
+  "disposition": "cross out: label has only 84 no-click rows across 10,000 records; chronological training majority accuracy is 99.29%, validation 98.93%, and test 98.80%; only 50/16/18 negative rows occur in train/validation/test. The target therefore saturates ordinary accuracy at the majority baseline and provides too few negatives for reliable event metrics. Source explicitly describes simulated behavior, so it is not a realistic hard benchmark. No MLP pilot was run after these data-level difficulty failures."
+}

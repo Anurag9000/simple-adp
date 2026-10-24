@@ -1,0 +1,523 @@
+{
+  "audit_date": "2026-10-24",
+  "method": "Exact float32 feature-row equality across deterministic repository 60/20/20 stratified split seed 42, on same provider artifacts used by the MLP pilot. Exact duplicates only; no near-duplicate/source-group audit.",
+  "results": [
+    {
+      "dataset": "cardio",
+      "rows": 1831,
+      "unique_feature_rows": 1822,
+      "duplicated_rows": 9,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 1099,
+      "validation_rows": 366,
+      "test_rows": 366,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 1,
+      "test_prevalence": 0.09562841530054644,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 2,
+          "shared_rows_in_validation": 2
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 1,
+          "shared_rows_in_test": 1
+        }
+      }
+    },
+    {
+      "dataset": "thyroid",
+      "rows": 3772,
+      "unique_feature_rows": 3656,
+      "duplicated_rows": 116,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 2264,
+      "validation_rows": 755,
+      "test_rows": 753,
+      "test_rows_exactly_seen_in_train": 22,
+      "test_rows_exactly_seen_in_train_or_validation": 25,
+      "test_prevalence": 0.02390438247011952,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 19,
+          "shared_rows_in_validation": 27
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 14,
+          "shared_rows_in_test": 22
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 8,
+          "shared_rows_in_test": 14
+        }
+      }
+    },
+    {
+      "dataset": "satimage-2",
+      "rows": 5803,
+      "unique_feature_rows": 5801,
+      "duplicated_rows": 2,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 3483,
+      "validation_rows": 1160,
+      "test_rows": 1160,
+      "test_rows_exactly_seen_in_train": 1,
+      "test_rows_exactly_seen_in_train_or_validation": 1,
+      "test_prevalence": 0.01206896551724138,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 1,
+          "shared_rows_in_test": 1
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "lympho",
+      "rows": 148,
+      "unique_feature_rows": 148,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 90,
+      "validation_rows": 29,
+      "test_rows": 29,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.034482758620689655,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "glass",
+      "rows": 214,
+      "unique_feature_rows": 213,
+      "duplicated_rows": 1,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 129,
+      "validation_rows": 43,
+      "test_rows": 42,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.023809523809523808,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "vowels",
+      "rows": 1456,
+      "unique_feature_rows": 1452,
+      "duplicated_rows": 4,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 874,
+      "validation_rows": 291,
+      "test_rows": 291,
+      "test_rows_exactly_seen_in_train": 1,
+      "test_rows_exactly_seen_in_train_or_validation": 1,
+      "test_prevalence": 0.03436426116838488,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 1,
+          "shared_rows_in_validation": 1
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 1,
+          "shared_rows_in_test": 1
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "musk",
+      "rows": 3062,
+      "unique_feature_rows": 3062,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 1838,
+      "validation_rows": 612,
+      "test_rows": 612,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.03104575163398693,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "letter",
+      "rows": 1600,
+      "unique_feature_rows": 1598,
+      "duplicated_rows": 2,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 960,
+      "validation_rows": 320,
+      "test_rows": 320,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.0625,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 2,
+          "shared_rows_in_validation": 2
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "satellite",
+      "rows": 6435,
+      "unique_feature_rows": 6435,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 3862,
+      "validation_rows": 1287,
+      "test_rows": 1286,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.3164852255054432,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "shuttle",
+      "rows": 49097,
+      "unique_feature_rows": 49097,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 29459,
+      "validation_rows": 9819,
+      "test_rows": 9819,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.07149404216315307,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "breastw",
+      "rows": 683,
+      "unique_feature_rows": 449,
+      "duplicated_rows": 234,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 411,
+      "validation_rows": 137,
+      "test_rows": 135,
+      "test_rows_exactly_seen_in_train": 55,
+      "test_rows_exactly_seen_in_train_or_validation": 56,
+      "test_prevalence": 0.34814814814814815,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 23,
+          "shared_rows_in_validation": 52
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 24,
+          "shared_rows_in_test": 55
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 15,
+          "shared_rows_in_test": 44
+        }
+      }
+    },
+    {
+      "dataset": "arrhythmia",
+      "rows": 452,
+      "unique_feature_rows": 452,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 272,
+      "validation_rows": 90,
+      "test_rows": 90,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.14444444444444443,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "ionosphere",
+      "rows": 351,
+      "unique_feature_rows": 350,
+      "duplicated_rows": 1,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 211,
+      "validation_rows": 70,
+      "test_rows": 70,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.35714285714285715,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "optdigits",
+      "rows": 5216,
+      "unique_feature_rows": 5198,
+      "duplicated_rows": 18,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 3130,
+      "validation_rows": 1043,
+      "test_rows": 1043,
+      "test_rows_exactly_seen_in_train": 7,
+      "test_rows_exactly_seen_in_train_or_validation": 7,
+      "test_prevalence": 0.028763183125599234,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 4,
+          "shared_rows_in_validation": 4
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 7,
+          "shared_rows_in_test": 7
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 1,
+          "shared_rows_in_test": 1
+        }
+      }
+    },
+    {
+      "dataset": "smtp",
+      "rows": 95156,
+      "unique_feature_rows": 71230,
+      "duplicated_rows": 23926,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 57094,
+      "validation_rows": 19031,
+      "test_rows": 19031,
+      "test_rows_exactly_seen_in_train": 5831,
+      "test_rows_exactly_seen_in_train_or_validation": 6765,
+      "test_prevalence": 0.0003152750775051232,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 4886,
+          "shared_rows_in_validation": 5925
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 4877,
+          "shared_rows_in_test": 5831
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 2233,
+          "shared_rows_in_test": 2774
+        }
+      }
+    },
+    {
+      "dataset": "annthyroid",
+      "rows": 7200,
+      "unique_feature_rows": 7062,
+      "duplicated_rows": 138,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 4321,
+      "validation_rows": 1440,
+      "test_rows": 1439,
+      "test_rows_exactly_seen_in_train": 37,
+      "test_rows_exactly_seen_in_train_or_validation": 42,
+      "test_prevalence": 0.07366226546212648,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 30,
+          "shared_rows_in_validation": 41
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 28,
+          "shared_rows_in_test": 37
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 22,
+          "shared_rows_in_test": 28
+        }
+      }
+    },
+    {
+      "dataset": "pendigits",
+      "rows": 6870,
+      "unique_feature_rows": 6870,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 4123,
+      "validation_rows": 1374,
+      "test_rows": 1373,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.022578295702840496,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "ecoli",
+      "error": "ValueError: ODDS anomaly labels must contain exactly 0=inlier and 1=outlier"
+    },
+    {
+      "dataset": "wine",
+      "rows": 129,
+      "unique_feature_rows": 129,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 78,
+      "validation_rows": 26,
+      "test_rows": 25,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.08,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    },
+    {
+      "dataset": "vertebral",
+      "rows": 240,
+      "unique_feature_rows": 240,
+      "duplicated_rows": 0,
+      "feature_groups_with_conflicting_labels": 0,
+      "train_rows": 144,
+      "validation_rows": 48,
+      "test_rows": 48,
+      "test_rows_exactly_seen_in_train": 0,
+      "test_rows_exactly_seen_in_train_or_validation": 0,
+      "test_prevalence": 0.125,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_validation": 0
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 0,
+          "shared_rows_in_test": 0
+        }
+      }
+    }
+  ]
+}

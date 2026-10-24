@@ -1,0 +1,84 @@
+{
+  "dataset": "UCI Spoken Arabic Digit (MFCC utterance classification)",
+  "uci_record": "https://archive.ics.uci.edu/dataset/195/spoken+arabic+digit",
+  "doi": "10.24432/C52C9Q",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "artifact": {
+    "url": "https://archive.ics.uci.edu/static/public/195/spoken%2Barabic%2Bdigit.zip",
+    "zip_bytes": 14646679,
+    "zip_sha256": "3c8c83404289c49631605421830872be337d92d887e61798385aacbe9423010d",
+    "files": [
+      {
+        "file": "Train_Arabic_Digit.txt",
+        "bytes": 28343795,
+        "sha256": "cecd3ee9951658e5391f0342e9b6467ba7c0e7ecff5c9012b9c1ed9f81b97bc6"
+      },
+      {
+        "file": "Test_Arabic_Digit.txt",
+        "bytes": 9371474,
+        "sha256": "de40eac66ce18fca8924bad592002ee7ef646fc84d48b065ce21ac9f88946922"
+      }
+    ]
+  },
+  "parsed": {
+    "train_utterances": 6600,
+    "test_utterances": 2200,
+    "classes": 10,
+    "utterances_per_class_train": 660,
+    "utterances_per_class_test": 220,
+    "train_speakers": 66,
+    "test_speakers": 22,
+    "feature_channels": 13,
+    "frames_min": 4,
+    "frames_max": 93,
+    "frames_mean_train": 39.8872727273,
+    "missing_values": false,
+    "padding": "right-pad each utterance with zeros to 93 frames; flatten 93x13 to 1,209 inputs",
+    "speaker_partition": "source documentation states official test speakers differ from training speakers; text files have no per-utterance speaker IDs"
+  },
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU (6 GiB)",
+    "seed": 20261023,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "max_epochs": 100,
+    "early_stop": "stop after 20 epochs without validation accuracy improvement",
+    "fullbatch_each_epoch": true,
+    "validation": "stratified utterance-level 20% of official training data (132/class; 1,320 utterances); 5,280 train utterances remain; source files do not expose verified speaker IDs for validation grouping",
+    "preprocessing": "per-feature mean/std fitted only on the 5,280 training utterances",
+    "test_used_for_model_selection": false,
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epochs_run": 100,
+        "selected_epoch": 92,
+        "best_validation_accuracy": 0.98333329,
+        "selected_test_accuracy": 0.96545455,
+        "selected_test_balanced_accuracy": 0.96545455,
+        "selected_test_macro_f1": 0.96544980,
+        "selected_test_cross_entropy": 0.13306607,
+        "last_train_loss": 0.00596473,
+        "peak_cuda_allocated_mib": 72.07
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epochs_run": 71,
+        "selected_epoch": 51,
+        "best_validation_accuracy": 0.98181814,
+        "selected_test_accuracy": 0.96545455,
+        "selected_test_balanced_accuracy": 0.96545455,
+        "selected_test_macro_f1": 0.96541861,
+        "selected_test_cross_entropy": 0.20430703,
+        "last_train_loss": 0.00029524,
+        "peak_cuda_allocated_mib": 155.18
+      }
+    ]
+  },
+  "baseline": {
+    "chance_accuracy": 0.1,
+    "test_majority_accuracy": 0.1
+  },
+  "disposition": "Cross out for the hard non-saturated benchmark suite: both plain full-batch MLPs reach 96.5% accuracy on the official unseen-speaker test split. It passes open-license, anonymous-download, fixed-width MLP and full-batch GPU checks, but the task is near-ceiling for the tested architecture range. The internal validation split is utterance-level because the source files provide no speaker IDs; only the official test is documented as speaker-disjoint. This is one seed and two representative architectures."
+}

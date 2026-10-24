@@ -1,0 +1,64 @@
+{
+  "dataset": "MetroPT-3 Dataset",
+  "retrieved_at": "2026-10-23",
+  "source": {
+    "official_record": "https://archive.ics.uci.edu/dataset/791/metropt%2B3%2B",
+    "license": "CC BY 4.0, as stated by UCI",
+    "no_login_required": true,
+    "source_split_guidance": "UCI says the first month can be used for training and the remainder for testing.",
+    "failure_information": "UCI describes the sensor series as unlabeled and provides four company-reported air-leak failure intervals."
+  },
+  "access": {
+    "artifact_url": "https://archive.ics.uci.edu/static/public/791/metropt%2B3%2Bdataset.zip",
+    "http_range_behavior": "The server ignored a one-byte Range request and returned the complete response.",
+    "downloaded_full_archive": true,
+    "archive_bytes": 218381995,
+    "archive_sha256": "aab991a970e58210de853bb8078ce0e63abb4d9412fdc5c79792dae3d8e1721a",
+    "zip_integrity_validated": true,
+    "csv_name": "MetroPT3(AirCompressor).csv",
+    "csv_bytes": 218300507,
+    "csv_sha256": "db30ccb4ea402e3c8bf2c99db06e288d4f2a772f6928f9dbe26a920d69793e24"
+  },
+  "parsed_csv": {
+    "rows": 1516948,
+    "columns": 17,
+    "columns_interpreted_as": "Unnamed row index, timestamp, and 15 sensor signals",
+    "missing_cells": 0,
+    "timestamps": ["2020-02-01 00:00:00", "2020-09-01 03:59:50"],
+    "observed_cadence_seconds": {"10": 1337521, "9": 128277, "12": 38321, "13": 7988, "11": 4471},
+    "failure_episodes_reported_by_UCI": 4,
+    "failure_train_support_under_UCI_split": 0
+  },
+  "forecast_screen": {
+    "task": "Use one hour of recent sensor history to forecast the next hour's mean on seven analog sensor channels.",
+    "preprocessing": "Resample raw signals into fixed non-overlapping ten-minute means. Include a bin only if it contains at least 45 raw records. Use the preceding six bins (90 numeric inputs) to predict the mean of the next six bins for TP2, TP3, H1, DV_pressure, Reservoirs, Oil_temperature, and Motor_current.",
+    "split": "Chronological: February 1 through 80% of the first month for training; remaining February for validation; March 1 through August 31 for test. Forecast targets cannot cross partition boundaries. Windows require all 12 input/target bins to pass the 45-record minimum.",
+    "counts": {
+      "resampled_bins": 30696,
+      "valid_bins": 25099,
+      "eligible_examples": 22787,
+      "train": 2670,
+      "validation": 608,
+      "test": 19509
+    },
+    "preprocessing_fit": "Input and output standardization means and standard deviations were fitted on training examples only.",
+    "training": "RTX 3050 Laptop GPU (6 GB); one entire training partition per batch; TabularMLP; Adam 0.001; MSE; 30 epochs; seeds 20261023, 20261024, 20261025; checkpoint selected by minimum standardized validation MSE.",
+    "baselines_test": {
+      "training_mean": {"micro_mae": 1.558499813079834, "micro_rmse": 3.5195956230163574, "macro_r2": -0.47576776146888733},
+      "last_10_minute_sensor_value_persistence": {"micro_mae": 0.7983638048171997, "micro_rmse": 1.303676724433899, "macro_r2": 0.08589120954275131},
+      "previous_hour_mean_repeated_as_forecast": {"micro_mae": 0.2662082016468048, "micro_rmse": 0.6838821172714233, "macro_r2": 0.8489769101142883}
+    },
+    "architectures": [
+      {"hidden_widths": [16, 16], "best_epoch": 30, "validation_macro_r2": -0.06191194802522659, "test_micro_mae": 1.3196967840194702, "test_micro_rmse": 3.3112666606903076, "test_macro_r2": -0.27959197759628296, "test_sensor_r2": {"TP2": 0.03316, "TP3": -0.12147, "H1": 0.17808, "DV_pressure": -0.06464, "Reservoirs": -0.01661, "Oil_temperature": -1.77381, "Motor_current": -0.19186}, "peak_cuda_gib": 0.026630401611328125},
+      {"hidden_widths": [128, 128], "best_epoch": 30, "validation_macro_r2": 0.27983370423316956, "test_micro_mae": 1.0909262895584106, "test_micro_rmse": 5.154297351837158, "test_macro_r2": -0.9294672608375549, "test_sensor_r2": {"TP2": 0.10923, "TP3": -0.84442, "H1": 0.02184, "DV_pressure": 0.04069, "Reservoirs": 0.01364, "Oil_temperature": -6.24476, "Motor_current": 0.3975}, "peak_cuda_gib": 0.04433631896972656},
+      {"hidden_widths": [512, 512, 512, 512, 512], "best_epoch": 27, "validation_macro_r2": 0.2973305881023407, "test_micro_mae": 1.2028820514678955, "test_micro_rmse": 6.664778232574463, "test_macro_r2": -1.59685218334198, "test_sensor_r2": {"TP2": 0.43952, "TP3": -0.55173, "H1": 0.36886, "DV_pressure": 0.06178, "Reservoirs": -0.55018, "Oil_temperature": -11.45938, "Motor_current": 0.51318}, "peak_cuda_gib": 0.11918878555297852}
+    ],
+    "disposition": "CROSS OUT for this tested plain-MLP forecasting task. The models do not saturate, but all lose to a simple previous-hour-mean baseline by a wide margin on the official future period. The steep validation-to-test degradation indicates temporal/regime shift; the tested MLP route does not meet useful predictive skill.",
+    "limitations": [
+      "This is one downsampled one-hour-ahead sensor-mean framing; no other horizons or aggregations were tested.",
+      "One compressor unit only; no independent machine or vehicle generalization split exists.",
+      "No ADP variants or central runner integration were tested.",
+      "The failure-report event route is separately rejected because the source gives only four episodes and none occurs in the prescribed first-month training period."
+    ]
+  }
+}

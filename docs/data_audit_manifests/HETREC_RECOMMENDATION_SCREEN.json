@@ -1,0 +1,93 @@
+{
+  "audit_date": "2026-10-24",
+  "suite_constraints": {
+    "full_training_partition_single_batch": true,
+    "largest_vanilla_architecture": [512, 512, 512, 512, 512],
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB",
+    "assumed_train_fraction_for_lower_bounds": 0.7,
+    "bytes_per_float": 4
+  },
+  "shared_source_evidence": {
+    "official_group_lens_overview": "https://lenskit.grouplens.org/datasets/hetrec-2011/",
+    "official_group_lens_index": "https://files.grouplens.org/datasets/hetrec2011/",
+    "index_lists_direct_archives_and_readmes": true,
+    "complete_anonymous_archive_transfer_performed": false,
+    "official_plain_text_readme_fetch": "web fetch failed Unicode decoding; local Python urllib failed certificate validation",
+    "readme_rights_text_checked_through_indexed_text_copies": true,
+    "scope_note": "Public listing is verified, but full artifact bytes, hashes, archive integrity, parsing, and empirical MLP difficulty are not claimed. Every candidate fails the documented non-commercial rights filter regardless."
+  },
+  "candidates": [
+    {
+      "name": "HetRec 2011 MovieLens-2K",
+      "statistics_source": "official GroupLens overview and indexed README copy",
+      "readme_copy": "https://github.com/spticad/mpic-movies/blob/master/hetrec-parser/src/main/resources/hetrec2011-movielens-2k-v2/readme.txt",
+      "public_archive_listing": "18 MB ZIP listed on official GroupLens index; direct anonymous full GET not independently completed",
+      "rights": "README states distributed with GroupLens permission and made available for non-commercial use; not an open license",
+      "task_fit": {
+        "rating_regression": "scalar MLP compatible; timestamped user ratings are present",
+        "click_or_exposure_recommendation": "not directly represented; ratings do not identify exposed non-clicked candidates"
+      },
+      "shape": {
+        "ratings": 86000,
+        "users": 2113,
+        "movies": 10197,
+        "dense_onehot_width": 12310
+      },
+      "capacity_lower_bounds": {
+        "train_rows_assumed": 60200,
+        "dense_float32_input_gib": 2.761,
+        "512x5_hidden_activation_gib": 0.574
+      },
+      "difficulty_evidence": "No MLP pilot; rating prediction non-saturation not established.",
+      "disposition": "cross out: non-commercial rights restriction; additionally full-batch dense representation consumes substantial GPU memory before parameters, gradients, optimizer state, and activations; no direct exposure labels"
+    },
+    {
+      "name": "HetRec 2011 Last.fm-2K",
+      "statistics_source": "official GroupLens overview and indexed README copy",
+      "readme_copy": "https://github.com/RUCAIBox/Social-Datasets/blob/main/lastfm/readme.txt",
+      "public_archive_listing": "2.5 MB ZIP listed on official GroupLens index; direct anonymous full GET not independently completed",
+      "rights": "README says made available for non-commercial use; not an open license",
+      "task_fit": {
+        "positive_user_artist_interactions": "tabular scalar MLP row is possible",
+        "direct_binary_click_response": "not available; only positive listening relations and counts, no observed exposure negatives"
+      },
+      "shape": {
+        "positive_interactions": 92834,
+        "users": 1892,
+        "artists": 17632,
+        "dense_onehot_width": 19524
+      },
+      "capacity_lower_bounds": {
+        "train_rows_assumed": 65000,
+        "dense_float32_input_gib": 4.728,
+        "512x5_hidden_activation_gib": 0.620
+      },
+      "difficulty_evidence": "No MLP pilot; no observed negative labels make ordinary binary accuracy unsuitable without synthesized negatives.",
+      "disposition": "cross out: non-commercial rights restriction, no directly observed negatives, and dense full-batch capacity pressure"
+    },
+    {
+      "name": "HetRec 2011 Delicious",
+      "statistics_source": "official GroupLens overview and indexed README copy",
+      "readme_copy": "https://github.com/qcymkxyc/RecSys/blob/master/data/delicious-2k/readme.txt",
+      "public_archive_listing": "13 MB ZIP listed on official GroupLens index; direct anonymous full GET not independently completed",
+      "rights": "README says made available for non-commercial use; not an open license",
+      "task_fit": {
+        "positive_user_bookmark_interactions": "tabular scalar MLP row is possible",
+        "direct_binary_click_response": "not available; bookmarks are positive-only and do not record exposed non-clicks"
+      },
+      "shape": {
+        "positive_bookmarks": 104799,
+        "users": 1867,
+        "urls": 69226,
+        "dense_onehot_width": 71093
+      },
+      "capacity_lower_bounds": {
+        "train_rows_assumed": 73359,
+        "dense_float32_input_gib": 19.429,
+        "512x5_hidden_activation_gib": 0.700
+      },
+      "difficulty_evidence": "No MLP pilot; candidate construction would require unobserved/sampled negatives.",
+      "disposition": "cross out: non-commercial rights restriction, no directly observed negatives, and dense full-batch representation exceeds device capacity"
+    }
+  ]
+}

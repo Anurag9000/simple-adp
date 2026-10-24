@@ -1,0 +1,1443 @@
+{
+  "snapshot_date": "2026-10-24",
+  "repository": "https://github.com/numenta/NAB",
+  "commit": "ea702d75cc2258d9d7dd35ca8e5e2539d71f3140",
+  "license_file": "https://github.com/numenta/NAB/blob/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/LICENSE.txt",
+  "data_readme": "https://github.com/numenta/NAB/blob/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/README.md",
+  "suite_profile": {
+    "largest_architecture": [
+      512,
+      512,
+      512,
+      512,
+      512
+    ],
+    "single_full_training_batch": true,
+    "window_length": 128,
+    "assumed_train_fraction": 0.7,
+    "bytes_per_float": 4,
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB"
+  },
+  "acquisition": {
+    "source_files": 58,
+    "full_anonymous_direct_gets": 58,
+    "complete_bytes_downloaded_in_memory": 9583432,
+    "corpus_archive_downloaded": false,
+    "note": "All individual CSV payloads were GET-fetched without authentication, parsed in memory and not saved to the workspace."
+  },
+  "parse": {
+    "series": 58,
+    "total_observations": 365558,
+    "all_two_column_timestamp_value_schema": true,
+    "all_values_finite_numeric": true,
+    "labelled_series": 52,
+    "series_with_zero_anomaly_timestamps": 6,
+    "anomaly_timestamps": 120,
+    "all_label_timestamps_match_series": true,
+    "window_length_128_stride_1_labelled_series_examples": 334762,
+    "70pct_train_examples_if_pooled": 234333,
+    "pooled_512x5_activation_lower_bound_gib": 2.235,
+    "max_single_series_rows": 22695,
+    "max_single_series_70pct_512x5_activation_gib": 0.15066
+  },
+  "rights": {
+    "repository_license": "MIT LICENSE file is present, but its text licenses software and associated documentation; no explicit dataset-specific license or per-file permission is provided in the data README. Corpus includes third-party AWS, ad-exchange, traffic, taxi, and Twitter data. Do not infer permission for all data files from the repository code license.",
+    "disposition": "cross out all 58 under strict open-reuse criterion until every source-file rights chain is established; public downloadability does not supply rights."
+  },
+  "difficulty": {
+    "mlp_pilot": "not run",
+    "reason": "No blanket dataset license or per-file rights established. The labels provide anomaly timestamps; fixed windows fit the MLP structurally, but held-out non-saturation and event quality are not empirically established. Six of 58 files have zero anomaly timestamps and are not supervised event tasks under these labels."
+  },
+  "records": [
+    {
+      "path": "data/artificialNoAnomaly/art_daily_no_noise.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialNoAnomaly/art_daily_no_noise.csv",
+      "http_status": 200,
+      "bytes": 116776,
+      "sha256": "ccb7743ac2de8ca110db4af796d11ba31a23ad448a28e353a935c15f637756bc",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 0,
+      "matched_anomaly_timestamps": 0,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [],
+      "task_compatibility": "not suitable for supervised event detection: no anomaly timestamps in canonical labels",
+      "whole_file_train_windows_70pct": 0,
+      "largest_vanilla_activation_lower_bound_gib": 0.0
+    },
+    {
+      "path": "data/artificialNoAnomaly/art_daily_perfect_square_wave.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialNoAnomaly/art_daily_perfect_square_wave.csv",
+      "http_status": 200,
+      "bytes": 100816,
+      "sha256": "662ff0a295b81eb0ff8e81116a54a497cd6f6b07c19c7a5ea72cce494913ce62",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 0,
+      "matched_anomaly_timestamps": 0,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [],
+      "task_compatibility": "not suitable for supervised event detection: no anomaly timestamps in canonical labels",
+      "whole_file_train_windows_70pct": 0,
+      "largest_vanilla_activation_lower_bound_gib": 0.0
+    },
+    {
+      "path": "data/artificialNoAnomaly/art_daily_small_noise.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialNoAnomaly/art_daily_small_noise.csv",
+      "http_status": 200,
+      "bytes": 140187,
+      "sha256": "c4b304229f69f108eaa024fb2406fcd4510c5c5d95cd0053e2da6989682e4e6d",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 0,
+      "matched_anomaly_timestamps": 0,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [],
+      "task_compatibility": "not suitable for supervised event detection: no anomaly timestamps in canonical labels",
+      "whole_file_train_windows_70pct": 0,
+      "largest_vanilla_activation_lower_bound_gib": 0.0
+    },
+    {
+      "path": "data/artificialNoAnomaly/art_flatline.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialNoAnomaly/art_flatline.csv",
+      "http_status": 200,
+      "bytes": 100816,
+      "sha256": "1cc10761ddd6d55fb5f0d9cfc73610416abbb120ee14bb65eff288509a463397",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 0,
+      "matched_anomaly_timestamps": 0,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [],
+      "task_compatibility": "not suitable for supervised event detection: no anomaly timestamps in canonical labels",
+      "whole_file_train_windows_70pct": 0,
+      "largest_vanilla_activation_lower_bound_gib": 0.0
+    },
+    {
+      "path": "data/artificialNoAnomaly/art_noisy.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialNoAnomaly/art_noisy.csv",
+      "http_status": 200,
+      "bytes": 140916,
+      "sha256": "ad455adeaf06852222500955f2aefe6bd389cc762ef68e7102ee543209c8607f",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 0,
+      "matched_anomaly_timestamps": 0,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [],
+      "task_compatibility": "not suitable for supervised event detection: no anomaly timestamps in canonical labels",
+      "whole_file_train_windows_70pct": 0,
+      "largest_vanilla_activation_lower_bound_gib": 0.0
+    },
+    {
+      "path": "data/artificialWithAnomaly/art_daily_flatmiddle.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialWithAnomaly/art_daily_flatmiddle.csv",
+      "http_status": 200,
+      "bytes": 140292,
+      "sha256": "ea5df125947e9ee2b977ac3d341f3c2a029588862af97cae4a654fc56e838702",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2880
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/artificialWithAnomaly/art_daily_jumpsdown.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialWithAnomaly/art_daily_jumpsdown.csv",
+      "http_status": 200,
+      "bytes": 140814,
+      "sha256": "4af31802e87dff4b4ba3ceb21714ba9d905f7888e1f53d47cc6dd4f856f9debc",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2988
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/artificialWithAnomaly/art_daily_jumpsup.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialWithAnomaly/art_daily_jumpsup.csv",
+      "http_status": 200,
+      "bytes": 140548,
+      "sha256": "f79f92b93ee4f9c10e2dc552505e8880b0c618639ed5e0f9816e044b75c26456",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2988
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/artificialWithAnomaly/art_daily_nojump.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialWithAnomaly/art_daily_nojump.csv",
+      "http_status": 200,
+      "bytes": 140478,
+      "sha256": "65c85d1834376ed5e622f01721d478609577ea0df0a067c5a5ebe5edea03b077",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2988
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/artificialWithAnomaly/art_increase_spike_density.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialWithAnomaly/art_increase_spike_density.csv",
+      "http_status": 200,
+      "bytes": 96869,
+      "sha256": "0959d8871d5c1a3fc3120fb7421e4ef113fffb434af2889085b52aebdb69360c",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2006
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/artificialWithAnomaly/art_load_balancer_spikes.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/artificialWithAnomaly/art_load_balancer_spikes.csv",
+      "http_status": 200,
+      "bytes": 101603,
+      "sha256": "99f7130e54c7c3e818df8e3bdc0974cd241914bb14a10a9c3fa7c1374125d224",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2935
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_24ae8d.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_24ae8d.csv",
+      "http_status": 200,
+      "bytes": 105367,
+      "sha256": "ab446fbd8b9f37507eb2fdb06315826d8daeef02e241133ce06e0ee571ba53d9",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        3547,
+        3777
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_53ea38.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_53ea38.csv",
+      "http_status": 200,
+      "bytes": 116041,
+      "sha256": "8942e498de7b40f1b4a6d802755592c09b8fb73ce8f658763a09cb9ea1ea94ac",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1496,
+        2659
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_5f5533.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_5f5533.csv",
+      "http_status": 200,
+      "bytes": 119229,
+      "sha256": "01613e6f632d067f11a5dfd40a188b0789752b388d9bc77a398bd06333878a76",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1271,
+        2930
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_77c1ca.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_77c1ca.csv",
+      "http_status": 200,
+      "bytes": 106007,
+      "sha256": "90ceabd570b449241ee24ff8a116a793979b7671ce4490707311bfea0e0aae1f",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1966
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_825cc2.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_825cc2.csv",
+      "http_status": 200,
+      "bytes": 113675,
+      "sha256": "d768419037c9db269343822957314f57ee21a7d9a4d41df2add0d1ba45ba84de",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1626,
+        1768
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_ac20cd.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_ac20cd.csv",
+      "http_status": 200,
+      "bytes": 116980,
+      "sha256": "749a15c2e1a4543c21fee9cbf3338cd8a7ed5f5f8a1308b9b099b06c2c66e66b",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        3575
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_c6585a.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_c6585a.csv",
+      "http_status": 200,
+      "bytes": 104962,
+      "sha256": "d936cea74682ed43ac96b778352d7de294c0b0c168f4a7e6817162346cdb28c1",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 0,
+      "matched_anomaly_timestamps": 0,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [],
+      "task_compatibility": "not suitable for supervised event detection: no anomaly timestamps in canonical labels",
+      "whole_file_train_windows_70pct": 0,
+      "largest_vanilla_activation_lower_bound_gib": 0.0
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_cpu_utilization_fe7f93.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_cpu_utilization_fe7f93.csv",
+      "http_status": 200,
+      "bytes": 115788,
+      "sha256": "f3433f8171f4dcea86c0c7af9996d0f166f812fa0f4567f1d5cd85d2d2cd69b4",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        765,
+        2131,
+        2602
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_disk_write_bytes_1ef3de.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_disk_write_bytes_1ef3de.csv",
+      "http_status": 200,
+      "bytes": 116626,
+      "sha256": "ce3d6c6a652ed7c31a6dd3727a36e128fcac6fb2381c63267ad0fbc02eccd9df",
+      "rows": 4730,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2635
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 3222,
+      "largest_vanilla_activation_lower_bound_gib": 0.03073
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_disk_write_bytes_c0d644.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_disk_write_bytes_c0d644.csv",
+      "http_status": 200,
+      "bytes": 101626,
+      "sha256": "a0e734a66098bb81833835f0839dadafbc8ae829c51494670ee8849e46eb5b63",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1861,
+        2306,
+        3031
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_network_in_257a54.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_network_in_257a54.csv",
+      "http_status": 200,
+      "bytes": 117236,
+      "sha256": "39104b08f2e0a673b5137eb7681897fcadf0955fedf565740a6a94edc63a81a4",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1638
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/ec2_network_in_5abac7.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/ec2_network_in_5abac7.csv",
+      "http_status": 200,
+      "bytes": 120827,
+      "sha256": "c27ef93f582af63bf42e80d804764cbe64ae987620f3cfab5477d6ebb3c6157e",
+      "rows": 4730,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2608,
+        3209
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 3222,
+      "largest_vanilla_activation_lower_bound_gib": 0.03073
+    },
+    {
+      "path": "data/realAWSCloudwatch/elb_request_count_8c0756.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/elb_request_count_8c0756.csv",
+      "http_status": 200,
+      "bytes": 101052,
+      "sha256": "74c26574a01ca9fb89dddb5021e2e13c3a93eb25dc640438a9acb1ceb00f1021",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        783,
+        3682
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/grok_asg_anomaly.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/grok_asg_anomaly.csv",
+      "http_status": 200,
+      "bytes": 131065,
+      "sha256": "86a0abe9d58e376858d2fd4f4a438f1997e24c64a09e5af03accd4e1b372ac47",
+      "rows": 4621,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1254,
+        1569,
+        3753
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 3146,
+      "largest_vanilla_activation_lower_bound_gib": 0.03
+    },
+    {
+      "path": "data/realAWSCloudwatch/iio_us-east-1_i-a2eb1cd9_NetworkIn.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/iio_us-east-1_i-a2eb1cd9_NetworkIn.csv",
+      "http_status": 200,
+      "bytes": 37339,
+      "sha256": "f115fbe6542159eed5612445bfa620708a28ab6b41349d1432bb15c3a3b8414d",
+      "rows": 1243,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        206,
+        339
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 781,
+      "largest_vanilla_activation_lower_bound_gib": 0.00745
+    },
+    {
+      "path": "data/realAWSCloudwatch/rds_cpu_utilization_cc0c53.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/rds_cpu_utilization_cc0c53.csv",
+      "http_status": 200,
+      "bytes": 117806,
+      "sha256": "d5df979ef85928769a016cd0f935919d8c2a113926e21e1eb3a5001d688760e2",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        3080,
+        3579
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAWSCloudwatch/rds_cpu_utilization_e47b3b.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAWSCloudwatch/rds_cpu_utilization_e47b3b.csv",
+      "http_status": 200,
+      "bytes": 113599,
+      "sha256": "6b712b922ab3b3404c5a629d64a570c390c99471ee8b9b0ff7665f553fda92c1",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        946,
+        2585
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realAdExchange/exchange-2_cpc_results.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAdExchange/exchange-2_cpc_results.csv",
+      "http_status": 200,
+      "bytes": 58887,
+      "sha256": "d869ab165254f3ee77ee21fd9fab2be1d07c1f80b8133cf01bbaf2d768c2ac64",
+      "rows": 1624,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        325
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1048,
+      "largest_vanilla_activation_lower_bound_gib": 0.00999
+    },
+    {
+      "path": "data/realAdExchange/exchange-2_cpm_results.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAdExchange/exchange-2_cpm_results.csv",
+      "http_status": 200,
+      "bytes": 58313,
+      "sha256": "1f01b9438566d2fe1ac446faa202a395ac86db9240a1955bc1f118c8eada2a19",
+      "rows": 1624,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        605,
+        974
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1048,
+      "largest_vanilla_activation_lower_bound_gib": 0.00999
+    },
+    {
+      "path": "data/realAdExchange/exchange-3_cpc_results.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAdExchange/exchange-3_cpc_results.csv",
+      "http_status": 200,
+      "bytes": 55474,
+      "sha256": "e70b24dba107a2589657cb3feb9ca5605b4f3f7de49ff445f32f5991bc0bdbe5",
+      "rows": 1538,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        296,
+        438,
+        977
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 988,
+      "largest_vanilla_activation_lower_bound_gib": 0.00942
+    },
+    {
+      "path": "data/realAdExchange/exchange-3_cpm_results.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAdExchange/exchange-3_cpm_results.csv",
+      "http_status": 200,
+      "bytes": 54949,
+      "sha256": "74d354a94fb1730e14b469c7c1c6e99c2ad69af53afdb85f65220bd3cf01ce4a",
+      "rows": 1538,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1121
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 988,
+      "largest_vanilla_activation_lower_bound_gib": 0.00942
+    },
+    {
+      "path": "data/realAdExchange/exchange-4_cpc_results.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAdExchange/exchange-4_cpc_results.csv",
+      "http_status": 200,
+      "bytes": 60212,
+      "sha256": "d4c13abd6f28594dc446f22106562ebe917fdbe76170f60a500c2a402ecc09e2",
+      "rows": 1643,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        367,
+        776,
+        1276
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1061,
+      "largest_vanilla_activation_lower_bound_gib": 0.01012
+    },
+    {
+      "path": "data/realAdExchange/exchange-4_cpm_results.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realAdExchange/exchange-4_cpm_results.csv",
+      "http_status": 200,
+      "bytes": 58931,
+      "sha256": "4e5c955b632145b77b93fba4a5e3bf615d47e00416e17091d64e05ae109c760e",
+      "rows": 1643,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        367,
+        749,
+        1276,
+        1401
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1061,
+      "largest_vanilla_activation_lower_bound_gib": 0.01012
+    },
+    {
+      "path": "data/realKnownCause/ambient_temperature_system_failure.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realKnownCause/ambient_temperature_system_failure.csv",
+      "http_status": 200,
+      "bytes": 233321,
+      "sha256": "230b68ccca20f59d562afd5d24ad52939c9b784386bed0054018358bf9120581",
+      "rows": 7267,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        3721,
+        6180
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 4998,
+      "largest_vanilla_activation_lower_bound_gib": 0.04766
+    },
+    {
+      "path": "data/realKnownCause/cpu_utilization_asg_misconfiguration.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realKnownCause/cpu_utilization_asg_misconfiguration.csv",
+      "http_status": 200,
+      "bytes": 539274,
+      "sha256": "58ba65dc0737cfbac11b51514476d50c438d44011232144bb8d93f392df58f9f",
+      "rows": 18050,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        17002,
+        17814
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 12546,
+      "largest_vanilla_activation_lower_bound_gib": 0.11965
+    },
+    {
+      "path": "data/realKnownCause/ec2_request_latency_system_failure.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realKnownCause/ec2_request_latency_system_failure.csv",
+      "http_status": 200,
+      "bytes": 123428,
+      "sha256": "98378580aa80157e057c61d59d81daddccc6c65a2c0c800e3f01f603b8215c3f",
+      "rows": 4032,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2081,
+        3395,
+        4023
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 2734,
+      "largest_vanilla_activation_lower_bound_gib": 0.02607
+    },
+    {
+      "path": "data/realKnownCause/machine_temperature_system_failure.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realKnownCause/machine_temperature_system_failure.csv",
+      "http_status": 200,
+      "bytes": 732223,
+      "sha256": "92bf5b87fc7f9bba8ca0b7ec63ccaac8cb4a1371a258e8c29a10ae9c018d82a4",
+      "rows": 22695,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2409,
+        3986,
+        16340,
+        19515
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 15798,
+      "largest_vanilla_activation_lower_bound_gib": 0.15066
+    },
+    {
+      "path": "data/realKnownCause/nyc_taxi.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realKnownCause/nyc_taxi.csv",
+      "http_status": 200,
+      "bytes": 265771,
+      "sha256": "d8fa6f7f0734bf5c8be12c52a94e20a82664c397d9dec4449156bd453d32856d",
+      "rows": 10320,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 5,
+      "matched_anomaly_timestamps": 5,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        5942,
+        7183,
+        8526,
+        8834,
+        10080
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 7135,
+      "largest_vanilla_activation_lower_bound_gib": 0.06804
+    },
+    {
+      "path": "data/realKnownCause/rogue_agent_key_hold.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realKnownCause/rogue_agent_key_hold.csv",
+      "http_status": 200,
+      "bytes": 55527,
+      "sha256": "47b110baa8e3636574c1033dda1cce780873647fab58223d159d4fee6f180e86",
+      "rows": 1882,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        716,
+        1287
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1228,
+      "largest_vanilla_activation_lower_bound_gib": 0.01171
+    },
+    {
+      "path": "data/realKnownCause/rogue_agent_key_updown.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realKnownCause/rogue_agent_key_updown.csv",
+      "http_status": 200,
+      "bytes": 138333,
+      "sha256": "9797cfef477c13306f7a33874ab4d6cf700f8f2c7e5825a2a5bc02004370909a",
+      "rows": 5315,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2375,
+        3009
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 3632,
+      "largest_vanilla_activation_lower_bound_gib": 0.03464
+    },
+    {
+      "path": "data/realTraffic/TravelTime_387.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTraffic/TravelTime_387.csv",
+      "http_status": 200,
+      "bytes": 59846,
+      "sha256": "38e70e9ead8227fd023bff6e93247d5bc01ee008f781b921a156962419b399bb",
+      "rows": 2500,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        428,
+        989,
+        1526
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1661,
+      "largest_vanilla_activation_lower_bound_gib": 0.01584
+    },
+    {
+      "path": "data/realTraffic/TravelTime_451.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTraffic/TravelTime_451.csv",
+      "http_status": 200,
+      "bytes": 51918,
+      "sha256": "7c174adfc457b201cd111d60688f7ec37eb7201c8080790dc41eeff477bd7345",
+      "rows": 2162,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        546
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1424,
+      "largest_vanilla_activation_lower_bound_gib": 0.01358
+    },
+    {
+      "path": "data/realTraffic/occupancy_6005.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTraffic/occupancy_6005.csv",
+      "http_status": 200,
+      "bytes": 59122,
+      "sha256": "cd357d7820d675074270fd976d4af1fc1e7854ecb764783028cbcb18d980c91d",
+      "rows": 2380,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1764
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1577,
+      "largest_vanilla_activation_lower_bound_gib": 0.01504
+    },
+    {
+      "path": "data/realTraffic/occupancy_t4013.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTraffic/occupancy_t4013.csv",
+      "http_status": 200,
+      "bytes": 62609,
+      "sha256": "5663a8122a300360eb51fbbd0f21706da05af1af55262926d6a226bb6d071704",
+      "rows": 2500,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2149,
+        2397
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1661,
+      "largest_vanilla_activation_lower_bound_gib": 0.01584
+    },
+    {
+      "path": "data/realTraffic/speed_6005.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTraffic/speed_6005.csv",
+      "http_status": 200,
+      "bytes": 57538,
+      "sha256": "7976e7596cd1e579696c737576e96a26fe041484472ed7d0a463ce2b094d7aa7",
+      "rows": 2500,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 1,
+      "matched_anomaly_timestamps": 1,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2386
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1661,
+      "largest_vanilla_activation_lower_bound_gib": 0.01584
+    },
+    {
+      "path": "data/realTraffic/speed_7578.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTraffic/speed_7578.csv",
+      "http_status": 200,
+      "bytes": 25928,
+      "sha256": "15ba994384730cb5a2e6818f17ded1430b40d92eb7a08e5b1a48a445c8c350f6",
+      "rows": 1127,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        317,
+        754,
+        923,
+        959
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 700,
+      "largest_vanilla_activation_lower_bound_gib": 0.00668
+    },
+    {
+      "path": "data/realTraffic/speed_t4013.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTraffic/speed_t4013.csv",
+      "http_status": 200,
+      "bytes": 57400,
+      "sha256": "fa5532d6f7db36cadc73e657fd4dfef05cb1ec44d4010243b314d3f1bbd6a7b5",
+      "rows": 2495,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        2146,
+        2397
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 1658,
+      "largest_vanilla_activation_lower_bound_gib": 0.01581
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_AAPL.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_AAPL.csv",
+      "http_status": 200,
+      "bytes": 368111,
+      "sha256": "826f5cf404c2890784a7824f7102fd00cb134a4948e12e44ec320d095cbbc217",
+      "rows": 15902,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1433,
+        3118,
+        4959,
+        9285
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11042,
+      "largest_vanilla_activation_lower_bound_gib": 0.1053
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_AMZN.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_AMZN.csv",
+      "http_status": 200,
+      "bytes": 364666,
+      "sha256": "234f5e63f19a62720dfb7ccfd6ecc8349b94d93b33ef8aafbdb17edda0b654f3",
+      "rows": 15831,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1993,
+        3735,
+        9795,
+        11606
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 10993,
+      "largest_vanilla_activation_lower_bound_gib": 0.10484
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_CRM.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_CRM.csv",
+      "http_status": 200,
+      "bytes": 350820,
+      "sha256": "e7133bf26479623d58fc7367107aea1cd7df6020420dece48b0eee4d26cdb28a",
+      "rows": 15902,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        3137,
+        6065,
+        8033
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11042,
+      "largest_vanilla_activation_lower_bound_gib": 0.1053
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_CVS.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_CVS.csv",
+      "http_status": 200,
+      "bytes": 348802,
+      "sha256": "f0bdc89cba3dd2265b47069187c750eeae18ef48f76f86067ee26ea1af9c3114",
+      "rows": 15853,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1660,
+        1995,
+        7973,
+        13547
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11008,
+      "largest_vanilla_activation_lower_bound_gib": 0.10498
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_FB.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_FB.csv",
+      "http_status": 200,
+      "bytes": 359760,
+      "sha256": "a7096bd646759486bda6796b5600cd33a4590f0842bf274ea7acba001b3ba591",
+      "rows": 15833,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        5009,
+        10321
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 10994,
+      "largest_vanilla_activation_lower_bound_gib": 0.10485
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_GOOG.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_GOOG.csv",
+      "http_status": 200,
+      "bytes": 361270,
+      "sha256": "3a39cc23d1ff6a0f234b55298d0c46c21d2e94ddb81a0dad9e1e46e3aaa9ec90",
+      "rows": 15842,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        4304,
+        4545,
+        6926,
+        9597
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11000,
+      "largest_vanilla_activation_lower_bound_gib": 0.1049
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_IBM.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_IBM.csv",
+      "http_status": 200,
+      "bytes": 351268,
+      "sha256": "4309bd56d28ddcbdc168e207da9717395fa2e9f74dba41fa768e0f7da8a116fa",
+      "rows": 15893,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 2,
+      "matched_anomaly_timestamps": 2,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        7209,
+        15245
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11036,
+      "largest_vanilla_activation_lower_bound_gib": 0.10525
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_KO.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_KO.csv",
+      "http_status": 200,
+      "bytes": 355283,
+      "sha256": "f3aa8157043c6569911031535bd1f7a73b428b5a2d95238d79b9d5b88ceebbd2",
+      "rows": 15851,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 3,
+      "matched_anomaly_timestamps": 3,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        6234,
+        11832,
+        13454
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11007,
+      "largest_vanilla_activation_lower_bound_gib": 0.10497
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_PFE.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_PFE.csv",
+      "http_status": 200,
+      "bytes": 348926,
+      "sha256": "18d2804d6a5dae63fe711baaba9242dce38a32bfade3dcdee1d8a7c1a866e41b",
+      "rows": 15858,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 4,
+      "matched_anomaly_timestamps": 4,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1148,
+        1594,
+        4299,
+        11544
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11012,
+      "largest_vanilla_activation_lower_bound_gib": 0.10502
+    },
+    {
+      "path": "data/realTweets/Twitter_volume_UPS.csv",
+      "url": "https://raw.githubusercontent.com/numenta/NAB/ea702d75cc2258d9d7dd35ca8e5e2539d71f3140/data/realTweets/Twitter_volume_UPS.csv",
+      "http_status": 200,
+      "bytes": 350182,
+      "sha256": "be50f06bbb9d020f37653c8c5cf19af63f77aa0019d8cf10849d91f4af455af4",
+      "rows": 15866,
+      "columns": [
+        "timestamp",
+        "value"
+      ],
+      "finite_numeric_values": true,
+      "parse_errors": [],
+      "anomaly_timestamps": 5,
+      "matched_anomaly_timestamps": 5,
+      "unmatched_anomaly_timestamps": [],
+      "row_indices_for_anomaly_timestamps": [
+        1185,
+        1601,
+        1940,
+        7447,
+        8865
+      ],
+      "task_compatibility": "fixed-width 128-value window -> binary event-in-window label is structurally compatible with scalar-output feedforward MLP",
+      "whole_file_train_windows_70pct": 11017,
+      "largest_vanilla_activation_lower_bound_gib": 0.10507
+    }
+  ]
+}

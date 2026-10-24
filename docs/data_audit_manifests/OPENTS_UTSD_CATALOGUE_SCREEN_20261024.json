@@ -1,0 +1,354 @@
+{
+  "snapshot_date": "2026-10-24",
+  "scope": "Catalogue-route screen for feed-forward MLP supervised forecasting in simple-adp. Crossed entries are not claims that independently sourced constituent datasets are invalid.",
+  "open_ts_bench": {
+    "source": "https://decisionintelligence.github.io/OpenTS/OpenTS-Bench/datasets/",
+    "catalogue_claims": "8068 univariate series from 16 unnamed datasets and 25 multivariate series; chronological ratios stated, but reviewed catalogue/repository contains no exact data artifact route or dataset license inventory.",
+    "all_named_multivariate_routes": [
+      {
+        "name": "METR-LA",
+        "dimensions": 207,
+        "time_steps": 34272,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross catalogue route: no data artifact/license; PeMS source ecosystem is registered access"
+      },
+      {
+        "name": "PEMS-BAY",
+        "dimensions": 325,
+        "time_steps": 52116,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross catalogue route: no data artifact/license; PeMS source ecosystem is registered access"
+      },
+      {
+        "name": "PEMS04",
+        "dimensions": 307,
+        "time_steps": 16992,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross catalogue route: no data artifact/license; PeMS source ecosystem is registered access"
+      },
+      {
+        "name": "PEMS08",
+        "dimensions": 170,
+        "time_steps": 17856,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross catalogue route: no data artifact/license; PeMS source ecosystem is registered access"
+      },
+      {
+        "name": "Traffic",
+        "dimensions": 862,
+        "time_steps": 17544,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross catalogue route: no versioned artifact/license/provenance"
+      },
+      {
+        "name": "ETTh1",
+        "dimensions": 7,
+        "time_steps": 14400,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: public payload but upstream CC BY-ND 4.0"
+      },
+      {
+        "name": "ETTh2",
+        "dimensions": 7,
+        "time_steps": 14400,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: public payload but upstream CC BY-ND 4.0"
+      },
+      {
+        "name": "ETTm1",
+        "dimensions": 7,
+        "time_steps": 57600,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: public payload but upstream CC BY-ND 4.0"
+      },
+      {
+        "name": "ETTm2",
+        "dimensions": 7,
+        "time_steps": 57600,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: public payload but upstream CC BY-ND 4.0"
+      },
+      {
+        "name": "Electricity",
+        "dimensions": 321,
+        "time_steps": 26304,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross OpenTS route: no artifact/license; independently sourced route remains separately judged"
+      },
+      {
+        "name": "Solar",
+        "dimensions": 137,
+        "time_steps": 52560,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross OpenTS route: no artifact/license; independently sourced route remains separately judged"
+      },
+      {
+        "name": "Wind",
+        "dimensions": 7,
+        "time_steps": 48673,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross OpenTS route: no artifact/license; independently sourced route remains separately judged"
+      },
+      {
+        "name": "Weather",
+        "dimensions": 21,
+        "time_steps": 52696,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross OpenTS route: no artifact/license; independently sourced route remains separately judged"
+      },
+      {
+        "name": "AQShunyi",
+        "dimensions": 11,
+        "time_steps": 35064,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/upstream version pinned"
+      },
+      {
+        "name": "AQWan",
+        "dimensions": 11,
+        "time_steps": 35064,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/upstream version pinned"
+      },
+      {
+        "name": "ZafNoo",
+        "dimensions": 11,
+        "time_steps": 19225,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: exact upstream artifact and rights not supplied"
+      },
+      {
+        "name": "CzeLan",
+        "dimensions": 11,
+        "time_steps": 19934,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: exact upstream artifact and rights not supplied"
+      },
+      {
+        "name": "FRED-MD",
+        "dimensions": 107,
+        "time_steps": 728,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross OpenTS route: no artifact/license; independently sourced route remains separately judged"
+      },
+      {
+        "name": "Exchange",
+        "dimensions": 8,
+        "time_steps": 7588,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/source terms pinned"
+      },
+      {
+        "name": "NASDAQ",
+        "dimensions": 5,
+        "time_steps": 1244,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/redistribution terms"
+      },
+      {
+        "name": "NYSE",
+        "dimensions": 5,
+        "time_steps": 1243,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/redistribution terms"
+      },
+      {
+        "name": "NN5",
+        "dimensions": 111,
+        "time_steps": 791,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross OpenTS route: no artifact/license; independently sourced route remains separately judged"
+      },
+      {
+        "name": "ILI",
+        "dimensions": 7,
+        "time_steps": 966,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/source terms pinned"
+      },
+      {
+        "name": "Covid-19",
+        "dimensions": 948,
+        "time_steps": 1392,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/source terms pinned"
+      },
+      {
+        "name": "Wike2000",
+        "dimensions": 2000,
+        "time_steps": 792,
+        "dense_mlp_window_compatible_in_principle": true,
+        "disposition": "Cross: no exact artifact/license/source terms pinned"
+      }
+    ],
+    "univariate_aggregate": {
+      "series_count": 8068,
+      "claimed_source_count": 16,
+      "source_names_published": false,
+      "disposition": "Cross aggregate route: source identities, artifacts, and source-specific rights cannot be checked."
+    }
+  },
+  "utsd": {
+    "source": "https://huggingface.co/datasets/thuml/UTSD",
+    "hub_api_probe": "anonymous HTTP 200; public; gated=false; private=false",
+    "source_csv_probe": "anonymous HTTP 200; 2728 bytes",
+    "hub_license_label": "Apache-2.0",
+    "published_splits": [
+      "train"
+    ],
+    "sequence_lengths": "variable",
+    "component_count": 29,
+    "aggregate_disposition": "Cross as unified benchmark route: mixed source terms are not cleared by the aggregate label, no supplied validation/test split, and variable-length pooled series need task-specific framing.",
+    "components": [
+      {
+        "name": "London Smart Meters",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "Wind Farms",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "Aus. Electricity Demand",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "AustraliaRainfall",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "BeijingPM25Quality",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "BenzeneConcentration",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "MotorImagery",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "SelfRegulationSCP1",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "SelfRegulationSCP2",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "AtrialFibrillation",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "PigArtPressure",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "PigCVP",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "IEEEPPG",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Cross UTSD route: cited source family does not provide a pinned artifact and reuse license through UTSD source.csv."
+      },
+      {
+        "name": "BIDMC32HR",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Cross UTSD route: cited source family does not provide a pinned artifact and reuse license through UTSD source.csv."
+      },
+      {
+        "name": "TDBrain",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Cross UTSD route: source route needs account/form or has no identifiable source/license (details in ledger)."
+      },
+      {
+        "name": "SensorData",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Cross UTSD route: source route needs account/form or has no identifiable source/license (details in ledger)."
+      },
+      {
+        "name": "Phoneme",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "EigenWorms",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "ERA5 Surface",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Cross UTSD route: source route needs account/form or has no identifiable source/license (details in ledger)."
+      },
+      {
+        "name": "ERA5 Pressure",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Cross UTSD route: source route needs account/form or has no identifiable source/license (details in ledger)."
+      },
+      {
+        "name": "Temperature Rain",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "StarLightCurves",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "Saugen River Flow",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "KDD Cup 2018",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "US Births",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "Sunspot",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "Worms",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in the UCR/UEA sequence-source screen; its exact route/task verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "Pedestrian Counts",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      },
+      {
+        "name": "Web Traffic",
+        "task_in_utds": "forecasting pretraining/series pool; no supplied held-out split",
+        "disposition": "Constituent source is in Monash K2a audit; its individual route verdict governs, not UTSD aggregate."
+      }
+    ]
+  },
+  "limits": [
+    "No MLP pilot for routes failing artifact/access/license provenance gates.",
+    "OpenTS and UTSD named benchmark entries are catalogued here; previously audited individual datasets keep their existing separate route decisions."
+  ]
+}

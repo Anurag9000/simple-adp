@@ -1,0 +1,62 @@
+{
+  "dataset": "UEA RacketSports wearable activity classification",
+  "zenodo_record": "https://zenodo.org/records/3743603",
+  "uea_page": "https://www.timeseriesclassification.com/description.php?Dataset=RacketSports",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "artifact": {
+    "file": "RacketSports.zip",
+    "bytes": 273912,
+    "sha256": "00fda1226862228c7a4553fe92bf5e48c90e45ff62aa801945f9e09012904227"
+  },
+  "parsed": {
+    "train_rows": 151,
+    "validation_rows": 75,
+    "test_rows": 77,
+    "channels": 6,
+    "points_per_channel": 30,
+    "input_width": 180,
+    "classes": ["Badminton_Clear", "Badminton_Smash", "Squash_BackhandBoast", "Squash_ForehandBoast"],
+    "train_class_counts": [43, 39, 34, 35],
+    "validation_class_counts": [21, 20, 17, 17],
+    "test_class_counts": [22, 20, 17, 18],
+    "missing_values": false,
+    "test_majority_accuracy": 0.2857142857,
+    "source_data": "Six-axis wrist accelerometer/gyroscope recordings collected at 10 Hz during badminton/squash strokes; university students, original undergraduate project."
+  },
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 151,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "selection": "best validation accuracy; test not used for selection",
+    "preprocessing": "per-feature mean/std fitted on 151 training rows only; reshape (6,30) to 180 fixed numeric features",
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "selected_epoch": 61,
+        "train_loss": 0.0012741014,
+        "validation_accuracy": 0.76,
+        "test_accuracy": 0.7922077922,
+        "test_balanced_accuracy": 0.8090909091,
+        "test_macro_f1": 0.7981877771,
+        "test_cross_entropy": 0.8998804688
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "selected_epoch": 24,
+        "train_loss": 0.0005422673,
+        "validation_accuracy": 0.8133333333,
+        "test_accuracy": 0.7662337662,
+        "test_balanced_accuracy": 0.7875668449,
+        "test_macro_f1": 0.7665601023,
+        "test_cross_entropy": 2.0727336407
+      }
+    ]
+  },
+  "disposition": "Keep provisionally as a small, non-saturated four-class wearable activity benchmark. Small test and source cohort limit confidence; participant identities/split independence were not verified."
+}

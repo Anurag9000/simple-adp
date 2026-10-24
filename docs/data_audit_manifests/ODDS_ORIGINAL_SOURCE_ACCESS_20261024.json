@@ -1,0 +1,229 @@
+{
+  "audit_date": "2026-10-24",
+  "method": "Unauthenticated HTTP range probes for each unique official UCI direct data artifact. For UCI records lacking a single API data_url, official record pages were fetched and public file links inventoried. This establishes reachability only; not full payload acquisition or parser validation.",
+  "unique_direct_sources": {
+    "193": {
+      "source_name": "Cardiotocography",
+      "source_page": "https://archive.ics.uci.edu/dataset/193/cardiotocography",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/193/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/193/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 190279,
+      "first_byte_sha256": "4648b5bf338d18f0c7e030a5d2cfb2018c831695cdb90129912cf00367c7d751"
+    },
+    "146": {
+      "source_name": "Statlog (Landsat Satellite)",
+      "source_page": "https://archive.ics.uci.edu/dataset/146/statlog+landsat+satellite",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/146/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/146/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 769440,
+      "first_byte_sha256": "a121454cbcc631ace2b0581b10336c2d553aa7689632e653934374a759bef443"
+    },
+    "63": {
+      "source_name": "Lymphography",
+      "source_page": "https://archive.ics.uci.edu/dataset/63/lymphography",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/63/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/63/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 5913,
+      "first_byte_sha256": "9a2a457505e8a7dbe15872209da84d919de6b085a996802b2bdc98899a69d266"
+    },
+    "42": {
+      "source_name": "Glass Identification",
+      "source_page": "https://archive.ics.uci.edu/dataset/42/glass+identification",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/42/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/42/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 10820,
+      "first_byte_sha256": "84e7e49a57bbd4cc46b2b9a5498a91ac8ea890e2adb988f3641e4a63ee079cb9"
+    },
+    "75": {
+      "source_name": "Musk (Version 2)",
+      "source_page": "https://archive.ics.uci.edu/dataset/75/musk+version+2",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/75/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/75/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 2000000,
+      "first_byte_sha256": "65385dea358720d43b3458d0a7d753e45fa68a2793ec9421d18daa963d92fb52"
+    },
+    "59": {
+      "source_name": "Letter Recognition",
+      "source_page": "https://archive.ics.uci.edu/dataset/59/letter+recognition",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/59/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/59/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 712666,
+      "first_byte_sha256": "9ec44e47110540d997fc2e247464a75ed3da0ad9dfcd49ded7e68fcaab04a9f7"
+    },
+    "148": {
+      "source_name": "Statlog (Shuttle)",
+      "source_page": "https://archive.ics.uci.edu/dataset/148/statlog+shuttle",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/148/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/148/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 1537839,
+      "first_byte_sha256": "47aef84b30949e8e5980995aa7cac907892ec8f50d6b929ca91bfd28ebef704e"
+    },
+    "15": {
+      "source_name": "Breast Cancer Wisconsin (Original)",
+      "source_page": "https://archive.ics.uci.edu/dataset/15/breast+cancer+wisconsin+original",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/15/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/15/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 20809,
+      "first_byte_sha256": "3fb81e10c657874f9db975b43a5c10fd0f95ec9ca33150962d486fd4740a8701"
+    },
+    "52": {
+      "source_name": "Ionosphere",
+      "source_page": "https://archive.ics.uci.edu/dataset/52/ionosphere",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/52/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/52/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 76872,
+      "first_byte_sha256": "04f2023ba4b9ff438d76d4d236762981795772d4f75f3bca1c8db0fcf26c83c1"
+    },
+    "80": {
+      "source_name": "Optical Recognition of Handwritten Digits",
+      "source_page": "https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/80/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/80/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 834735,
+      "first_byte_sha256": "75fc37d1cb6590c84f567c6bd65c73051cdede2568f148a7b23ddd5ecbfdda2b"
+    },
+    "81": {
+      "source_name": "Pen-Based Recognition of Handwritten Digits",
+      "source_page": "https://archive.ics.uci.edu/dataset/81/pen+based+recognition+of+handwritten+digits",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/81/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/81/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 539812,
+      "first_byte_sha256": "3a3043879657816e18af4bc0822cb89aff03b30988511590e2c05454ce092656"
+    },
+    "39": {
+      "source_name": "Ecoli",
+      "source_page": "https://archive.ics.uci.edu/dataset/39/ecoli",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/39/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/39/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 16295,
+      "first_byte_sha256": "42e4526726ed030c640ecd91837acfd4fe23d8305954d250dedf944a4f9ecee8"
+    },
+    "109": {
+      "source_name": "Wine",
+      "source_page": "https://archive.ics.uci.edu/dataset/109/wine",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/109/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/109/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 11480,
+      "first_byte_sha256": "70ba539f750faef04eb4859f68cf67f13676d42fafce8e4f85982705953c219a"
+    },
+    "212": {
+      "source_name": "Vertebral Column",
+      "source_page": "https://archive.ics.uci.edu/dataset/212/vertebral+column",
+      "artifact_url": "https://archive.ics.uci.edu/static/public/212/data.csv",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/static/public/212/data.csv",
+      "content_range": null,
+      "content_length": null,
+      "content_type": null,
+      "body_bytes_read": 26181,
+      "first_byte_sha256": "7b98e6802c824d4c20a97f86174ef47db9171875888775a3884245443f7432d5"
+    }
+  },
+  "multi_file_or_missing_data_url_sources": {
+    "thyroid": {
+      "source_page": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "candidate_public_files": [
+        "https://archive.ics.uci.edu/static/public/102/thyroid+disease.zip",
+        "https://archive.ics.uci.edu/static/public/default/Large.jpg?87"
+      ],
+      "page_sha256": "3db1152181e3fd7e52c9c309ffb86cb135f0c6ca6e1b0969c5624d0bcfb94f50"
+    },
+    "vowels": {
+      "source_page": "https://archive.ics.uci.edu/dataset/128/japanese+vowels",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/dataset/128/japanese+vowels",
+      "candidate_public_files": [
+        "https://archive.ics.uci.edu/static/public/128/japanese+vowels.zip",
+        "https://archive.ics.uci.edu/static/public/default/Large.jpg?152"
+      ],
+      "page_sha256": "d0ee7a1bdd184777617c3db410a46949b6877774cd2ae01d6d8d5f45e07ba64b"
+    },
+    "arrhythmia": {
+      "source_page": "https://archive.ics.uci.edu/dataset/5/arrhythmia",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/dataset/5/arrhythmia",
+      "candidate_public_files": [
+        "https://archive.ics.uci.edu/static/public/5/arrhythmia.zip",
+        "https://archive.ics.uci.edu/static/public/default/Large.jpg?99"
+      ],
+      "page_sha256": "ef58d2f662da6ff7404862a87288a5ec78444de6c260516c92dc1070c2530e40"
+    },
+    "mammography": {
+      "source_page": "https://openml.org/data/v1/download/52214/mammography.arff",
+      "status": 200,
+      "final_url": "https://www.openml.org/data/v1/download/52214/mammography.arff",
+      "candidate_public_files": [],
+      "page_sha256": "495e3e9689e740a0de044feb2ebd3ecd2d30c13d725e3d820ea2afd7454c3f3b"
+    },
+    "annthyroid": {
+      "source_page": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "status": 200,
+      "final_url": "https://archive.ics.uci.edu/dataset/102/thyroid+disease",
+      "candidate_public_files": [
+        "https://archive.ics.uci.edu/static/public/102/thyroid+disease.zip",
+        "https://archive.ics.uci.edu/static/public/default/Large.jpg?192"
+      ],
+      "page_sha256": "f9447c41c4ee845ddf2e00014e9b3ff7118670ac0cbe4d059e63a3d5395c56a8"
+    }
+  },
+  "non_uci_openml_310_note": "OpenML dataset 310 was checked via anonymous API; its license value is Public, not a standard open-data license.",
+  "unresolved_non_uci_sources": [
+    "MNIST official Yann LeCun source",
+    "KDD Cup 99 service-specific HTTP/SMTP files",
+    "Brno University of Technology speech corpus"
+  ]
+}

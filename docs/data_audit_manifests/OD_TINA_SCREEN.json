@@ -1,0 +1,53 @@
+{
+  "dataset": "Time-series Industrial Anomaly dataset (OD-TINA)",
+  "screened_at": "2026-10-23",
+  "source": {
+    "official_repository": "https://github.com/ari-dasci/OD-TINA",
+    "license": "CC BY-SA 4.0, as declared by the repository",
+    "repository_public": true,
+    "authentication_required_for_repository_listing": false,
+    "readme_reported_rows": "more than 38 million",
+    "readme_reported_columns": 108,
+    "readme_nominal_cadence": "2 seconds",
+    "readme_reported_span": "2017-09-06 through 2018-12-25",
+    "readme_reported_maintenance_events": 191241,
+    "readme_reported_alarms": 587398,
+    "columns": {
+      "numeric_sensor_features": 103,
+      "categorical_feature_columns": ["FEATURE76", "FEATURE87"],
+      "candidate_targets": ["m_id", "m_subid", "alarms"]
+    },
+    "tree_inventory": {
+      "daily_parquet_partitions": 468,
+      "listed_blob_count": 470,
+      "listed_total_bytes": 1345059331,
+      "recursive_tree_truncated": false,
+      "evidence_basis": "Anonymous GitHub recursive tree inspection recorded in the audit; not a complete content download."
+    }
+  },
+  "download_probe": {
+    "representative_file": "data/day=2017-09-06/data.parquet",
+    "anonymous_get_succeeded": true,
+    "bytes": 859492,
+    "sha256": "e73c30b03465f2a93ceac07f8a209004a9f729ec320b11573c8913cfc7e239d2",
+    "parquet_parse_succeeded": true,
+    "shape": [74026, 108],
+    "missing_cells": 0,
+    "all_468_partitions_downloaded_and_parsed": false,
+    "full_download_attempt": "Attempted an eight-worker anonymous fetch and parser pass, but outbound GitHub TLS connections remained in SYN-SENT from this machine; process was stopped without claiming complete acquisition.",
+    "all_partition_hashes": "not collected"
+  },
+  "task_screen": {
+    "candidate_task": "Pointwise supervised prediction of alarm, maintenance, or maintenance-subtype labels from same-row numeric sensor features, with chronological date-grouped splits.",
+    "architecture_compatibility": "Fixed-width rows of 103 numeric inputs can be passed to the repository's plain feedforward MLP without a special architecture. Categorical source features were not required for this compatibility route.",
+    "problems": [
+      "Full 38-million-row training partition cannot fit the project's whole-training-set single-batch constraint or the available 6 GiB GPU.",
+      "Uniform stride subsampling may miss short events and changes the event-label distribution; no source-supported aggregation/window rule was established.",
+      "No complete partition-level parsing, chronological split counts, or training-only preprocessing screen was obtained.",
+      "No empirical MLP baseline, non-saturation, or held-out temporal skill pilot was run."
+    ],
+    "disposition": "Cross out for this suite under the current full-batch protocol. Reopen only with a documented event-preserving aggregation task and a new complete split/resource/MLP pilot.",
+    "is_not_a_claim_of_intrinsic_dataset_unsuitability": true
+  },
+  "evidence_boundary": "Source metadata, public listing, license declaration, one anonymous partition GET, and its parse were verified. Full release downloadability across all partitions and empirical task utility were not verified."
+}

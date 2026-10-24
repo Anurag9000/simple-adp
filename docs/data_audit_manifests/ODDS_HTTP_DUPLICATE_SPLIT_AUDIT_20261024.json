@@ -1,0 +1,33 @@
+{
+  "audit_date": "2026-10-24",
+  "method": "Exact float32 feature-row equality across deterministic repository 60/20/20 stratified split seed 42, on same provider artifacts used by the MLP pilot. Exact duplicates only; no near-duplicate/source-group audit.",
+  "results": [
+    {
+      "dataset": "http",
+      "rows": 567498,
+      "unique_feature_rows": 221900,
+      "duplicated_rows": 345598,
+      "feature_groups_with_conflicting_labels": 2,
+      "train_rows": 340500,
+      "validation_rows": 113499,
+      "test_rows": 113499,
+      "test_rows_exactly_seen_in_train": 78594,
+      "test_rows_exactly_seen_in_train_or_validation": 84380,
+      "test_prevalence": 0.00389430743883206,
+      "overlaps": {
+        "train_x_validation": {
+          "shared_unique_feature_rows": 42912,
+          "shared_rows_in_validation": 78719
+        },
+        "train_x_test": {
+          "shared_unique_feature_rows": 42773,
+          "shared_rows_in_test": 78594
+        },
+        "validation_x_test": {
+          "shared_unique_feature_rows": 24941,
+          "shared_rows_in_test": 55783
+        }
+      }
+    }
+  ]
+}

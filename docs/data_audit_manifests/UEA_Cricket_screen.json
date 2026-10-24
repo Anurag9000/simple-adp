@@ -1,0 +1,28 @@
+{
+  "dataset": "UEA Cricket human action recognition",
+  "uea_page": "https://www.timeseriesclassification.com/description.php?Dataset=Cricket",
+  "direct_archive_probe": {
+    "url": "https://www.timeseriesclassification.com/aeon-toolkit/Cricket.zip",
+    "anonymous": true,
+    "http_status": 206,
+    "content_range": "bytes 0-0/8202144",
+    "bytes_received": 1,
+    "full_payload_downloaded": false
+  },
+  "source_link": "https://sites.google.com/site/dtwadaptive/home",
+  "source_link_access": "Redirects to Google account sign-in in current check; original source terms and license not verified.",
+  "uea_metadata": {
+    "train_rows": 108,
+    "test_rows": 72,
+    "channels": 6,
+    "points_per_channel": 1197,
+    "classes": 12,
+    "participants": 4,
+    "repetitions_per_signal_class": 10,
+    "sample_rate_hz": 184,
+    "task": "12-way wrist-accelerometer umpire hand-signal recognition"
+  },
+  "compatibility_assessment": "A fixed six-channel x 1197-point signal can be flattened to 7182 numeric inputs for the classification MLP, but the full payload was not fetched or parsed.",
+  "pilot": null,
+  "disposition": "Cross out: source rights are not verifiable from the public record and the linked original source requires Google sign-in; only four umpires and 180 total examples provide weak support for subject-generalization benchmarking. No full-payload or MLP pilot was run because the access/rights gate is unresolved."
+}

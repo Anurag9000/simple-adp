@@ -1,0 +1,98 @@
+{
+  "dataset": "PenDigits (UCI Pen-Based Recognition of Handwritten Digits; UEA time-series-format split)",
+  "source_url": "https://www.timeseriesclassification.com/aeon-toolkit/PenDigits.zip",
+  "authoritative_dataset_record": "https://archive.ics.uci.edu/dataset/81/pen+based+recognition+of+handwritten+digits",
+  "downloaded_anonymously": true,
+  "bytes": 650057,
+  "sha256": "4a9a706463eb98b8773fb6c2bb24038f2855ce1f0c55d1d0109e9f0bd0052842",
+  "archive_entries": [
+    "PenDigits.PNG",
+    "PenDigits.txt",
+    "PenDigitsDimension1_TEST.arff",
+    "PenDigitsDimension1_TRAIN.arff",
+    "PenDigitsDimension2_TEST.arff",
+    "PenDigitsDimension2_TRAIN.arff",
+    "PenDigits_TEST.arff",
+    "PenDigits_TRAIN.arff",
+    "PenDigits_TEST.ts",
+    "PenDigits_TRAIN.ts"
+  ],
+  "parsed_multivariate_ts": {
+    "train_rows": 7494,
+    "test_rows": 3498,
+    "channels": 2,
+    "points_per_channel": 8,
+    "input_width": 16,
+    "classes": 10,
+    "train_counts": [
+      780,
+      779,
+      780,
+      719,
+      780,
+      720,
+      720,
+      778,
+      719,
+      719
+    ],
+    "test_counts": [
+      363,
+      364,
+      364,
+      336,
+      364,
+      335,
+      336,
+      364,
+      336,
+      336
+    ]
+  },
+  "split_provenance": "UCI dataset documentation says the train portion is drawn from 30 writers and writer-independent test portion from 14 other writers; this is the standard supplied 7494/3498 split.",
+  "license": "CC BY 4.0, as displayed on the official UCI record.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 518,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "20% class-stratified random holdout from official train (1500 examples); official test untouched for model/epoch selection",
+    "preprocessing": "per-feature mean/std fit on remaining 5994 train rows only",
+    "architectures": [
+      {
+        "hidden_widths": [
+          128,
+          128
+        ],
+        "selected_epoch": 100,
+        "train_loss": 0.11763797,
+        "validation_accuracy": 0.96266663,
+        "test_accuracy": 0.92881647,
+        "test_balanced_accuracy": 0.93080734,
+        "test_macro_f1": 0.92899348,
+        "test_cross_entropy": 0.27378324
+      },
+      {
+        "hidden_widths": [
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "selected_epoch": 71,
+        "train_loss": 0.01106075,
+        "validation_accuracy": 0.99066663,
+        "test_accuracy": 0.96769583,
+        "test_balanced_accuracy": 0.96827304,
+        "test_macro_f1": 0.96785033,
+        "test_cross_entropy": 0.17892221
+      }
+    ],
+    "majority_baseline_test_accuracy": 0.10405946,
+    "assessment": "Neither model reaches 100%, but the large MLP achieves 96.77% test accuracy and 99.07% validation accuracy; this is too near-ceiling for the requested difficult benchmark suite. Single seed; test scores apply only to the fixed source split."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "dataset": "Tribler Learning-to-Rank Dataset",
+  "doi": "10.4121/17091504-6005-4AE0-8A30-468675F09D3C",
+  "task": "grouped binary relevance ranking",
+  "sources": {
+    "official_metadata": "https://api.datacite.org/dois/10.4121/17091504-6005-4AE0-8A30-468675F09D3C",
+    "official_tudelft_record": "https://research.tudelft.nl/en/datasets/tribler-learning-to-rank-dataset/",
+    "author_repository": "https://github.com/mg98/DART",
+    "artifact": "https://github.com/mg98/DART/raw/refs/heads/main/artifacts/tribler_data.zip",
+    "paper": "https://euromlsys.eu/pdf/euromlsys25-18.pdf"
+  },
+  "access_and_rights": {
+    "anonymous_download": true,
+    "download_bytes": 32289510,
+    "sha256": "f3c3d766d1a97faa159a34218d2623fa3e58299fc9877731ef4c2feed912f18a",
+    "zip_crc_passed": true,
+    "datacite_dataset_license": "Apache-2.0",
+    "github_repository_code_license": null,
+    "artifact_status": "actual split files downloaded anonymously from the author repository; DataCite metadata independently lists train, vali, test files for this DOI"
+  },
+  "schema": {
+    "features_per_row": 31,
+    "numeric_features": true,
+    "query_id_column": true,
+    "relevance_labels": [
+      0,
+      1
+    ],
+    "feature_format": "SVMlight/libsvm-style text, dense numeric feature indices"
+  },
+  "splits": {
+    "train": {
+      "rows": 416959,
+      "queries": 6528,
+      "positive_rows": 6915,
+      "query_ids_unique_across_splits": true
+    },
+    "validation": {
+      "rows": 103289,
+      "queries": 1632,
+      "positive_rows": 1725,
+      "query_ids_unique_across_splits": true
+    },
+    "test": {
+      "rows": 61601,
+      "queries": 907,
+      "positive_rows": 970,
+      "query_ids_unique_across_splits": true
+    }
+  },
+  "difficulty_and_capacity_pilots": {
+    "framework_device": "PyTorch, NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB",
+    "repository_path_smoke": {
+      "estimator": "TabularADP",
+      "task": "GroupedRankingTask(relevant_threshold=0.5)",
+      "architecture": [
+        16,
+        16
+      ],
+      "epochs": 1,
+      "batch_size": 416959,
+      "full_training_partition_single_batch": true,
+      "completed": true,
+      "test_ndcg_at_5": 0.267014001,
+      "test_ndcg_at_10": 0.3040267084,
+      "test_recall_at_5": 0.3850055127,
+      "test_recall_at_10": 0.4980154355
+    },
+    "standalone_vectorized_pairwise_pilot": {
+      "architecture": [
+        128,
+        128
+      ],
+      "epochs": 30,
+      "batch_size": 416959,
+      "optimizer": "Adam",
+      "learning_rate": 0.001,
+      "seed": 17,
+      "test_mrr": 0.248790377,
+      "test_ndcg_binary": 0.3883907744,
+      "original_input_order_test_mrr": 0.317564377,
+      "objective_note": "pairwise logistic, one deterministically selected negative per positive; pair contributions averaged over all sampled pairs"
+    },
+    "largest_suite_architecture_full_batch": {
+      "architecture": [
+        512,
+        512,
+        512,
+        512,
+        512
+      ],
+      "rows": 416959,
+      "device": "NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB",
+      "input": "same-shaped synthetic float32 full-batch feature tensor; actual parsed dataset has 31 columns and is 52 MiB as float32",
+      "forward_and_backward_attempted": true,
+      "completed": false,
+      "failure": "CUDA out of memory trying to allocate another 816 MiB",
+      "peak_pytorch_allocated_gib": 4.844,
+      "disposition": "fails the required full-batch full-architecture GPU profile"
+    },
+    "disposition": "cross out from the required suite: full-batch [512]*5 fails on current GPU, and [128,128] 30-epoch test MRR is below source original-order baseline; smaller task runs are technically compatible"
+  },
+  "limitations": [
+    "the one-epoch repository-path and 30-epoch standalone runs do not test every architecture, ADP controller, or seed",
+    "the standalone 30-epoch MRR pilot is below the original-order baseline reported for the source benchmark",
+    "the full-batch [512]*5 GPU run was confirmed to OOM; CPU fallback capacity was not executed because current host free memory was only about 5.2 GiB",
+    "no runner-provider integration was performed",
+    "GitHub repository API reports no license for the code repository; the dataset DOI itself carries Apache-2.0"
+  ]
+}

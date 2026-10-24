@@ -1,0 +1,64 @@
+{
+  "dataset": "UCI High-Resolution Load Dataset from Smart Meters Across Various Cities in Morocco",
+  "uci_id": 1158,
+  "screened_at": "2026-10-23",
+  "official_source": "https://archive.ics.uci.edu/dataset/1158/high-resolution+load+dataset+from+smart+meters+across+various+cities+in+morocco",
+  "access_and_rights": {
+    "license": "CC BY 4.0, explicitly stated on the UCI dataset record",
+    "anonymous_direct_download": "HTTP 200 full GET, no login/token/application required by the UCI download page",
+    "archive_name": "high-resolution+load+dataset+from+smart+meters+across+various+cities+in+morocco.zip",
+    "archive_bytes": 22411556,
+    "archive_sha256": "04a9a3cc5addffbd0d2e2eac898b51065d7d9f7ea457c9c28dba6b703ca19021",
+    "archive_members": ["Data Morocco.xlsx"],
+    "full_download_and_parse": true
+  },
+  "source_schema_audit": {
+    "uci_metadata_claim": "5 instances and 5 features",
+    "actual_workbook": "Four sheets with 17 numeric zone series plus a DateTime column per sheet; the UCI instance/feature summary does not describe the workbook layout.",
+    "sheets": {
+      "Laayoune": {"rows_per_series": 88890, "series": 5, "reported_cadence_minutes": 10, "units": "amperes", "first_datetime": "2022-09-14T17:10:00", "last_datetime": "2024-05-24T00:00:00", "timestamp_intervals": {"10_minutes": 88885, "minus_50_minutes": 2, "plus_70_minutes": 2}},
+      "Boujdour": {"rows_per_series": 88890, "series": 3, "reported_cadence_minutes": 10, "units": "amperes", "first_datetime": "2022-09-14T17:10:00", "last_datetime": "2024-05-24T00:00:00", "timestamp_intervals": {"10_minutes": 88885, "minus_50_minutes": 2, "plus_70_minutes": 2}},
+      "Foum eloued": {"rows_per_series": 88890, "series": 7, "reported_cadence_minutes": 10, "units": "amperes", "first_datetime": "2022-09-14T17:10:00", "last_datetime": "2024-05-24T00:00:00", "timestamp_intervals": {"10_minutes": 88885, "minus_50_minutes": 2, "plus_70_minutes": 2}},
+      "Marrakech": {"rows_per_series": 17501, "series": 2, "reported_cadence_minutes": 30, "units": "kilowatts", "first_datetime": "2023-01-09T09:59:59.999999", "last_datetime": "2024-01-08T00:00:00", "timestamp_intervals": {"30_minutes": 16763, "minus_1410_minutes": 365, "plus_1470_minutes": 364, "other_irregular_intervals": 7}}
+    },
+    "missing_numeric_values": 0,
+    "time_handling": "No clock/calendar covariates are used. Source row order is retained as sequence order. Ten-minute local timestamps include two -50/+70 minute clock transitions per sheet, consistent with a local-clock shift but not independently validated against UTC. Marrakech has a recurring midnight timestamp/date inconsistency and additional irregular intervals; its rows are ordered as supplied, but this unresolved chronology makes the two Marrakech routes ineligible."
+  },
+  "task_protocol": {
+    "task": "univariate fixed-window load forecasting for each source zone independently",
+    "10_minute_series_input_output": "144 prior observations to the next 6 observations (nominally 24-hour history to 60-minute horizon)",
+    "marrakech_input_output_screened_but_not_admitted": "48 prior observations to the next 2 observations (nominally 24-hour history to 60-minute horizon)",
+    "split": "Chronological by row index: first 70% of raw observations for training targets, next 15% for validation targets, final 15% for test targets. A window is assigned only if its entire target horizon lies within the partition; prior history may cross the preceding boundary, as in rolling-origin forecasting.",
+    "train_validation_test_windows": {
+      "each_10_minute_series": [62074, 13328, 13329],
+      "each_marrakech_series": [12202, 2624, 2624]
+    },
+    "preprocessing": "Input position means and standard deviations and scalar target mean and standard deviation fitted on training windows only; validation and test transformed with those values.",
+    "baseline_metrics": "Normalized RMSE and normalized MAE divide by the standard deviation of training targets. Baselines repeat the last observed point across the horizon (persistence) or use the same time-of-day values from the previous day (daily seasonal naive).",
+    "architecture": "Repository TabularMLP with vector output of length 6 (10-minute) or 2 (Marrakech)",
+    "full_batch": "Every training partition was passed as one batch per epoch; no minibatches, subsampling or gradient accumulation.",
+    "training": "CUDA, Adam lr 0.001, MSE, 30 epochs; best validation MSE checkpoint used for the held-out test score; one fixed seed per architecture and series.",
+    "architectures": ["[16,16]", "[128,128]", "[512,512,512,512,512]"],
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU 6 GiB"
+  },
+  "per_series_results": [
+    {"sheet":"Laayoune","zone":"zone1","train_target_std":19.7001,"persistence_nrmse":0.3692,"daily_naive_nrmse":0.7729,"mlp_nrmse":{"[16,16]":0.6332,"[128,128]":0.4587,"[512]*5":0.3948},"mlp_nmae":{"[16,16]":0.4901,"[128,128]":0.3224,"[512]*5":0.2485},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Laayoune","zone":"zone2","train_target_std":33.3087,"persistence_nrmse":0.2707,"daily_naive_nrmse":0.4972,"mlp_nrmse":{"[16,16]":0.5594,"[128,128]":0.364,"[512]*5":0.2923},"mlp_nmae":{"[16,16]":0.4216,"[128,128]":0.26,"[512]*5":0.1969},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Laayoune","zone":"zone3","train_target_std":39.4028,"persistence_nrmse":0.3367,"daily_naive_nrmse":0.6182,"mlp_nrmse":{"[16,16]":0.8529,"[128,128]":0.4652,"[512]*5":0.3688},"mlp_nmae":{"[16,16]":0.5855,"[128,128]":0.301,"[512]*5":0.2444},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Laayoune","zone":"zone4","train_target_std":24.9665,"persistence_nrmse":0.3649,"daily_naive_nrmse":0.8594,"mlp_nrmse":{"[16,16]":0.9251,"[128,128]":0.5506,"[512]*5":0.4254},"mlp_nmae":{"[16,16]":0.5646,"[128,128]":0.3256,"[512]*5":0.2479},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Laayoune","zone":"zone5","train_target_std":32.7771,"persistence_nrmse":0.397,"daily_naive_nrmse":0.8039,"mlp_nrmse":{"[16,16]":0.9265,"[128,128]":0.4941,"[512]*5":0.4197},"mlp_nmae":{"[16,16]":0.6347,"[128,128]":0.3084,"[512]*5":0.259},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Boujdour","zone":"zone1","train_target_std":21.2823,"persistence_nrmse":0.1745,"daily_naive_nrmse":0.4124,"mlp_nrmse":{"[16,16]":0.442,"[128,128]":0.2875,"[512]*5":0.2132},"mlp_nmae":{"[16,16]":0.336,"[128,128]":0.2132,"[512]*5":0.149},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Boujdour","zone":"zone2","train_target_std":6.0396,"persistence_nrmse":0.6085,"daily_naive_nrmse":2.1971,"mlp_nrmse":{"[16,16]":2.7194,"[128,128]":1.238,"[512]*5":0.9579},"mlp_nmae":{"[16,16]":2.2151,"[128,128]":0.8682,"[512]*5":0.6693},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Boujdour","zone":"zone3","train_target_std":14.4127,"persistence_nrmse":0.274,"daily_naive_nrmse":0.8049,"mlp_nrmse":{"[16,16]":0.7396,"[128,128]":0.4491,"[512]*5":0.3182},"mlp_nmae":{"[16,16]":0.543,"[128,128]":0.3162,"[512]*5":0.2331},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Foum eloued","zone":"zone1","train_target_std":37.1655,"persistence_nrmse":0.1409,"daily_naive_nrmse":0.5117,"mlp_nrmse":{"[16,16]":0.377,"[128,128]":0.2956,"[512]*5":0.2091},"mlp_nmae":{"[16,16]":0.2754,"[128,128]":0.2135,"[512]*5":0.1347},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Foum eloued","zone":"zone2","train_target_std":45.108,"persistence_nrmse":0.1067,"daily_naive_nrmse":0.3619,"mlp_nrmse":{"[16,16]":0.3295,"[128,128]":0.2367,"[512]*5":0.164},"mlp_nmae":{"[16,16]":0.2482,"[128,128]":0.1808,"[512]*5":0.1228},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Foum eloued","zone":"zone3","train_target_std":42.9395,"persistence_nrmse":0.1193,"daily_naive_nrmse":0.5728,"mlp_nrmse":{"[16,16]":0.4259,"[128,128]":0.3189,"[512]*5":0.1915},"mlp_nmae":{"[16,16]":0.3336,"[128,128]":0.2465,"[512]*5":0.1423},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Foum eloued","zone":"zone4","train_target_std":23.1636,"persistence_nrmse":0.1065,"daily_naive_nrmse":0.5314,"mlp_nrmse":{"[16,16]":0.3475,"[128,128]":0.242,"[512]*5":0.1572},"mlp_nmae":{"[16,16]":0.2573,"[128,128]":0.1804,"[512]*5":0.1094},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Foum eloued","zone":"zone5","train_target_std":4.0349,"persistence_nrmse":0.5443,"daily_naive_nrmse":0.8893,"mlp_nrmse":{"[16,16]":0.9296,"[128,128]":0.5942,"[512]*5":0.517},"mlp_nmae":{"[16,16]":0.675,"[128,128]":0.3783,"[512]*5":0.3363},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"retain provisionally as a single hard series: [512]*5 modestly improves on persistence (0.517 vs 0.544 NRMSE), remains far from zero error, and capacity changes generalization materially; one split and seed only"},
+    {"sheet":"Foum eloued","zone":"zone6","train_target_std":7.302,"persistence_nrmse":0.1823,"daily_naive_nrmse":0.5681,"mlp_nrmse":{"[16,16]":0.5456,"[128,128]":0.334,"[512]*5":0.2652},"mlp_nmae":{"[16,16]":0.4057,"[128,128]":0.2001,"[512]*5":0.1718},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Foum eloued","zone":"zone7","train_target_std":42.5031,"persistence_nrmse":0.2062,"daily_naive_nrmse":0.6311,"mlp_nrmse":{"[16,16]":0.4842,"[128,128]":0.3782,"[512]*5":0.2829},"mlp_nmae":{"[16,16]":0.3729,"[128,128]":0.2936,"[512]*5":0.1945},"peak_cuda_gib":{"[16,16]":0.077,"[128,128]":0.18,"[512]*5":0.908},"decision":"cross out: all tested MLPs worse than persistence"},
+    {"sheet":"Marrakech","zone":"zone1","train_target_std":297.7843,"persistence_nrmse":0.2552,"daily_naive_nrmse":0.2307,"mlp_nrmse":{"[16,16]":0.5577,"[128,128]":0.2072,"[512]*5":0.2034},"mlp_nmae":{"[16,16]":0.4261,"[128,128]":0.1639,"[512]*5":0.1629},"peak_cuda_gib":{"[16,16]":0.022,"[128,128]":0.049,"[512]*5":0.196},"decision":"cross out: malformed recurring timestamps and irregular intervals make the source chronology unreliable, even though the models do not saturate"},
+    {"sheet":"Marrakech","zone":"zone2","train_target_std":116.9488,"persistence_nrmse":0.3502,"daily_naive_nrmse":1.5172,"mlp_nrmse":{"[16,16]":1.0831,"[128,128]":0.5628,"[512]*5":0.413},"mlp_nmae":{"[16,16]":0.8579,"[128,128]":0.3393,"[512]*5":0.2454},"peak_cuda_gib":{"[16,16]":0.022,"[128,128]":0.049,"[512]*5":0.196},"decision":"cross out: malformed recurring timestamps and irregular intervals make the source chronology unreliable, even though the models do not saturate"}
+  ],
+  "overall_disposition": "Keep provisionally only the individual Foum eloued zone5 10-minute target as a hard, non-saturated fixed-window regression task. Cross out the other 14 ten-minute targets because persistence beats every tested MLP; cross out both Marrakech targets because their timestamps are malformed at every daily midnight and include additional irregular intervals. The workbook is genuinely open and anonymously downloadable, and its 17 routes are all numeric fixed-width MLP compatible, but only one series passes the task-utility screen. One 70/15/15 split, one seed, three representative architectures, and 30 epochs do not establish robust cross-split performance or ADP benefit."
+}

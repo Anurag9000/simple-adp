@@ -1,0 +1,89 @@
+{
+  "dataset": "Europe Offshore Wind Farms 40-Year Hourly Wind Speed and Electricity Production",
+  "screened_at": "2026-10-23",
+  "primary_record": "https://figshare.com/articles/dataset/Dataset_for_the_Paper_Analyzing_Europe_s_Biggest_Offshore_Wind_Farms_a_Data_set_With_40_Years_of_Hourly_Wind_Speeds_and_Electricity_Production_/19139648",
+  "doi": "10.6084/m9.figshare.19139648.v1",
+  "rights_and_access": {
+    "license": "CC BY 4.0 according to the Figshare public API record",
+    "attribution": "The files contain modified Copernicus Climate Change Service information (1980-2019); preserve the source attribution described in the README and dataset paper.",
+    "anonymous_byte_range_probes": {
+      "All_Power_Data.csv": {"status":206,"content_range":"bytes 0-0/95877884"},
+      "All_Windspeed_Data.csv": {"status":206,"content_range":"bytes 0-0/100291107"}
+    },
+    "full_payloads_downloaded": true,
+    "files": [
+      {"name":"All_Power_Data.csv","bytes":95877884,"sha256":"0925cf818c3afdd1ed33a18e407528429fcf00161ef20ae76607ab1ca1ddaa86","parsed_shape":[350640,31]},
+      {"name":"All_Windspeed_Data.csv","bytes":100291107,"sha256":"ae9714694f8da4ab93c5ef0cdb2cc7c744e1dfa98f65f82c88a84012f484d89f","parsed_shape":[350640,30]}
+    ],
+    "download_route": "Anonymous GET through the official Figshare downloader; no account, token or request form."
+  },
+  "payload_reconciliation": {
+    "official_description": "29 individual offshore farms, 350,640 hourly rows spanning 1980-01-01 00:00 UTC through 2019-12-31 23:00 UTC.",
+    "observed_rows": 350640,
+    "observed_power_columns": "An index, the 29 farm power series, and an extra `Total_Power` column.",
+    "observed_wind_columns": "An index plus the same 29 farm wind-speed series.",
+    "pilot_columns": "Only the 29 exactly matching farm-level power/wind column pairs were used. The extra aggregate `Total_Power` column was excluded from this per-farm screen.",
+    "data_semantics": "Power outputs are synthetic historical production signals generated from reanalysis weather and turbine power curves, not observed metered output."
+  },
+  "task_protocol": {
+    "task": "24-hour-ahead hourly synthetic power forecasting, one separate target per farm",
+    "inputs": "24 previous hourly power values and the corresponding 24 previous hourly wind-speed values for that farm (48 numeric inputs). No future wind/weather values or target-derived features are used.",
+    "target": "Next 24 hourly power outputs for the same farm (24 network outputs).",
+    "split": "Chronological row-order 70/15/15 split of the 350,640 source timestamps, with each complete 24-step target vector confined to its partition; a forecast window may use history from immediately before the partition boundary.",
+    "window_counts_train_validation_test": [245400,52574,52573],
+    "scaling": "Per-feature-position input mean/std and scalar target mean/std fit on the training windows only; apply to validation/test unchanged.",
+    "baselines": "Persistence repeats the final observed power value across 24 hours. Daily seasonal naive predicts the previous 24-hour power vector.",
+    "training": "Repository TabularMLP; CUDA full training partition as one batch per epoch; Adam lr=0.001, MSE, 30 epochs; lowest-validation-MSE checkpoint evaluated once on held-out test.",
+    "architectures_and_seeds": {"[16,16]":101,"[128,128]":102,"[512,512,512,512,512]":103},
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB"
+  },
+  "per_farm_results": [
+    {"farm":"London_Array","persistence_nrmse":0.891071,"daily_naive_nrmse":1.122894,"mlp_nrmse":{"[16,16]":0.953459,"[128,128]":0.797856,"[512]*5":0.768612},"mlp_nmae":{"[16,16]":0.860719,"[128,128]":0.643975,"[512]*5":0.613358}},
+    {"farm":"Greater_Gabbard","persistence_nrmse":0.873701,"daily_naive_nrmse":1.104385,"mlp_nrmse":{"[16,16]":0.949532,"[128,128]":0.787889,"[512]*5":0.757722},"mlp_nmae":{"[16,16]":0.84614,"[128,128]":0.633133,"[512]*5":0.6046}},
+    {"farm":"Gwynt_y_Mor","persistence_nrmse":0.866219,"daily_naive_nrmse":1.094138,"mlp_nrmse":{"[16,16]":0.942896,"[128,128]":0.779709,"[512]*5":0.752147},"mlp_nmae":{"[16,16]":0.8303,"[128,128]":0.623367,"[512]*5":0.595595}},
+    {"farm":"Gode_Wind","persistence_nrmse":0.86815,"daily_naive_nrmse":1.10074,"mlp_nrmse":{"[16,16]":0.953952,"[128,128]":0.781098,"[512]*5":0.75301},"mlp_nmae":{"[16,16]":0.854988,"[128,128]":0.628,"[512]*5":0.606999}},
+    {"farm":"Gemini","persistence_nrmse":0.911851,"daily_naive_nrmse":1.155515,"mlp_nrmse":{"[16,16]":0.959149,"[128,128]":0.801241,"[512]*5":0.775075},"mlp_nmae":{"[16,16]":0.848074,"[128,128]":0.630926,"[512]*5":0.608633}},
+    {"farm":"Race_Bank","persistence_nrmse":0.892661,"daily_naive_nrmse":1.130552,"mlp_nrmse":{"[16,16]":0.954358,"[128,128]":0.797412,"[512]*5":0.768643},"mlp_nmae":{"[16,16]":0.852222,"[128,128]":0.641373,"[512]*5":0.616552}},
+    {"farm":"Walney","persistence_nrmse":0.900755,"daily_naive_nrmse":1.133182,"mlp_nrmse":{"[16,16]":0.958244,"[128,128]":0.80067,"[512]*5":0.771034},"mlp_nmae":{"[16,16]":0.873754,"[128,128]":0.646629,"[512]*5":0.627474}},
+    {"farm":"Borkum_Riffgrund","persistence_nrmse":0.883382,"daily_naive_nrmse":1.124754,"mlp_nrmse":{"[16,16]":0.957772,"[128,128]":0.788675,"[512]*5":0.762342},"mlp_nmae":{"[16,16]":0.862729,"[128,128]":0.634129,"[512]*5":0.616909}},
+    {"farm":"Hohe_See","persistence_nrmse":0.879326,"daily_naive_nrmse":1.124769,"mlp_nrmse":{"[16,16]":0.95529,"[128,128]":0.784609,"[512]*5":0.756611},"mlp_nmae":{"[16,16]":0.860995,"[128,128]":0.633139,"[512]*5":0.605387}},
+    {"farm":"Horns_Rev","persistence_nrmse":0.885442,"daily_naive_nrmse":1.127148,"mlp_nrmse":{"[16,16]":0.96128,"[128,128]":0.792654,"[512]*5":0.763397},"mlp_nmae":{"[16,16]":0.866707,"[128,128]":0.643001,"[512]*5":0.611205}},
+    {"farm":"Beatrice","persistence_nrmse":0.908864,"daily_naive_nrmse":1.137977,"mlp_nrmse":{"[16,16]":0.960437,"[128,128]":0.804691,"[512]*5":0.775451},"mlp_nmae":{"[16,16]":0.860386,"[128,128]":0.652603,"[512]*5":0.619494}},
+    {"farm":"Borssele_(Phase_1,2)","persistence_nrmse":0.914897,"daily_naive_nrmse":1.144453,"mlp_nrmse":{"[16,16]":0.958388,"[128,128]":0.808439,"[512]*5":0.779615},"mlp_nmae":{"[16,16]":0.870038,"[128,128]":0.653621,"[512]*5":0.631728}},
+    {"farm":"Seamade","persistence_nrmse":0.907852,"daily_naive_nrmse":1.138851,"mlp_nrmse":{"[16,16]":0.957718,"[128,128]":0.805085,"[512]*5":0.775719},"mlp_nmae":{"[16,16]":0.869175,"[128,128]":0.650325,"[512]*5":0.62529}},
+    {"farm":"East_Anglia_One","persistence_nrmse":0.880527,"daily_naive_nrmse":1.114018,"mlp_nrmse":{"[16,16]":0.952009,"[128,128]":0.790697,"[512]*5":0.761558},"mlp_nmae":{"[16,16]":0.848321,"[128,128]":0.6366,"[512]*5":0.606119}},
+    {"farm":"Hornsea_(Project_1)","persistence_nrmse":0.895921,"daily_naive_nrmse":1.139632,"mlp_nrmse":{"[16,16]":0.955614,"[128,128]":0.794152,"[512]*5":0.764704},"mlp_nmae":{"[16,16]":0.863133,"[128,128]":0.641541,"[512]*5":0.611876}},
+    {"farm":"Borssele_(Phase_3,4)","persistence_nrmse":0.882949,"daily_naive_nrmse":1.11187,"mlp_nrmse":{"[16,16]":0.951936,"[128,128]":0.792743,"[512]*5":0.763679},"mlp_nmae":{"[16,16]":0.849987,"[128,128]":0.63839,"[512]*5":0.608953}},
+    {"farm":"Triton_Knoll","persistence_nrmse":0.891755,"daily_naive_nrmse":1.130736,"mlp_nrmse":{"[16,16]":0.954329,"[128,128]":0.797424,"[512]*5":0.767945},"mlp_nmae":{"[16,16]":0.853563,"[128,128]":0.642958,"[512]*5":0.620112}},
+    {"farm":"Kriegers_Flak","persistence_nrmse":0.906761,"daily_naive_nrmse":1.157224,"mlp_nrmse":{"[16,16]":0.964582,"[128,128]":0.801463,"[512]*5":0.772676},"mlp_nmae":{"[16,16]":0.878926,"[128,128]":0.651871,"[512]*5":0.621211}},
+    {"farm":"Hornsea_(Project_2)","persistence_nrmse":0.916925,"daily_naive_nrmse":1.161768,"mlp_nrmse":{"[16,16]":0.959068,"[128,128]":0.803762,"[512]*5":0.77797},"mlp_nmae":{"[16,16]":0.87309,"[128,128]":0.647142,"[512]*5":0.631352}},
+    {"farm":"Moray_Firth","persistence_nrmse":0.916265,"daily_naive_nrmse":1.143773,"mlp_nrmse":{"[16,16]":0.961617,"[128,128]":0.808346,"[512]*5":0.780124},"mlp_nmae":{"[16,16]":0.865723,"[128,128]":0.656383,"[512]*5":0.62417}},
+    {"farm":"Iles_dYeu_et_de_Noirmoutir","persistence_nrmse":0.92803,"daily_naive_nrmse":1.137666,"mlp_nrmse":{"[16,16]":0.964325,"[128,128]":0.820003,"[512]*5":0.794691},"mlp_nmae":{"[16,16]":0.860448,"[128,128]":0.663305,"[512]*5":0.636362}},
+    {"farm":"Baie_de_Saint_Brieuc","persistence_nrmse":0.900824,"daily_naive_nrmse":1.132117,"mlp_nrmse":{"[16,16]":0.958833,"[128,128]":0.806738,"[512]*5":0.777629},"mlp_nmae":{"[16,16]":0.858318,"[128,128]":0.652439,"[512]*5":0.627965}},
+    {"farm":"Hautes_Falaises","persistence_nrmse":0.864216,"daily_naive_nrmse":1.100622,"mlp_nrmse":{"[16,16]":0.951932,"[128,128]":0.785985,"[512]*5":0.753047},"mlp_nmae":{"[16,16]":0.841051,"[128,128]":0.62661,"[512]*5":0.603063}},
+    {"farm":"Hollandse_Kust_Zuid","persistence_nrmse":0.877461,"daily_naive_nrmse":1.103314,"mlp_nrmse":{"[16,16]":0.949591,"[128,128]":0.786094,"[512]*5":0.757766},"mlp_nmae":{"[16,16]":0.848384,"[128,128]":0.634352,"[512]*5":0.602629}},
+    {"farm":"Hollandse_Kust_Noord","persistence_nrmse":0.886081,"daily_naive_nrmse":1.122913,"mlp_nrmse":{"[16,16]":0.953548,"[128,128]":0.788596,"[512]*5":0.761274},"mlp_nmae":{"[16,16]":0.857498,"[128,128]":0.637741,"[512]*5":0.613284}},
+    {"farm":"Baltic_Eagle","persistence_nrmse":0.889882,"daily_naive_nrmse":1.137749,"mlp_nrmse":{"[16,16]":0.960543,"[128,128]":0.793738,"[512]*5":0.765293},"mlp_nmae":{"[16,16]":0.8612,"[128,128]":0.645185,"[512]*5":0.615396}},
+    {"farm":"Seagreen","persistence_nrmse":0.917711,"daily_naive_nrmse":1.153019,"mlp_nrmse":{"[16,16]":0.958861,"[128,128]":0.809462,"[512]*5":0.78125},"mlp_nmae":{"[16,16]":0.8623,"[128,128]":0.65706,"[512]*5":0.632525}},
+    {"farm":"Dieppe_et_Le_Treport","persistence_nrmse":0.890693,"daily_naive_nrmse":1.125123,"mlp_nrmse":{"[16,16]":0.955481,"[128,128]":0.798249,"[512]*5":0.766873},"mlp_nmae":{"[16,16]":0.861988,"[128,128]":0.644428,"[512]*5":0.619271}},
+    {"farm":"Dogger_Bank_(Phase_A,B)","persistence_nrmse":0.921802,"daily_naive_nrmse":1.167117,"mlp_nrmse":{"[16,16]":0.956688,"[128,128]":0.804672,"[512]*5":0.779541},"mlp_nmae":{"[16,16]":0.867464,"[128,128]":0.64722,"[512]*5":0.630608}}
+  ],
+  "capacity_and_difficulty": {
+    "training_windows_per_farm": 245400,
+    "largest_hidden_architecture": "[512,512,512,512,512]",
+    "measured_peak_cuda_gib_largest_model": 3.4112,
+    "available_cuda_gib": 5.6683,
+    "normalized_metric": "RMSE/MAE divided by the standard deviation of the training target values.",
+    "largest_model_test_nrmse_range": [0.752147,0.794691],
+    "largest_model_beats_persistence_on_all_29_farms": true,
+    "smallest_model_test_nrmse_range": [0.942896,0.964582],
+    "conclusion": "No tested architecture saturates: test errors remain substantial, and wider capacity systematically changes held-out error. The widest network improves on both simple baselines for all 29 farm tasks."
+  },
+  "limitations": [
+    "Power is synthetic, not observed metered generation; the benchmark tests weather-to-power-curve time series rather than an operational utility forecast.",
+    "One chronological split and one seed per architecture were screened; results are provisional and do not certify robustness to alternative splits, seeds, or forecast horizons.",
+    "The aggregate Total_Power column was not screened as a separate task.",
+    "No ADP controller, full vanilla grid, or central runner integration was tested."
+  ],
+  "disposition": "KEEP PROVISIONALLY as 29 individual, non-saturated 24-hour-ahead farm-level synthetic power forecasting tasks. Open license, anonymous complete retrieval, exact series matching, full-batch memory, three representative plain MLPs, chronological validation/test and baseline comparison all passed this screen. Preserve attribution to the dataset authors and modified Copernicus information."
+}

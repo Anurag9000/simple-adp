@@ -1,0 +1,65 @@
+{
+  "dataset": "UEA JapaneseVowels equal-length release",
+  "zenodo_record": "https://zenodo.org/records/18735628",
+  "uci_record": "https://archive.ics.uci.edu/dataset/236/japanese+vowels",
+  "uci_task_page": "https://kdd.ics.uci.edu/databases/JapaneseVowels/JapaneseVowels.task.html",
+  "access_right": "open",
+  "license": "CC BY 4.0 (Zenodo release and UCI record)",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "JapaneseVowels_eq_TRAIN.ts",
+      "bytes": 1617961,
+      "sha256": "54ca63bef8e67d6998a360401d1b0baeffe0de46a9f12f959c75c1a154db2ce7"
+    },
+    {
+      "file": "JapaneseVowels_eq_TEST.ts",
+      "bytes": 2219910,
+      "sha256": "31db42f917ead63088d83f1102e002047bcc163fc51963b9d49071d2902ef34f"
+    }
+  ],
+  "total_bytes": 3837871,
+  "parsed": {
+    "train_rows": 270,
+    "test_rows": 370,
+    "channels": 12,
+    "points_per_channel": 25,
+    "input_width": 300,
+    "classes": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    "train_class_counts": [30, 30, 30, 30, 30, 30, 30, 30, 30],
+    "test_class_counts": [31, 35, 88, 44, 29, 24, 40, 50, 29],
+    "missing_values": false,
+    "test_majority_accuracy": 0.2378378378
+  },
+  "task_note": "UCI describes the task as distinguishing nine male speakers by utterances of two Japanese vowels. The UEA Zenodo release supplies equal-length sequence variants; the original UCI sequences vary in length.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 270,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "None; fixed 100 epochs, official test used only for descriptive reporting, not epoch selection",
+    "preprocessing": "per-feature mean/std fitted on all 270 official training rows only",
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epoch_100_train_loss": 0.0013758992,
+        "epoch_100_test_accuracy": 0.9837837838,
+        "epoch_100_test_balanced_accuracy": 0.9822000796,
+        "epoch_100_test_macro_f1": 0.9823957566,
+        "epoch_100_test_cross_entropy": 0.0428410657
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epoch_100_train_loss": 0.0000000534,
+        "epoch_100_test_accuracy": 0.9729729730,
+        "epoch_100_test_balanced_accuracy": 0.9729087795,
+        "epoch_100_test_macro_f1": 0.9704101247,
+        "epoch_100_test_cross_entropy": 0.2433629036
+      }
+    ]
+  },
+  "disposition": "Cross out for near-ceiling test performance on both MLPs; not sufficiently difficult for the requested comparative benchmark."
+}

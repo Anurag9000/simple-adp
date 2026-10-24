@@ -1,0 +1,72 @@
+{
+  "dataset": "UWaveGestureLibrary",
+  "source_url": "https://www.timeseriesclassification.com/aeon-toolkit/UWaveGestureLibrary.zip",
+  "source_page": "https://www.timeseriesclassification.com/description.php?Dataset=UWaveGestureLibrary",
+  "downloaded_anonymously": true,
+  "bytes": 2972926,
+  "sha256": "c6a771794bb14a815e204307b7d7e85d7a8291ddb16626cb9460aa5a75b6e042",
+  "archive_entries": [
+    "UWaveGestureLibrary_TRAIN.ts",
+    "UWaveGestureLibrary_TEST.ts",
+    "UWaveGestureLibrary_TRAIN.arff",
+    "UWaveGestureLibrary_TEST.arff",
+    "UWaveGestureLibraryDimension1_TRAIN.arff",
+    "UWaveGestureLibraryDimension1_TEST.arff",
+    "UWaveGestureLibraryDimension2_TRAIN.arff",
+    "UWaveGestureLibraryDimension2_TEST.arff",
+    "UWaveGestureLibraryDimension3_TRAIN.arff",
+    "UWaveGestureLibraryDimension3_TEST.arff",
+    "UWaveGestureLibrary.txt",
+    "UWaveGestureLibrary.jpg"
+  ],
+  "parsed_multivariate_ts": {
+    "train_rows": 120,
+    "test_rows": 320,
+    "channels": 3,
+    "samples_per_channel": 315,
+    "input_width": 945,
+    "classes": 8,
+    "train_per_class": 15,
+    "test_per_class": 40
+  },
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 507,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "training_batch": "entire 96-row training partition",
+    "validation": "stratified 20% of official train; 3 rows per class (24 total)",
+    "scaling": "per-feature mean/std fitted on 96 training rows only",
+    "architectures": [
+      {
+        "hidden_widths": [
+          128,
+          128
+        ],
+        "best_validation_epoch": 13,
+        "train_loss_at_selected_epoch": 0.2492954,
+        "validation_accuracy": 0.9166667,
+        "official_test_accuracy": 0.83125,
+        "official_test_cross_entropy": 0.484576
+      },
+      {
+        "hidden_widths": [
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "best_validation_epoch": 22,
+        "train_loss_at_selected_epoch": 0.0136246,
+        "validation_accuracy": 0.9583334,
+        "official_test_accuracy": 0.840625,
+        "official_test_cross_entropy": 1.11624
+      }
+    ],
+    "limitation": "Single seed; validation has only 24 examples; test performance reported at validation-selected epoch; this is a screening pilot, not robust multi-fold evidence."
+  },
+  "rights_note": "Original uWave project README grants a nonexclusive, nontransferable license for commercial, educational, and/or research use and prohibits redistribution without written permission; this is not an open redistribution license."
+}

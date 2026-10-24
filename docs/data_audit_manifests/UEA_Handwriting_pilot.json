@@ -1,0 +1,64 @@
+{
+  "dataset": "UEA Handwriting (26-class smartwatch letter-motion classification)",
+  "zenodo_record": "https://zenodo.org/records/11206227",
+  "uea_page": "https://www.timeseriesclassification.com/description.php?Dataset=Handwriting",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "Handwriting_TRAIN.ts",
+      "bytes": 591601,
+      "sha256": "c187e2288bd7f0667ab7453de436feeadb5dd417c5778a6c62b71852b50736cc"
+    },
+    {
+      "file": "Handwriting_TEST.ts",
+      "bytes": 3343809,
+      "sha256": "156ee781ad41d58b4e5d48a907aef956f5a3756e1ab2d796c785db1a47863524"
+    }
+  ],
+  "total_bytes": 3935410,
+  "parsed": {
+    "train_rows": 150,
+    "test_rows": 850,
+    "channels": 3,
+    "points_per_channel": 152,
+    "input_width": 456,
+    "classes": 26,
+    "train_class_counts": [8, 6, 9, 4, 5, 9, 6, 2, 3, 7, 2, 5, 7, 4, 8, 5, 6, 6, 3, 5, 5, 10, 4, 4, 6, 11],
+    "test_class_counts": [36, 34, 29, 43, 34, 30, 29, 32, 27, 26, 25, 37, 40, 35, 29, 33, 32, 31, 33, 31, 34, 43, 32, 37, 26, 32],
+    "missing_values": false,
+    "test_majority_accuracy": 0.0505882353
+  },
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 150,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "None; fixed 100 epochs, official test used only for descriptive reporting, not epoch selection",
+    "preprocessing": "per-feature mean/std fitted on all 150 official training rows only",
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epoch_100_train_loss": 0.0036668186,
+        "epoch_100_test_accuracy": 0.2623529412,
+        "epoch_100_test_balanced_accuracy": 0.2577921583,
+        "epoch_100_test_macro_f1": 0.2426128690,
+        "epoch_100_test_cross_entropy": 4.9601311684
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epoch_100_train_loss": 0.0000043527,
+        "epoch_100_test_accuracy": 0.2094117647,
+        "epoch_100_test_balanced_accuracy": 0.2073061136,
+        "epoch_100_test_macro_f1": 0.1915993120,
+        "epoch_100_test_cross_entropy": 20.3624477386
+      }
+    ]
+  },
+  "provenance_limit": "UEA description refers to a smartwatch subject but does not expose subject/person identifiers in the rows; participant-held-out test status cannot be checked.",
+  "disposition": "Cross out from architecture comparison: only 150 train examples across 26 classes (2-11/class), very low train loss, weak test skill, and no verifiable group split make comparisons too unstable despite non-saturated scores."
+}

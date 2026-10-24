@@ -1,0 +1,62 @@
+{
+  "dataset": "UEA CharacterTrajectories, equal-length v2",
+  "zenodo_record": "https://zenodo.org/records/18723007",
+  "source_record": "https://archive.ics.uci.edu/dataset/175/character+trajectories",
+  "access_right": "open",
+  "license": "CC BY 4.0 (Zenodo version used)",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "CharacterTrajectories_eq_TRAIN.ts",
+      "bytes": 4746588,
+      "sha256": "e5e69cf178fd9282c10bc69dc542f4a1bc886107df64aa7bb2ac4d60a4864c28"
+    },
+    {
+      "file": "CharacterTrajectories_eq_TEST.ts",
+      "bytes": 4794123,
+      "sha256": "fde566a73f0e47f80b9a740214bf1f081c6d3e8e23964cf7089e670d50a2e091"
+    }
+  ],
+  "total_bytes": 9540711,
+  "parsed": {
+    "train_rows": 1422,
+    "test_rows": 1436,
+    "channels": 3,
+    "points_per_channel": 119,
+    "input_width": 357,
+    "classes": 20,
+    "missing_values": false,
+    "test_majority_accuracy": 0.06476323119777158
+  },
+  "provenance": "UCI states that all samples are from the same writer. The official train/test partitions therefore do not establish writer-independent generalization.",
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 1820,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "validation": "None; fixed 100 epochs, official test used only for descriptive reporting, not epoch selection",
+    "preprocessing": "per-feature mean/std fitted on all 1422 official training rows only",
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epoch_100_train_loss": 0.0167154744,
+        "epoch_100_test_accuracy": 0.9777158774,
+        "epoch_100_test_balanced_accuracy": 0.9766997461,
+        "epoch_100_test_macro_f1": 0.9767175262,
+        "epoch_100_test_cross_entropy": 0.1012714133
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epoch_100_train_loss": 0.0001545662,
+        "epoch_100_test_accuracy": 0.9742339833,
+        "epoch_100_test_balanced_accuracy": 0.9725491390,
+        "epoch_100_test_macro_f1": 0.9726749212,
+        "epoch_100_test_cross_entropy": 0.2025216818
+      }
+    ]
+  },
+  "disposition": "Cross out: both plain MLPs approach 97.4-97.8% test accuracy, and UCI documents that all samples come from one writer, so the benchmark is near-saturated and cannot establish writer-independent generalization."
+}

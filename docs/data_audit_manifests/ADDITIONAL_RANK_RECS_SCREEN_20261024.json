@@ -1,0 +1,104 @@
+{
+  "snapshot_date": "2026-10-24",
+  "scope": "Newly identified query-ranking and recommendation candidates screened for tabular dense-MLP fit, anonymous access, open terms, and the all-training-rows full-batch profile.",
+  "amazon_shopping_queries_esci": {
+    "source": "https://github.com/amazon-science/esci-data",
+    "license": "Apache-2.0",
+    "access_evidence": {
+      "repository_public": true,
+      "anonymous_payload_range_requests": [
+        {
+          "artifact": "shopping_queries_dataset_examples.parquet",
+          "url": "https://media.githubusercontent.com/media/amazon-science/esci-data/main/shopping_queries_dataset/shopping_queries_dataset_examples.parquet",
+          "http_status": 206,
+          "total_bytes": 51286808
+        },
+        {
+          "artifact": "shopping_queries_dataset_products.parquet",
+          "url": "https://media.githubusercontent.com/media/amazon-science/esci-data/main/shopping_queries_dataset/shopping_queries_dataset_products.parquet",
+          "http_status": 206,
+          "total_bytes": 1108857465
+        },
+        {
+          "artifact": "shopping_queries_dataset_sources.csv",
+          "url": "https://raw.githubusercontent.com/amazon-science/esci-data/main/shopping_queries_dataset/shopping_queries_dataset_sources.csv",
+          "http_status": 200,
+          "total_bytes": 1682802
+        }
+      ],
+      "full_payloads_downloaded": false
+    },
+    "tasks_and_splits": {
+      "task_1": "query-product grouped ranking, Exact/Substitute/Complement/Irrelevant graded relevance, official query-level train/test split",
+      "task_1_small_version": {
+        "train_rows": 781638,
+        "test_rows": 336373,
+        "unique_queries": 48300
+      },
+      "task_2_and_3_large_version": {
+        "train_rows": 1983272,
+        "test_rows": 638016,
+        "unique_queries": 130652
+      },
+      "input_schema": [
+        "query text",
+        "product title",
+        "description",
+        "bullet points",
+        "brand",
+        "color",
+        "IDs and locale"
+      ],
+      "official_count_note": "README prose gives 2,621,738 large-version judgments, but Table 2 total and the train+test split rows sum to 2,621,288; catalog uses the internally consistent table/split total."
+    },
+    "dense_mlp_fit": "Only after a text featurizer or handcrafted lexical feature pipeline; the official dataset does not supply a numeric query-product feature matrix. That is outside the tabular-only input contract.",
+    "full_batch_memory": {
+      "profile": "[512]*5 float32 hidden activations only, one entire training partition per batch",
+      "small_task_1_gib": 7.45,
+      "large_task_2_3_gib": 18.91,
+      "gpu_memory_gib": 6
+    },
+    "saturation_pilot": "Not run because tabular input contract and full-batch resource gates already fail.",
+    "disposition": "CROSS OUT: access and open-license gates pass; task requires text processing, and largest registered full-batch model exceeds GPU memory even for the reduced ranking version."
+  },
+  "yambda": {
+    "source": "https://huggingface.co/datasets/yandex/yambda",
+    "hub_api": {
+      "http_status": 200,
+      "private": false,
+      "gated": false,
+      "disabled": false,
+      "license": "Apache-2.0"
+    },
+    "anonymous_payload_range_request": {
+      "artifact": "flat/50m/multi_event.parquet",
+      "http_status": 206,
+      "range": "bytes 0-0"
+    },
+    "official_artifact_sizes": {
+      "flat/50m/multi_event.parquet": 384465869,
+      "flat/500m/multi_event.parquet": 3843474075,
+      "flat/5b/multi_event.parquet": 38230763570
+    },
+    "task_semantics": "Observed listens/likes/dislikes and other actions; no complete exposed candidate set or observed non-click labels. Event-type prediction is conceivable but is not a direct click/recommendation accuracy benchmark.",
+    "mlp_and_capacity": "IDs are high-cardinality and would require dense one-hot input for this plain MLP profile. Even the 50M-row artifact needs about 358 GiB for [512]*5 activations if a 75% training split is used (477 GiB if all 50M rows are training data), before inputs or gradients.",
+    "saturation_pilot": "Not run after task-semantics and hard full-batch resource failures.",
+    "disposition": "CROSS OUT for the supervised recommendation suite, despite public ungated Apache-2.0 access."
+  },
+  "ali_ccp": {
+    "source": "https://tianchi.aliyun.com/dataset/408",
+    "task": "click-through and conversion prediction from exposed ad contexts",
+    "reported_scale": {
+      "train_rows": 42000000,
+      "test_rows": 43000000,
+      "train_storage_gb": 10,
+      "test_storage_gb": 8
+    },
+    "access_and_rights": "Official Tianchi route. Tianchi platform agreement limits downloaded dataset use to scientific research and education, bars commercial activity, and defers to third-party terms; this does not meet the unrestricted open-license criterion. No anonymous direct artifact GET was verified.",
+    "mlp_compatibility": "Sparse feature-field/value rows can be parsed for a pointwise MLP, but dense one-hot conversion is extremely wide.",
+    "full_batch_memory": "42M train rows require about 400.5 GiB for [512]*5 float32 hidden activations alone.",
+    "saturation_pilot": "Not run after rights/access and resource failures.",
+    "disposition": "CROSS OUT."
+  },
+  "wands": "See WANDS_RANKING_MLP_SCREEN_20261024.json for complete anonymous checkout, hashes, row-level parsing, two full-batch vanilla MLP feature routes, metrics, and cross-out."
+}

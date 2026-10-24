@@ -1,0 +1,474 @@
+{
+  "audit_date": "2026-10-23",
+  "source": "Zenodo public REST API metadata for the exact TSML UEA 2018 record IDs listed in aeon-toolkit/aeon tsc_zenodo mapping",
+  "population": "the 30 UEA multivariate classification candidates named in docs/SUPPLEMENTAL_DATASET_COMPATIBILITY_AUDIT_2026-10-23.md",
+  "method": "anonymous GET of record metadata; confirms open access, declared license, file names and file byte counts. Existing one-byte anonymous range probes cover all 30 UEA archive problem URLs. This manifest does not claim complete payload transfer or parsing except where separate pilot manifests document it.",
+  "results": [
+    {
+      "dataset": "ArticularyWordRecognition",
+      "record_id": 11204924,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "ArticularyWordRecognition_TEST.ts",
+        "ArticularyWordRecognition_TRAIN.ts"
+      ],
+      "file_bytes": [
+        3148724,
+        2884471
+      ]
+    },
+    {
+      "dataset": "AtrialFibrillation",
+      "record_id": 11206175,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "AtrialFibrillation_TRAIN.ts",
+        "AtrialFibrillation_TEST.ts"
+      ],
+      "file_bytes": [
+        158521,
+        159342
+      ]
+    },
+    {
+      "dataset": "BasicMotions",
+      "record_id": 11206179,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "BasicMotions_TRAIN.ts",
+        "BasicMotions_TEST.ts"
+      ],
+      "file_bytes": [
+        227792,
+        227715
+      ]
+    },
+    {
+      "dataset": "CharacterTrajectories",
+      "record_id": 18723007,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "CharacterTrajectories_eq_TRAIN.ts",
+        "CharacterTrajectories_eq_TEST.ts",
+        "CharacterTrajectories_TEST.ts",
+        "CharacterTrajectories_TRAIN.ts"
+      ],
+      "file_bytes": [
+        4746588,
+        4794123,
+        10070994,
+        10010170
+      ]
+    },
+    {
+      "dataset": "Cricket",
+      "record_id": 11206185,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "Cricket_TEST.ts",
+        "Cricket_TRAIN.ts"
+      ],
+      "file_bytes": [
+        4264223,
+        6374234
+      ]
+    },
+    {
+      "dataset": "DuckDuckGeese",
+      "record_id": 11206189,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "DuckDuckGeese_TEST.ts",
+        "DuckDuckGeese_TRAIN.ts"
+      ],
+      "file_bytes": [
+        152960971,
+        152489148
+      ]
+    },
+    {
+      "dataset": "EigenWorms",
+      "record_id": 11206196,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "EigenWorms_TRAIN.ts",
+        "EigenWorms_TEST.ts"
+      ],
+      "file_bytes": [
+        129771958,
+        132845364
+      ]
+    },
+    {
+      "dataset": "Epilepsy",
+      "record_id": 11206204,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "Epilepsy_TEST.ts",
+        "Epilepsy_TRAIN.ts"
+      ],
+      "file_bytes": [
+        471837,
+        463710
+      ]
+    },
+    {
+      "dataset": "EthanolConcentration",
+      "record_id": 11206212,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "EthanolConcentration_TEST.ts",
+        "EthanolConcentration_TRAIN.ts"
+      ],
+      "file_bytes": [
+        10171799,
+        10105014
+      ]
+    },
+    {
+      "dataset": "ERing",
+      "record_id": 11206210,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "ERing_TEST.ts",
+        "ERing_TRAIN.ts"
+      ],
+      "file_bytes": [
+        805168,
+        90270
+      ]
+    },
+    {
+      "dataset": "FaceDetection",
+      "record_id": 11206216,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "FaceDetection_TRAIN.ts",
+        "FaceDetection_TEST.ts"
+      ],
+      "file_bytes": [
+        493652128,
+        295402468
+      ]
+    },
+    {
+      "dataset": "FingerMovements",
+      "record_id": 11206220,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "FingerMovements_TRAIN.ts",
+        "FingerMovements_TEST.ts"
+      ],
+      "file_bytes": [
+        2278167,
+        724312
+      ]
+    },
+    {
+      "dataset": "HandMovementDirection",
+      "record_id": 11206224,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "HandMovementDirection_TEST.ts",
+        "HandMovementDirection_TRAIN.ts"
+      ],
+      "file_bytes": [
+        3229786,
+        6976068
+      ]
+    },
+    {
+      "dataset": "Handwriting",
+      "record_id": 11206227,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "Handwriting_TEST.ts",
+        "Handwriting_TRAIN.ts"
+      ],
+      "file_bytes": [
+        3343809,
+        591601
+      ]
+    },
+    {
+      "dataset": "Heartbeat",
+      "record_id": 11206229,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "Heartbeat_TEST.ts",
+        "Heartbeat_TRAIN.ts"
+      ],
+      "file_bytes": [
+        44006251,
+        43796926
+      ]
+    },
+    {
+      "dataset": "JapaneseVowels",
+      "record_id": 18735628,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "JapaneseVowels_TRAIN.ts",
+        "JapaneseVowels_TEST.ts",
+        "JapaneseVowels_eq_TEST.ts",
+        "JapaneseVowels_eq_TRAIN.ts"
+      ],
+      "file_bytes": [
+        488332,
+        649593,
+        2219910,
+        1617961
+      ]
+    },
+    {
+      "dataset": "Libras",
+      "record_id": 11206239,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "Libras_TRAIN.ts",
+        "Libras_TEST.ts"
+      ],
+      "file_bytes": [
+        133343,
+        133315
+      ]
+    },
+    {
+      "dataset": "LSST",
+      "record_id": 11206243,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "LSST_TEST.ts",
+        "LSST_TRAIN.ts"
+      ],
+      "file_bytes": [
+        4013881,
+        4003924
+      ]
+    },
+    {
+      "dataset": "InsectWingbeat",
+      "record_id": 21871184,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "InsectWingbeat_TRAIN.ts",
+        "InsectWingbeat_eq_TRAIN.ts",
+        "InsectWingbeat_TEST.ts",
+        "InsectWingbeat_eq_TEST.ts"
+      ],
+      "file_bytes": [
+        298286832,
+        734148663,
+        297694481,
+        734251622
+      ]
+    },
+    {
+      "dataset": "MotorImagery",
+      "record_id": 11206246,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "MotorImagery_TRAIN.ts",
+        "MotorImagery_TEST.ts"
+      ],
+      "file_bytes": [
+        414951187,
+        122386618
+      ]
+    },
+    {
+      "dataset": "NATOPS",
+      "record_id": 11206248,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "NATOPS_TEST.ts",
+        "NATOPS_TRAIN.ts"
+      ],
+      "file_bytes": [
+        2119227,
+        2119514
+      ]
+    },
+    {
+      "dataset": "PenDigits",
+      "record_id": 11206259,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "PenDigits_TRAIN.ts",
+        "PenDigits_TEST.ts"
+      ],
+      "file_bytes": [
+        609014,
+        284981
+      ]
+    },
+    {
+      "dataset": "PEMS-SF",
+      "record_id": 11206252,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "PEMS-SF_TEST.ts",
+        "PEMS-SF_TRAIN.ts"
+      ],
+      "file_bytes": [
+        165185278,
+        254935750
+      ]
+    },
+    {
+      "dataset": "PhonemeSpectra",
+      "record_id": 11206261,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "PhonemeSpectra_TEST.ts",
+        "PhonemeSpectra_TRAIN.ts"
+      ],
+      "file_bytes": [
+        66825148,
+        66078480
+      ]
+    },
+    {
+      "dataset": "RacketSports",
+      "record_id": 11206263,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "RacketSports_TRAIN.ts",
+        "RacketSports_TEST.ts"
+      ],
+      "file_bytes": [
+        261503,
+        262999
+      ]
+    },
+    {
+      "dataset": "SelfRegulationSCP1",
+      "record_id": 11206265,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "SelfRegulationSCP1_TEST.ts",
+        "SelfRegulationSCP1_TRAIN.ts"
+      ],
+      "file_bytes": [
+        9389096,
+        8452683
+      ]
+    },
+    {
+      "dataset": "SelfRegulationSCP2",
+      "record_id": 11206269,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "SelfRegulationSCP2_TEST.ts",
+        "SelfRegulationSCP2_TRAIN.ts"
+      ],
+      "file_bytes": [
+        8349428,
+        9308948
+      ]
+    },
+    {
+      "dataset": "SpokenArabicDigits",
+      "record_id": 18734026,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "SpokenArabicDigits_eq_TEST.ts",
+        "SpokenArabicDigits_TRAIN.ts",
+        "SpokenArabicDigits_TEST.ts",
+        "SpokenArabicDigits_eq_TRAIN.ts"
+      ],
+      "file_bytes": [
+        36477261,
+        28266699,
+        9344215,
+        109467252
+      ]
+    },
+    {
+      "dataset": "StandWalkJump",
+      "record_id": 11206278,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "StandWalkJump_TEST.ts",
+        "StandWalkJump_TRAIN.ts"
+      ],
+      "file_bytes": [
+        809395,
+        648190
+      ]
+    },
+    {
+      "dataset": "UWaveGestureLibrary",
+      "record_id": 11206282,
+      "http": 200,
+      "access_right": "open",
+      "license": "cc-by-4.0",
+      "file_names": [
+        "UWaveGestureLibrary_TEST.ts",
+        "UWaveGestureLibrary_TRAIN.ts"
+      ],
+      "file_bytes": [
+        2445046,
+        918539
+      ]
+    }
+  ]
+}

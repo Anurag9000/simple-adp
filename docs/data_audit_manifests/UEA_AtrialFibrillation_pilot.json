@@ -1,0 +1,60 @@
+{
+  "dataset": "UEA AtrialFibrillation (AF termination classification)",
+  "zenodo_record": "https://zenodo.org/records/11206175",
+  "access_right": "open",
+  "license": "CC BY 4.0",
+  "downloaded_anonymously": true,
+  "files": [
+    {
+      "file": "AtrialFibrillation_TRAIN.ts",
+      "bytes": 158521,
+      "sha256": "1037b09c03dfc9d9d6af0a32208519ae4697f6c86083d80dd4f57f7fc1f2cdc9"
+    },
+    {
+      "file": "AtrialFibrillation_TEST.ts",
+      "bytes": 159342,
+      "sha256": "fed5ef4795417dd14513aa39233676d20f9dbc8d016acc71940ef3f74368ade7"
+    }
+  ],
+  "total_bytes": 317863,
+  "parsed": {
+    "train_rows": 15,
+    "test_rows": 15,
+    "channels": 2,
+    "points_per_channel": 640,
+    "input_width": 1280,
+    "classes": ["n", "s", "t"],
+    "train_per_class": 5,
+    "test_per_class": 5,
+    "missing_values": false
+  },
+  "pilot": {
+    "repo_model": "simple_adp.models.TabularMLP",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "seed": 750,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "fullbatch_each_epoch": true,
+    "preprocessing": "per-feature mean/std fitted on all 15 official training rows only",
+    "test_majority_accuracy": 0.3333333333333333,
+    "architectures": [
+      {
+        "hidden_widths": [128, 128],
+        "epoch_1_test_accuracy": 0.4666666666666667,
+        "epoch_100_train_loss": 0.0000012795,
+        "epoch_100_test_accuracy": 0.3333333333333333,
+        "best_test_accuracy_over_100_epochs_descriptive_only": 0.4666666666666667
+      },
+      {
+        "hidden_widths": [512, 512, 512, 512, 512],
+        "epoch_1_test_accuracy": 0.3333333333333333,
+        "epoch_100_train_loss": 0.0,
+        "epoch_100_test_accuracy": 0.26666666666666666,
+        "best_test_accuracy_over_100_epochs_descriptive_only": 0.3333333333333333
+      }
+    ],
+    "test_used_for_epoch_selection": false
+  },
+  "disposition": "Cross out: only 15 examples per split, no usable independent validation cohort, and near-zero train loss with no test generalization. Not a sufficiently supported difficult benchmark."
+}

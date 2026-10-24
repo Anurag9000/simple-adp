@@ -1,0 +1,172 @@
+{
+  "audit_date": "2026-10-24",
+  "suite_constraints": {
+    "full_training_partition_single_batch": true,
+    "largest_vanilla_architecture": [512, 512, 512, 512, 512],
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU, 6 GiB",
+    "assumed_train_fraction": 0.7,
+    "bytes_per_float": 4,
+    "hidden_activation_lower_bound_formula": "train_rows * 512 * 5 * 4 / 2^30"
+  },
+  "zenodo_ctr_collection": {
+    "record": "https://zenodo.org/records/2594012",
+    "record_currently_lists_files_as_open": true,
+    "record_rights_license_field": "blank",
+    "anonymous_file_listing_visible": true,
+    "anonymous_head_checks": {
+      "Avazu.zip": {"http_status": 200, "content_length_bytes": 1362361557},
+      "Criteo.zip": {"http_status": 200, "content_length_bytes": 4530568789},
+      "iPinYou.zip": {"http_status": 200, "content_length_bytes": 1179747615}
+    },
+    "full_payload_downloads_performed": false,
+    "important_correction": "Earlier supplemental text said CC BY 4.0 metadata. Current Zenodo record has no license in its Rights section; that prior statement is withdrawn.",
+    "candidates": [
+      {
+        "name": "Criteo Display Advertising Challenge CTR",
+        "archive": "Criteo.zip",
+        "artifact_url": "https://zenodo.org/records/2594012/files/Criteo.zip?download=1",
+        "listed_size": "4.5 GB",
+        "task": "binary click prediction on displayed-ad rows; directly compatible with a pointwise MLP if categorical IDs are one-hot encoded and label leakage is excluded",
+        "rows": 45840617,
+        "features": "13 numeric and 26 categorical fields plus click label",
+        "access": "Zenodo lists a public Download link; actual full anonymous GET not tested",
+        "rights": "Zenodo Rights/License blank; related Kaggle challenge terms apply to challenge release; no permissive data license established",
+        "resource": {
+          "assumed_train_rows": 32088432,
+          "512x5_activation_only_gib": 306.02
+        },
+        "difficulty": "Not empirically piloted. A direct click label and real impression rows are documented; held-out MLP non-saturation remains unverified.",
+        "disposition": "cross out for full-batch capacity and unresolved reuse rights; no pilot"
+      },
+      {
+        "name": "Avazu CTR",
+        "archive": "Avazu.zip",
+        "artifact_url": "https://zenodo.org/records/2594012/files/Avazu.zip?download=1",
+        "listed_size": "1.4 GB",
+        "task": "binary click prediction on mobile-ad rows; directly compatible with a pointwise MLP if categorical identifiers are one-hot encoded",
+        "rows": 40428967,
+        "features": "23 fields, mostly categorical, plus click label",
+        "access": "Zenodo lists a public Download link; actual full anonymous GET not tested",
+        "rights": "Zenodo Rights/License blank; upstream Kaggle challenge terms apply to original challenge data; no permissive data license established",
+        "resource": {
+          "assumed_train_rows": 28300277,
+          "512x5_activation_only_gib": 269.89
+        },
+        "difficulty": "Not empirically piloted. Source reports labeled click responses; no saturation claim is made.",
+        "disposition": "cross out for full-batch capacity and unresolved reuse rights; no pilot"
+      },
+      {
+        "name": "iPinYou RTB CTR",
+        "archive": "iPinYou.zip",
+        "artifact_url": "https://zenodo.org/records/2594012/files/iPinYou.zip?download=1",
+        "listed_size": "1.2 GB",
+        "task": "binary click prediction from impression/context rows; use only pre-outcome features and retain campaign/time groups",
+        "rows": 19500000,
+        "features": "bid request, user, publisher, ad-slot and campaign context; clicks are observed",
+        "official_split": "first seven days train, final three days test, by campaign",
+        "access": "Zenodo lists a public Download link; actual full anonymous GET not tested",
+        "rights": "Zenodo Rights/License blank; original paper says publicly released for research, not a permissive reuse license",
+        "resource": {
+          "assumed_train_rows": 13650000,
+          "512x5_activation_only_gib": 130.18
+        },
+        "difficulty": "Not empirically piloted. Rare click prevalence is reported (about 14.8k clicks of 19.5m impressions); difficulty and useful held-out learning remain unverified.",
+        "disposition": "cross out for full-batch capacity and unresolved reuse rights; no pilot"
+      }
+    ]
+  },
+  "openml_click_prediction_small": {
+    "api_base": "https://api.openml.org/api/v1/json/data/",
+    "visibility": "all listed records are public",
+    "api_license_text": "Public",
+    "interpretation": "The word Public describes visibility/access, not a standard open-data license. No upstream license permitting reuse was established for the KDD-derived versions.",
+    "full_payload_downloads_performed": false,
+    "variants": [
+      {
+        "openml_id": 1216,
+        "api_record": "https://api.openml.org/api/v1/json/data/1216",
+        "artifact_url": "https://openml.org/data/v1/download/183030/Click_prediction_small.arff",
+        "version": 1,
+        "rows": 1496391,
+        "features_reported": 10,
+        "class_count": 2,
+        "anonymous_head": {"http_status": 200, "content_length_bytes": 107976482},
+        "source_or_description": "Source unspecified; click prediction on ads in search engine",
+        "assumed_train_rows": 1047474,
+        "512x5_activation_only_gib": 9.99,
+        "disposition": "cross out for full-batch capacity and absent reuse license"
+      },
+      {
+        "openml_id": 1217,
+        "api_record": "https://api.openml.org/api/v1/json/data/1217",
+        "artifact_url": "https://openml.org/data/v1/download/183039/Click_prediction_small.arff",
+        "version": 2,
+        "rows": 149639,
+        "features_reported": 12,
+        "class_count": 2,
+        "anonymous_head": {"http_status": 200, "content_length_bytes": 10797134},
+        "source_or_description": "Even smaller sample of version 1; source unspecified",
+        "assumed_train_rows": 104747,
+        "512x5_activation_only_gib": 1.00,
+        "disposition": "cross out for absent reuse license and unverified dense categorical/full-batch fit"
+      },
+      {
+        "openml_id": 1218,
+        "api_record": "https://api.openml.org/api/v1/json/data/1218",
+        "artifact_url": "https://openml.org/data/v1/download/183150/Click_prediction_small.arff",
+        "version": 3,
+        "rows": 1997410,
+        "features_reported": 12,
+        "class_count": 2,
+        "anonymous_head": {"http_status": 200, "content_length_bytes": 144186634},
+        "source_or_description": "Balanced version; source unspecified",
+        "assumed_train_rows": 1398187,
+        "512x5_activation_only_gib": 13.33,
+        "disposition": "cross out for full-batch capacity and absent reuse license"
+      },
+      {
+        "openml_id": 1219,
+        "api_record": "https://api.openml.org/api/v1/json/data/1219",
+        "artifact_url": "https://openml.org/data/v1/download/183151/Click_prediction_small.arff",
+        "version": 4,
+        "rows": 399482,
+        "features_reported": 12,
+        "class_count": 2,
+        "anonymous_head": {"http_status": 200, "content_length_bytes": 28837287},
+        "source_or_description": "1% KDD Cup 2012 Track 2 sample, majority downsampled to about 5:1",
+        "assumed_train_rows": 279637,
+        "512x5_activation_only_gib": 2.67,
+        "disposition": "cross out for absent upstream reuse license and unverified dense-ID full-batch fit"
+      },
+      {
+        "openml_id": 1220,
+        "api_record": "https://api.openml.org/api/v1/json/data/1220",
+        "artifact_url": "https://openml.org/data/v1/download/184157/Click_prediction_small.arff",
+        "version": 5,
+        "rows": 39948,
+        "features_reported": 10,
+        "class_count": 2,
+        "anonymous_head": {"http_status": 200, "content_length_bytes": 2886080},
+        "source_or_description": "0.1% balanced KDD Cup 2012 sample; about 5:1 class ratio; identifier-like fields are not typed nominally in this version",
+        "assumed_train_rows": 27964,
+        "512x5_activation_only_gib": 0.27,
+        "disposition": "cross out for absent upstream reuse license and unverified full-batch fit after correct categorical encoding"
+      },
+      {
+        "openml_id": 42733,
+        "api_record": "https://api.openml.org/api/v1/json/data/42733",
+        "artifact_url": "https://openml.org/data/v1/download/22044769/Click_prediction_small.arff",
+        "version": 10,
+        "rows": 39948,
+        "features_reported": 12,
+        "class_count": 2,
+        "anonymous_head": {"http_status": 200, "content_length_bytes": 4188745},
+        "source_or_description": "same observations as ID 1220, with identifier fields coded as nominal factors",
+        "assumed_train_rows": 27964,
+        "512x5_activation_only_gib": 0.27,
+        "disposition": "cross out for absent upstream reuse license and unverified full-batch fit after one-hot expansion"
+      }
+    ],
+    "difficulty": "The sampled KDD variants report a roughly 5:1 label ratio; no MLP pilot was run, so non-saturation is unverified. The 0.1% variants are also highly reduced samples and cannot stand in for the full challenge benchmark."
+  }
+}
