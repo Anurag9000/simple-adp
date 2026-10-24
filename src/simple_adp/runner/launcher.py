@@ -24,7 +24,16 @@ from .logging_context import configure_console_logging
 
 LOG = logging.getLogger("simple_adp.launcher")
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_DATASET_SUITES = "cc18,tabzilla,ctr23"
+# Keep the default coordinated comparison small and task-balanced: one
+# literature-backed dataset per supported task family. Add ``@task_id`` to a
+# provider suite selector to restrict a multi-task suite to a single task.
+DEFAULT_DATASET_SUITES = (
+    "tabzilla@168335,ctr23@361242,"
+    "monash:aus-electricity-demand@monash-aus-electricity-demand-h28,"
+    "uci_sequence:hapt@uci-hapt-per-step-activity,"
+    "physionet_ecg:mitdb@mitdb-aami-beat-classification,"
+    "movielens:ml-1m,odds:annthyroid@odds-annthyroid-supervised-anomaly"
+)
 
 
 def _parse_value(raw: str) -> Any:
@@ -51,7 +60,7 @@ def _argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--set", dest="overrides", action="append", default=[], metavar="KEY=VALUE", help="override any setting using JSON scalar/list syntax")
     parser.add_argument(
         "--dataset-suites", default=DEFAULT_DATASET_SUITES,
-        help="comma-separated suite names (bare names use OpenML) or provider:suite selectors",
+        help="comma-separated suite names (bare names use OpenML) or provider:suite selectors; append @task_id to select one task from a suite",
     )
     parser.add_argument("--output")
     parser.add_argument("--run-root")
@@ -323,12 +332,18 @@ def main(argv: list[str] | None = None) -> int:
                 for suite in getattr(provider, "suites", ())
             ) or provider_suites
         available = {}
-        for provider, suite in provider_suites:
+        for provider, selector in provider_suites:
             if provider not in providers:
                 continue
-            key = f"{provider}:{suite}" if provider != "openml" else suite
+            suite, separator, selected_task_id = selector.partition("@")
+            if not suite or (separator and (not selected_task_id or "@" in selected_task_id)):
+                parser.error(f"invalid dataset selector {provider}:{selector}")
+            key = f"{provider}:{selector}" if provider != "openml" else selector
             try:
-                available[key] = [ref.task_id for ref in providers[provider].list_tasks(suite)]
+                refs = providers[provider].list_tasks(suite)
+                if selected_task_id:
+                    refs = [ref for ref in refs if str(ref.task_id) == selected_task_id]
+                available[key] = [ref.task_id for ref in refs]
             except RuntimeError as exc:
                 # OpenML task IDs are fetched from its live suite API. Listing
                 # the locally registered catalog should still work when the

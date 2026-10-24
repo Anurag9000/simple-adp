@@ -56,6 +56,18 @@ Summarize finished runs with `simple-adp-benchmark-report benchmark-results/hard
 
 The package now has adapter and deterministic framing primitives for fixed-window forecasting, per-step labeling, event classification, grouped ranking, supervised anomaly labels, and rating-derived preference labels. Enabled source providers include UCI Electricity (128 lags, next interval, all meters, stride 24 on its long series), Monash Australian Electricity Demand (horizons 1, 7, and 28), PhysioNet MIT-BIH and LTDB (AAMI beat classes, record-level splits), NAB v1.1, UCI HAPT (raw six-channel sensor data and per-step 128-sample windows with disjoint subjects), 24 individually inventoried ODDS supervised anomaly artifacts, and MovieLens 100K/1M as rating, rating-derived preference, and per-user grouped-ranking tasks. Source archives and PhysioNet record files are cached under `~/.cache/simple-adp/datasets` by default (override with `SIMPLE_ADP_DATA_CACHE`); run manifests store source digests and provenance. The Monash Australian Electricity Demand archive is CC BY 4.0; NAB files retain their individual upstream terms, so NAB is not represented as having one blanket data license. Install `simple-adp[physionet]` to load MIT-BIH/LTDB WFDB records and `simple-adp[odds]` (SciPy and h5py) to read ODDS MATLAB v5/v7 and v7.3 MAT files. ODDS does not state a separate license for its derived MAT artifacts; catalog entries record this and original-source terms separately, and this package does not redistribute those artifacts. MovieLens preference means a rating threshold of 4, not a click label. Per-user splits are chronological 80/10/10 and the ranking sampler keeps each training user's group intact. UCI forecasting splits by target position in 70/10/20 chronological order, so targets do not cross partition boundaries.
 
+### Default coordinated comparison: one representative dataset per task
+
+`simple-adp-suite` defaults to the task-balanced dataset selection in [`docs/REPRESENTATIVE_BENCHMARK_PROFILE.md`](docs/REPRESENTATIVE_BENCHMARK_PROFILE.md): MiniBooNE classification, Superconductivity regression, Monash Australian Electricity Demand at horizon 28, UCI HAPT sequence labeling, MIT-BIH Arrhythmia beat/event classification, MovieLens 1M for rating/preference/ranking, and ODDS Annthyroid supervised anomaly classification. This is one dataset per task family; MovieLens 1M is reused across its three rating-derived recommendation objectives. The full OpenML and provider catalogs remain available by passing `--dataset-suites` explicitly. Select one task from any multi-task provider suite with `provider:suite@task_id` (for example, `monash:aus-electricity-demand@monash-aus-electricity-demand-h28`).
+
+Launch the selected pressure-aware comparison with:
+
+```bash
+scripts/run_representative_pressure_aware_suite.sh
+```
+
+This uses the runner's complete configured comparison matrix on each selected task: all registered ADP configurations (both generic-search profiles), the full 50-architecture vanilla MLP grid, and its configured screening routes. The pressure-aware scheduler coordinates the jobs. Add normal suite CLI arguments after the script name to set limits or override dataset selectors; the wider dataset providers remain registered and selectable.
+
 List currently registered sources with `simple-adp-suite --list-suites`. To explicitly include the existing OpenML pools and every enabled provider suite, including all 24 individually inventoried ODDS MAT artifacts, launch with:
 
 ```bash

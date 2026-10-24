@@ -312,18 +312,31 @@ class SuitePlan:
             )
         ]
         routes = [route for _adapter, route in adapter_routes]
-        provider_suites: list[tuple[DatasetProvider, str]] = []
-        for provider_name, suite in dataset_suites:
+        provider_suites: list[tuple[DatasetProvider, str, str | None]] = []
+        for provider_name, selector in dataset_suites:
             if provider_name not in provider_by_name:
                 raise ValueError(f"dataset provider {provider_name!r} was not registered")
-            provider_suites.append((provider_by_name[provider_name], suite))
+            suite, separator, selected_task_id = selector.partition("@")
+            if not suite or (separator and not selected_task_id) or (separator and "@" in selected_task_id):
+                raise ValueError(
+                    f"invalid dataset selector {provider_name}:{selector!s}; "
+                    "expected provider:suite or provider:suite@task_id"
+                )
+            provider_suites.append((provider_by_name[provider_name], suite, selected_task_id or None))
 
         # Keep only prepared split metadata after inspecting each provider.
         # Retaining every materialized task can hold gigabytes of windows in a
         # complete temporal suite plan.
         task_inputs: list[tuple[DatasetProvider, DatasetTaskRef, list[SplitSpec]]] = []
-        for provider, suite in provider_suites:
+        for provider, suite, selected_task_id in provider_suites:
             refs = provider.list_tasks(suite)
+            if selected_task_id is not None:
+                refs = [ref for ref in refs if str(ref.task_id) == selected_task_id]
+                if len(refs) != 1:
+                    raise ValueError(
+                        f"dataset selector {provider.name}:{suite}@{selected_task_id} "
+                        f"matched {len(refs)} task(s); expected exactly one"
+                    )
             if settings.task_limit is not None:
                 refs = refs[:settings.task_limit]
             if not refs:
