@@ -70,3 +70,31 @@ File naming alone cannot distinguish a legitimate comparison from a hyperparamet
 ### Reproducible next verification
 
 From a clean checkout at the pinned SHA, inspect the native CLI and run the **planning-only** command above. Archive the plan JSON/CSV, resolved configurations, rejected/skipped cells with reasons, input dataset identities, seed list, and source revision. Compare method/dataset/protocol membership with this inventory; only then calculate **exact distinct jobs** versus **execution records**. Execution is a separate operator action. Do not automatically download datasets or treat optional provider availability as success.
+
+
+## ADP variance-stagnation counterparts (added after the historical snapshot above)
+
+The *current* authoritative `SuitePlan.build` emits an opt-in
+`__bgd_variance_stagnation` counterpart for every materialized, non-screening
+ADP growth-capable route, preserving the original route, dataset task, split,
+seed, candidate training settings, budget and validation-acceptance objective.
+The counterpart has its own run ID, job directory, result artifacts and
+checkpoint. The worker uses an **auxiliary shadow diagonal-BGD variance
+observer** while leaving Adam/AdamW as the weight optimizer. The growth
+proposal gate is non-contraction of that estimated posterior; loss still
+selects and retains candidate architectures.
+
+Fixed MLP and screening controls do not create fake growth counterparts.
+This implementation is defined in the source files
+`src/simple_adp/shadow_bgd_variance.py`,
+`src/simple_adp/training.py`,
+`src/simple_adp/dedicated.py`,
+`src/simple_adp/generic_search.py` and
+`src/simple_adp/runner/plan.py`. See
+[variance counterpart ledger](BGD_VARIANCE_STAGNATION_JOB_LEDGER.md).
+
+**Implementation and verification are separate.** Earlier counts in this
+document refer to the pinned historical snapshot, *not* a successful run
+at the current `main`. Generate a real native plan and test each
+model/dataset/adapter/resume route before declaring exhaustive execution
+coverage. No scientific training completion is claimed here.
