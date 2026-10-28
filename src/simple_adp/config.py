@@ -101,6 +101,7 @@ class SearchSettings:
     lambda_ineq: float = 0.0
     max_candidates: int = 0
     min_new_layer_width: int = 1
+    expansion_criterion: Literal["loss", "variance_stagnation"] = "loss"
     seed: int = 0
     device: str = "cpu"
 
@@ -135,6 +136,8 @@ class SearchSettings:
             raise ValueError("grad_clip must be positive when set")
         if self.max_candidates < 0:
             raise ValueError("max_candidates cannot be negative")
+        if self.expansion_criterion not in {"loss", "variance_stagnation"}:
+            raise ValueError("unknown ADP expansion criterion")
 
     def as_dict(self) -> dict[str, object]:
         return {

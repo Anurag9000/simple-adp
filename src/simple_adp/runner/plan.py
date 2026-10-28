@@ -513,6 +513,45 @@ class SuitePlan:
                                 tmp.write_text(json.dumps(spec.as_dict(), indent=2, sort_keys=True, default=_json_default) + "\n", encoding="utf-8")
                                 tmp.replace(spec_path)
                             run_specs.append(spec)
+        # Scientific one-to-one matched counterparts for every materialized
+        # adaptive route. Screening and fixed-model controls are not growth jobs.
+        # Reuse the exact dataset split and model RNG seed. Only the separate
+        # shadow-posterior expansion gate is changed.
+        alternatives: list[RunSpec] = []
+        for original in run_specs:
+            if original.route.screening_only or original.route.model_id == "MLP-Fixed":
+                continue
+            alternate_id = replace(
+                original.identity,
+                model_route=original.identity.model_route + "__bgd_variance_stagnation",
+            )
+            alternate_spec_path = (
+                runtime_root / "jobs" / alternate_id.run_id / "run_spec.json"
+            )
+            alternative = replace(
+                original,
+                identity=alternate_id,
+                result_dir=str(result_root / alternate_id.run_id),
+                worker_settings={
+                    **original.worker_settings,
+                    "expansion_criterion": "variance_stagnation",
+                    "counterpart_of": original.identity.run_id,
+                    "variance_posterior": "shadow_bgd_sigma_not_exact_bayes",
+                },
+                command=(sys.executable, "-m", "simple_adp.runner.worker",
+                         "--spec", str(alternate_spec_path)),
+            )
+            alternatives.append(alternative)
+            alternate_spec_path.parent.mkdir(parents=True, exist_ok=True)
+            if not alternate_spec_path.exists():
+                temp = alternate_spec_path.with_suffix(".tmp")
+                temp.write_text(
+                    json.dumps(alternative.as_dict(), indent=2, sort_keys=True,
+                               default=_json_default) + "\n",
+                    encoding="utf-8",
+                )
+                temp.replace(alternate_spec_path)
+        run_specs.extend(alternatives)
         selected = run_specs[max(0, settings.job_start_index):]
         if settings.job_limit > 0:
             selected = selected[: settings.job_limit]

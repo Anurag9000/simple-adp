@@ -40,6 +40,11 @@ class GenericCandidateSearch:
         self.mutation_id = mutation_id or "builtin"
         self.artifact_store = artifact_store
         self.context: dict[str, object] = {}
+        self._variance_stagnated = False
+
+    def _growth_ready(self) -> bool:
+        return (self.settings.expansion_criterion == "loss"
+                or bool(self._variance_stagnated))
 
     def _commit_candidate(
         self,
@@ -115,7 +120,9 @@ class GenericCandidateSearch:
         return candidate
 
     def _stage(self, model, arrays, *, resume_state=None):
-        return self._stage_runner(model, arrays, generic=True, resume_state=resume_state, search_context=dict(self.context))
+        stage = self._stage_runner(model, arrays, generic=True, resume_state=resume_state, search_context=dict(self.context))
+        self._variance_stagnated = bool(stage.variance_stagnated)
+        return stage
 
     def run(
         self,
@@ -305,6 +312,8 @@ class GenericCandidateSearch:
             resume_failures = 0
             patience = settings.patience_width_exp if phase == "width" else settings.patience_depth_exp
             while failures < patience:
+                if not self._growth_ready():
+                    break
                 if settings.max_candidates and candidate_count >= settings.max_candidates:
                     break
                 if phase == "width":

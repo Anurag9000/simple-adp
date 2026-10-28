@@ -136,6 +136,7 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         lambda_ineq=float(settings_value.get("lambda_ineq", 0.0)),
         max_candidates=int(settings_value.get("max_candidates", 0)),
         min_new_layer_width=int(settings_value.get("min_new_layer_width", 1)),
+        expansion_criterion=str(settings_value.get("expansion_criterion", "loss")),
         seed=identity.seed,
         device=device,
     )

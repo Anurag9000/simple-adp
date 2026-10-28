@@ -26,12 +26,19 @@ class DedicatedController:
         self.settings = settings
         self._stage_runner = stage_runner
         self.context: dict[str, object] = {}
+        self._variance_stagnated = False
+
+    def _growth_ready(self) -> bool:
+        return (self.settings.expansion_criterion == "loss"
+                or bool(self._variance_stagnated))
 
     def _stage(self, model, arrays, *, resume_state=None):
-        return self._stage_runner(
+        stage = self._stage_runner(
             model, arrays, generic=False, resume_state=resume_state,
             search_context=dict(self.context),
         )
+        self._variance_stagnated = bool(stage.variance_stagnated)
+        return stage
 
     def run(self, initial: TabularMLP, arrays, config: ModelConfig, *, fixed_grid=None, resume_payload=None) -> SearchResult:
         if config.controller == "lgnd":
@@ -94,6 +101,8 @@ class DedicatedController:
                 raise ValueError(f"cannot resume width controller from phase {phase!r}")
         while ((greedy and not stop_greedy_after_resumed_failure)
                or (not greedy and failures < settings.patience_width_exp)):
+            if not self._growth_ready():
+                break
             if greedy:
                 # The source LG-ND helper estimates capacity as if all layers
                 # grew, even when a caller manually selects RR mutation.
@@ -192,6 +201,8 @@ class DedicatedController:
             else:
                 raise ValueError(f"cannot resume depth controller from phase {phase!r}")
         while failures < settings.patience_depth_exp:
+            if not self._growth_ready():
+                break
             if resumed_progressive:
                 candidate = current
                 while candidate.hidden_widths[-1] < progressive_start_width:
@@ -451,6 +462,8 @@ class DedicatedController:
                 resume_inner_round = True
 
         while width_failures < settings.patience_width_exp:
+            if not self._growth_ready():
+                break
             if resume_inner_round:
                 # The interrupted candidate has already been scored above.
                 before_round_best = float(resume_context["before_round_best"])
@@ -475,6 +488,8 @@ class DedicatedController:
                 depth_failures = 0
 
             while depth_failures < settings.patience_depth_exp:
+                if not self._growth_ready():
+                    break
                 depth_seed_width = (
                     current.hidden_widths[-1]
                     if seed_new_depth_to_current_width else 1

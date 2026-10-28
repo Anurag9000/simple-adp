@@ -13,6 +13,7 @@ from .checkpoint import capture_rng_state, restore_rng_state
 from .config import SearchSettings
 from .models import TabularMLP
 from .tasks import TaskAdapter
+from .shadow_bgd_variance import ShadowBGDVariance
 
 
 @dataclass
@@ -23,6 +24,8 @@ class StageResult:
     batches: int
     checkpoint_state: dict[str, object]
     last_snapshot: dict[str, object] | None = None
+    variance_stagnated: bool = False
+    posterior_contraction: float | None = None
 
 
 class StageTrainer:
@@ -131,6 +134,8 @@ class StageTrainer:
             raise ValueError(f"task {type(self.task).__name__} requires validation context {group_key!r}")
         if len(x_train) == 0 or len(x_valid) == 0:
             raise ValueError("training and validation splits must be non-empty")
+        shadow = (ShadowBGDVariance(seed=settings.seed)
+                  if settings.expansion_criterion == "variance_stagnation" else None)
         optimizer = self._optimizer(model)
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
             optimizer,
@@ -171,6 +176,11 @@ class StageTrainer:
                 raw_plan = resume_state.get("batch_plan")
                 batch_plan = copy.deepcopy(raw_plan) if isinstance(raw_plan, list) else None
                 batches_done = int(resume_state.get("batches_done", 0))
+                if shadow is not None:
+                    saved_shadow = resume_state.get("shadow_bgd_variance")
+                    if saved_shadow is None:
+                        raise ValueError("variance-stagnation stage checkpoint has no BGD shadow state")
+                    shadow.load_state_dict(saved_shadow)
                 generator.set_state(resume_state["generator_state"])  # type: ignore[arg-type]
                 rng_state = resume_state.get("rng_state")
                 if not isinstance(rng_state, dict) or not all(
@@ -204,6 +214,7 @@ class StageTrainer:
                 "generator_state": generator.get_state(),
                 "rng_state": capture_rng_state(),
                 "batches_done": batches_done,
+                "shadow_bgd_variance": None if shadow is None else shadow.state_dict(),
                 "stage_status": "active",
             }
 
@@ -255,6 +266,21 @@ class StageTrainer:
                 if self.optimizer_kind == "adamw" and settings.grad_clip is not None:
                     nn.utils.clip_grad_norm_(model.parameters(), settings.grad_clip)
                 optimizer.step()
+                if shadow is not None:
+                    if self.use_penalties:
+                        def shadow_loss(out, targets):
+                            return self.task.adp_search_loss(
+                                out, targets,
+                                lambda_loss=settings.lambda_loss,
+                                lambda_eq=settings.lambda_eq,
+                                lambda_ineq=settings.lambda_ineq,
+                                context=batch_context,
+                            )
+                    else:
+                        def shadow_loss(out, targets):
+                            return (self.task.loss(out, targets) if batch_context is None
+                                    else self.task.loss(out, targets, context=batch_context))
+                    shadow.observe(model, xb, yb, shadow_loss)
                 batches_done += 1
                 batch_cursor = batch_index + 1
                 if self.checkpoint_callback is not None:
@@ -307,4 +333,9 @@ class StageTrainer:
             batches_done,
             final,
             last_snapshot,
+            False if shadow is None else (
+                shadow.observations >= shadow.patience
+                and shadow.streak >= shadow.patience
+            ),
+            None if shadow is None else shadow.contraction,
         )
