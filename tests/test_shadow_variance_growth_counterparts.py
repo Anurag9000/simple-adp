@@ -50,3 +50,20 @@ def test_variance_gates_are_opt_in_for_both_search_families():
 def test_invalid_expansion_criterion_rejected():
     with pytest.raises(ValueError):
         SearchSettings(expansion_criterion="random_noise")
+
+
+def test_shadow_preserves_mixed_child_train_eval_modes():
+    model = torch.nn.Sequential(
+        torch.nn.Linear(3, 6),
+        torch.nn.ReLU(),
+        torch.nn.Dropout(0.25),
+        torch.nn.Linear(6, 2),
+    )
+    model.train()
+    model[2].eval()
+    before = [child.training for child in model.modules()]
+    x = torch.randn(12, 3)
+    target = torch.randint(0, 2, (12,))
+    monitor = ShadowBGDVariance(mc_samples=2, seed=7)
+    monitor.observe(model, x, target)
+    assert [child.training for child in model.modules()] == before
