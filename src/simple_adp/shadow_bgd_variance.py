@@ -60,7 +60,7 @@ class ShadowBGDVariance:
             return False
         before = {n: t.clone() for n, t in self.sigma.items()}
         cross = {n: torch.zeros_like(t) for n, t in before.items()}
-        model_training = model.training
+        module_modes = {module: module.training for module in model.modules()}
         buffer_state = {n: b.detach().clone() for n, b in model.named_buffers()}
         try:
             model.eval()
@@ -90,7 +90,10 @@ class ShadowBGDVariance:
                         if grad is not None:
                             cross[n] += grad.detach() * eps[n] / self.mc_samples
         finally:
-            model.train(model_training)
+            # Restore every child independently: calling model.train(mode)
+            # would overwrite intentionally mixed training/eval submodules.
+            for module, was_training in module_modes.items():
+                module.training = was_training
         contraction_sum = 0.0
         total = 0
         new_sigma = {}
