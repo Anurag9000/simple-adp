@@ -83,3 +83,23 @@ coverage evidence, not as proof that any job executed.
 
 The OpenML plan tests now assert original route counts and separately
 paired ADP growth counts while excluding screening/fixed controls.
+
+
+## Executed CPU regression evidence — 29 October 2026
+
+At source commit `27b9297011945d01a687a7b1d1498dd53aaf5021`,
+GitHub Actions workflow
+`Standalone ADP original-versus-variance contracts` completed
+successfully:
+https://github.com/Anurag9000/simple-adp/actions/runs/40880236237
+
+Executed on an Ubuntu Python 3.11 CPU runner with Torch 2.6.0.
+The actual test command covered
+`tests/test_shadow_variance_growth_counterparts.py` and
+`tests/test_runner_openml_provider_plan.py`:
+**17 passed in 3.55 seconds** (job succeeded).
+These tests validate targeted source mechanisms, sampled shadow-BGD
+behavior and matched suite-plan construction, not complete OpenML
+training, all original/alternate jobs, fault-injected checkpoint
+equivalence or GPU execution. The job-wide completed count remains
+zero until individually recorded experiment artifacts are verified.
