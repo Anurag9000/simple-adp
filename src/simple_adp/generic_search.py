@@ -311,7 +311,8 @@ class GenericCandidateSearch:
             failures = resume_failures if phase_index == phase_start else 0
             resume_failures = 0
             patience = settings.patience_width_exp if phase == "width" else settings.patience_depth_exp
-            while failures < patience:
+            while (settings.expansion_criterion == "variance_stagnation"
+                   or failures < patience):
                 if not self._growth_ready():
                     break
                 if settings.max_candidates and candidate_count >= settings.max_candidates:

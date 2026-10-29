@@ -46,3 +46,22 @@ No claims are made for fabricated data combinations, missing datasets,
 completed training runs, or validation of every custom adapter.
 The variance-stagnation threshold is a research heuristic, not a proved
 ADP expansion rule from the BGD/FOO-VB papers.
+
+
+## Corrected loss-patience interference (2026-10-29)
+
+Both source-native controller families previously checked the
+shadow-BGD growth permission but *also* terminated their width,
+depth and nested search loops when source **validation-loss failure**
+patience was exhausted. Under a variance-stagnation counterpart that
+was a second, unintended loss-based growth criterion. The generic
+and dedicated controller loops now use loss-failure termination
+**only for the original `expansion_criterion="loss"` jobs**.
+Variance counterparts continue only while the most recent stage's
+actual auxiliary posterior measurements report persistent non-
+contraction and an architecture candidate fits the original capacity
+or max-candidate budget. Candidate retention, global best and
+validation scoring remain unchanged. See
+`tests/test_shadow_variance_growth_counterparts.py::
+test_variance_criterion_not_cut_short_by_original_loss_patience`.
+This is source-level testing, not evidence of full trained-job parity.

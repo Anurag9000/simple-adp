@@ -99,8 +99,9 @@ class DedicatedController:
                     stop_greedy_after_resumed_failure = greedy
             else:
                 raise ValueError(f"cannot resume width controller from phase {phase!r}")
-        while ((greedy and not stop_greedy_after_resumed_failure)
-               or (not greedy and failures < settings.patience_width_exp)):
+        while (settings.expansion_criterion == "variance_stagnation"
+               or ((greedy and not stop_greedy_after_resumed_failure)
+                   or (not greedy and failures < settings.patience_width_exp))):
             if not self._growth_ready():
                 break
             if greedy:
@@ -145,7 +146,7 @@ class DedicatedController:
                 failures = 0
             else:
                 failures += 1
-                if greedy:
+                if greedy and settings.expansion_criterion == "loss":
                     break
         return SearchResult(best, best_score, history, {
             "width_failures": failures,
@@ -200,7 +201,8 @@ class DedicatedController:
                         failures += 1
             else:
                 raise ValueError(f"cannot resume depth controller from phase {phase!r}")
-        while failures < settings.patience_depth_exp:
+        while (settings.expansion_criterion == "variance_stagnation"
+               or failures < settings.patience_depth_exp):
             if not self._growth_ready():
                 break
             if resumed_progressive:
@@ -461,7 +463,8 @@ class DedicatedController:
                     depth_failures += 1
                 resume_inner_round = True
 
-        while width_failures < settings.patience_width_exp:
+        while (settings.expansion_criterion == "variance_stagnation"
+               or width_failures < settings.patience_width_exp):
             if not self._growth_ready():
                 break
             if resume_inner_round:
@@ -487,7 +490,8 @@ class DedicatedController:
                 current = widened
                 depth_failures = 0
 
-            while depth_failures < settings.patience_depth_exp:
+            while (settings.expansion_criterion == "variance_stagnation"
+                   or depth_failures < settings.patience_depth_exp):
                 if not self._growth_ready():
                     break
                 depth_seed_width = (

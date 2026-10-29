@@ -67,3 +67,50 @@ def test_shadow_preserves_mixed_child_train_eval_modes():
     monitor = ShadowBGDVariance(mc_samples=2, seed=7)
     monitor.observe(model, x, target)
     assert [child.training for child in model.modules()] == before
+
+
+def test_variance_criterion_not_cut_short_by_original_loss_patience():
+    from types import SimpleNamespace
+    from simple_adp.config import ModelConfig
+    from simple_adp.models import TabularMLP
+
+    def simulate(controller_cls, model_config, criterion):
+        visits = []
+        def stage(model, arrays, **kwargs):
+            del arrays, kwargs
+            visits.append(tuple(model.hidden_widths))
+            # No validation improvement: loss-driven greed/patience stops.
+            # Posterior non-contraction continues until the third stage.
+            return SimpleNamespace(
+                best_score=1.0,
+                best_snapshot=model.snapshot(),
+                variance_stagnated=len(visits) < 3,
+            )
+        settings = SearchSettings(
+            init_width=1, init_depth=1, max_width=8, max_depth=3,
+            max_neurons=20, patience_width_exp=1, max_candidates=5,
+            expansion_criterion=criterion,
+        )
+        controller = controller_cls(settings, stage) if controller_cls is DedicatedController else (
+            controller_cls(settings, "corrected", stage)
+        )
+        result = controller.run(
+            TabularMLP(3, [1], 2), None, model_config
+        )
+        return result, visits
+
+    greedy = ModelConfig(id="LGND", controller="lgnd", order="width")
+    generic = ModelConfig(id="GENERIC", controller="phase_search",
+                          order="width", generic=True)
+    for cls, config in (
+        (DedicatedController, greedy),
+        (GenericCandidateSearch, generic),
+    ):
+        base, original_visits = simulate(cls, config, "loss")
+        alt, variance_visits = simulate(cls, config, "variance_stagnation")
+        assert len(original_visits) == 2
+        assert len(variance_visits) == 3
+        # The original loss-selection objective still retains the initial
+        # architecture, even when the variance criterion trials more growth.
+        assert base.model.hidden_widths == [1]
+        assert alt.model.hidden_widths == [1]
