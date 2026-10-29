@@ -26,6 +26,8 @@ _EXPORTS = {
     "DedicatedController": "dedicated",
     "TabularADP": "estimator",
     "VisualADPEstimator": "visual",
+    "FrozenVisionEncoder": "vision_encoders",
+    "create_frozen_vision_encoder": "vision_encoders",
     "ImagePartitions": "vision_data",
     "make_image_partitions": "vision_data",
     "load_torchvision_partitions": "vision_data",

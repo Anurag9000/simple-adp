@@ -8,7 +8,7 @@ States distinguish source/static implementation from executed tests and science.
 | V01 frozen image feature -> native ADP MLP head | runtime-tested (bounded CPU) | src/simple_adp/visual.py |
 | V01 actual candidate growth | runtime-tested (bounded CPU) | delegates to native TabularADP; tests/test_visual_v01.py |
 | V01 fixed non-growing control | runtime-tested (bounded CPU) | MLP-Fixed native route, tested in new test |
-| V01 pretrained ResNet/ViT/ConvNeXt concrete model loaders | missing | encoder supplied externally; no weights auto-download |
+| V01 concrete torchvision ResNet18/ConvNeXt-tiny/ViT-B16 frozen encoder construction | static-complete pending CI | vision_encoders.py; local-only optional weights, trained origins not asserted |
 | V01 packaged estimator export | static-complete | src/simple_adp/__init__.py |
 | CIFAR-10/CIFAR-100/Fashion-MNIST optional loader | runtime-tested API on offline synthetic arrays (not real datasets) | vision_data.py, torchvision optional; no real dataset execution | 
 | V01 opt-in coordinated runner and signed split jobs | static-complete pending CI | runner/vision.py, plan.py, plugins.py, tests/test_runner_vision.py; toy and offline image provider only |

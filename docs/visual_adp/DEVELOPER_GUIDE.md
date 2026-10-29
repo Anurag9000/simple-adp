@@ -92,3 +92,31 @@ can bound per-partition samples; full metadata/checksums are signed into jobs.
 
 **Scope caution:** This runner route is V01 fixed-encoder random-weight
 experimental control only; V02–V11 interior MLP growth is not yet wired.
+
+## Concrete torchvision frozen backbones (no model downloads)
+
+```python
+from simple_adp import create_frozen_vision_encoder, VisualADPEstimator
+
+encoder, info = create_frozen_vision_encoder(
+    "resnet18", weights_path="./my_exact_source_state_dict.pth",
+    expected_weights_sha256="the sha256 of the local file",
+    normalization="imagenet",
+)
+# info carries the weights-file digest and frozen-encoder state digest.
+# Load full torchvision-source model state_dicts before its classifier is
+# removed. A checkpoint file alone is *not* proof of actual pretraining:
+# the caller must independently document training data and provenance.
+# Pass encoder_id=info["architecture_id"], weights_id=info["weights_id"],
+# pool=info["pool"], and a validated dataset manifest to VisualADPEstimator.
+```
+
+Supported architecture identifiers: `resnet18`, `convnext_tiny`,
+`vit_b_16`. The ViT-B/16 factory rejects any non-224x224 resolution.
+ResNet18/ConvNeXt-tiny accept >=32-pixel spatial dimensions under their
+native model constraints. No downloaded weights are fetched; if no
+`weights_path` is supplied, initialization is deterministic random and is
+explicitly labeled as such. Pretrained models using the `imagenet`
+normalization expect input pixel values [0,1] and normalize internally.
+V01 still trains/grows only the dense classifier head, not source CNN/ViT
+blocks or native FFNs.

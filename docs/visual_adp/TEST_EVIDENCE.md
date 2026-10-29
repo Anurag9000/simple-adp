@@ -24,3 +24,12 @@ scientific result has been executed in this increment.
 - Visual ADP V01, new image split tests, and legacy core: https://github.com/Anurag9000/simple-adp/actions/runs/40919599860 — **success**, 30 passed in 5.67s.
 - Original-versus-variance contracts: https://github.com/Anurag9000/simple-adp/actions/runs/40919599981 — **success**.
 - Evidence level: offline synthetic image tests, native ADP head training, V01 save/load, deterministic partition tests, core regressions. Real torchvision dataset files and pretrained weight downloads were not used.
+
+## Second opt-in coordinated worker CI (verified)
+- Commit: 94be53aef5d7a96da88ea2942bb85069a9b2023a
+- Run: https://github.com/Anurag9000/simple-adp/actions/runs/40921830940
+- **Success, 226 passed in 24.48s** across V01 runner, plugin, model,
+  visual estimator, image split, and original core tests.
+- Failed prior attempts revealed systemd re-exec in pytest and a scientifically
+  invalid variance counterpart for third-party adapters; both were fixed.
+- Concrete pretrained-model factory tests remain pending CI on the next commit.
