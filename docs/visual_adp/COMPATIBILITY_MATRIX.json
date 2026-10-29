@@ -12,11 +12,11 @@
     },
     {
       "architecture": "V02",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "native RR/all-layer/DEN-RR width and D1/Dcur depth candidate operators only; no canonical controllers yet",
+      "site": "adapter:block1",
+      "criterion": "native StageTrainer loss (variance observer not yet paired)",
+      "status": "partial (candidate StageTrainer and native mutation; coordinated search unsupported)",
+      "reason": "No canonical search-controller proposal/acceptance/global-best/resume and no signed runner route."
     },
     {
       "architecture": "V03",

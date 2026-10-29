@@ -120,3 +120,23 @@ explicitly labeled as such. Pretrained models using the `imagenet`
 normalization expect input pixel values [0,1] and normalize internally.
 V01 still trains/grows only the dense classifier head, not source CNN/ViT
 blocks or native FFNs.
+
+## Research-only V02 inner-CNN residual adapter candidate
+
+```python
+from simple_adp import ResidualAdapterSpec, VisualResidualAdapter
+spec = ResidualAdapterSpec(input_channels=3, backbone_channels=6,
+                           local_dim=4, classes=2,
+                           image_height=8, image_width=9)
+model = VisualResidualAdapter(spec, (3, 3))
+# Full-image forward: model(image_tensor_NCHW) -> [N, 2]
+# Only local MLP coordinates grow; the CNN/post modules stay exactly frozen.
+expanded = model.grow_width(site_id="adapter:block1",
+                             operator="round_robin", increment=1,
+                             max_width=5)
+# Source StageTrainer(task, settings).train_stage(...) supports this model;
+# full canonical 14-method search and coordinated V02 jobs are NOT yet wired.
+```
+
+See `tests/test_visual_inner_v02.py` for full-image gradient and local
+mutation, frozen-state, depth phase and StageTrainer checks.

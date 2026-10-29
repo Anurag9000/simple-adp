@@ -45,3 +45,14 @@ hashed and loaded strictly before removing classifier heads. A provided local
 checkpoint is not automatically certified as pretrained. The coordinated runner
 continues to use its tiny random frozen CNN control: these explicit factories
 are available through the package API, not yet native runner configurations.
+
+## Experimental V02 residual inner-MLP candidate
+src/simple_adp/visual_inner.py introduces VisualResidualAdapter with a
+frozen-CNN/adapter/frozen-CNN composite forward and source-local TabularMLP
+mutation (RR, all-layer, DEN-RR, D1, Dcur). Unlike V01 cached embeddings,
+all candidate training is on full image tensors, with frozen *downstream*
+operations left in autograd. StageTrainer is already duck-typed and accepts
+this composite model; canonical DedicatedController/GenericCandidateSearch
+still assume TabularMLP restoration and have **not** been generalized to V02.
+This is a partial candidate-level implementation; no V02 runner job is yet
+allowed by the official compatibility matrix.

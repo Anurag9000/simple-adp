@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'src/simple_adp/visual.py'
+      - 'src/simple_adp/visual_inner.py'
       - 'src/simple_adp/runner/vision.py'
       - 'src/simple_adp/runner/plan.py'
       - 'src/simple_adp/runner/plugins.py'
@@ -11,6 +12,7 @@ on:
       - 'src/simple_adp/vision_encoders.py'
       - 'src/simple_adp/__init__.py'
       - 'tests/test_visual_v01.py'
+      - 'tests/test_visual_inner_v02.py'
       - 'tests/test_runner_vision.py'
       - 'tests/test_vision_data.py'
       - 'tests/test_vision_encoders.py'
@@ -25,4 +27,4 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -e '.[dev,vision]'
-      - run: python -m pytest -q tests/test_runner_vision.py tests/test_runner_plugins.py tests/test_runner_models.py tests/test_visual_v01.py tests/test_vision_data.py tests/test_vision_encoders.py tests/test_core.py
+      - run: python -m pytest -q tests/test_runner_vision.py tests/test_runner_plugins.py tests/test_runner_models.py tests/test_visual_v01.py tests/test_vision_data.py tests/test_vision_encoders.py tests/test_visual_inner_v02.py tests/test_core.py
