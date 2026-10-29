@@ -134,7 +134,11 @@ def test_openml_provider_plans_every_listed_task_for_registered_suite(
         model_adapters=(SimpleADPModelAdapter(),),
     )
 
-    assert len(plan.runs) == 2 * 15  # two task IDs × three width-only models × five depths
+    # Each of the 15 ADP growth routes has its original and variance
+    # counterpart on each of the two benchmark tasks.
+    assert len(plan.runs) == 2 * 15 * 2
+    assert plan.manifest["variance_pair_audit"]["eligible_original_growth_runs"] == 2 * 15
+    assert plan.manifest["variance_pair_audit"]["matched_variance_counterparts"] == 2 * 15
     assert {run.task_ref.task_id for run in plan.runs} == {"101", "203"}
     assert {run.task_ref.dataset_id for run in plan.runs} == {"1101", "1203"}
     assert {run.route.suite_group for run in plan.runs} == {"width_only"}
@@ -219,14 +223,33 @@ def test_openml_plan_crosses_every_task_with_every_registered_model_route(
         model_adapters=(adapter,),
     )
 
-    assert len(plan.runs) == len(task_ids) * len(expected_routes)
+    adaptive_routes = [
+        route for route in expected_routes
+        if not route.screening_only
+        and route.suite_group not in {"screening", "vanilla"}
+        and route.model_id != "MLP-Fixed"
+    ]
+    assert len(plan.runs) == len(task_ids) * (
+        len(expected_routes) + len(adaptive_routes)
+    )
     expected_route_records = sorted(
         json.dumps(route.as_dict(), sort_keys=True) for route in expected_routes
     )
     for task_id in (str(value) for value in task_ids):
         task_runs = [run for run in plan.runs if run.task_ref.task_id == task_id]
-        assert len(task_runs) == len(expected_routes)
-        assert sorted(json.dumps(run.route.as_dict(), sort_keys=True) for run in task_runs) == expected_route_records
+        originals = [run for run in task_runs
+                     if "counterpart_of" not in run.worker_settings]
+        alternatives = [run for run in task_runs
+                        if "counterpart_of" in run.worker_settings]
+        assert len(originals) == len(expected_routes)
+        assert len(alternatives) == len(adaptive_routes)
+        assert sorted(json.dumps(run.route.as_dict(), sort_keys=True)
+                      for run in originals) == expected_route_records
+        parent_ids = {run.identity.run_id for run in originals}
+        assert {run.worker_settings["counterpart_of"]
+                for run in alternatives} <= parent_ids
+        assert all(run.worker_settings["expansion_criterion"] == "variance_stagnation"
+                   for run in alternatives)
         assert {run.identity.split_sha256 for run in task_runs} == {split_hash}
         assert all(run.identity.suite == suite for run in task_runs)
         for split_path in {run.split_file for run in task_runs}:

@@ -65,3 +65,21 @@ validation scoring remain unchanged. See
 `tests/test_shadow_variance_growth_counterparts.py::
 test_variance_criterion_not_cut_short_by_original_loss_patience`.
 This is source-level testing, not evidence of full trained-job parity.
+
+
+## Native unsliced plan completeness check
+
+`SuitePlan.build` now checks every concrete eligible ADP growth
+job *before* applying `job_start_index` or `job_limit`. Each must
+have exactly one alternative with the same task/dataset, split
+fingerprint, model adapter, architecture strategy, seed and original
+training configuration, differing only by the explicit shadow
+variance criterion and its provenance fields. Duplicate run identities
+or unmatched original growth jobs fail plan construction.
+Fixed vanilla and screening routes are classified by their
+source-defined `suite_group`, not only one historic model name.
+The native manifest includes `variance_pair_audit` as source-backed
+coverage evidence, not as proof that any job executed.
+
+The OpenML plan tests now assert original route counts and separately
+paired ADP growth counts while excluding screening/fixed controls.

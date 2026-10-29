@@ -519,7 +519,7 @@ class SuitePlan:
         # shadow-posterior expansion gate is changed.
         alternatives: list[RunSpec] = []
         for original in run_specs:
-            if original.route.screening_only or original.route.model_id == "MLP-Fixed":
+            if route_group(original.route) in {"vanilla", "screening"}:
                 continue
             alternate_id = replace(
                 original.identity,
@@ -551,7 +551,44 @@ class SuitePlan:
                     encoding="utf-8",
                 )
                 temp.replace(alternate_spec_path)
+        # Audit the *unsliced* concrete source jobs. A selected scheduler
+        # subset can legitimately contain only one member of a matched pair.
+        originals = {
+            spec.identity.run_id: spec
+            for spec in run_specs
+            if route_group(spec.route) not in {"vanilla", "screening"}
+        }
+        matched = {}
+        for alternative in alternatives:
+            parent = alternative.worker_settings.get("counterpart_of")
+            if parent not in originals or parent in matched:
+                raise RuntimeError(
+                    "missing or duplicate source ADP variance pair: "
+                    + str(parent)
+                )
+            original = originals[parent]
+            if (alternative.identity.seed != original.identity.seed
+                    or alternative.identity.split_sha256
+                       != original.identity.split_sha256
+                    or alternative.task_ref != original.task_ref
+                    or alternative.model_adapter != original.model_adapter
+                    or alternative.route != original.route
+                    or alternative.split_file != original.split_file
+                    or alternative.identity.run_id == parent):
+                raise RuntimeError("ADP variance pair changed matched scientific inputs")
+            baseline_settings = dict(alternative.worker_settings)
+            for criterion_field in (
+                "expansion_criterion", "counterpart_of", "variance_posterior"
+            ):
+                baseline_settings.pop(criterion_field, None)
+            if baseline_settings != original.worker_settings:
+                raise RuntimeError("ADP variance pair changed native training settings")
+            matched[parent] = alternative.identity.run_id
+        if set(originals) != set(matched):
+            raise RuntimeError("unpaired original ADP growth jobs in native suite plan")
         run_specs.extend(alternatives)
+        if len({spec.identity.run_id for spec in run_specs}) != len(run_specs):
+            raise RuntimeError("duplicate original or variance ADP execution identities")
         selected = run_specs[max(0, settings.job_start_index):]
         if settings.job_limit > 0:
             selected = selected[: settings.job_limit]
@@ -562,6 +599,12 @@ class SuitePlan:
             "run_root": str(runtime_root),
             "python_executable": os.path.realpath(sys.executable),
             "job_count": len(selected),
+            "variance_pair_audit": {
+                "eligible_original_growth_runs": len(originals),
+                "matched_variance_counterparts": len(matched),
+                "unpaired_originals": 0,
+                "verification": "source-plan-only; training and resume not yet verified",
+            },
             "jobs": [spec.as_dict() for spec in selected],
         }
         manifest["manifest_digest"] = manifest_compatibility_digest(manifest)
