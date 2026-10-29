@@ -1,12 +1,12 @@
 {
   "version": 1,
   "source_main": "a2e6b6325a80ca6da41b1898ebf71c6ec8829a62",
-  "note": "No new central-runner vision jobs registered yet; executable V01 estimator is separate.",
+  "note": "V01 opt-in vision provider/model adapter conditionally registers 14 native ADP route identities, with paired variance gate jobs (except fixed). Pending end-to-end CI; no pretrained-backbone or scientific result.",
   "architectures": [
     {
       "id": "V01",
-      "central_runner_jobs": 0,
-      "implementation": "standalone_estimator_static",
+      "central_runner_jobs": "conditional; 14 configs with two generic profiles where native; criteria paired for growth; exact count depends on run settings",
+      "implementation": "v01_frozen_random_cnn_native_head_plus_opt_in_coordinated_runner_pending_CI",
       "scientifically_executed": false
     },
     {

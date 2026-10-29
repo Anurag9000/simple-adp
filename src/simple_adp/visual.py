@@ -9,7 +9,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 import numpy as np
 import torch
@@ -151,7 +151,8 @@ class VisualADPEstimator:
         return features
 
     def fit(self, images: Any, labels: Any, *, validation_data: tuple[Any, Any],
-            checkpoint_path: str | os.PathLike[str] | None = None) -> "VisualADPEstimator":
+            checkpoint_path: str | os.PathLike[str] | None = None,
+            progress_callback: Callable[[dict[str, object]], None] | None = None) -> "VisualADPEstimator":
         if not isinstance(validation_data, tuple) or len(validation_data) != 2:
             raise ValueError("explicit validation_data=(images,labels) is required")
         train = self.features(images)
@@ -173,7 +174,7 @@ class VisualADPEstimator:
                 tmp.write_text(json.dumps(expected, sort_keys=True, indent=2), encoding="utf-8")
                 os.replace(tmp, sidecar)
         self.head.fit(train, labels, validation_data=(valid, validation_data[1]),
-                      checkpoint_path=checkpoint_path)
+                      checkpoint_path=checkpoint_path, progress_callback=progress_callback)
         self._verify_frozen()
         return self
 

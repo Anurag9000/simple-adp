@@ -10,7 +10,7 @@ This is an incremental evidence ledger, not a claim that the full vision suite i
 - src/simple_adp/tasks.py: TaskAdapter classification/regression objective, target encoding, validation selection, and reporting.
 - src/simple_adp/estimator.py: TabularADP preprocessing, native search controller, checkpoints, fit/predict/save/load. The V01 frozen-feature route delegates to this API without changing its semantics.
 - src/simple_adp/runner/models.py: ModelRegistry plus SimpleADPModelAdapter enumerate_routes/fit_predict; assumes TabularTaskData and TabularADP.
-- src/simple_adp/runner/datasets.py: DatasetProvider, DatasetRegistry, PreparedTaskData. Vision provider is not yet registered.
+- src/simple_adp/runner/datasets.py: DatasetProvider, DatasetRegistry, PreparedTaskData. Explicit opt-in V01 provider and adapter live in runner/vision.py.
 - src/simple_adp/runner/plan.py: SuitePlan and RunIdentity with provider/suite/task/split/route signatures.
 - src/simple_adp/config.py, generic_search.py, dedicated.py: native ADP method settings, generic/dedicated controllers and variance-stagnation criteria.
 
@@ -26,13 +26,14 @@ For V02-V11, inserting a local MLP inside a composite requires passing the whole
 image model through candidate train/evaluation, with fixed downstream differentiable
 layers kept in autograd. SearchController, StageTrainer, model snapshots, candidate
 mutation, and runner remain TabularMLP-specific. Replacing a module in place without
-those integrations is **not** a complete ADP route. Runner vision job registration,
-raw-image provider, stable split manifests, real CIFAR training, whole-repo regression
-execution, and full serial-depth parity are not yet implemented in this increment.
+those integrations is **not** a complete ADP route. A V01 opt-in runner provider, signed splits, and matched method/criterion jobs
+now have static code and a worker smoke test awaiting CI. Real CIFAR training,
+pretrained backbones, inner-network growth, whole-repo regression execution,
+and full serial-depth parity are not yet implemented in this increment.
 
 ## Additional opt-in image preparation surface
 src/simple_adp/vision_data.py adds torchvision dataset loading and deterministic
 classwise source-train/validation partitioning, preserving official test
-isolation and recording raw checksums and original indices. This is an
-installed package API, not yet a DatasetRegistry implementation or a runner
-job. The optional torchvision extra does not affect existing dependencies.
+isolation and recording raw checksums and original indices. This is an installed package API. Separately, runner/vision.py adds an
+experimental opt-in DatasetRegistry provider and model adapter for the V01
+frozen random tiny-conv control, with data-isolated runner jobs. The optional torchvision extra does not affect existing dependencies.

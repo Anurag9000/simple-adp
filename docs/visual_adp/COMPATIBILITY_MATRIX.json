@@ -7,8 +7,8 @@
       "methods": "all 14 through native TabularADP API subject to standard settings",
       "site": "frozen-embedding head",
       "criterion": "native selected controller as configured",
-      "status": "conditional (not runner-integrated)",
-      "reason": "V01 needs externally supplied encoder and datasets; runtime tests not yet verified"
+      "status": "conditional (opt-in runner V01 toy and local image data; CI pending)",
+      "reason": "Frozen random CNN toy runner supports native TabularADP only. Supplied-encoder path supports external pretrained weights; no native built-in pretrained model loader, real datasets or scientific runs validated."
     },
     {
       "architecture": "V02",

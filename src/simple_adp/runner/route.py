@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Literal
 
-SuiteGroup = Literal["width_only", "width_to_depth", "depth_to_width", "depth_only", "vanilla", "screening"]
+SuiteGroup = Literal["width_only", "width_to_depth", "depth_to_width", "depth_only", "vanilla", "screening", "vision"]
 
 
 @dataclass(frozen=True, slots=True)

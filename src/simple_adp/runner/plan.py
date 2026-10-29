@@ -277,7 +277,7 @@ class SuitePlan:
             if route.screening_only:
                 return "screening"
             if route.suite_group is not None:
-                allowed = {"width_only", "width_to_depth", "depth_to_width", "depth_only", "vanilla", "screening"}
+                allowed = {"width_only", "width_to_depth", "depth_to_width", "depth_only", "vanilla", "screening", "vision"}
                 if route.suite_group not in allowed:
                     raise ValueError(f"model route {route.route_label!r} has unsupported suite group {route.suite_group!r}")
                 return route.suite_group
@@ -309,6 +309,10 @@ class SuitePlan:
             ) or (
                 route_group(route) in requested_tasks
                 and route_groups.get(route_group(route), False)
+            ) or (
+                route_group(route) == "vision"
+                and "vision" in requested_tasks
+                and (route.model_id != "MLP-Fixed" or settings.include_vanilla)
             )
         ]
         routes = [route for _adapter, route in adapter_routes]
@@ -418,7 +422,7 @@ class SuitePlan:
         }
         signature = sha256_json(signature_payload)
         run_specs: list[RunSpec] = []
-        has_adaptive = any(route_group(route) not in {"vanilla", "screening"} for route in routes)
+        has_adaptive = any(route.model_id != "MLP-Fixed" and route_group(route) not in {"vanilla", "screening"} for route in routes)
         outer_repeat_count = max(settings.repeat_count, settings.missing_present_task_repeats if has_adaptive else 0, 1)
         for suite_repeat in range(1, outer_repeat_count + 1):
             for provider, ref, splits in task_inputs:
@@ -426,7 +430,10 @@ class SuitePlan:
                 # use missing_present_task_repeats; fixed vanilla routes use
                 # every outer repeat.
                 for adapter, route in adapter_routes:
-                    route_is_vanilla = route_group(route) == "vanilla" and not route.screening_only
+                    # Vision jobs are never sent to a tabular model or vice versa.
+                    if (provider.name == "vision") != (adapter.name == "vision_adp"):
+                        continue
+                    route_is_vanilla = route.model_id == "MLP-Fixed" and not route.screening_only
                     route_repeat_limit = (
                         outer_repeat_count if route_is_vanilla else
                         1 if route.screening_only else
@@ -443,6 +450,8 @@ class SuitePlan:
                         for model_seed in effective_model_seeds:
                             seed = route.screening_seed if route.screening_only else derive_run_seed(
                                 settings.seed,
+                                (ref.provider, ref.suite, ref.task_id, split.repeat, split.fold, split.sample,
+                                 suite_repeat, model_seed) if route_group(route) == "vision" else
                                 (ref.provider, ref.suite, ref.task_id, split.repeat, split.fold, split.sample,
                                  suite_repeat, route.route_label, model_seed),
                             )
@@ -519,7 +528,7 @@ class SuitePlan:
         # shadow-posterior expansion gate is changed.
         alternatives: list[RunSpec] = []
         for original in run_specs:
-            if route_group(original.route) in {"vanilla", "screening"}:
+            if original.route.model_id == "MLP-Fixed" or route_group(original.route) in {"vanilla", "screening"}:
                 continue
             alternate_id = replace(
                 original.identity,
@@ -556,7 +565,7 @@ class SuitePlan:
         originals = {
             spec.identity.run_id: spec
             for spec in run_specs
-            if route_group(spec.route) not in {"vanilla", "screening"}
+            if spec.route.model_id != "MLP-Fixed" and route_group(spec.route) not in {"vanilla", "screening"}
         }
         matched = {}
         for alternative in alternatives:
