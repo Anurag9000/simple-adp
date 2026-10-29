@@ -18,3 +18,9 @@ scientific result has been executed in this increment.
 - Visual V01 CPU smoke + legacy core workflow: https://github.com/Anurag9000/simple-adp/actions/runs/40918821989 — **success**, 27 passed in 3.57s (tests/test_visual_v01.py and tests/test_core.py).
 - Original-versus-variance controller contract workflow: https://github.com/Anurag9000/simple-adp/actions/runs/40918821988 — **success**.
 - This proves bounded CPU unit/integration coverage; no real-image CIFAR, pretrained backbone, runner, full CUDA or multi-seed experiment has been executed.
+
+## Verified second CPU test pass (image partitioning)
+- Commit: 51322fca736591ffa8ea9b35f23745bb10427e17
+- Visual ADP V01, new image split tests, and legacy core: https://github.com/Anurag9000/simple-adp/actions/runs/40919599860 — **success**, 30 passed in 5.67s.
+- Original-versus-variance contracts: https://github.com/Anurag9000/simple-adp/actions/runs/40919599981 — **success**.
+- Evidence level: offline synthetic image tests, native ADP head training, V01 save/load, deterministic partition tests, core regressions. Real torchvision dataset files and pretrained weight downloads were not used.
