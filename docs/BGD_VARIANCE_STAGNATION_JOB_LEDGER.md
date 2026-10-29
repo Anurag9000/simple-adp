@@ -103,3 +103,23 @@ behavior and matched suite-plan construction, not complete OpenML
 training, all original/alternate jobs, fault-injected checkpoint
 equivalence or GPU execution. The job-wide completed count remains
 zero until individually recorded experiment artifacts are verified.
+
+
+## Paired-criterion CPU model-adapter execution — 29 October 2026
+
+At source commit `569b3480a5c8f396c9055888a2c418a55f6e733b`,
+the actual GitHub Actions Ubuntu CPU run
+https://github.com/Anurag9000/simple-adp/actions/runs/40881288873
+executed the paired original/variance test suite:
+**208 passed in 7.19 seconds**.
+
+The `test_runner_models.py` canonical ADP parametrization
+now runs each registered adaptive model/profile on both
+classification and regression fixtures under
+`expansion_criterion="loss"` **and**
+`expansion_criterion="variance_stagnation"`.
+The same run also includes posterior and plan-integrity tests.
+Training budgets and capacity are deliberately tiny for CPU
+contract verification; no claim is made that every full OpenML
+task, full-size architecture expansion, GPU runner or fault-injected
+checkpoint has been scientifically completed.
