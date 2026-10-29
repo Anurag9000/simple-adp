@@ -528,6 +528,11 @@ class SuitePlan:
         # shadow-posterior expansion gate is changed.
         alternatives: list[RunSpec] = []
         for original in run_specs:
+            # A third-party adapter cannot be assumed to implement the native
+            # BGD shadow-growth criterion just because its route is adaptive.
+            # Keep native simple-adp and opt-in V01; never fabricate custom jobs.
+            if original.model_adapter not in {"simple_adp", "vision_adp"}:
+                continue
             if original.route.model_id == "MLP-Fixed" or route_group(original.route) in {"vanilla", "screening"}:
                 continue
             alternate_id = replace(
@@ -565,7 +570,9 @@ class SuitePlan:
         originals = {
             spec.identity.run_id: spec
             for spec in run_specs
-            if spec.route.model_id != "MLP-Fixed" and route_group(spec.route) not in {"vanilla", "screening"}
+            if (spec.model_adapter in {"simple_adp", "vision_adp"}
+                and spec.route.model_id != "MLP-Fixed"
+                and route_group(spec.route) not in {"vanilla", "screening"})
         }
         matched = {}
         for alternative in alternatives:

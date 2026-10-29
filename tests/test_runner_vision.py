@@ -40,6 +40,10 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     # In-process worker tests must not exec into a systemd-run user scope.
     # The production worker still keeps its original systemd behavior.
     monkeypatch.setenv("TABULAR_SKIP_SYSTEMD_SCOPE", "1")
+    # In normal worker processes the scheduler explicitly admits a backend.
+    monkeypatch.setenv("TABULAR_BACKEND", "cpu")
+    monkeypatch.setenv("SIMPLE_ADP_DISABLE_GPU_ACCELERATORS", "1")
+    monkeypatch.setenv("TRAINING_CONTROL_CPU_ONLY", "1")
     datasets, models = load_registries()
     settings = RunnerSettings(
         tasks=("vision",), run_hardness_screen=False, repeat_count=1,
