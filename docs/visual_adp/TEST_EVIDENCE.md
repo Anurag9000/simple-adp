@@ -12,3 +12,9 @@ the existing core regression tests on a fresh Python installation.
 Do not mark as executed until a matching GitHub Actions run is inspected.
 No CIFAR-10/100, Fashion-MNIST, CUDA, pretrained-backbone or multi-seed
 scientific result has been executed in this increment.
+
+## Verified GitHub Actions on main
+- Commit: 1be6b214d4edcc78fbe9eb1246bf10ffe2d80b57
+- Visual V01 CPU smoke + legacy core workflow: https://github.com/Anurag9000/simple-adp/actions/runs/40918821989 — **success**, 27 passed in 3.57s (tests/test_visual_v01.py and tests/test_core.py).
+- Original-versus-variance controller contract workflow: https://github.com/Anurag9000/simple-adp/actions/runs/40918821988 — **success**.
+- This proves bounded CPU unit/integration coverage; no real-image CIFAR, pretrained backbone, runner, full CUDA or multi-seed experiment has been executed.

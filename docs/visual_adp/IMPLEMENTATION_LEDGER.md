@@ -5,9 +5,9 @@ States distinguish source/static implementation from executed tests and science.
 | Item | State | Evidence / missing |
 |---|---|---|
 | Legacy 14 model identities | preserved | registry.py unchanged |
-| V01 frozen image feature -> native ADP MLP head | static-complete pending CI | src/simple_adp/visual.py |
-| V01 actual candidate growth | conditional pending CI | delegates to native TabularADP; tests/test_visual_v01.py |
-| V01 fixed non-growing control | conditional pending CI | MLP-Fixed native route, tested in new test |
+| V01 frozen image feature -> native ADP MLP head | runtime-tested (bounded CPU) | src/simple_adp/visual.py |
+| V01 actual candidate growth | runtime-tested (bounded CPU) | delegates to native TabularADP; tests/test_visual_v01.py |
+| V01 fixed non-growing control | runtime-tested (bounded CPU) | MLP-Fixed native route, tested in new test |
 | V01 pretrained ResNet/ViT/ConvNeXt concrete model loaders | missing | encoder supplied externally; no weights auto-download |
 | V01 packaged estimator export | static-complete | src/simple_adp/__init__.py |
 | V01 suite runner routes / torchvision dataset provider | missing | no central vision plan entries |
@@ -16,7 +16,7 @@ States distinguish source/static implementation from executed tests and science.
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
 | V10/V11 | missing | ResMLP/GFNet operators and full integration |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | pending | CI added for bounded CPU tests only |
+| CPU/CUDA complete regression | partial | 27 CPU smoke/core tests passed, plus variance contract workflow; CUDA/full suite not executed |
 
 Next: implement native inner-MLP adapter and snapshot codec; connect StageTrainer
 to composite image models; implement V02-V04 first. Add architecture and data
