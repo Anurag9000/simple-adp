@@ -12,7 +12,7 @@
     {
       "id": "V02",
       "central_runner_jobs": 0,
-      "implementation": "partial: CNN residual inner MLP candidate forward/backward/natively mutated and source StageTrainer; pending CI; no full controller or runner",
+      "implementation": "partial runtime-tested bounded CPU V02 CNN residual inner MLP native stage/growth; full canonical controller/runner/science absent",
       "scientifically_executed": false
     },
     {

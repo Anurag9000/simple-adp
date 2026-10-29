@@ -40,3 +40,16 @@ scientific result has been executed in this increment.
 - Tested local torchvision ResNet18 state-dict reconstruction, classifier removal, frozen parameter and inference equivalence, SHA256 rejection, deterministic construction, malformed input rejection; previous V01 runner and core tests rerun.
 - Standalone ADP original-versus-variance contract: https://github.com/Anurag9000/simple-adp/actions/runs/40922695059 — **success**.
 - ConvNeXt-Tiny/ViT-B16 source constructors are statically implemented but not yet exercised by this workflow; actual pretrained checkpoint provenance, real CIFAR training, scientific evaluation and CUDA are not verified.
+
+## V02 residual adapter stage evidence (verified)
+- Code commit: 77fa4f62b487183db044c5effeccb961c293ca1b.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/40923983465 — **success, 231 passed in 19.74s**.
+- Native variance/source-contract CI: https://github.com/Anurag9000/simple-adp/actions/runs/40923983499 — **success**.
+- V02 specific executed tests: differentiable frozen downstream CNN, nonzero
+  local MLP gradients, frozen parameter/buffer bitwise digest invariance,
+  source RR/all/DEN-RR width and D1/Dcur depth operators, real local structural
+  parameter transfer, whole-image native StageTrainer and exact architecture
+  snapshot reconstruction without consuming RNG.
+- Scope **only** candidate training/mutation. V02 full canonical search,
+  acceptance/rollback across 14 methods, exact interruption resume and central
+  runner are not implemented or tested. No real-image scientific validation.
