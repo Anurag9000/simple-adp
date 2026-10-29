@@ -2,7 +2,7 @@ name: Standalone ADP original-versus-variance contracts
 on:
   push:
     branches: [main]
-    paths: ['src/simple_adp/**', 'tests/test_shadow_variance_growth_counterparts.py', 'tests/test_runner_openml_provider_plan.py', 'tests/test_runner_models.py', '.github/workflows/adp-variance-growth.yml']
+    paths: ['src/simple_adp/**', 'tests/test_shadow_variance_growth_counterparts.py', 'tests/test_runner_openml_provider_plan.py', 'tests/test_runner_models.py', 'tests/test_stage_variance_best_epoch_alignment.py', '.github/workflows/adp-variance-growth.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,4 +25,5 @@ jobs:
           python -m pytest -q -o addopts='' \
             tests/test_shadow_variance_growth_counterparts.py \
             tests/test_runner_openml_provider_plan.py \
-            tests/test_runner_models.py
+            tests/test_runner_models.py \
+            tests/test_stage_variance_best_epoch_alignment.py

@@ -123,3 +123,19 @@ Training budgets and capacity are deliberately tiny for CPU
 contract verification; no claim is made that every full OpenML
 task, full-size architecture expansion, GPU runner or fault-injected
 checkpoint has been scientifically completed.
+
+
+## Stage best-epoch posterior/checkpoint consistency
+
+The common `StageTrainer` used by dedicated and generic
+ADP model families now stores the auxiliary sigma/RNG state
+alongside the best-validation model snapshot and restores both
+at stage completion. Previously it returned best weights but
+a final-epoch posterior, allowing rejected training epochs to
+affect variance-triggered growth. Intermediate and final
+variance checkpoints include `best_shadow_bgd_variance`;
+resume rejects old variance-stage checkpoints lacking that
+metadata rather than silently using mismatched evidence.
+Original loss-mode models and their optimizer trajectory
+are unaffected. Regression:
+`tests/test_stage_variance_best_epoch_alignment.py`.

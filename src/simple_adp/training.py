@@ -136,6 +136,7 @@ class StageTrainer:
             raise ValueError("training and validation splits must be non-empty")
         shadow = (ShadowBGDVariance(seed=settings.seed)
                   if settings.expansion_criterion == "variance_stagnation" else None)
+        best_shadow_state = None
         optimizer = self._optimizer(model)
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
             optimizer,
@@ -181,6 +182,14 @@ class StageTrainer:
                     if saved_shadow is None:
                         raise ValueError("variance-stagnation stage checkpoint has no BGD shadow state")
                     shadow.load_state_dict(saved_shadow)
+                    if "best_shadow_bgd_variance" not in resume_state:
+                        raise ValueError(
+                            "variance-stagnation stage checkpoint lacks "
+                            "best-epoch posterior provenance"
+                        )
+                    best_shadow_state = copy.deepcopy(
+                        resume_state["best_shadow_bgd_variance"]
+                    )
                 generator.set_state(resume_state["generator_state"])  # type: ignore[arg-type]
                 rng_state = resume_state.get("rng_state")
                 if not isinstance(rng_state, dict) or not all(
@@ -215,6 +224,9 @@ class StageTrainer:
                 "rng_state": capture_rng_state(),
                 "batches_done": batches_done,
                 "shadow_bgd_variance": None if shadow is None else shadow.state_dict(),
+                "best_shadow_bgd_variance": (
+                    None if shadow is None else copy.deepcopy(best_shadow_state)
+                ),
                 "stage_status": "active",
             }
 
@@ -295,6 +307,8 @@ class StageTrainer:
                 best_score = score
                 best_state = copy.deepcopy(model.state_dict())
                 best_cursor = int(getattr(model, "_width_cursor", 0))
+                if shadow is not None:
+                    best_shadow_state = shadow.state_dict()
                 patience = settings.patience_es
             else:
                 patience -= 1
@@ -317,6 +331,10 @@ class StageTrainer:
         }
         model.load_state_dict(best_state)
         setattr(model, "_width_cursor", best_cursor)
+        if shadow is not None:
+            if best_shadow_state is None:
+                raise RuntimeError("best candidate lacks matching shadow variance state")
+            shadow.load_state_dict(best_shadow_state)
         final = state_payload(epoch, 0, None)
         final["stage_status"] = "completed"
         final["model_state"] = copy.deepcopy(model.state_dict())
