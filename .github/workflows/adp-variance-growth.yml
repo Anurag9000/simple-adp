@@ -24,4 +24,5 @@ jobs:
         run: |
           python -m pytest -q -o addopts='' \
             tests/test_shadow_variance_growth_counterparts.py \
-            tests/test_runner_openml_provider_plan.py
+            tests/test_runner_openml_provider_plan.py \
+            tests/test_runner_models.py
