@@ -33,3 +33,10 @@ scientific result has been executed in this increment.
 - Failed prior attempts revealed systemd re-exec in pytest and a scientifically
   invalid variance counterpart for third-party adapters; both were fixed.
 - Concrete pretrained-model factory tests remain pending CI on the next commit.
+
+## Concrete frozen torchvision encoder CI (verified)
+- Code commit: eca4b61c688d66137a7bf8b52379a491eddf0c89.
+- CI run: https://github.com/Anurag9000/simple-adp/actions/runs/40922695070 — **success, 228 passed in 21.02s**.
+- Tested local torchvision ResNet18 state-dict reconstruction, classifier removal, frozen parameter and inference equivalence, SHA256 rejection, deterministic construction, malformed input rejection; previous V01 runner and core tests rerun.
+- Standalone ADP original-versus-variance contract: https://github.com/Anurag9000/simple-adp/actions/runs/40922695059 — **success**.
+- ConvNeXt-Tiny/ViT-B16 source constructors are statically implemented but not yet exercised by this workflow; actual pretrained checkpoint provenance, real CIFAR training, scientific evaluation and CUDA are not verified.

@@ -37,3 +37,11 @@ classwise source-train/validation partitioning, preserving official test
 isolation and recording raw checksums and original indices. This is an installed package API. Separately, runner/vision.py adds an
 experimental opt-in DatasetRegistry provider and model adapter for the V01
 frozen random tiny-conv control, with data-isolated runner jobs. The optional torchvision extra does not affect existing dependencies.
+
+## Concrete torchvision V01 loaders
+src/simple_adp/vision_encoders.py adds frozen resnet18, convnext_tiny and
+vit_b_16 constructors. User-provided local torchvision source state_dicts are
+hashed and loaded strictly before removing classifier heads. A provided local
+checkpoint is not automatically certified as pretrained. The coordinated runner
+continues to use its tiny random frozen CNN control: these explicit factories
+are available through the package API, not yet native runner configurations.

@@ -7,7 +7,7 @@
       "methods": "all 14 through native TabularADP API subject to standard settings",
       "site": "frozen-embedding head",
       "criterion": "native selected controller as configured",
-      "status": "conditional (opt-in runner V01 toy and local image data; CI pending)",
+      "status": "supported conditionally for V01 frozen head (runner toy CPU end-to-end verified; ResNet18 local source factory verified)",
       "reason": "Frozen random CNN toy runner supports native TabularADP only. Supplied-encoder path supports external pretrained weights; no native built-in pretrained model loader, real datasets or scientific runs validated."
     },
     {

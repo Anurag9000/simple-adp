@@ -23,3 +23,16 @@ of adapters; V10 ResMLP channel FFN; V11 GFNet Fourier-mixed FFN.
 All require fixed external interfaces, authentic composite forward/backward,
 local eligible-site expansion, reproducible snapshots, controller/runner integration.
 No convolution/attention/filter/channel-interface/token-count mutation is permitted.
+
+## Concrete V01 frozen-source encoder interface
+
+src/simple_adp/vision_encoders.py exposes resnet18, convnext_tiny and
+vit_b_16 torchvision feature extractors with the full source model loaded
+strictly *before* replacing its classifier with identity. ViT-B/16 fixes
+resolution at 224x224. Local full-state checkpoints may be supplied with a
+SHA256 expectation. Raw weight files alone establish neither pretrained status
+nor source dataset: weights_source is explicitly unverified unless independently
+documented. Architecture construction does not modify the global RNG and does
+not download weights. All frozen parameters and buffers remain untouched during
+head training; a torch.no_grad() boundary is valid here only because the encoder
+precedes the sole eligible dense head.

@@ -1,11 +1,11 @@
 {
   "version": 1,
   "source_main": "a2e6b6325a80ca6da41b1898ebf71c6ec8829a62",
-  "note": "V01 opt-in vision provider/model adapter conditionally registers 14 native ADP route identities, with paired variance gate jobs (except fixed). Pending end-to-end CI; no pretrained-backbone or scientific result.",
+  "note": "Opt-in V01 coordinated provider+adapter with 22 native model/profile variants and 21 matched variance counterparts per single seed/split/repeat, subject to job settings. ResNet18 factory locally tested; ConvNeXt and ViT source constructors static. Not validated on real dataset.",
   "architectures": [
     {
       "id": "V01",
-      "central_runner_jobs": "conditional; 14 configs with two generic profiles where native; criteria paired for growth; exact count depends on run settings",
+      "central_runner_jobs": "43 per one seed/split/repeat, including 22 native (14 IDs with 8 additional generic profiles) plus 21 matched variance; opt-in; no real dataset execution",
       "implementation": "v01_frozen_random_cnn_native_head_plus_opt_in_coordinated_runner_pending_CI",
       "scientifically_executed": false
     },
