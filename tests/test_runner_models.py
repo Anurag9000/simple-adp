@@ -99,9 +99,12 @@ def test_builtin_task_evaluation_metrics_have_explicit_values():
     assert regression_metrics["r2"] == pytest.approx(-1.5)
 
 
+@pytest.mark.parametrize("expansion_criterion", ["loss", "variance_stagnation"])
 @pytest.mark.parametrize("task_kind", ["classification", "regression"])
 @pytest.mark.parametrize(("model_id", "profile"), ADP_ADAPTER_ROUTES)
-def test_runner_adapter_smokes_every_canonical_adp_route_full_batch(task_kind, model_id, profile):
+def test_runner_adapter_smokes_every_canonical_adp_route_full_batch(
+    task_kind, model_id, profile, expansion_criterion
+):
     """Every canonical ADP identity/profile reaches fit and metric conversion."""
     rng = np.random.default_rng(733)
     X = rng.normal(size=(8, 2)).astype(np.float32)
@@ -147,6 +150,7 @@ def test_runner_adapter_smokes_every_canonical_adp_route_full_batch(task_kind, m
         batch_size=len(split.train_indices),
         max_candidates=1,
         seed=31,
+        expansion_criterion=expansion_criterion,
     )
 
     result = SimpleADPModelAdapter().fit_predict(
@@ -156,6 +160,7 @@ def test_runner_adapter_smokes_every_canonical_adp_route_full_batch(task_kind, m
     assert result["selected_architecture"] == [1]
     assert result["history_entries"] >= 1
     assert result["test_metrics"]
+    assert np.isfinite(result["validation_selection_score"])
 
 
 @pytest.mark.parametrize("task_kind", ["classification", "regression"])
