@@ -34,3 +34,24 @@ requires both artifacts. Saved models also require the same external encoder
 weights and provenance upon VisualADPEstimator.load. Load only trusted head
 checkpoint files because legacy TabularADP.load currently uses torch.load
 with weights_only=False. The coordinated runner has not yet been wired to V01.
+
+## Real dataset preparation (opt-in, torchvision installed)
+
+```python
+from simple_adp import load_torchvision_partitions
+partitions = load_torchvision_partitions(
+    "cifar10", root="./data", download=False, seed=7,
+    train_limit=128, validation_limit=64, test_limit=64,
+)
+x_train, y_train = partitions.materialize("train")
+x_valid, y_valid = partitions.materialize("validation")
+x_test, y_test = partitions.materialize("test")  # evaluate only after search
+# Supply partitions.manifest to VisualADPEstimator(dataset_manifest=...).
+```
+
+Use pip install -e '.[vision]' to enable torchvision; downloads are disabled
+unless explicitly requested. Validation is drawn only from the official train
+group, with deterministic classwise partitioning; the official test group
+remains disjoint and is never supplied to candidate selection. Data materialization
+returns [N,C,H,W] float32 in [0,1]; apply any backbone-specific mean/std
+normalization explicitly and record it in a revised dataset manifest.

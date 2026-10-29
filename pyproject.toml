@@ -24,6 +24,7 @@ simple-adp-pressure-wrapper = "simple_adp.runner.pressure_wrapper:main"
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
 benchmark = ["openml>=0.15", "scikit-learn>=1.5"]
+vision = ["torchvision>=0.20"]
 physionet = ["wfdb>=4.1"]
 odds = ["scipy>=1.13", "h5py>=3.10"]
 

@@ -29,3 +29,10 @@ mutation, and runner remain TabularMLP-specific. Replacing a module in place wit
 those integrations is **not** a complete ADP route. Runner vision job registration,
 raw-image provider, stable split manifests, real CIFAR training, whole-repo regression
 execution, and full serial-depth parity are not yet implemented in this increment.
+
+## Additional opt-in image preparation surface
+src/simple_adp/vision_data.py adds torchvision dataset loading and deterministic
+classwise source-train/validation partitioning, preserving official test
+isolation and recording raw checksums and original indices. This is an
+installed package API, not yet a DatasetRegistry implementation or a runner
+job. The optional torchvision extra does not affect existing dependencies.

@@ -10,7 +10,8 @@ States distinguish source/static implementation from executed tests and science.
 | V01 fixed non-growing control | runtime-tested (bounded CPU) | MLP-Fixed native route, tested in new test |
 | V01 pretrained ResNet/ViT/ConvNeXt concrete model loaders | missing | encoder supplied externally; no weights auto-download |
 | V01 packaged estimator export | static-complete | src/simple_adp/__init__.py |
-| V01 suite runner routes / torchvision dataset provider | missing | no central vision plan entries |
+| CIFAR-10/CIFAR-100/Fashion-MNIST optional loader | static-complete pending CI | vision_data.py, torchvision optional; no real dataset execution | 
+| V01 suite runner routes / DatasetRegistry provider | missing | no central vision plan entries |
 | V02/V03/V04 | missing | requires composite controller, fixed-dimensional local mutations |
 | V05/V06a/V06b/V07 | missing | operator/model integration, mutation and resume |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
