@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "source_main": "a2e6b6325a80ca6da41b1898ebf71c6ec8829a62",
+  "note": "No new central-runner vision jobs registered yet; executable V01 estimator is separate.",
+  "architectures": [
+    {
+      "id": "V01",
+      "central_runner_jobs": 0,
+      "implementation": "standalone_estimator_static",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V02",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V03",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V04",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V05",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V06a",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V06b",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V07",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V08",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V09",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V10",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    },
+    {
+      "id": "V11",
+      "central_runner_jobs": 0,
+      "implementation": "missing",
+      "scientifically_executed": false
+    }
+  ]
+}

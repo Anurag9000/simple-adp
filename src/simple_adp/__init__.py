@@ -25,6 +25,7 @@ _EXPORTS = {
     "SearchSettings": "config",
     "DedicatedController": "dedicated",
     "TabularADP": "estimator",
+    "VisualADPEstimator": "visual",
     "GenericCandidateSearch": "generic_search",
     "can_add_depth": "growth",
     "can_grow_width_all_layers": "growth",

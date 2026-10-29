@@ -1,0 +1,19 @@
+name: Visual ADP V01 CPU smoke
+on:
+  push:
+    paths:
+      - 'src/simple_adp/visual.py'
+      - 'src/simple_adp/__init__.py'
+      - 'tests/test_visual_v01.py'
+      - '.github/workflows/visual-adp-v01.yml'
+  workflow_dispatch:
+jobs:
+  vision-v01:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pytest -q tests/test_visual_v01.py tests/test_core.py

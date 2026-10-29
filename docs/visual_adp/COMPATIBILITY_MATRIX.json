@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "scope": "documented exemplar architecture-method categories, not completed exhaustive Cartesian matrix",
+  "rows": [
+    {
+      "architecture": "V01",
+      "methods": "all 14 through native TabularADP API subject to standard settings",
+      "site": "frozen-embedding head",
+      "criterion": "native selected controller as configured",
+      "status": "conditional (not runner-integrated)",
+      "reason": "V01 needs externally supplied encoder and datasets; runtime tests not yet verified"
+    },
+    {
+      "architecture": "V02",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V03",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V04",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V05",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V06a",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V06b",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V07",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V08",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V09",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V10",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    },
+    {
+      "architecture": "V11",
+      "methods": "none yet",
+      "site": "unimplemented internal site",
+      "criterion": "unimplemented",
+      "status": "unsupported (not implemented)",
+      "reason": "No composite train/mutation/snapshot/runner integration"
+    }
+  ]
+}
