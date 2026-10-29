@@ -37,6 +37,9 @@ def test_vision_provider_manifest_and_split_isolation(monkeypatch):
 
 def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     monkeypatch.setenv("SIMPLE_ADP_ENABLE_VISION", "1")
+    # In-process worker tests must not exec into a systemd-run user scope.
+    # The production worker still keeps its original systemd behavior.
+    monkeypatch.setenv("TABULAR_SKIP_SYSTEMD_SCOPE", "1")
     datasets, models = load_registries()
     settings = RunnerSettings(
         tasks=("vision",), run_hardness_screen=False, repeat_count=1,
