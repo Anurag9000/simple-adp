@@ -236,3 +236,9 @@ protocol. `S2SpatialShift` and `AxialSpatialShift` are exported standalone
 for inspecting boundary/grouping semantics. Their concrete frozen random
 tiny backbones are not pretrained or faithful end-to-end published source
 models. New CPU tests and real-dataset benchmarks remain unverified.
+
+### Verified V06 family tests
+V06a/V06b native shift/growth/restart and worker tests passed 288 selected
+CPU checks in https://github.com/Anurag9000/simple-adp/actions/runs/41399092726.
+Only synthetic controlled architectures were tested. Real-data/pretraining
+benchmark claims are expressly excluded.

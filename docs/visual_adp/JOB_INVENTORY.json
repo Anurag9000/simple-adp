@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source_main": "a2e6b6325a80ca6da41b1898ebf71c6ec8829a62",
+  "source_main": "3bff656fceeaa62e0feef6398124a261366d7273",
   "note": "Opt-in V01 coordinated provider+adapter with 22 native model/profile variants and 21 matched variance counterparts per single seed/split/repeat, subject to job settings. ResNet18 factory locally tested; ConvNeXt and ViT source constructors static. Not validated on real dataset.",
   "architectures": [
     {
@@ -35,14 +35,14 @@
     },
     {
       "id": "V06a",
-      "central_runner_jobs": "43 per one seed/split/repeat (22 native methods/profiles + 21 variance counterparts), opt-in, pending CI",
-      "implementation": "genuine separate parameter-free shift mixer and expandable channel FFN, signed composite controller and worker, pending CPU CI",
+      "central_runner_jobs": "43 per seed/split/repeat (22 methods/profiles + 21 variance counterparts), opt-in, selected CPU CI verified",
+      "implementation": "selected synthetic CPU CI verified parameter-free spatial shifts, native channel growth, signed replay and worker",
       "scientifically_executed": false
     },
     {
       "id": "V06b",
-      "central_runner_jobs": "43 per one seed/split/repeat (22 native methods/profiles + 21 variance counterparts), opt-in, pending CI",
-      "implementation": "genuine separate parameter-free shift mixer and expandable channel FFN, signed composite controller and worker, pending CPU CI",
+      "central_runner_jobs": "43 per seed/split/repeat (22 methods/profiles + 21 variance counterparts), opt-in, selected CPU CI verified",
+      "implementation": "selected synthetic CPU CI verified parameter-free spatial shifts, native channel growth, signed replay and worker",
       "scientifically_executed": false
     },
     {

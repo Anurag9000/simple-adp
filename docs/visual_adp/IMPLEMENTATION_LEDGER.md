@@ -19,15 +19,14 @@ States distinguish source/static implementation from executed tests and science.
 | V02 residual CNN adapter with all 14 canonical methods and generic profiles | runtime-tested on synthetic CPU; 259 tests passed | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
 | V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
-| V06a S2 / V06b axial shift FFN | implemented; CI pending | separate parameter-free frozen shifts, source growth and paired vision workers |
+| V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
 | V07 MLP-Mixer | missing | token/channel dual-site model and source controller integration |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
 | V10/V11 | missing | ResMLP/GFNet operators and full integration |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | partial | 275 selected CPU tests passed through V05; V06a/b pending; CUDA and full suite not executed |
+| CPU/CUDA complete regression | partial | 288 selected CPU tests passed through V06a/b; CUDA and full suite not executed |
 
-**Next:** verify V06a/b selected CI and independent variance contract;
-then implement V07 token/channel mixer scopes, V08–V11, pretrained source FFNs and
+**Next:** implement V07 token/channel mixer scopes, V08–V11, pretrained source FFNs and
 real-data science. Original tabular identities remain unchanged.
 
 ## V02 dedicated composite architecture-search increment (historical superseded phase)
@@ -143,7 +142,7 @@ corrected generic methods. Evidence remains pending CI.
   **CI pending**. These are random-initialized controls, not pretrained PoolFormer
   or validated real-image science.
 
-## V06a and V06b independent shift-MLP channel FFN routes (pending CI)
+## V06a and V06b independent shift-MLP channel FFN routes (verified selected CPU CI)
 - `src/simple_adp/visual_shift.py` defines separate zero-padded,
   parameter-free **S2SpatialShift** (four directional channel groups) and
   **AxialSpatialShift** (separate height/width branches, averaged).
@@ -168,3 +167,14 @@ corrected generic methods. Evidence remains pending CI.
   pooling-operator verification, source ADP growth, snapshot/mid-batch replay,
   fixed/generic routes, central worker and matched variance-gated job.
 - Only synthetic toy images and randomly initialized feature backbones tested.
+
+## V06a/V06b selected CI confirmation — 2026-11-02
+- Code commit: 3bff656fceeaa62e0feef6398124a261366d7273.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41399092726.
+- **288 passing selected CPU tests in 40.71s**; both V06 families run through
+  source growth, signed restart, fixed/generic controllers, opt-in worker,
+  matched variance gate and frozen spatial-operator checks.
+- Original ADP original-vs-variance contract CI separately succeeded.
+- These are tiny experimental fixed-shift backbones; no pretrained model,
+  published-architecture numerical equivalence, real dataset benchmarks or
+  CUDA-wide scientific tests are claimed.

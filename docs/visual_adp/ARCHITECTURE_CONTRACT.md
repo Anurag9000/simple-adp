@@ -113,3 +113,9 @@ composite controller/checkpoint, an independently signed architecture spec,
 source growth/method profile identities and paired original/variance routes.
 The small models are architecture-shaped controls, not the exact pretrained
 published network or scientific demonstration. New CI evidence pending.
+
+## Verified selected CPU evidence through V06b
+The V06a/V06b native shift-MLP implementation and paired coordinated runner
+passed 288 selected CPU tests at
+https://github.com/Anurag9000/simple-adp/actions/runs/41399092726.
+V01/V02 remain supported along with V03/V04/V05. V07–V11 remain missing.

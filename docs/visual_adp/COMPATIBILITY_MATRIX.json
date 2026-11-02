@@ -47,16 +47,16 @@
       "methods": "all 14 canonical IDs and eight 2-profile generic methods via opt-in native composite runner, pending CI",
       "site": "channel:s2.block0",
       "criterion": "native loss vs shadow BGD variance counterparts (21 matching gates), pending CI",
-      "status": "source operator/model, signed controller and opt-in worker implemented, pending CPU CI",
-      "reason": "Four-way one-pixel zero-padded S2 spatial shift frozen; only channel FFN eligible; tiny random control."
+      "status": "selected synthetic CPU CI verified (288 passing tests), original variance contract green",
+      "reason": "Four-group zero-padded S2 shift frozen with expandable local channel FFN; tiny from-scratch control. Real source checkpoints and scientific benchmarks missing."
     },
     {
       "architecture": "V06b",
       "methods": "all 14 canonical IDs and eight 2-profile generic methods via opt-in native composite runner, pending CI",
       "site": "channel:axial.block0",
       "criterion": "native loss vs shadow BGD variance counterparts (21 matching gates), pending CI",
-      "status": "source operator/model, signed controller and opt-in worker implemented, pending CPU CI",
-      "reason": "Separate vertical/horizontal shifted channel branches with frozen mixing; only channel FFN eligible; tiny random control."
+      "status": "selected synthetic CPU CI verified (288 passing tests), original variance contract green",
+      "reason": "Separate zero-padded axial height/width shift branches frozen with expandable local channel FFN; tiny from-scratch control. Real source checkpoints and scientific benchmarks missing."
     },
     {
       "architecture": "V07",

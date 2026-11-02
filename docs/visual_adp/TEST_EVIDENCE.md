@@ -135,3 +135,13 @@ scientific result has been executed in this increment.
   pooling-operator frozen identity, native growth, restarts, worker routes,
   generic method and criterion counterpart.
 - No real-image scientific runs or pretrained source weights.
+
+## V06a/V06b zero-padded shift and paired runner CI verified (2026-11-02)
+- Code commit: 3bff656fceeaa62e0feef6398124a261366d7273.
+- Workflow: https://github.com/Anurag9000/simple-adp/actions/runs/41399092726.
+- **288 passed in 40.71s** on selected CPU tests, including both shift
+  geometries/no-wrap boundaries, no-trainable-spatial-weights check,
+  local MLP growth, signed exact resume, generic/fixed methods and V06a/b
+  coordinated worker original-versus-shadow-BGD variance counterpart.
+- Standalone original-versus-variance controller contract CI also succeeded.
+- No pretrained published architecture, real CIFAR training or CUDA validation.
