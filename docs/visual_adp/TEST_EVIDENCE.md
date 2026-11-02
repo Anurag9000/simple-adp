@@ -531,3 +531,28 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Fresh 38-route real-image run with serialization fix:
   https://github.com/Anurag9000/simple-adp/actions/runs/41493795442.
   **Pending outcome as of this documentation update.**
+
+## Final bounded Fashion-MNIST matrix execution evidence
+
+- **38/38 worker jobs passed**, zero failures, at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41493795442.
+  The live job log prints each completed worker, 19 distinct controlled
+  architecture/site identities × two registered methods (`MLP-Fixed` and
+  `ADP-W-RR`). RR jobs asserted that at least two actual search
+  stages ran; each completed normal signed worker result contains a
+  valid `parameter_accounting` partition, real validation/test metrics
+  and an actual selected architecture.
+- Evidence artifact (retained by workflow):
+  https://github.com/Anurag9000/simple-adp/actions/runs/41493795442/artifacts/13166111100.
+  It includes the official image matrix result JSON and normal worker
+  files, with per-worker method, split hash, selected architecture,
+  candidate-stage count, metrics and parameter partitions.
+- This is **one seed, tiny subsets of original Fashion-MNIST train/test,
+  one epoch per architecture stage and one RR proposal per ADP job**.
+  It is runtime validation of every controlled architecture; no claim of
+  competitive image recognition performance, matched total training
+  budget, full-depth source-faithful backbone coverage, CUDA operation
+  or multi-seed generalization.
+- Two preceding failed CI invocations are preserved in the prior
+  evidence sections with their exact causes and fixes. They are not
+  counted as completed scientific experiments.
