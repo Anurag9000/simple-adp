@@ -20,6 +20,7 @@ from ..registry import MODEL_REGISTRY
 from ..tasks import ClassificationTask
 from ..vision_data import make_image_partitions, load_torchvision_partitions
 from ..visual import VisualADPEstimator
+from ..visual_accounting import visual_parameter_accounting
 from ..visual_inner import ResidualAdapterSpec
 from ..visual_native_ffn import NativeFFNSpec
 from ..visual_mixer import MixerSpec
@@ -260,6 +261,10 @@ class VisionModelAdapter:
             "metric_directions": task.metric_directions,
             "artifact_path": artifact,
             "encoder_sha256": estimator.encoder_sha256,
+            "parameter_accounting": visual_parameter_accounting(
+                nn.ModuleDict({"encoder": estimator.encoder, "head": estimator.head.model_}),
+                {"head": estimator.head.model_},
+            ),
             "growth_site": "head",
             "architecture_id": "v01-tiny-conv-frozen-random-control",
         }
@@ -455,6 +460,9 @@ class VisionInnerModelAdapter:
             "growth_site": spec.site_id,
             "architecture_id": architecture_label,
             "frozen_sha256": search.model_.frozen_state_sha256(),
+            "parameter_accounting": visual_parameter_accounting(
+                search.model_, search.model_.growth_targets,
+            ),
             "expansion_criterion": actual.expansion_criterion,
             **({
                 "site_schedule_trace": [
