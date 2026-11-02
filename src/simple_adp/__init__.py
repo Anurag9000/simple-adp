@@ -32,6 +32,7 @@ _EXPORTS = {
     "ResidualAdapterSpec": "visual_inner",
     "VisualResidualAdapter": "visual_inner",
     "VisualResidualSearch": "visual_search",
+    "visual_parameter_accounting": "visual_accounting",
     "NativeFFNSpec": "visual_native_ffn",
     "VisualNativeFFN": "visual_native_ffn",
     "MixerSpec": "visual_mixer",
