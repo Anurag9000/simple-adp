@@ -48,3 +48,13 @@ The V02 worker trains on full images, uses the signed native per-batch resume
 checkpoint, reports architecture ID/growth site, and writes a separately signed
 best-model artifact. All vision paths are disabled by default. A bounded
 worker end-to-end regression was added to tests/test_runner_vision.py.
+
+## V02 ADP-D-D1 progressive insertion (pending CI)
+The composite search now supports native width-one depth insertion and an
+optimization-only ladder through widths 1..Dcur. Intermediate stages retain
+whole-image gradients and signed mid-stage checkpoint/resume but never enter
+architecture-selection history. The final matched-width depth candidate is
+evaluated once; one logical insertion counts as one proposal. New synthetic
+CPU tests interrupt exactly at width-two warmup and compare bitwise to an
+uninterrupted run. The V02 coordinated runner enumerates this sixth method and
+its variance counterpart without affecting legacy tabular algorithms.

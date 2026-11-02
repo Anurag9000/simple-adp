@@ -11,8 +11,8 @@
     },
     {
       "id": "V02",
-      "central_runner_jobs": "9 per one seed/split/repeat (5 methods + 4 nonfixed variance counterparts), opt-in and pending CI",
-      "implementation": "CI-verified standalone dedicated search five methods with exact per-batch resume; opt-in central runner pending CI; 8 generic plus D1 not implemented",
+      "central_runner_jobs": "11 per one seed/split/repeat (6 dedicated + 5 variance counterparts), opt-in, pending latest CI",
+      "implementation": "6 native dedicated methods, including progressive D1 warmup with per-batch resume; latest D1 CI pending; 8 generic methods not implemented",
       "scientifically_executed": false
     },
     {

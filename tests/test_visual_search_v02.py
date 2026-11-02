@@ -54,7 +54,7 @@ def test_v02_supported_methods_execute_real_composite_selection(method):
     if method == "MLP-Fixed":
         assert [r["architecture"] for r in search.history_] == [[2], [3]]
         assert all(r["stage"] == "fixed" for r in search.history_)
-    elif method == "ADP-D-Dcur":
+    elif method in {"ADP-D-Dcur", "ADP-D-D1"}:
         assert search.history_[1]["architecture"] == [2, 2]
         assert search.history_[1]["stage"] == "depth"
     else:
@@ -65,8 +65,6 @@ def test_v02_supported_methods_execute_real_composite_selection(method):
 def test_v02_rejects_unimplemented_canonical_methods():
     with pytest.raises(NotImplementedError, match="composite-controller"):
         VisualResidualSearch("ADP-WD-RR-D1", spec(), settings=settings())
-    with pytest.raises(NotImplementedError):
-        VisualResidualSearch("ADP-D-D1", spec(), settings=settings())
 
 
 def test_v02_exact_batch_resume_and_completed_idempotence(tmp_path):
@@ -115,3 +113,44 @@ def test_v02_forces_output_contract_and_fixed_grid():
     with pytest.raises(ValueError, match="number of training classes"):
         VisualResidualSearch("ADP-W-RR", bad_spec, settings=settings()).fit(
             x, y, validation_data=validation)
+
+
+def test_v02_progressive_d1_intermediates_and_exact_mid_warmup_resume(tmp_path):
+    x, y, valid = samples()
+    config = SearchSettings(**{
+        **settings(seed=41).as_dict(), "init_width": 3,
+        "max_width": 4, "max_depth": 2, "max_neurons": 30,
+    })
+    baseline_progress = []
+    baseline = VisualResidualSearch("ADP-D-D1", spec(), settings=config)
+    baseline.fit(x, y, validation_data=valid,
+                 progress_callback=lambda state: baseline_progress.append(
+                     (state["phase"], tuple(state["architecture"]), state["batches_done"])))
+    assert len(baseline.history_) == 2
+    assert baseline.history_[-1]["architecture"] == [3, 3]
+    assert {("depth_warmup", (3, 1)), ("depth_warmup", (3, 2))}.issubset({
+        (phase, widths) for phase, widths, _ in baseline_progress
+    })
+    assert ("depth", (3, 3)) in {(phase, widths) for phase, widths, _ in baseline_progress}
+    # Intermediate widths must not be mistaken for independent accepted depths.
+    assert all(x["stage"] != "depth_warmup" for x in baseline.history_)
+    path = tmp_path / "d1-progressive.pt"
+
+    class Evicted(Exception):
+        pass
+    def interrupt(record):
+        if (record["phase"] == "depth_warmup"
+                and record["architecture"] == [3, 2]
+                and record["batches_done"] == 1
+                and record["stage_status"] == "active"):
+            raise Evicted()
+    with pytest.raises(Evicted):
+        VisualResidualSearch("ADP-D-D1", spec(), settings=config).fit(
+            x, y, validation_data=valid,
+            checkpoint_path=path, progress_callback=interrupt,
+        )
+    resumed = VisualResidualSearch("ADP-D-D1", spec(), settings=config)
+    resumed.fit(x, y, validation_data=valid, checkpoint_path=path)
+    assert resumed.history_ == baseline.history_
+    assert resumed.result_.score == baseline.result_.score
+    assert np.array_equal(resumed.predict_proba(valid[0]), baseline.predict_proba(valid[0]))

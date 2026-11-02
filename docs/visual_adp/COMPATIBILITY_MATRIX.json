@@ -12,11 +12,11 @@
     },
     {
       "architecture": "V02",
-      "methods": "LGND-W-Greedy, ADP-W-RR, ADP-W-All, ADP-D-Dcur, MLP-Fixed through experimental full-image dedicated V02 controller",
+      "methods": "6 native dedicated methods: LGND-W-Greedy, ADP-W-RR, ADP-W-All, ADP-D-D1 progressive, ADP-D-Dcur, MLP-Fixed",
       "site": "adapter:block1",
       "criterion": "native StageTrainer loss and shadow-BGD variance gate for supported methods (pending CI)",
-      "status": "standalone 5-method dedicated search CI-verified; opt-in coordinated runner and matched variance route pending CI",
-      "reason": "Signed standalone whole-image search/resume passed; V02 native runner jobs added but not yet CI-verified. Eight generic and progressive D1 remain unsupported."
+      "status": "5 methods runtime-verified, sixth progressive D1 pending CI; opt-in runner 6-method extension pending CI",
+      "reason": "All native dedicated V02 paths now implemented. Eight generic phase-search configurations still unsupported. Scientific real datasets not executed."
     },
     {
       "architecture": "V03",

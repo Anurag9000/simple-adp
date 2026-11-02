@@ -172,3 +172,12 @@ method is scheduled. Tests cover split isolation and runner execution; CI status
 must be verified before treating this path as production-ready. Both this
 experimental route and V01's default tiny frozen CNN are controlled baselines,
 not a pretrained-ResNet/CIFAR benchmark.
+
+## V02 progressive depth-only D1
+`VisualResidualSearch('ADP-D-D1', spec, settings=...)` uses true progressive
+width-one depth insertion rather than Dcur insertion. Intermediates
+`[3,1]`, `[3,2]` are trained on full images before evaluating `[3,3]`;
+they are not separately scored for global-best architecture selection. The
+per-batch authoritative checkpoint captures intermediate-stage position,
+optimizer/scheduler and RNG for interruption safety. V02 `ADP-D-D1` is also
+available as an opt-in `vision_inner` coordinated runner route.

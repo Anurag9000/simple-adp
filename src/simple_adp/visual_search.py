@@ -1,7 +1,7 @@
 """V02 dedicated composite-image architecture search with exact stage restart.
 
-This is intentionally limited to native LGND/width-DEN/Dcur-depth/fixed
-controllers. Generic phase-search and progressive D1 are rejected explicitly:
+This is intentionally limited to native LGND/width-DEN/D1-progressive/Dcur-depth/fixed
+controllers. Generic phase-search remains explicitly unsupported:
 their semantics must not be silently replaced by a different search policy.
 """
 from __future__ import annotations
@@ -22,6 +22,7 @@ from .growth import (
     can_add_depth, can_grow_width_all_layers, can_grow_width_round_robin,
     total_neurons,
 )
+from .models import rebuild_mlp
 from .registry import get_model_config
 from .results import SearchResult
 from .tasks import ClassificationTask
@@ -30,7 +31,8 @@ from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 
 
 SUPPORTED_V02_METHODS = frozenset({
-    "LGND-W-Greedy", "ADP-W-RR", "ADP-W-All", "ADP-D-Dcur", "MLP-Fixed",
+    "LGND-W-Greedy", "ADP-W-RR", "ADP-W-All",
+    "ADP-D-D1", "ADP-D-Dcur", "MLP-Fixed",
 })
 
 
@@ -70,7 +72,7 @@ class VisualResidualSearch:
         if config.id not in SUPPORTED_V02_METHODS:
             raise NotImplementedError(
                 f"V02 {model_id} needs a composite-controller implementation; "
-                "do not report generic or progressive D1 methods as supported"
+                "do not report generic methods as supported"
             )
         self.config = config
         self.spec = spec
@@ -155,10 +157,36 @@ class VisualResidualSearch:
                                       increment=s.ex_k_width, max_width=s.max_width)
         if state["phase"] == "depth":
             width = current.hidden_widths[-1]
-            if not can_add_depth(local, s.max_depth, s.max_neurons, width):
+            seed = 1 if self.config.progressive_depth else width
+            if not can_add_depth(local, s.max_depth, s.max_neurons, seed):
                 return None
+            if self.config.progressive_depth:
+                candidate = current.grow_depth(site_id=site, operator="D1",
+                                               max_depth=s.max_depth, seed_width=1)
+                if candidate is not None and width > 1:
+                    # One *logical* depth proposal has optimization-only stages
+                    # at widths 1..(current width - 1), exactly as dedicated DEN.
+                    state["depth_target"] = width
+                    state["phase"] = "depth_warmup"
+                return candidate
             return current.grow_depth(site_id=site, operator="Dcur",
                                       max_depth=s.max_depth)
+        if state["phase"] == "depth_warmup":
+            target = int(state["depth_target"])
+            new_width = current.hidden_widths[-1] + 1
+            if new_width > target or new_width > s.max_width or total_neurons(local) + 1 > s.max_neurons:
+                return None
+            candidate = copy.deepcopy(current)
+            candidate.local_mlp = rebuild_mlp(
+                current.local_mlp, [*current.hidden_widths[:-1], new_width],
+                cursor=current._width_cursor,
+            )
+            candidate.train(current.training)
+            candidate.verify_frozen()
+            if new_width == target:
+                state["phase"] = "depth"
+                state.pop("depth_target", None)
+            return candidate
         if state["phase"] == "fixed":
             index = state["fixed_index"]
             if index >= len(self.fixed_grid):
@@ -176,6 +204,15 @@ class VisualResidualSearch:
         kind = state["phase"]
         current = _restore(stage.best_snapshot, self.settings.device)
         score = float(stage.best_score)
+        if kind == "depth_warmup":
+            # Dedicated D1 intermediate stages optimize only. They must not
+            # compete in architecture selection or reset failure patience.
+            state["current"] = current.snapshot(cursor=current._width_cursor)
+            state["stage_state"] = None
+            state["in_stage"] = False
+            state["rng_state"] = capture_rng_state()
+            current.verify_frozen()
+            return
         accepted = self._accept(state, score)
         if accepted:
             state["best_score"] = score
@@ -262,14 +299,18 @@ class VisualResidualSearch:
             else:
                 exhausted = (self.settings.expansion_criterion == "loss"
                              and int(state["failed"]) >= self.settings.patience_depth_exp)
-            capped = self.settings.max_candidates > 0 and int(state["proposals"]) >= self.settings.max_candidates
-            gated = self.settings.expansion_criterion == "variance_stagnation" and not state["gate_ready"]
-            if exhausted or capped or gated:
+            warmup = state["phase"] == "depth_warmup"
+            capped = (not warmup and self.settings.max_candidates > 0
+                      and int(state["proposals"]) >= self.settings.max_candidates)
+            gated = (not warmup and self.settings.expansion_criterion == "variance_stagnation"
+                     and not state["gate_ready"])
+            if (not warmup and exhausted) or capped or gated:
                 break
             candidate = self._propose(state)
             if candidate is None:
                 break
-            state["proposals"] = int(state["proposals"]) + 1
+            if not warmup:
+                state["proposals"] = int(state["proposals"]) + 1
             state["current"] = candidate.snapshot(cursor=candidate._width_cursor)
             state["in_stage"] = True
             state["stage_state"] = None

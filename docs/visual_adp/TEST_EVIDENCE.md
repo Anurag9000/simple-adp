@@ -61,3 +61,9 @@ scientific result has been executed in this increment.
   complete candidate search/selection and mid-stage exact batch resume.
 - Standalone native variance-contract workflow for the same commit succeeded.
 - Subsequent coordinated runner V02 adapter is pending a separate test run.
+
+## V02 D1 progressive test addition (pending CI)
+- Added a synthetic full-image trace for width-one insertion, widths 1->2->3
+  optimization-only ladder, no intermediate best selection and exact
+  interruption/restart inside a warmup stage. No numerical claim until
+  corresponding workflow passes.
