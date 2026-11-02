@@ -1,0 +1,28 @@
+name: Runner source function map AST contract
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/runner/**'
+      - 'docs/COORDINATED_PRESSURE_AWARE_SOURCE_FUNCTION_MAP.md'
+      - 'scripts/generate_runner_function_map.py'
+      - '.github/workflows/runner-function-map-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  function-map-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile Python AST map generator
+        run: python -m py_compile scripts/generate_runner_function_map.py
+      - name: Exact checked-in runner function map must match Python AST
+        run: python scripts/generate_runner_function_map.py --check
