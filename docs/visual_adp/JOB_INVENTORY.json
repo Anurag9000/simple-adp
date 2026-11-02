@@ -43,7 +43,8 @@
         "source_runner_tests_passed": 3,
         "central_runner_registered": "optional separate family gated",
         "published_pretrained_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41474035681",
-        "published_pretrained_status": "pending"
+        "published_pretrained_status": "verified real-image 3072→3073 source FFN growth, small smoke",
+        "published_pretrained_artifact_id": 13157600366
       }
     },
     {
@@ -136,7 +137,7 @@
   "scientific_evidence": {
     "real_data_smoke_count": 2,
     "benchmark_quality_multi_seed_runs": 0,
-    "pretrained_inner_ffn_runs": 1,
+    "pretrained_inner_ffn_runs": 2,
     "scientific_caveat": "Nine matched V01 real Fashion runs and one real pretrained V04 internal-FFN smoke are verified. Tiny sample budgets, no full pretrained multi-seed architecture comparison, CUDA/full-suite or comprehensive published-source coverage.",
     "verified_matched_comparison": {
       "dataset": "torchvision:fashion_mnist",
@@ -192,7 +193,23 @@
       "run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41466060451",
       "artifact_id": 13151101792,
       "benchmark_quality": false
-    }
+    },
+    "pretrained_inner_ffn_evidence": [
+      {
+        "architecture": "V04",
+        "status": "passed official pretrained ConvNeXt-Tiny internal FFN source smoke",
+        "run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41466060451",
+        "benchmark_quality": false
+      },
+      {
+        "architecture": "V03",
+        "status": "passed official pretrained ViT-B16 internal FFN source smoke",
+        "initial_width": 3072,
+        "selected_width": 3073,
+        "run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41474035681",
+        "benchmark_quality": false
+      }
+    ]
   },
   "comparison_runner": {
     "per_seed_jobs": 3,
@@ -247,7 +264,11 @@
     "initial_width": 3072,
     "tested_real_worker_on_random_full_source": true,
     "verified_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41473641002",
-    "published_pretrained_real_test_status": "pending",
-    "scientific_jobs_in_central_runner": 0
+    "published_pretrained_real_test_status": "separate successful standalone ViT pretrained full-source FFN growth (not one of the 43 central job ledger executions)",
+    "scientific_jobs_in_central_runner": 0,
+    "published_pretrained_real_test_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41474035681",
+    "verified_cpu_regression": "380 selected tests passed in 180.05 seconds",
+    "verified_cpu_regression_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41473641019",
+    "exact_resume_test": "pending run 41474722199"
   }
 }

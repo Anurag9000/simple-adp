@@ -181,3 +181,43 @@ study, full source architecture ADP, or GPU comparison.
   not all V04 source methods or V03/V05–V11 pretrained internal FFNs.
   Tiny data, one seed and a one-proposal budget mean it is not evidence of
   benchmark superiority or trustworthy generalization.
+
+## Run F — published pretrained ViT-B/16 *internal FFN* expansion
+
+- **Verified successful** https://github.com/Anurag9000/simple-adp/actions/runs/41474035681
+  with source script commit `d3464fba354f44f5961e586e1ddf6fe490a4227f`.
+- Original source `torchvision.models.vit_b_16`, published
+  `ViT_B_16_Weights.IMAGENET1K_V1` (ImageNet-1K):
+  https://download.pytorch.org/models/vit_b_16-c867db91.pth.
+  Complete saved strict source file SHA256:
+  `335d1dfe0a7aac5787ffdc111e46843f7e2223218f49ab989333b880f77a427e`.
+- Real first transformer FFN growth target
+  `vit:encoder_layer_0.channel_ffn` starts at **768→3072→768** GELU
+  with original pretrained weight tensors transplanted exactly.
+  Source ADP-W-RR chose widened **3073 hidden neurons** after one
+  proposal; no patch/attention/downstream source dimensions changed.
+- Selected source-frozen SHA256:
+  `71dae45b55b257d03809417ea7960c265365b8931656979dab07169807ca8196`.
+  Source FFN/tiny task classifier are the only trainable units;
+  entire remaining pretrained ViT is frozen.
+- Official Fashion-MNIST seed 11, **20 fit, 10 validation, 10 official
+  test** images; one epoch per stage, two history entries, no test
+  materialization until training/selection completed.
+- Validation accuracy **0.40**, macro-F1 **0.28**, log-loss
+  **1.8708838387**. Official-test accuracy **0.40**, macro-F1
+  **0.30**, log-loss **1.9859184127**.
+- Artifact `official-fashion-vitb16-v03-source-ffn`, ID
+  **13157600366**, size **319,053,611 bytes**. Four files: source
+  manifest, `result.json`, `search_history.json`, complete selected
+  model snapshot, SHA256
+  `2c18fac8f1fc1b94523b1bbaea027532a20cd1de67a60434be16d1df7db46390`.
+  GitHub Actions artifacts have finite retention (30 days).
+- Prior original ViT source-fidelity CI
+  https://github.com/Anurag9000/simple-adp/actions/runs/41472976307
+  **4/4 passed** on randomly initialized full torchvision source
+  architecture (initial feature equality), and coordinated source
+  runner CI https://github.com/Anurag9000/simple-adp/actions/runs/41473641002
+  **3/3 passed** with actual full-source CPU worker and 43 source
+  route pairs. Both tests are separate from this real published-weight run.
+- This is strictly an architecture/pretrained-data **integration smoke**,
+  not benchmark-quality generalization or comparative scientific evidence.

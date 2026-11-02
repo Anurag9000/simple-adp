@@ -397,3 +397,20 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Published pretrained experiment https://github.com/Anurag9000/simple-adp/actions/runs/41474035681
   is a separate real-data workflow **pending**. The full selected CPU
   regression after source V03 runner integration is also separately pending.
+
+## Published pretrained V03 original ViT FFN real official image execution
+
+- https://github.com/Anurag9000/simple-adp/actions/runs/41474035681
+  passed on actual torchvision published weights
+  `ViT_B_16_Weights.IMAGENET1K_V1` and official Fashion-MNIST.
+- 20/10/10 images, original 3072→3073 genuine first transformer
+  local FFN, output test accuracy 0.40; artifact ID 13157600366.
+- Random-source ViT source equivalence tests 4/4 passed
+  (https://github.com/Anurag9000/simple-adp/actions/runs/41472976307).
+  Central source ViT worker test 3/3 passed
+  (https://github.com/Anurag9000/simple-adp/actions/runs/41473641002).
+  Selected CPU regression 380 passed in 180.05s
+  (https://github.com/Anurag9000/simple-adp/actions/runs/41473641019).
+- Mid-batch exact-full-ViT restart case appended in
+  `43269193141177c9b4661eccf6f5a7d6585912bd`; new dedicated
+  verification run 41474722199 is pending.

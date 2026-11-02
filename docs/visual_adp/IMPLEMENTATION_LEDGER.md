@@ -18,7 +18,7 @@ States distinguish source/static implementation from executed tests and science.
 | V01 opt-in coordinated runner and signed split jobs | runtime-tested (toy CPU) | runner/vision.py, plan.py, plugins.py, tests/test_runner_vision.py; toy and offline image provider only |
 | V02 residual CNN adapter with all 14 canonical methods and generic profiles | runtime-tested on synthetic CPU; 259 tests passed | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
 | V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
-| V03 original torchvision ViT-B16 source FFN | exact first transformer FFN transfer + worker execution verified | full random-source 768→3072→768 GELU FFN and checksum-gated 43-job optional runner; pretrained official image smoke pending |
+| V03 original torchvision ViT-B16 source FFN | real published-pretrained in-block width growth verified | 3072→3073 hidden, official Fashion-MNIST 20/10/10, real run 41474035681; 43 separate opt-in source planner routes verified |
 | V04 original torchvision ConvNeXt source FFN | exact source-tensor equality (4 tests) AND published-pretrained real-data growth verified | first true pretrained in-block FFN 384→385 on Fashion-MNIST; distinct from tiny vision_v04 route |
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
@@ -663,3 +663,23 @@ corrected generic methods. Evidence remains pending CI.
   https://github.com/Anurag9000/simple-adp/actions/runs/41474035681,
   **pending** execution verification; no accuracy claim until success.
   This route is separate from tiny randomly initialized `vision_v03`.
+
+## Verified published-pretrained V03 internal transformer FFN expansion
+
+- Official published source `ViT_B_16_Weights.IMAGENET1K_V1`
+  loaded strictly by complete state_dict SHA256
+  `335d1dfe0a7aac5787ffdc111e46843f7e2223218f49ab989333b880f77a427e`.
+- https://github.com/Anurag9000/simple-adp/actions/runs/41474035681
+  **succeeded**: genuine first ViT-B16 FFN went from **3072→3073**
+  hidden units, all other pretrained ViT stages frozen, source frozen
+  state SHA256 recorded.
+- Official real Fashion-MNIST 20/10/10, seed 11, 1 epoch per stage:
+  validation accuracy 0.40, official-test accuracy 0.40, test macro-F1
+  0.30, test log-loss 1.9859184127. One tiny integration run, **not**
+  a trustworthy generalization performance estimate.
+- Uploaded four files (manifest, result, search history, selected
+  complete source model) in artifact `official-fashion-vitb16-v03-source-ffn`
+  ID **13157600366**. Details in `REAL_IMAGE_EVIDENCE.md`.
+- V03 original-source full-model **mid-batch** interruption/restart
+  regression is newly added (commit `43269193141177c9b4661eccf6f5a7d6585912bd`)
+  and is pending test verification; do not claim resume parity until CI.
