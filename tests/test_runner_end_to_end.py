@@ -123,6 +123,23 @@ class PluginModelAdapter:
     assert {run.route.model_id for run in plan.runs} == {
         "LGND-W-Greedy", "ADP-W-RR", "ADP-W-All", "PLUGIN-MLP",
     }
+    originals = [
+        run for run in plan.runs
+        if "counterpart_of" not in run.worker_settings
+    ]
+    variants = [
+        run for run in plan.runs
+        if "counterpart_of" in run.worker_settings
+    ]
+    assert len(originals) == 4
+    assert len(variants) == 3
+    assert plan.manifest["variance_pair_audit"]["matched_variance_counterparts"] == 3
+    assert {v.worker_settings["counterpart_of"] for v in variants} == {
+        run.identity.run_id for run in originals
+        if run.model_adapter == "simple_adp"
+    }
+    assert all(v.worker_settings["expansion_criterion"] == "variance_stagnation"
+               for v in variants)
 
     coordinator = SuiteCoordinator(
         plan,
@@ -136,7 +153,7 @@ class PluginModelAdapter:
     )
     summary = coordinator.run()
 
-    assert summary["completed"] == 4
+    assert summary["completed"] == 7
     records = [json.loads(Path(run.result_dir, "result.json").read_text()) for run in plan.runs]
     assert {record["model_id"] for record in records} == {
         "LGND-W-Greedy", "ADP-W-RR", "ADP-W-All", "PLUGIN-MLP",
