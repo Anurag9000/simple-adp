@@ -221,3 +221,25 @@ study, full source architecture ADP, or GPU comparison.
   route pairs. Both tests are separate from this real published-weight run.
 - This is strictly an architecture/pretrained-data **integration smoke**,
   not benchmark-quality generalization or comparative scientific evidence.
+
+## All-controlled-variant Fashion-MNIST execution (2026-11-02)
+
+The signed coordinated-worker execution
+https://github.com/Anurag9000/simple-adp/actions/runs/41493795442
+**passed all 38 planned selected real-image jobs** (19 separate
+architecture/site adapter identities × `MLP-Fixed` or `ADP-W-RR`).
+This complements, rather than replaces, the published source-model
+V01/V03/V04 micro-smokes described above. The
+[workflow artifact](https://github.com/Anurag9000/simple-adp/actions/runs/41493795442/artifacts/13166111100)
+contains every completed worker result and the paired matrix summary.
+Each ADP route actually ran its initial and at least one candidate
+architecture stage, and each result retained the selected model's
+composite frozen/trainable/eligible parameter counts.
+
+The controlled-family matrix uses deliberately tiny models and
+**40/20/20** train/architecture-validation/official-test image
+subsets, one seed and one epoch per architecture stage. It has not
+established ImageNet-architecture source parity for V05-V11,
+search-compute parity with controls, meaningful multi-seed accuracy
+advantages, full-CIFAR coverage or GPU performance. Do not cite it as
+benchmark-quality evidence.
