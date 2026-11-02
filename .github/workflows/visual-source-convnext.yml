@@ -1,0 +1,27 @@
+name: V04 real torchvision ConvNeXt source FFN transfer and growth
+
+on:
+  push:
+    paths:
+      - 'src/simple_adp/visual_source_convnext.py'
+      - 'src/simple_adp/visual_native_ffn.py'
+      - 'src/simple_adp/visual_search.py'
+      - 'tests/test_visual_source_convnext.py'
+      - '.github/workflows/visual-source-convnext.yml'
+  workflow_dispatch:
+
+jobs:
+  source-ffn-fidelity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev,vision]'
+      - name: Verify exact first-CNBlock pretrained source FFN transplant and ADP
+        run: python -m pytest -q --maxfail=1 tests/test_visual_source_convnext.py

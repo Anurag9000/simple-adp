@@ -319,6 +319,9 @@ def build_visual_composite(spec, hidden_widths):
     from .visual_multistage import MultistageSpec, VisualMultistage
     from .visual_adapter_bank import BankSpec, VisualAdapterBank
     from .visual_multistage_schedule import ScheduledMultistageSpec, VisualMultistageScheduled
+    from .visual_source_convnext import SourceConvNeXtSpec, VisualSourceConvNeXtFFN
+    if isinstance(spec, SourceConvNeXtSpec):
+        return VisualSourceConvNeXtFFN(spec, tuple(hidden_widths))
     if isinstance(spec, ScheduledMultistageSpec):
         return VisualMultistageScheduled(spec, tuple(hidden_widths))
     if isinstance(spec, BankSpec):
@@ -340,6 +343,9 @@ def restore_visual_composite(snapshot: dict[str, object]):
     from .visual_multistage import VisualMultistage
     from .visual_adapter_bank import VisualAdapterBank
     from .visual_multistage_schedule import VisualMultistageScheduled
+    from .visual_source_convnext import VisualSourceConvNeXtFFN
+    if snapshot.get("kind") == VisualSourceConvNeXtFFN.SNAPSHOT_KIND:
+        return VisualSourceConvNeXtFFN.from_snapshot(snapshot)
     if snapshot.get("kind") == VisualMultistageScheduled.SNAPSHOT_KIND:
         return VisualMultistageScheduled.from_snapshot(snapshot)
     if snapshot.get("kind") == VisualAdapterBank.SNAPSHOT_KIND:

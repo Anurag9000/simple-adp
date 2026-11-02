@@ -42,6 +42,8 @@ _EXPORTS = {
     "VisualMultistageScheduled": "visual_multistage_schedule",
     "BankSpec": "visual_adapter_bank",
     "VisualAdapterBank": "visual_adapter_bank",
+    "SourceConvNeXtSpec": "visual_source_convnext",
+    "VisualSourceConvNeXtFFN": "visual_source_convnext",
     "S2SpatialShift": "visual_shift",
     "AxialSpatialShift": "visual_shift",
     "build_visual_composite": "visual_native_ffn",
