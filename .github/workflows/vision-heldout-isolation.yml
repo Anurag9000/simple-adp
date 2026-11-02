@@ -1,0 +1,32 @@
+name: Visual ADP held-out partition access contract
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/runner/vision.py'
+      - 'tests/test_runner_vision_test_isolation.py'
+      - '.github/workflows/vision-heldout-isolation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolation-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install project, vision and test extras
+        run: python -m pip install -e '.[dev,vision]'
+      - name: Prove test images and labels inaccessible until visual search completion
+        run: python -m pytest -q tests/test_runner_vision_test_isolation.py tests/test_visual_v01.py tests/test_core.py
