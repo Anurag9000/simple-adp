@@ -208,3 +208,12 @@ scientific result has been executed in this increment.
   matching original/variance seeds/split identities, immutable routing-count
   JSON diagnostics, artifact outputs and corrected generic controller.
 - Fresh Actions status pending. No pretrained source or real-image benchmark.
+
+## V09 frozen hard-router bank selected CI verified (2026-11-02)
+- Code commit `1d5c1ae3472671fe162b47a97ac73df4a6ab2b5e`.
+- Workflow https://github.com/Anurag9000/simple-adp/actions/runs/41413752172
+- **347 passed in 67.91 seconds** selected CPU suite; nonselected bank
+  isolation, frozen router, accurate route count export, source growth,
+  exact interruption recovery and loss/variance matched worker were tested.
+- Original-vs-variance method contract workflow also succeeded.
+- No learned routing or pretrained bank experiment performed.

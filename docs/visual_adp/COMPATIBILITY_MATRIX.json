@@ -79,8 +79,8 @@
       "methods": "14 canonical IDs plus 8 generic two-profile routes per bank member, with 21 matched variance counterparts (pending CI)",
       "site": "bank:0 OR bank:1 OR bank:2 (one eligible member per job)",
       "criterion": "native loss/variance-stagnation paired jobs, frozen hard label-free router",
-      "status": "implemented strict fixed hard router bank and coordinated jobs; pending CPU CI",
-      "reason": "Three frozen/eligible-by-member MLPs, other members held immutable; signed router identity and train/test route histogram. No learned router, pretrained backbone or real-data scientific verification."
+      "status": "selected synthetic CPU CI verified (347 passing tests) for all 3 fixed hard-router bank members and paired workers",
+      "reason": "Label-free frozen hard router, nonselected adapter gradient isolation, signed checkpoint, occupancy per job; no learned gate, bank creation, pretrained model or scientific run."
     },
     {
       "architecture": "V10",

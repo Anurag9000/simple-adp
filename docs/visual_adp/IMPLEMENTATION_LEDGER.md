@@ -22,12 +22,12 @@ States distinguish source/static implementation from executed tests and science.
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
 | V07 MLP-Mixer | all 3 token/channel/synchronous-both scopes CPU CI verified (303 tests) | true residual token/channel MLPs, signed resumed search, matched variance jobs and joint budget |
 | V08 fixed three-stage residual adapter | verified selected CPU CI: 331 passed | early/middle/late independent growth with signed resume and paired worker |
-| V09 strict adapter bank | implemented, pending CI | hard fixed router, three isolated adapter targets, routing histograms and signed worker jobs |
+| V09 strict adapter bank | selected CPU CI verified: 347 passed | hard frozen router, three strictly isolated adapter targets, routing counts and matched workers |
 | V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | partial | 331 selected CPU tests passed through V08; V09 pending; CUDA and full suite not executed |
+| CPU/CUDA complete regression | partial | 347 selected CPU tests passed through V09; CUDA and full suite not executed |
 
-**Next:** verify V09 bank CI; then implement adaptive multisite scheduling,
+**Next:** implement fixed predeclared multi-site V08 scheduling; then adaptive selection,
 strict pretrained-source FFN integration, real-image benchmarking and GPU/full-suite checks.
 Original tabular identities remain unchanged.
 
@@ -300,7 +300,7 @@ corrected generic methods. Evidence remains pending CI.
   loss/variance contract CI also succeeded.
 - No adaptive multi-site selection or real pretrained CNN experiment.
 
-## V09 strict hard-routed adapter bank (new, pending CI)
+## V09 strict hard-routed adapter bank (selected CPU CI verified)
 - `visual_adapter_bank.py` implements a frozen CNN, shared frozen in/out
   projections and classifier, **three real residual local MLP members** and
   immutable hard argmax K-way router based solely on CNN features. No label
@@ -323,3 +323,14 @@ corrected generic methods. Evidence remains pending CI.
   Unit+runner tests are **pending CI**. This is a small random-initialized
   hard-routed adapter-bank control, not a trained mixture-of-experts gate,
   pretrained architecture or real-image benchmark.
+
+## V09 verified results — 2026-11-02
+- Code: `1d5c1ae3472671fe162b47a97ac73df4a6ab2b5e`.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41413752172
+- **347 selected CPU tests passed in 67.91s**, including all three
+  strict bank members, hard-routing immutability, no nonselected gradients,
+  local ADP growth, signed interruption/restart, and coordinated original/
+  variance plus generic worker jobs with route occupancy JSON.
+- Standalone ADP original-versus-variance contract workflow also passed.
+- This is a frozen hard router; no learned gate, new-member creation,
+  pretrained backbone, real-image scientific experiment or CUDA validation.

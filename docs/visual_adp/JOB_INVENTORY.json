@@ -59,8 +59,8 @@
     },
     {
       "id": "V09",
-      "central_runner_jobs": "129 per one seed/split/repeat (43 per bank member 0/1/2), opt-in, pending CI",
-      "implementation": "fixed hard argmax CNN-feature router with three actual isolated adapter MLPs, signed member-specific search, route occupancies and matched worker pairs, pending CI",
+      "central_runner_jobs": "129 per one seed/split/repeat (43 each for bank0/1/2), opt-in, selected CPU CI verified",
+      "implementation": "fixed hard routed bank of 3 isolated real adapters, signed exact interrupted replay, trained one selected local MLP, matched original/variance worker and routing counts; 347 selected CPU tests passing",
       "scientifically_executed": false
     },
     {
