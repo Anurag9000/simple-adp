@@ -44,6 +44,8 @@ _EXPORTS = {
     "VisualAdapterBank": "visual_adapter_bank",
     "SourceConvNeXtSpec": "visual_source_convnext",
     "VisualSourceConvNeXtFFN": "visual_source_convnext",
+    "SourceViTSpec": "visual_source_vit",
+    "VisualSourceViTFFN": "visual_source_vit",
     "S2SpatialShift": "visual_shift",
     "AxialSpatialShift": "visual_shift",
     "build_visual_composite": "visual_native_ffn",

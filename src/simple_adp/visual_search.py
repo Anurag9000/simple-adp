@@ -33,6 +33,7 @@ from .visual_multistage import MultistageSpec
 from .visual_adapter_bank import BankSpec
 from .visual_multistage_schedule import ScheduledMultistageSpec, VisualMultistageScheduled, SITES
 from .visual_source_convnext import SourceConvNeXtSpec, VisualSourceConvNeXtFFN
+from .visual_source_vit import SourceViTSpec, VisualSourceViTFFN
 
 
 SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
@@ -65,7 +66,7 @@ class VisualResidualSearch:
     def __init__(
         self,
         model_id: str,
-        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec | MultistageSpec | BankSpec | ScheduledMultistageSpec | SourceConvNeXtSpec,
+        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec | MultistageSpec | BankSpec | ScheduledMultistageSpec | SourceConvNeXtSpec | SourceViTSpec,
         *,
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
@@ -120,6 +121,8 @@ class VisualResidualSearch:
             return "visual-multistage-search-v1"
         if isinstance(self.spec, SourceConvNeXtSpec):
             return "visual-source-convnext-v04-search-v1"
+        if isinstance(self.spec, SourceViTSpec):
+            return "visual-source-vit-v03-search-v1"
         if isinstance(self.spec, ScheduledMultistageSpec):
             return "visual-multistage-rr-sites-search-v1"
         if isinstance(self.spec, BankSpec):
@@ -137,6 +140,8 @@ class VisualResidualSearch:
                  (self.settings.init_width,) * self.settings.init_depth)
         if isinstance(self.spec, SourceConvNeXtSpec) and tuple(first) != (384,):
             raise ValueError("pretrained V04 inner FFN requires initial hidden width exactly 384")
+        if isinstance(self.spec, SourceViTSpec) and tuple(first) != (3072,):
+            raise ValueError("source V03 ViT inner FFN requires initial hidden width exactly 3072")
         model = build_visual_composite(self.spec, tuple(first)).to(self.settings.device)
         return {
             "kind": self._search_kind(),
@@ -244,6 +249,8 @@ class VisualResidualSearch:
                 candidate.site_mlps[candidate._active] = replacement
             elif isinstance(candidate, VisualSourceConvNeXtFFN):
                 candidate.source.features[1][0].block[3] = replacement
+            elif isinstance(candidate, VisualSourceViTFFN):
+                candidate.source.encoder.layers[0].mlp[0] = replacement
             else:
                 candidate.local_mlp = replacement
             if isinstance(current.spec, MixerSpec) and current.spec.site_id == "both:block0":

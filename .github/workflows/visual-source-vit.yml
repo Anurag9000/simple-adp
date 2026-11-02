@@ -1,0 +1,27 @@
+name: V03 genuine torchvision ViT-B16 source FFN integrity
+
+on:
+  push:
+    paths:
+      - 'src/simple_adp/visual_source_vit.py'
+      - 'src/simple_adp/visual_native_ffn.py'
+      - 'src/simple_adp/visual_search.py'
+      - 'tests/test_visual_source_vit.py'
+      - '.github/workflows/visual-source-vit.yml'
+  workflow_dispatch:
+
+jobs:
+  vit-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev,vision]'
+      - name: Verify strict ViT transformer weights, source equivalence and native ADP
+        run: python -m pytest -q --maxfail=1 tests/test_visual_source_vit.py
