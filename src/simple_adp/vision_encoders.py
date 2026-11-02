@@ -167,3 +167,64 @@ def create_frozen_vision_encoder(
         "interface": "[B,3,H,W] to [B,D]; frozen encoder, trainable ADP head only",
     }
     return encoder, metadata
+
+
+
+class VisionInputAdapter(nn.Module):
+    """Frozen, deterministic raw-image bridge for torchvision RGB encoders.
+
+    Raw partition arrays are [N,1|3,H,W] float32 in [0,1]. Grayscale is
+    repeated across three channels; smaller images are bilinearly resized
+    with align_corners=False to a declared resolution. No fitted statistics,
+    stochastic augmentation or label-dependent preprocessing is performed.
+    """
+
+    def __init__(
+        self, encoder: nn.Module, *, architecture_id: ArchitectureID,
+        input_channels: int, input_resolution: tuple[int, int],
+    ) -> None:
+        super().__init__()
+        if architecture_id not in _FEATURE_DIMS:
+            raise ValueError("unknown vision source architecture")
+        if input_channels not in {1, 3}:
+            raise ValueError("vision source image channels must be 1 or 3")
+        if len(input_resolution) != 2 or min(input_resolution) <= 0:
+            raise ValueError("source image resolution must be positive")
+        self.encoder = encoder
+        self.architecture_id = architecture_id
+        self.input_channels = int(input_channels)
+        self.input_resolution = tuple(int(v) for v in input_resolution)
+        if architecture_id == "vit_b_16":
+            self.output_resolution = (224, 224)
+        else:
+            self.output_resolution = tuple(max(32, v) for v in self.input_resolution)
+        self.preprocessing = {
+            "format": "frozen-rgb-bridge-v1",
+            "raw_channels": self.input_channels,
+            "raw_resolution": list(self.input_resolution),
+            "rgb_channels": 3,
+            "output_resolution": list(self.output_resolution),
+            "channel_policy": "repeat grayscale across RGB" if input_channels == 1 else "identity RGB",
+            "resize": ("torch bilinear align_corners=False"
+                       if self.input_resolution != self.output_resolution else "none"),
+            "input_normalization": "raw uint8/255 float32",
+        }
+        self.requires_grad_(False)
+        self.train(False)
+
+    def train(self, mode: bool = True) -> "VisionInputAdapter":
+        super().train(False)
+        return self
+
+    def forward(self, images: torch.Tensor) -> torch.Tensor:
+        import torch.nn.functional as F
+
+        if (images.ndim != 4 or images.shape[1] != self.input_channels
+                or tuple(images.shape[-2:]) != self.input_resolution):
+            raise ValueError("raw images do not match declared input channel/resolution contract")
+        if not images.is_floating_point() or not torch.isfinite(images).all():
+            raise ValueError("raw images must be finite floating point values")
+        rgb = images.repeat(1, 3, 1, 1) if self.input_channels == 1 else images
+        if tuple(rgb.shape[-2:]) != self.output_resolution:
+            rgb = F.interpolate(rgb, size=self.output_resolution, mode="bilinear", align_corners=False)
+        return self.encoder(rgb)

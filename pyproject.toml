@@ -20,6 +20,7 @@ simple-adp-benchmark = "simple_adp.benchmark_cli:main"
 simple-adp-benchmark-report = "simple_adp.benchmark_report:main"
 simple-adp-suite = "simple_adp.runner.launcher:cli_main"
 simple-adp-pressure-wrapper = "simple_adp.runner.pressure_wrapper:main"
+simple-adp-vision-experiment = "simple_adp.vision_experiment:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
