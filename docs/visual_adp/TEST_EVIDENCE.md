@@ -1,4 +1,29 @@
 # Test evidence — vision ADP
+
+## 2026-11-02 incremental official-test access isolation
+
+- Baseline live `main` inspected: `9b1d7fb96a4a2e71e056a7bd8eaef01130fc897e`.
+- New V01 and V02-V11 coordinated adapter implementation:
+  `a07034219e7f4eac0f8fb8f39409e66687352663`.
+  Both now index held-out test images and labels **only after** the
+  controller/estimator's full `fit()` completes. The old paired source
+  V03/V04 adapter already followed this order.
+- New runtime regression source:
+  `41e7410405adf8bcba5028499079e5880db8bd98`,
+  `tests/test_runner_vision_test_isolation.py`.
+  Guarded data arrays raise on any held-out test-row access until the
+  actual fixed-model search has completed, covering both V01 and V02.
+  **Pending new CI result; committed test code alone is not execution evidence.**
+- Runner function-map spans refreshed:
+  `fe8447b478289d19fec42574bbf7a07eec204e18`.
+- Last inspected **pre-change** complete repository CPU pytest run:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41488650402
+  (success). This does not prove the new changes passed.
+- Not yet executed here: physical CUDA, full multi-seed V01–V11 scientific
+  benchmarks, full published-source parity beyond V03/V04.
+
+---
+
 Baseline GitHub main inspected: a2e6b6325a80ca6da41b1898ebf71c6ec8829a62.
 
 Before publishing this increment, source/contract audit was performed against
