@@ -21,7 +21,7 @@ Raw image [N,C,H,W] -> user-provided frozen classifier-free encoder (no-grad, ev
 Inference repeats the same frozen embedding path. Cache equivalence depends on
 identical encoder and preprocessing; cache contents must be identified independently.
 
-## Unresolved integration
+## Historical unresolved integration from the initial V01 audit (superseded)
 For V02-V11, inserting a local MLP inside a composite requires passing the whole
 image model through candidate train/evaluation, with fixed downstream differentiable
 layers kept in autograd. SearchController, StageTrainer, model snapshots, candidate

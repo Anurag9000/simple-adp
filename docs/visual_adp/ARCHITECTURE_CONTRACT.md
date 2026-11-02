@@ -15,11 +15,11 @@ classification logits as embeddings unintentionally. Do not cache embeddings
 after trainable internal backbone layers. The feature-head path deliberately
 uses the existing tabular preprocessing on frozen embeddings only.
 
-## V03-V11 requested but not implemented
-V03 native ViT FFN; V04 ConvNeXt channel FFN;
-V05 PoolFormer channel FFN; V06a S2 spatial shift; V06b AS axial shift;
+## Outstanding V07–V11 architectures
 V07 MLP-Mixer token/channel FFNs; V08 multisite adapters; V09 strict bank
-of adapters; V10 ResMLP channel FFN; V11 GFNet Fourier-mixed FFN.
+of adapters; V10 ResMLP channel FFN; V11 GFNet Fourier-mixed FFN. V03–V06b
+now have small random-initialized internal-FFN implementations and opt-in
+worker routes (selected CPU CI verified through V05; V06a/b pending CI).
 All require fixed external interfaces, authentic composite forward/backward,
 local eligible-site expansion, reproducible snapshots, controller/runner integration.
 No convolution/attention/filter/channel-interface/token-count mutation is permitted.

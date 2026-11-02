@@ -1,5 +1,9 @@
 # Visual ADP implementation ledger
 
+**The top table is the current summary.** Later chronological sections preserve
+historical development milestones, including past pending-CI statements that
+were subsequently verified by newer test evidence.
+
 States distinguish source/static implementation from executed tests and science.
 
 | Item | State | Evidence / missing |
@@ -13,18 +17,20 @@ States distinguish source/static implementation from executed tests and science.
 | CIFAR-10/CIFAR-100/Fashion-MNIST optional loader | runtime-tested API on offline synthetic arrays (not real datasets) | vision_data.py, torchvision optional; no real dataset execution | 
 | V01 opt-in coordinated runner and signed split jobs | runtime-tested (toy CPU) | runner/vision.py, plan.py, plugins.py, tests/test_runner_vision.py; toy and offline image provider only |
 | V02 residual CNN adapter with all 14 canonical methods and generic profiles | runtime-tested on synthetic CPU; 259 tests passed | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
-| V03/V04 | missing | requires composite controller and source FFN integration |
-| V05/V06a/V06b/V07 | missing | operator/model integration, mutation and resume |
+| V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
+| V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
+| V06a S2 / V06b axial shift FFN | implemented; CI pending | separate parameter-free frozen shifts, source growth and paired vision workers |
+| V07 MLP-Mixer | missing | token/channel dual-site model and source controller integration |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
 | V10/V11 | missing | ResMLP/GFNet operators and full integration |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | partial | 259 selected CPU tests passed including V01 worker and torchvision ResNet18, plus variance contract CI; CUDA/full suite not executed |
+| CPU/CUDA complete regression | partial | 275 selected CPU tests passed through V05; V06a/b pending; CUDA and full suite not executed |
 
-Next: validate the eight generic V02 controller profiles through the coordinated runner, then integrate V03/V04. Original tabular job identities remain untouched.
+**Next:** verify V06a/b selected CI and independent variance contract;
+then implement V07 token/channel mixer scopes, V08–V11, pretrained source FFNs and
+real-data science. Original tabular identities remain unchanged.
 
-**Next:** finish the V02 generic-profile CI; then extend eligible local FFN sites to V03/V04 without modifying the source taxonomy.
-
-## V02 dedicated composite architecture-search increment (pending CI)
+## V02 dedicated composite architecture-search increment (historical superseded phase)
 
 `src/simple_adp/visual_search.py` executes the original dedicated loss/variance
 stage trainer over full-image V02 candidates for LGND-W-Greedy, ADP-W-RR,
@@ -36,7 +42,7 @@ and progressive ADP-D-D1 are explicitly rejected, not silently approximated.
 This first controller is a standalone library API, not yet a signed V02
 coordinated runner job. CPU execution and interruption tests pending CI.
 
-## V02 coordinated suite integration (pending new CI)
+## V02 coordinated suite integration (historical superseded phase)
 A separately registered opt-in `vision_inner` ModelAdapter enumerates only the
 five standalone supported V02 controllers, with one additional variance-shadow
 counterpart per growing method. The original V01 routes remain independent.
@@ -45,7 +51,7 @@ checkpoint, reports architecture ID/growth site, and writes a separately signed
 best-model artifact. All vision paths are disabled by default. A bounded
 worker end-to-end regression was added to tests/test_runner_vision.py.
 
-## V02 ADP-D-D1 progressive insertion (pending CI)
+## V02 ADP-D-D1 progressive insertion (historical superseded phase)
 The composite search now supports native width-one depth insertion and an
 optimization-only ladder through widths 1..Dcur. Intermediate stages retain
 whole-image gradients and signed mid-stage checkpoint/resume but never enter
@@ -83,7 +89,7 @@ CI (259 tests). V03–V11 remain unimplemented.
   image backbones, actual CIFAR experiments, multi-seed science, full-suite
   regression and CUDA behavior verification.
 
-## V03/V04 native inner-FFN composite controllers — pending CI
+## V03/V04 native inner-FFN composite controllers — verified selected CPU CI
 - `src/simple_adp/visual_native_ffn.py` introduces **V03** patch/tokens/CLS,
   fixed multihead attention and a native token-wise expandable GELU FFN, and
   **V04** fixed depthwise spatial convolution and channels-last GELU channel FFN.
@@ -100,7 +106,7 @@ CI (259 tests). V03–V11 remain unimplemented.
 - This pass implements the standalone library search path; central runner
   route registration and full real-data experiments are still missing.
 
-## V03/V04 opt-in coordinated runner extension (pending CI)
+## V03/V04 opt-in coordinated runner extension (verified selected CPU CI)
 `VisionNativeFFNModelAdapter` registers independent adapter IDs
 `vision_v03` / `vision_v04` under `SIMPLE_ADP_ENABLE_VISION=1`.
 Each enumerates 14 canonical IDs / 22 method-profile combinations, with 21
@@ -122,7 +128,7 @@ corrected generic methods. Evidence remains pending CI.
   selected seed/split/repeat per V03 and per V04**, subject to suite settings.
 - No pretrained FFN injection, real CIFAR benchmark or GPU scientific run.
 
-## V05 PoolFormer native channel FFN (new code pending CI)
+## V05 PoolFormer native channel FFN (verified selected CPU CI)
 - Same frozen-interface architecture factory now implements a distinct
   `V05` family: fixed strided stem, parameter-free 3x3 average pooling minus
   identity token mixer, residual update, channels-last LayerNorm and local

@@ -33,7 +33,8 @@ A checkpoint path has a sibling .vision.json identity sidecar; exact resume
 requires both artifacts. Saved models also require the same external encoder
 weights and provenance upon VisualADPEstimator.load. Load only trusted head
 checkpoint files because legacy TabularADP.load currently uses torch.load
-with weights_only=False. The coordinated runner is opt-in for V01 only (see below).
+with weights_only=False. The coordinated runner is opt-in for the separate vision families; V01–V05
+have selected CPU CI and V06a/b await new CI (see family-specific sections).
 
 ## Real dataset preparation (opt-in, torchvision installed)
 
