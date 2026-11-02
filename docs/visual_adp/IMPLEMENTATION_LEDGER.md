@@ -21,13 +21,13 @@ States distinguish source/static implementation from executed tests and science.
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
 | V07 MLP-Mixer | all 3 token/channel/synchronous-both scopes CPU CI verified (303 tests) | true residual token/channel MLPs, signed resumed search, matched variance jobs and joint budget |
-| V08 fixed three-stage residual adapter | 3 independent sites verified (331 tests); fixed multisite schedule pending CI | early/middle/late source growth and a separate predeclared round-robin site policy |
+| V08 fixed three-stage residual adapter | independent sites + fixed multisite schedule verified (354 tests) | early/middle/late local growth, saved site order/weights and exact middle-site resume |
 | V09 strict adapter bank | selected CPU CI verified: 347 passed | hard frozen router, three strictly isolated adapter targets, routing counts and matched workers |
 | V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | partial | 347 selected CPU tests passed through V09; CUDA and full suite not executed |
+| CPU/CUDA complete regression | partial | 354 selected CPU tests passed including V08 schedule and V09 bank; CUDA/full suite not executed |
 
-**Next:** verify the V08 predefined multistage schedule; then adaptive selection,
+**Next:** adaptive multi-site selection and optional bank creation/learned routing; then
 strict pretrained-source FFN integration, real-image benchmarking and GPU/full-suite checks.
 Original tabular identities remain unchanged.
 
@@ -335,7 +335,7 @@ corrected generic methods. Evidence remains pending CI.
 - This is a frozen hard router; no learned gate, new-member creation,
   pretrained backbone, real-image scientific experiment or CUDA validation.
 
-## V08 predefined multisite stage schedule (separate ablation, pending CI)
+## V08 predefined multisite stage schedule (verified selected CPU CI)
 - New `visual_multistage_schedule.py` holds three genuine trainable local
   C-to-C residual MLPs inside a fixed three-convolutional-stage CNN, with an
   explicit immutable site order `early -> middle -> late`.
@@ -358,3 +358,19 @@ corrected generic methods. Evidence remains pending CI.
   Synthetic CPU tests, including a mid-middle-site eviction and exact resume,
   are added but **CI is pending**. Pretrained source and real-image science
   remain absent.
+
+## Verified V08 predefined site schedule — 2026-11-02
+- Implemented: `53f7d7a33b6a78439363bb9c7419aedacf3d0e99`.
+- Snapshot syntax corrected by `73db80bfd43229762f0a0158d356f6f00e639716`
+  and `98bfd9f78339cb77b16c9214a2dba944ebac546f`.
+- Selected workflow: https://github.com/Anurag9000/simple-adp/actions/runs/41415527242
+- **354 CPU tests passed in 69.35 seconds**; early/middle/late
+  fixed schedule, exact per-site weights/cursors, signed mid-middle-site
+  interrupted recovery, source variants, coordinated runner and matching
+  variance jobs. The separate source original-versus-variance workflow
+  also succeeded.
+- A prior CI run at `53f7d7a3` had failed at collection due to a
+  malformed Python dict comprehension in the new snapshot restore.
+  The correction is in current main; the above test run confirms success.
+- Scientific image training, pretrained source implementations, full
+  repo-wide regression and CUDA correctness remain unverified.

@@ -71,8 +71,8 @@
       "methods": "14 canonical IDs per scope; 3 independent source scopes verified; one extra fixed-site round-robin policy pending CI",
       "site": "adapter:early / adapter:middle / adapter:late independent (CI verified); separate adapter:round_robin_sites schedule (pending CI)",
       "criterion": "native loss / matched shadow-BGD variance-stagnation (21 counterpart jobs per site)",
-      "status": "three independent-site policies verified with 331 selected CPU tests; fixed multisite RR policy implemented, pending CI",
-      "reason": "Fixed CNN with real local adapters, exact per-site candidate snapshot and aggregate neuron budget; source within-MLP methods remain intact, no learned adaptive site selection or real pretrained model."
+      "status": "selected synthetic CPU CI verified (354 passing tests) for 3 independent sites plus fixed predeclared RR multi-site policy",
+      "reason": "Three real independent stage adapters and one separate site-RR ablation; exact signed site order, weights/cursors and mid-middle-site resume tested. No adaptive learned site selection or pretrained scientific experiments."
     },
     {
       "architecture": "V09",

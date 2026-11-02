@@ -227,3 +227,17 @@ scientific result has been executed in this increment.
 - tests/test_runner_vision.py adds the fourth V08 family, signed per-job
   schedule trace, 22 original/21 variance route matching and source workers.
 - No pretrained scientific run; CI pending.
+
+## V08 scheduled multisite ablation selected CI — verified (2026-11-02)
+- Initial code `53f7d7a33b6a78439363bb9c7419aedacf3d0e99`.
+- First workflow https://github.com/Anurag9000/simple-adp/actions/runs/41415150793
+  failed test collection due to a Python dictionary-comprehension syntax
+  error in snapshot restore; resolved by follow-up fixes.
+- Successful follow-up workflow:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41415527242.
+- **354 selected CPU tests passed in 69.35s**, including all prior V01–V11
+  controlled families, V09 fixed bank, V08 scheduled three-site real local
+  growth, aggregate capacity, exact middle-site interrupted resume, and
+  original/variance matched worker. Variance contract workflow also passed.
+- These are synthetic CPU implementation tests, not full pretrained real
+  CIFAR-10/100, Fashion-MNIST, full-suite, or GPU scientific validation.

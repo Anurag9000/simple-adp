@@ -210,3 +210,10 @@ Aggregate neuron budget sums all three local MLPs. This route has a separate
 opt-in runner name, snapshot kind, source-version signature and site schedule
 history. It is not a learned site selector or a change to the canonical
 within-MLP method taxonomy. Tests pending CI.
+
+## Verified V08 schedule execution (2026-11-02)
+The predeclared round-robin early/middle/late policy and its independently
+signed per-site state passed 354 selected CPU tests at
+https://github.com/Anurag9000/simple-adp/actions/runs/41415527242.
+This validates real fixed-stage local MLP training/mutations, not learned
+site selection or a pretrained three-stage source backbone.

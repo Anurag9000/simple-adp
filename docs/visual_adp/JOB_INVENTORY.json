@@ -53,8 +53,8 @@
     },
     {
       "id": "V08",
-      "central_runner_jobs": "172 per seed/split/repeat: 129 independent early/middle/late CI verified + 43 explicit predeclared RR site schedule pending CI",
-      "implementation": "three independent fixed-site CNN adapter controls plus separate predeclared multisite RR policy with per-site weight/cursor snapshots, true frozen inactive local MLPs and site history, schedule CI pending",
+      "central_runner_jobs": "172 per seed/split/repeat: 129 independent early/middle/late plus 43 predeclared RR site policy, opt-in; all selected CPU CI verified",
+      "implementation": "three independent local stage MLPs plus fixed early-middle-late scheduled policy, signed distinct per-site weights/cursors, true local-only training, matched variance, selected CPU CI verified (354 tests)",
       "scientifically_executed": false
     },
     {
@@ -75,5 +75,6 @@
       "implementation": "native frozen GFNet complex Fourier operator, channel FFN ADP, exact resume, paired worker, 315 selected CI tests",
       "scientifically_executed": false
     }
-  ]
+  ],
+  "last_verified_visual_sha": "73db80bfd43229762f0a0158d356f6f00e639716"
 }

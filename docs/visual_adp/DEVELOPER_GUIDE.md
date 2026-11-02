@@ -310,3 +310,10 @@ on the active site. The worker's result.json includes
 per-candidate `site_schedule_trace`. Per-site hidden widths/weights and
 within-local-MPL RR cursors are signed. This is **not** the canonical ADP-W-RR
 within-layer selection, and no adaptive learned controller is implied.
+
+### Fixed V08 schedule verification
+The `vision_v08_schedule` family passed bounded full-image synthetic CPU
+CI: https://github.com/Anurag9000/simple-adp/actions/runs/41415527242.
+The run restored each local MLP's weights/cursor after a middle-site eviction
+and exactly reproduced the baseline trajectory. This is a fixed site policy,
+not a validation-selected/adaptive site router.
