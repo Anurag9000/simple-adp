@@ -1,0 +1,39 @@
+name: Published pretrained ViT-B16 V03 inner FFN real-image smoke
+
+on:
+  push:
+    paths:
+      - 'scripts/vision_pretrained_vit_smoke.py'
+      - '.github/workflows/visual-pretrained-vit-smoke.yml'
+  workflow_dispatch:
+
+jobs:
+  actual-pretrained-vit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[vision]'
+      - name: Run published ViT source internal FFN on official Fashion-MNIST
+        run: |
+          python scripts/vision_pretrained_vit_smoke.py \
+            --workdir "${{ runner.temp }}/real-v03" --device cpu
+      - name: Retain real-data source FFN result evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-fashion-vitb16-v03-source-ffn
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/real-v03/experiments/fashion_mnist/V03-source/ADP-W-RR/seed11/manifest.json
+            ${{ runner.temp }}/real-v03/experiments/fashion_mnist/V03-source/ADP-W-RR/seed11/result.json
+            ${{ runner.temp }}/real-v03/experiments/fashion_mnist/V03-source/ADP-W-RR/seed11/search_history.json
+            ${{ runner.temp }}/real-v03/experiments/fashion_mnist/V03-source/ADP-W-RR/seed11/selected_source_vit_model.pt
