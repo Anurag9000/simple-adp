@@ -12,7 +12,16 @@ from simple_adp.runner import backend
 
 
 @pytest.fixture(autouse=True)
-def reset_backend_state():
+def reset_backend_state(monkeypatch):
+    # The whole-repository suite runs under scheduler/inherited admission
+    # settings that are intentionally unrelated to unit-test simulated
+    # workers. Isolate *all* CPU and GPU admission inputs so the explicit
+    # monkeypatches in each test are the complete simulated environment.
+    for name in (
+        *backend.CPU_FLAGS, "TRAINING_CONTROL_BACKEND", "TABULAR_BACKEND",
+        "CUDA_VISIBLE_DEVICES",
+    ):
+        monkeypatch.delenv(name, raising=False)
     backend.reset_backend_cache()
     yield
     backend.reset_backend_cache()
