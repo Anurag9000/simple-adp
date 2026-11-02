@@ -154,3 +154,34 @@ disk load, interrupted minibatch recovery and posterior/RNG identity.
 Older checkpoints containing raw ndarray RNG records may require
 trusted legacy-load migration; no silent unsafe fallback has been
 introduced to this test.
+
+
+## Verified fault-injected variance stage resume (2 November 2026)
+
+On source commit `55e712938b5b9ad7a1585f1183153ee5d76f792f`,
+GitHub Actions run
+https://github.com/Anurag9000/simple-adp/actions/runs/41394892660
+passed **212 CPU tests**, including safe Torch 2.6 loading of a
+persisted mid-epoch variance-stage checkpoint, restart after the
+second minibatch, and equality with an uninterrupted stage for model
+weights, optimizer-step counts, best-epoch BGD sigma, observer RNG
+and deterministic minibatch scheduling.
+
+At commit `edc75eba9d0b3eb484b3dc3746bea92eb29098e9`,
+https://github.com/Anurag9000/simple-adp/actions/runs/41395163878
+passed **219 CPU tests**, adding eight criterion-specific fault
+injection cases spanning Adam/AdamW, classification/regression,
+and interruptions both before and after a best-validation epoch.
+Neither run establishes full coordinated runner restart, CUDA
+bitwise parity or whole-science-job completion.
+
+## Newly added visual pipelines
+
+The separately developed visual V01 frozen encoder and V02
+residual/single-site ADP pathways have their own documented
+source-to-variance pairing, profile and signed split contracts in
+`docs/visual_adp/IMPLEMENTATION_LEDGER.md`. They were not
+part of the original tabular inventory and must be audited
+and executed independently as new scientific job families.
+V03 onwards are not declared supported jobs; unfinished
+architectures are not counted as executable counterparts.
