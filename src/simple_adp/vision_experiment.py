@@ -48,6 +48,25 @@ def _file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _json_native(value: Any) -> Any:
+    """Convert experiment histories to strict, portable JSON primitives."""
+    if value is None or isinstance(value, (str, bool, int, float)):
+        return value
+    if isinstance(value, np.generic):
+        return _json_native(value.item())
+    if isinstance(value, np.ndarray):
+        return [_json_native(x) for x in value.tolist()]
+    if torch.is_tensor(value):
+        return _json_native(value.detach().cpu().numpy())
+    if isinstance(value, (list, tuple)):
+        return [_json_native(x) for x in value]
+    if isinstance(value, dict):
+        return {str(k): _json_native(v) for k, v in value.items()}
+    if isinstance(value, Path):
+        return str(value)
+    raise TypeError(f"experiment history cannot encode {type(value).__name__}")
+
+
 def run_vision_experiment(
     *,
     dataset: str,
@@ -146,6 +165,7 @@ def run_vision_experiment(
     result_path = output / "result.json"
     checkpoint_path = output / "estimator.checkpoint.pt"
     model_path = output / "estimator.model.pt"
+    history_path = output / "search_history.json"
     if manifest_path.exists():
         stored = json.loads(manifest_path.read_text(encoding="utf-8"))
         if stored != manifest:
@@ -164,6 +184,9 @@ def run_vision_experiment(
             raise ValueError("completed inference model checksum changed")
         if result.get("model_identity_sha256") != _file_sha256(output / "estimator.model.pt.vision.json"):
             raise ValueError("completed inference model identity checksum changed")
+        if "search_history_file_sha256" in result:
+            if not history_path.is_file() or _file_sha256(history_path) != result["search_history_file_sha256"]:
+                raise ValueError("completed candidate history checksum changed")
         return result
 
     train_x, train_y = parts.materialize("train")
@@ -201,6 +224,17 @@ def run_vision_experiment(
     test_prediction = estimator.head.predict(test_features)
     test_proba = estimator.head.predict_proba(test_features)
     test_metrics = task.evaluation_metrics(test_y, test_prediction, test_proba)
+    truth = task.encode_targets(test_y, device=torch.device("cpu")).numpy()
+    predicted = task.encode_targets(test_prediction, device=torch.device("cpu")).numpy()
+    confusion = np.zeros((task.output_dim, task.output_dim), dtype=np.int64)
+    np.add.at(confusion, (truth, predicted), 1)
+    search_history = {
+        "format": "simple-adp-vision-search-history-v1",
+        "run_signature": manifest["run_signature"],
+        "model_id": model_id, "generic_profile": generic_profile,
+        "entries": _json_native(estimator.head.history_),
+    }
+    _atomic_json(history_path, search_history)
     estimator.save(model_path)
     result = {
         "format": "simple-adp-vision-v01-result-v1",
@@ -213,6 +247,14 @@ def run_vision_experiment(
         "source_encoder_state_sha256": source_state_sha,
         "selected_architecture": list(estimator.head.model_.hidden_widths),
         "history_entries": len(estimator.head.history_),
+        "search_history_artifact": history_path.name,
+        "search_history_file_sha256": _file_sha256(history_path),
+        "class_order": _json_native(task.classes_),
+        "confusion_matrix": confusion.tolist(),
+        "parameter_counts": {
+            "frozen_encoder": int(sum(p.numel() for p in bridge.parameters())),
+            "selected_adp_head": int(sum(p.numel() for p in estimator.head.model_.parameters())),
+        },
         "validation_metrics": validation_metrics,
         "test_metrics": test_metrics,
         "sample_counts": {

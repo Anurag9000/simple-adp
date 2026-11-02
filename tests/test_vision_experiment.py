@@ -111,7 +111,7 @@ def test_experiment_writes_signed_manifest_results_and_inference_artifact(tmp_pa
     assert completed["selected_architecture"] == [3]
     assert set(completed["sample_counts"]) == {"train", "validation", "official_test"}
     assert completed["sample_counts"] == {"train": 16, "validation": 6, "official_test": 6}
-    for name in ("manifest.json", "result.json", "estimator.model.pt",
+    for name in ("manifest.json", "result.json", "search_history.json", "estimator.model.pt",
                  "estimator.model.pt.vision.json", "estimator.checkpoint.pt"):
         assert (cfg["output_dir"] / name).exists()
     recorded = json.loads((cfg["output_dir"] / "manifest.json").read_text())
@@ -122,6 +122,17 @@ def test_experiment_writes_signed_manifest_results_and_inference_artifact(tmp_pa
     assert recorded["input_transform"]["raw_channels"] == 1
     assert recorded["input_transform"]["output_resolution"] == [32, 32]
     assert completed["run_signature"] == recorded["run_signature"]
+    assert completed["search_history_artifact"] == "search_history.json"
+    assert len(completed["search_history_file_sha256"]) == 64
+    assert completed["class_order"] == [0, 1]
+    assert len(completed["confusion_matrix"]) == 2
+    assert sum(sum(row) for row in completed["confusion_matrix"]) == 6
+    assert completed["parameter_counts"]["frozen_encoder"] > 0
+    assert completed["parameter_counts"]["selected_adp_head"] > 0
+    trace = json.loads((cfg["output_dir"] / "search_history.json").read_text())
+    assert trace["run_signature"] == completed["run_signature"]
+    assert trace["model_id"] == "MLP-Fixed"
+    assert len(trace["entries"]) == completed["history_entries"]
     assert len(completed["source_encoder_state_sha256"]) == 64
     assert 0 <= completed["test_metrics"]["accuracy"] <= 1
     assert completed["test_metrics"]["n_samples"] if "n_samples" in completed["test_metrics"] else True
@@ -163,6 +174,13 @@ def test_run_manifest_blocks_mismatched_encoder_settings_and_wrong_artifacts(tmp
     )
     with pytest.raises(ValueError, match="manifest identity mismatch"):
         run_vision_experiment(**altered)
+    trace = cfg["output_dir"] / "search_history.json"
+    history_bytes = trace.read_bytes()
+    with trace.open("ab") as stream:
+        stream.write(b"tamper")
+    with pytest.raises(ValueError, match="history checksum changed"):
+        run_vision_experiment(**cfg)
+    trace.write_bytes(history_bytes)
     path = cfg["output_dir"] / "estimator.model.pt"
     with path.open("ab") as stream:
         stream.write(b"tamper")
