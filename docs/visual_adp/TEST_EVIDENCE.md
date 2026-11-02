@@ -91,3 +91,10 @@ scientific result has been executed in this increment.
 - Original ADP native loss/variance contract workflow also succeeded.
 - No real pretrained source backbones, CIFAR scientific benchmarks, CUDA or
   complete repository-wide test suite were executed in this increment.
+
+## V03/V04 standalone native FFN tests (pending CI)
+- New tests: tests/test_visual_native_ffn.py covers ViT attention/CLS token FFN,
+  ConvNeXt-style depthwise/channel FFN, fixed-state hash, actual gradients,
+  native RR/all/D1/Dcur, GELU/weights transfer, exact checkpoint restoration,
+  fixed model and generic search, and mid-batch fault/restart.
+- Do not count new routes or scientific jobs as executed until verified by CI.

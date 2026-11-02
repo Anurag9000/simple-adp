@@ -69,3 +69,22 @@ Synthetic CPU integration passed at
 https://github.com/Anurag9000/simple-adp/actions/runs/41394281464.
 V02 uses a frozen random CNN control, not a verified pretrained ResNet-like
 adapter or empirical model-quality claim.
+
+## Experimental V03 and V04 native FFN site contracts
+`NativeFFNSpec` enforces fixed NCHW resolution, patch size and site ID;
+V03 uses `ffn:block0` and V04 uses `channel:stage0.block0`.
+V03 is a small train-from-scratch frozen patch stem + CLS/position embeddings
++ self-attention + FFN with GELU on all tokens + CLS classifier. V04 is a
+small frozen strided stem + 7x7 depthwise spatial mixer + channels-last
+LayerNorm/GELU FFN + fixed layer scale + pooled classifier. These are genuine
+inside-backbone FFN sites, not the V01 pooled-head route or a residual
+projection adapter; they are *not* pretrained production torchvision models.
+All native growth operators use local source TabularMLP overlap copying,
+while stateless ReLU layers produced by those operators are converted back to
+GELU to retain FFN activation semantics. Interface d_in=d_out=d_model,
+token count, depthwise channels, patch count and attention heads never grow.
+All fixed modules have requires_grad=False, eval mode and a hash checking
+weights/buffers. Frozen downstream paths remain in autograd. Full-image
+candidate search/restoration uses VisualResidualSearch's additive composite
+model factory, with a separate checkpoint namespace for V03/V04. Standalone
+constructor/search tests pending CI; no real-data or pretrained weight claim.

@@ -27,6 +27,7 @@ from .results import SearchResult
 from .tasks import ClassificationTask
 from .training import StageTrainer
 from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
+from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_composite, restore_visual_composite
 
 
 SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
@@ -42,7 +43,7 @@ def _hash_array(digest: Any, item: Any) -> None:
 
 
 def _restore(snapshot: dict[str, object], device: str) -> VisualResidualAdapter:
-    model = VisualResidualAdapter.from_snapshot(snapshot).to(device)
+    model = restore_visual_composite(snapshot).to(device)
     model.verify_frozen()
     return model
 
@@ -59,7 +60,7 @@ class VisualResidualSearch:
     def __init__(
         self,
         model_id: str,
-        spec: ResidualAdapterSpec,
+        spec: ResidualAdapterSpec | NativeFFNSpec,
         *,
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
@@ -95,7 +96,8 @@ class VisualResidualSearch:
         for item in (train_x, train_y, valid_x, valid_y):
             _hash_array(digest, item)
         return stable_signature({
-            "version": "v02-dedicated-1",
+            "version": ("v02-dedicated-1" if isinstance(self.spec, ResidualAdapterSpec)
+                        else "visual-native-ffn-search-1"),
             "model": self.config.signature_dict(),
             "spec": asdict(self.spec),
             "settings": self.settings.as_dict(),
@@ -105,15 +107,19 @@ class VisualResidualSearch:
             "raw_data_sha256": digest.hexdigest(),
         })
 
+    def _search_kind(self) -> str:
+        return ("visual-residual-search-v02" if isinstance(self.spec, ResidualAdapterSpec)
+                else "visual-native-ffn-search-v1")
+
     def _new_state(self) -> dict[str, Any]:
         random.seed(self.settings.seed)
         np.random.seed(self.settings.seed)
         torch.manual_seed(self.settings.seed)
         first = (self.fixed_grid[0] if self.fixed_grid else
                  (self.settings.init_width,) * self.settings.init_depth)
-        model = VisualResidualAdapter(self.spec, tuple(first)).to(self.settings.device)
+        model = build_visual_composite(self.spec, tuple(first)).to(self.settings.device)
         return {
-            "kind": "visual-residual-search-v02",
+            "kind": self._search_kind(),
             "status": "running", "phase": "initial" if self.config.controller != "fixed" else "fixed",
             "current": model.snapshot(cursor=model._width_cursor),
             "best": None, "best_score": float("inf"),
@@ -205,6 +211,8 @@ class VisualResidualSearch:
                 current.local_mlp, [*current.hidden_widths[:-1], new_width],
                 cursor=current._width_cursor,
             )
+            if isinstance(candidate, VisualNativeFFN):
+                candidate._gelu_hidden()
             candidate.train(current.training)
             candidate.verify_frozen()
             if new_width == target:
@@ -215,7 +223,7 @@ class VisualResidualSearch:
             index = state["fixed_index"]
             if index >= len(self.fixed_grid):
                 return None
-            return VisualResidualAdapter(self.spec, self.fixed_grid[index]).to(s.device)
+            return build_visual_composite(self.spec, self.fixed_grid[index]).to(s.device)
         raise ValueError(f"unknown V02 dedicated phase {state['phase']!r}")
 
     def _accept(self, state: dict[str, Any], score: float) -> bool:
@@ -325,7 +333,7 @@ class VisualResidualSearch:
         store = CheckpointStore(checkpoint_path) if checkpoint_path is not None else None
         state = (store.load(signature=signature, map_location="cpu")
                  if store and store.path.exists() else self._new_state())
-        if state.get("kind") != "visual-residual-search-v02":
+        if state.get("kind") != self._search_kind():
             raise ValueError("exact-resume failure: unrecognized composite controller state")
         if state["status"] == "completed":
             selected = _restore(state["best"], self.settings.device)

@@ -20,19 +20,19 @@
     },
     {
       "architecture": "V03",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "all 14 canonical method IDs via shared composite controller (pending standalone CPU CI)",
+      "site": "ffn:block0",
+      "criterion": "loss / BGD-shadow variance-stagnation (pending tests)",
+      "status": "experimental standalone native FFN implementation; CI and coordinated runner pending",
+      "reason": "Synthetic tiny frozen random feature backbone with internal GELU FFN. Not a pretrained torchvision model, not a scientific image experiment."
     },
     {
       "architecture": "V04",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "all 14 canonical method IDs via shared composite controller (pending standalone CPU CI)",
+      "site": "channel:stage0.block0",
+      "criterion": "loss / BGD-shadow variance-stagnation (pending tests)",
+      "status": "experimental standalone native FFN implementation; CI and coordinated runner pending",
+      "reason": "Synthetic tiny frozen random feature backbone with internal GELU FFN. Not a pretrained torchvision model, not a scientific image experiment."
     },
     {
       "architecture": "V05",

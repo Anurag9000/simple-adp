@@ -18,13 +18,13 @@
     {
       "id": "V03",
       "central_runner_jobs": 0,
-      "implementation": "missing",
+      "implementation": "experimental native inner FFN + shared standalone composite controller and snapshot, pending CI",
       "scientifically_executed": false
     },
     {
       "id": "V04",
       "central_runner_jobs": 0,
-      "implementation": "missing",
+      "implementation": "experimental native inner FFN + shared standalone composite controller and snapshot, pending CI",
       "scientifically_executed": false
     },
     {

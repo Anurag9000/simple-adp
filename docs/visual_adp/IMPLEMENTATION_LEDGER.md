@@ -82,3 +82,20 @@ CI (259 tests). V03–V11 remain unimplemented.
 - Still missing: V03–V11 (with V06a/V06b distinct), real pretrained internal
   image backbones, actual CIFAR experiments, multi-seed science, full-suite
   regression and CUDA behavior verification.
+
+## V03/V04 native inner-FFN composite controllers — pending CI
+- `src/simple_adp/visual_native_ffn.py` introduces **V03** patch/tokens/CLS,
+  fixed multihead attention and a native token-wise expandable GELU FFN, and
+  **V04** fixed depthwise spatial convolution and channels-last GELU channel FFN.
+- Both own immutable patch/channel/attention interfaces and strict frozen
+  state hashes. Only FFN linear hidden layers grow; all other modules and
+  buffers are frozen. They are small random-initialized *architecture-shaped*
+  controls, not pretrained torchvision ViT/ConvNeXt models.
+- The V02 full-image candidate controller has an additive, explicitly typed
+  composite factory and snapshot dispatcher, retaining the exact V02 checkpoint
+  namespace. The V03/V04 signatures use distinct new namespaces.
+- Tests added for frozen gradients, width/depth operators, GELU restoration,
+  local weight transfer, safe snapshot, fixed control, generic phase search,
+  actual training/growth and mid-stage signed replay. **Pending CI.**
+- This pass implements the standalone library search path; central runner
+  route registration and full real-data experiments are still missing.
