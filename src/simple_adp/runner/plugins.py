@@ -59,6 +59,9 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
         if os.environ.get("SIMPLE_ADP_ENABLE_V04_SOURCE") == "1":
             from .vision_source import VisionSourceConvNeXtModelAdapter
             models.register(VisionSourceConvNeXtModelAdapter())
+        if os.environ.get("SIMPLE_ADP_ENABLE_V03_SOURCE") == "1":
+            from .vision_source import VisionSourceViTModelAdapter
+            models.register(VisionSourceViTModelAdapter())
     points = entry_points()
     for group, registry in (
         ("simple_adp.dataset_providers", datasets),

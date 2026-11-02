@@ -1,0 +1,27 @@
+name: V03 genuine source ViT coordinated runner contracts
+
+on:
+  push:
+    paths:
+      - 'src/simple_adp/runner/vision_source.py'
+      - 'src/simple_adp/runner/plugins.py'
+      - 'src/simple_adp/runner/plan.py'
+      - 'tests/test_runner_vision_vit_source.py'
+      - '.github/workflows/visual-source-vit-runner.yml'
+  workflow_dispatch:
+
+jobs:
+  source-vit-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 26
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[dev,vision]'
+      - name: Verify source ViT route identity, checksum guards and actual worker
+        run: python -m pytest -q --maxfail=1 tests/test_runner_vision_vit_source.py

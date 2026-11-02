@@ -22,6 +22,7 @@ from ..config import SearchSettings
 from ..registry import MODEL_REGISTRY
 from ..visual_search import VisualResidualSearch
 from ..visual_source_convnext import SourceConvNeXtSpec, file_sha256
+from ..visual_source_vit import SourceViTSpec
 from .artifacts import estimator_model_path
 from .datasets import PreparedTaskData
 from .plan import SplitSpec
@@ -32,13 +33,18 @@ class VisionSourceConvNeXtModelAdapter:
     name = "vision_v04_source"
     family = "V04-source"
     SOURCE_WIDTH = 384
+    SOURCE_SPEC = SourceConvNeXtSpec
+    SOURCE_PREFIX = "V04-source"
+    SOURCE_ARCHITECTURE = "V04:torchvision-convnext-tiny-source-ffn"
+    ENABLE_ENV = "SIMPLE_ADP_ENABLE_V04_SOURCE"
+    WEIGHTS_ENV = "SIMPLE_ADP_V04_SOURCE_WEIGHTS"
+    SHA_ENV = "SIMPLE_ADP_V04_SOURCE_SHA256"
 
-    @staticmethod
-    def _source() -> tuple[str, str]:
-        if os.environ.get("SIMPLE_ADP_ENABLE_V04_SOURCE") != "1":
-            raise ValueError("source V04 requires explicit SIMPLE_ADP_ENABLE_V04_SOURCE=1")
-        path_text = os.environ.get("SIMPLE_ADP_V04_SOURCE_WEIGHTS", "").strip()
-        expected = os.environ.get("SIMPLE_ADP_V04_SOURCE_SHA256", "").strip().lower()
+    def _source(self) -> tuple[str, str]:
+        if os.environ.get(self.ENABLE_ENV) != "1":
+            raise ValueError(f"source {self.family} requires explicit {self.ENABLE_ENV}=1")
+        path_text = os.environ.get(self.WEIGHTS_ENV, "").strip()
+        expected = os.environ.get(self.SHA_ENV, "").strip().lower()
         if not path_text or len(expected) != 64 or any(
                 c not in "0123456789abcdef" for c in expected):
             raise ValueError("source V04 requires a local source weights file and a full SHA256")
@@ -60,7 +66,7 @@ class VisionSourceConvNeXtModelAdapter:
         for model_id, config in sorted(MODEL_REGISTRY.items()):
             profiles = (None,) if not config.generic else generic_profiles
             for profile in profiles:
-                label = (f"V04-source:sha{source_sha[:20]}:{model_id}"
+                label = (f"{self.SOURCE_PREFIX}:sha{source_sha[:20]}:{model_id}"
                          + (f"@{profile}" if profile else ""))
                 routes.append(ModelRoute(
                     model_id,
@@ -82,7 +88,7 @@ class VisionSourceConvNeXtModelAdapter:
         if data.task_family != "vision" or route.suite_group != "vision":
             raise ValueError("source V04 adapter only accepts official/synthetic vision tasks")
         weights_path, source_sha = self._source()
-        expected_label = f"V04-source:sha{source_sha[:20]}:{route.model_id}"
+        expected_label = f"{self.SOURCE_PREFIX}:sha{source_sha[:20]}:{route.model_id}"
         if route.model_id not in MODEL_REGISTRY or route.route_label != (
                 expected_label + (f"@{route.generic_profile}" if route.generic_profile else "")):
             raise ValueError("source V04 route/source checksum is inconsistent with planned identity")
@@ -108,7 +114,7 @@ class VisionSourceConvNeXtModelAdapter:
             **settings.as_dict(), "seed": int(seed),
             "init_width": self.SOURCE_WIDTH, "init_depth": 1,
         })
-        spec = SourceConvNeXtSpec(
+        spec = self.SOURCE_SPEC(
             input_channels=int(fit_x.shape[1]),
             image_height=int(fit_x.shape[2]),
             image_width=int(fit_x.shape[3]),
@@ -146,11 +152,11 @@ class VisionSourceConvNeXtModelAdapter:
         if checkpoint_path is not None:
             artifact = str(estimator_model_path(checkpoint_path))
             CheckpointStore(artifact).save({
-                "format": "visual-v04-source-convnext-inference-v1",
+                "format": f"visual-{self.family.lower()}-inference-v1",
                 "model_id": route.model_id,
                 "source_weights_sha256": source_sha,
                 "source_route_label": route.route_label,
-                "architecture_id": "V04:torchvision-convnext-tiny-source-ffn",
+                "architecture_id": self.SOURCE_ARCHITECTURE,
                 "growth_site": spec.site_id,
                 "split_sha256": split.split_sha256,
                 "task": task.state_dict(),
@@ -177,10 +183,29 @@ class VisionSourceConvNeXtModelAdapter:
             "metric_directions": task.metric_directions,
             "artifact_path": artifact,
             "growth_site": spec.site_id,
-            "architecture_id": "V04:torchvision-convnext-tiny-source-ffn",
+            "architecture_id": self.SOURCE_ARCHITECTURE,
             "source_weights_sha256": source_sha,
             "frozen_sha256": search.model_.frozen_state_sha256(),
             "expansion_criterion": real_settings.expansion_criterion,
             "source_ffn_exact_at_initialization": (
                 search.model_.source_ffn_exact_at_initialization),
         }
+
+
+
+class VisionSourceViTModelAdapter(VisionSourceConvNeXtModelAdapter):
+    """V03 true torchvision ViT-B/16 first 768->3072->768 transformer FFN.
+
+    Separate explicit gate and 350 MB full source checkpoint. Inherits the
+    same signed paired-run, finite-budget and post-fit test protocol as V04.
+    """
+
+    name = "vision_v03_source"
+    family = "V03-source"
+    SOURCE_WIDTH = 3072
+    SOURCE_SPEC = SourceViTSpec
+    SOURCE_PREFIX = "V03-source"
+    SOURCE_ARCHITECTURE = "V03:torchvision-vit-b16-source-ffn"
+    ENABLE_ENV = "SIMPLE_ADP_ENABLE_V03_SOURCE"
+    WEIGHTS_ENV = "SIMPLE_ADP_V03_SOURCE_WEIGHTS"
+    SHA_ENV = "SIMPLE_ADP_V03_SOURCE_SHA256"
