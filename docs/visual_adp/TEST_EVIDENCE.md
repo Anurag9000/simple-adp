@@ -414,3 +414,17 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Mid-batch exact-full-ViT restart case appended in
   `43269193141177c9b4661eccf6f5a7d6585912bd`; new dedicated
   verification run 41474722199 is pending.
+
+## V03 original full ViT exact interrupted batch recovered — verified
+
+- Dedicated full-source V03 workflow
+  https://github.com/Anurag9000/simple-adp/actions/runs/41474722199:
+  **5/5 passed in 94.01s**. New test interrupts original ViT
+  after batch 1, checkpoint-reloads full model and optimizer/RNG/batch
+  state, checks byte-identical selected history, score, frozen SHA,
+  selected width and prediction probabilities against uninterrupted
+  training; mismatched search seed is rejected.
+- New all-test suite `.github/workflows/full-repository-cpu-regression.yml`
+  triggers `python -m pytest -q tests` on CPU (all declared extras);
+  https://github.com/Anurag9000/simple-adp/actions/runs/41475398340
+  is pending and must not be described as passed until verified.

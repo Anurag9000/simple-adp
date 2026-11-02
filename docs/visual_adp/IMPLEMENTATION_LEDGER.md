@@ -682,4 +682,25 @@ corrected generic methods. Evidence remains pending CI.
   ID **13157600366**. Details in `REAL_IMAGE_EVIDENCE.md`.
 - V03 original-source full-model **mid-batch** interruption/restart
   regression is newly added (commit `43269193141177c9b4661eccf6f5a7d6585912bd`)
-  and is pending test verification; do not claim resume parity until CI.
+  and **passed 5/5 dedicated source-V03 tests** at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41474722199
+  (94.01 seconds), including exact interruption/relaunch parity.
+
+## Verified signed full-model V03 mid-batch resume (2026-11-02)
+
+- Exact source-V03 resumed checkpoint test added to
+  `tests/test_visual_source_vit.py` in
+  `43269193141177c9b4661eccf6f5a7d6585912bd`.
+- https://github.com/Anurag9000/simple-adp/actions/runs/41474722199:
+  **5/5 passed in 94.01 seconds**. Interrupted after the first
+  training batch, restored all original ~86M ViT source weights plus
+  trainable local FFN, batch cursor, optimizer state and RNG, matching
+  the uninterrupted selected architecture, history, search score,
+  frozen source hash, and per-example prediction probabilities exactly.
+  Changed source/search signatures fail closed on recovery.
+- A new **whole repository** CPU pytest workflow was added in
+  `7bef111fe251cd6219313dad81ff258dd214e6d3`; it runs
+  `pytest -q tests` with every declared optional test dependency
+  rather than just the selected visual regression tests. Initial
+  workflow https://github.com/Anurag9000/simple-adp/actions/runs/41475398340
+  is still pending. No full-suite pass count has been established.

@@ -269,6 +269,21 @@
     "published_pretrained_real_test_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41474035681",
     "verified_cpu_regression": "380 selected tests passed in 180.05 seconds",
     "verified_cpu_regression_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41473641019",
-    "exact_resume_test": "pending run 41474722199"
+    "exact_resume_test": "passed dedicated V03 five-test suite in 94.01 seconds",
+    "exact_resume_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41474722199"
+  },
+  "full_repository_cpu_regression": {
+    "workflow": ".github/workflows/full-repository-cpu-regression.yml",
+    "trigger": "push under src/tests/pyproject and manual",
+    "command": "python -m pytest -q tests",
+    "extra_deps": [
+      "dev",
+      "vision",
+      "benchmark",
+      "physionet",
+      "odds"
+    ],
+    "status": "pending",
+    "initial_run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41475398340"
   }
 }
