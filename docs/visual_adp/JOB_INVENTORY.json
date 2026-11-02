@@ -267,8 +267,8 @@
     "published_pretrained_real_test_status": "separate successful standalone ViT pretrained full-source FFN growth (not one of the 43 central job ledger executions)",
     "scientific_jobs_in_central_runner": 0,
     "published_pretrained_real_test_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41474035681",
-    "verified_cpu_regression": "380 selected tests passed in 180.05 seconds",
-    "verified_cpu_regression_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41473641019",
+    "verified_cpu_regression": "381 selected CPU tests passed in 233.07s, including full ViT interrupted batch resume",
+    "verified_cpu_regression_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41474722290",
     "exact_resume_test": "passed dedicated V03 five-test suite in 94.01 seconds",
     "exact_resume_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41474722199"
   },
@@ -283,7 +283,7 @@
       "physionet",
       "odds"
     ],
-    "status": "pending",
+    "status": "running at final documentation checkpoint",
     "initial_run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41475398340"
   }
 }

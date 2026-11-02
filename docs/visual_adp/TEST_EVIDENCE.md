@@ -428,3 +428,12 @@ evidence of accuracy or reproducible real-data science. CI pending.
   triggers `python -m pytest -q tests` on CPU (all declared extras);
   https://github.com/Anurag9000/simple-adp/actions/runs/41475398340
   is pending and must not be described as passed until verified.
+
+## V03 full source + selected visual regression follow-up
+
+- https://github.com/Anurag9000/simple-adp/actions/runs/41474722290:
+  **381 selected CPU tests passed in 233.07s** after adding
+  exact source-ViT interrupted batch/relaunch validation.
+- Initial whole repository `python -m pytest -q tests`:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41475398340,
+  pending verification, rather than a confirmed green suite.

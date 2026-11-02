@@ -704,3 +704,14 @@ corrected generic methods. Evidence remains pending CI.
   rather than just the selected visual regression tests. Initial
   workflow https://github.com/Anurag9000/simple-adp/actions/runs/41475398340
   is still pending. No full-suite pass count has been established.
+
+## Selected visual suite after V03 full-source exact-resume coverage
+
+- https://github.com/Anurag9000/simple-adp/actions/runs/41474722290
+  **381 passing selected CPU tests in 233.07 seconds**. Includes
+  new V03 real ViT original-source FFN, 43-job coordinated ViT
+  source integration, and signed mid-batch full-model recovery,
+  without breaking older visual architecture tests.
+- Full `tests/` regression is distinct and was still active at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41475398340
+  when this section was written. No full-suite completion is implied.
