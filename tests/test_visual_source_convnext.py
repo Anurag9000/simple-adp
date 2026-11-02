@@ -172,3 +172,50 @@ def test_v04_native_controller_trains_full_image_with_frozen_source(source):
     probs = search.predict_proba(x[4:])
     assert probs.shape == (4, 2)
     assert np.isfinite(probs).all()
+
+
+
+def test_v04_source_exact_mid_batch_checkpoint_restart(source, tmp_path):
+    """True 28M-param source with exact optimizer/batch replay, not tiny proxy."""
+    x = np.random.default_rng(34).random((8, 3, 32, 32), dtype=np.float32)
+    y = np.asarray([0, 1, 0, 1, 0, 1, 0, 1], dtype=np.int64)
+    cfg = SearchSettings(
+        init_width=384, init_depth=1, max_width=384,
+        max_depth=2, max_neurons=1000, max_epochs=1,
+        max_candidates=1, batch_size=2, patience_es=1,
+        patience_width_exp=1, device="cpu", seed=31,
+    )
+    args = (x[:4], y[:4])
+    valid = (x[4:], y[4:])
+    baseline = VisualResidualSearch("ADP-W-RR", spec(source), settings=cfg)
+    baseline.fit(*args, validation_data=valid)
+    filename = tmp_path / "source-v04.checkpoint.pt"
+
+    class Eviction(Exception):
+        pass
+
+    def interrupt(progress):
+        if (progress["phase"] == "initial"
+                and progress["stage_status"] == "active"
+                and progress["batches_done"] == 1):
+            raise Eviction()
+
+    with pytest.raises(Eviction):
+        VisualResidualSearch("ADP-W-RR", spec(source), settings=cfg).fit(
+            *args, validation_data=valid, checkpoint_path=filename,
+            progress_callback=interrupt,
+        )
+    assert filename.exists()
+    resumed = VisualResidualSearch("ADP-W-RR", spec(source), settings=cfg)
+    resumed.fit(*args, validation_data=valid, checkpoint_path=filename)
+    assert resumed.history_ == baseline.history_
+    assert resumed.model_.hidden_widths == baseline.model_.hidden_widths == [384]
+    assert resumed.result_.score == baseline.result_.score
+    assert np.array_equal(resumed.predict_proba(valid[0]),
+                          baseline.predict_proba(valid[0]))
+    assert resumed.model_.frozen_state_sha256() == baseline.model_.frozen_state_sha256()
+    with pytest.raises(ValueError, match="signature"):
+        other = SearchSettings(**{**cfg.as_dict(), "seed": 32})
+        VisualResidualSearch("ADP-W-RR", spec(source), settings=other).fit(
+            *args, validation_data=valid, checkpoint_path=filename,
+        )
