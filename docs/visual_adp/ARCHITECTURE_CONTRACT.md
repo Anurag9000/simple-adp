@@ -147,3 +147,20 @@ additional site policy**, not an implicit redefinition of `ADP-W-All`.
 It has a separately named checkpoint/search format, a joint two-site neuron
 budget, per-site RR cursor persistence and a separate opt-in suite identity.
 This is not V08 arbitrary multistage scheduling or adaptive site selection.
+
+## V10 frozen ResMLP token mixing and channel growth (pending CI)
+The patch stem produces fixed T-by-C tokens. A frozen ordinary dense
+`Linear(T,T)` crosses spatial tokens after fixed learned-affine-like scale/
+shift, and the channel MLP is the only ADP-eligible target. Its input/output
+channel dimension C never expands. The fixed token-linear and affine state
+are hashed, restored strictly and excluded from the optimizer.
+
+## V11 frozen Fourier global filter and real channel growth (pending CI)
+A fixed non-unit complex64 spectral filter with exact shape
+`[patch_H, patch_W//2+1, channels]` acts only on the spatial FFT axes.
+`rfft2 -> complex multiplication -> irfft2` remains in the differentiable
+image forward; no FFT or complex filter coefficients are ADP growth targets.
+A real channel `TabularMLP` (GELU hidden layers) is the sole expandable
+FFN. Frozen filter and resolution contracts are signed and strict. Both
+V10/V11 use separate opt-in runner names and the native method/criterion
+ledger. Not a published pretrained-model reproduction.

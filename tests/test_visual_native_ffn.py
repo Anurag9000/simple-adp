@@ -21,7 +21,9 @@ def spec(architecture: str) -> NativeFFNSpec:
         site_id={"V03": "ffn:block0", "V04": "channel:stage0.block0",
                  "V05": "channel:poolformer.block0",
                  "V06a": "channel:s2.block0",
-                 "V06b": "channel:axial.block0"}[architecture],
+                 "V06b": "channel:axial.block0",
+                 "V10": "channel:resmlp.block0",
+                 "V11": "channel:gfnet.block0"}[architecture],
     )
 
 
@@ -43,7 +45,7 @@ def settings():
     )
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b", "V10", "V11"])
 def test_native_ffn_is_inner_and_frozen_backbone_remains_exact(arch):
     torch.manual_seed(103)
     model = VisualNativeFFN(spec(arch), (3,))
@@ -68,7 +70,7 @@ def test_native_ffn_is_inner_and_frozen_backbone_remains_exact(arch):
         NativeFFNSpec(arch, 3, 4, 2, 7, 12, site_id=spec(arch).site_id)
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b", "V10", "V11"])
 def test_native_ffn_source_growth_and_snapshot_preserve_interfaces(arch):
     model = build_visual_composite(spec(arch), (3, 3))
     before = model.frozen_state_sha256()
@@ -110,7 +112,7 @@ def test_native_ffn_source_growth_and_snapshot_preserve_interfaces(arch):
         restored.verify_frozen()
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b", "V10", "V11"])
 def test_native_ffn_composite_search_actual_growth_and_restart(arch, tmp_path):
     x, y, validation = sample()
     base = VisualResidualSearch("ADP-W-RR", spec(arch), settings=settings())
@@ -145,7 +147,7 @@ def test_native_ffn_composite_search_actual_growth_and_restart(arch, tmp_path):
             changed, y, validation_data=validation, checkpoint_path=path)
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b", "V10", "V11"])
 def test_native_ffn_fixed_model_and_generic_phase_search(arch):
     x, y, validation = sample()
     control = VisualResidualSearch(
@@ -215,3 +217,63 @@ def test_shift_family_frozen_operator_identity_is_snapshot_checked(arch):
     restored.spatial_shift.channels = 8
     with pytest.raises(ValueError, match="frozen"):
         restored.verify_frozen()
+
+
+
+def test_resmlp_fixed_cross_patch_linear_affine_and_channel_adp():
+    model = VisualNativeFFN(spec("V10"), (3,))
+    x = torch.randn(2, 3, 8, 12)
+    expected_tokens = spec("V10").token_count
+    assert isinstance(model.token_mixing, nn.Linear)
+    assert model.token_mixing.in_features == model.token_mixing.out_features == expected_tokens
+    assert len(model.token_affine) == 2
+    assert not model.token_mixing.weight.requires_grad
+    assert not any(p.requires_grad for p in model.token_affine.parameters())
+    assert model.local_mlp.input_dim == model.local_mlp.output_dim == 4
+    state_before = model.frozen_state_sha256()
+    model(x).sum().backward()
+    assert model.local_mlp.output_layer.weight.grad is not None
+    assert model.frozen_state_sha256() == state_before
+    widened = model.grow_width(site_id="channel:resmlp.block0",
+                                operator="all_layers", increment=1, max_width=6)
+    assert widened is not None and widened.hidden_widths == [4]
+    assert widened.token_mixing.weight.shape == (expected_tokens, expected_tokens)
+    assert widened.frozen_state_sha256() == state_before
+    with torch.no_grad():
+        widened.token_affine[0].add_(1)
+    with pytest.raises(ValueError, match="frozen"):
+        widened.verify_frozen()
+
+
+def test_gfnet_frozen_complex_fft_filter_and_real_local_adp():
+    model = VisualNativeFFN(spec("V11"), (3,))
+    x = torch.randn(3, 3, 8, 12, requires_grad=True)
+    frequency = torch.fft.rfft2(
+        model.stem(x).permute(0, 2, 3, 1), dim=(1, 2), norm="ortho",
+    )
+    filt = model.global_filter[0]
+    assert filt.dtype == torch.complex64
+    assert filt.shape == frequency.shape[1:]
+    assert filt.requires_grad is False
+    assert not torch.equal(filt, torch.ones_like(filt))
+    spatial = torch.fft.irfft2(frequency * filt,
+                               s=(4, 6), dim=(1, 2), norm="ortho")
+    assert spatial.shape == (3, 4, 6, 4)
+    assert torch.isfinite(spatial).all()
+    frozen_before = model.frozen_state_sha256()
+    out = model(x)
+    assert out.shape == (3, 2) and torch.isfinite(out).all()
+    out.square().mean().backward()
+    assert x.grad is not None and x.grad.abs().sum() > 0
+    assert model.local_mlp.output_layer.weight.grad.abs().sum() > 0
+    assert filt.grad is None
+    assert model.frozen_state_sha256() == frozen_before
+    grown = model.grow_depth(site_id="channel:gfnet.block0",
+                              operator="Dcur", max_depth=2)
+    assert grown is not None and grown.hidden_widths == [3, 3]
+    assert grown.global_filter[0].shape == filt.shape
+    assert grown.frozen_state_sha256() == frozen_before
+    with torch.no_grad():
+        grown.global_filter[0].add_(0.02 + 0.01j)
+    with pytest.raises(ValueError, match="frozen"):
+        grown.verify_frozen()

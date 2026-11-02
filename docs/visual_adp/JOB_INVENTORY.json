@@ -65,14 +65,14 @@
     },
     {
       "id": "V10",
-      "central_runner_jobs": 0,
-      "implementation": "missing",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 original source method/profile routes + 21 matched variance counterparts), opt-in, pending CI",
+      "implementation": "frozen cross-patch ResMLP token matrix/affine with source channel FFN growth, signed search and worker pending CI",
       "scientifically_executed": false
     },
     {
       "id": "V11",
-      "central_runner_jobs": 0,
-      "implementation": "missing",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 original source method/profile routes + 21 matched variance counterparts), opt-in, pending CI",
+      "implementation": "complex64 frozen GFNet spatial FFT filter with source channel FFN growth, signed search and worker pending CI",
       "scientifically_executed": false
     }
   ]

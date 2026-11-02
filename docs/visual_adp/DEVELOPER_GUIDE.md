@@ -263,3 +263,14 @@ with a joint neuron cap and two saved RR cursors. The opt-in adapter is
 for controlled site-scope comparisons; each has 22 source/profile jobs and
 21 matched variance counterparts. Do not call synchronous-both a source
 single-site ADP method or an implementation of V08 multi-stage search.
+
+## Experimental V10 ResMLP and V11 GFNet native FFNs (pending CI)
+Under `SIMPLE_ADP_ENABLE_VISION=1`, separately registered adapters
+`vision_v10` / `vision_v11` enumerate the source method taxonomy and
+matched native variance gate. Sites are `channel:resmlp.block0` and
+`channel:gfnet.block0` respectively. Both accept fixed NCHW inputs from
+the existing `vision:toy` and optional CIFAR/Fashion-MNIST providers.
+ResMLP's token-mixing matrix and affine are fixed; GFNet's spectral filter
+is fixed complex64 with exact spatial FFT shape. Only the real channel
+MLP grows. New bounded tests cover actual math, exact restoration, source
+methods and worker pairs. No pretrained published checkpoint is provided.

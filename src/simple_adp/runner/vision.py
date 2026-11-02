@@ -327,7 +327,7 @@ class VisionInnerModelAdapter:
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 site_id="adapter:block1", fixed_seed=17,
             )
-        elif self.family in {"V03", "V04", "V05", "V06a", "V06b"}:
+        elif self.family in {"V03", "V04", "V05", "V06a", "V06b", "V10", "V11"}:
             patch = (4 if train_x.shape[2] % 4 == 0 and train_x.shape[3] % 4 == 0
                      else 2)
             spec = NativeFFNSpec(
@@ -339,7 +339,9 @@ class VisionInnerModelAdapter:
                 site_id={"V03": "ffn:block0", "V04": "channel:stage0.block0",
                          "V05": "channel:poolformer.block0",
                          "V06a": "channel:s2.block0",
-                         "V06b": "channel:axial.block0"}[self.family],
+                         "V06b": "channel:axial.block0",
+                         "V10": "channel:resmlp.block0",
+                         "V11": "channel:gfnet.block0"}[self.family],
             )
         elif self.family in {"V07-token", "V07-channel", "V07-both"}:
             site = {"V07-token": "token:block0", "V07-channel": "channel:block0",
@@ -361,6 +363,8 @@ class VisionInnerModelAdapter:
             "V05": "V05:tiny-poolformer-ffn-frozen-random",
             "V06a": "V06a:tiny-s2shift-ffn-frozen-random",
             "V06b": "V06b:tiny-axialshift-ffn-frozen-random",
+            "V10": "V10:tiny-resmlp-channel-ffn-frozen-random",
+            "V11": "V11:tiny-gfnet-fourier-channel-ffn-frozen-random",
             "V07-token": "V07:tiny-mlp-mixer-token-site",
             "V07-channel": "V07:tiny-mlp-mixer-channel-site",
             "V07-both": "V07:tiny-mlp-mixer-synchronous-both-sites",
@@ -424,8 +428,8 @@ class VisionNativeFFNModelAdapter(VisionInnerModelAdapter):
     """
 
     def __init__(self, family: str):
-        if family not in {"V03", "V04", "V05", "V06a", "V06b"}:
-            raise ValueError("only V03, V04, V05, V06a and V06b native FFN families are supported")
+        if family not in {"V03", "V04", "V05", "V06a", "V06b", "V10", "V11"}:
+            raise ValueError("unsupported native FFN runner family")
         self.family = family
         self.name = "vision_" + family.lower()
 

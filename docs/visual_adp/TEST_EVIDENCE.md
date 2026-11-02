@@ -167,3 +167,14 @@ scientific result has been executed in this increment.
   D1/Dcur, cursor-resolved snapshot, exact mid-batch restart, joint capacity
   ceiling and source D1 serial warmup, plus coordinated-both source/variance
   worker. Explicitly separate from V08 adaptive multi-site scheduling.
+
+## V10/V11 native spatial mixer tests (pending CI)
+- tests/test_visual_native_ffn.py now includes V10/V11 in growth, frozen
+  operator, signed resume and generic/fixed matrix. Dedicated V10 checks
+  dense fixed token matrix/affine hash and local width expansion. V11 checks
+  complex64 nontrivial Fourier filter, rfft2/irfft2 axes/shapes, gradients,
+  frozen-filter strictness and depth expansion.
+- tests/test_runner_vision.py extends the native source/variance and generic
+  worker smoke matrix for both new architecture IDs.
+- CI and real dataset scientific execution pending; do not infer pretrained
+  source behavior from these bounded controls.

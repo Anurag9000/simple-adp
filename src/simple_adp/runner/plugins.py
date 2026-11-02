@@ -44,6 +44,8 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
         models.register(VisionNativeFFNModelAdapter("V05"))
         models.register(VisionNativeFFNModelAdapter("V06a"))
         models.register(VisionNativeFFNModelAdapter("V06b"))
+        models.register(VisionNativeFFNModelAdapter("V10"))
+        models.register(VisionNativeFFNModelAdapter("V11"))
         models.register(VisionMixerModelAdapter("token"))
         models.register(VisionMixerModelAdapter("channel"))
         models.register(VisionMixerModelAdapter("both"))

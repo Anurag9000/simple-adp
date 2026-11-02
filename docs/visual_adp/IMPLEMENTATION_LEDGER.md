@@ -22,7 +22,7 @@ States distinguish source/static implementation from executed tests and science.
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
 | V07 MLP-Mixer | token/channel independently CI verified (299 tests); explicit synchronous-both scope pending CI | true residual token/channel MLPs, signed resumed search and matched runner criteria |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
-| V10/V11 | missing | ResMLP/GFNet operators and full integration |
+| V10 ResMLP / V11 GFNet | native operator + search + runner implemented; pending CI | frozen dense token-affine mixer / frozen complex Fourier filter; channel FFN alone expands |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
 | CPU/CUDA complete regression | partial | 288 selected CPU tests passed through V06a/b; CUDA and full suite not executed |
 
@@ -231,3 +231,28 @@ corrected generic methods. Evidence remains pending CI.
   synchronized D1 intermediate widths and signed budget enforcement.
   **CI pending**. This is a synchronous two-site ablation, NOT the V08
   adaptive multi-stage scheduling algorithm.
+
+## V10 ResMLP native token-mixer/channel-FFN route (pending CI)
+- Native V10 keeps a fixed token-mixing `Linear(T,T)` and fixed per-channel
+  affine scale/shift, plus immutable patch embedding and classifier. The
+  expandable GELU MLP has invariant `Linear(C,H)...Linear(H,C)` interfaces.
+- `channel:resmlp.block0` identifies its sole eligible site. The dense
+  spatial-token mixing matrix remains frozen and included in the frozen
+  backbone hash. Source width/depth methods, signed resume, and opt-in
+  `vision_v10` worker routes are integrated without touching V01–V07 jobs.
+- One fixed + 21 adaptive method/profile routes with one matched BGD-shadow
+  variance counterpart each: 43 jobs per seed/split/repeat, pending CI.
+
+## V11 GFNet fixed complex-frequency filter and real ADP FFN (pending CI)
+- Native V11 applies `torch.fft.rfft2(..., dim=(1,2))` and `irfft2`
+  to patch-grid spatial axes, using a reproducible nontrivial **complex64**
+  frozen `[H,W//2+1,C]` global filter. Spectral dimensions, patch geometry,
+  output channels, filter coefficients, norms and classifier are immutable.
+- Only the real-valued channels-last GELU MLP at
+  `channel:gfnet.block0` grows. True full-image FFT/IFFT forward/backward,
+  strict complex-buffer/weight frozen hashing, signed mid-batch restart,
+  14 canonical ADP IDs and paired native variance gates share the prior
+  controller and opt-in `vision_v11` worker.
+- Same 43 route/criterion jobs per seed/split/repeat; pending CI.
+- Both are **tiny randomly initialized architecture controls**, not published
+  pretrained ResMLP or GFNet checkpoints. No CIFAR benchmark results claimed.

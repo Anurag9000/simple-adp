@@ -1,4 +1,4 @@
-"""Experimental V03 ViT FFN, V04 ConvNeXt FFN and V05 PoolFormer FFN.
+"""Experimental native V03/V04/V05/V06a/V06b/V10/V11 visual FFNs.
 
 These are *tiny from-scratch controls*, not torchvision pretrained backbones.
 They use genuine frozen attention or depthwise spatial mixing and a native
@@ -33,8 +33,8 @@ class NativeFFNSpec:
     site_id: str = ""
 
     def __post_init__(self) -> None:
-        if self.architecture_id not in {"V03", "V04", "V05", "V06a", "V06b"}:
-            raise ValueError("native FFN architecture must be V03, V04, V05, V06a or V06b")
+        if self.architecture_id not in {"V03", "V04", "V05", "V06a", "V06b", "V10", "V11"}:
+            raise ValueError("native FFN architecture must be V03/V04/V05/V06a/V06b/V10/V11")
         for key in ("input_channels", "local_dim", "classes", "image_height",
                     "image_width", "patch_size", "attention_heads"):
             if getattr(self, key) <= 0:
@@ -51,7 +51,9 @@ class NativeFFNSpec:
         wanted = {"V03": "ffn:block0", "V04": "channel:stage0.block0",
                   "V05": "channel:poolformer.block0",
                   "V06a": "channel:s2.block0",
-                  "V06b": "channel:axial.block0"}[self.architecture_id]
+                  "V06b": "channel:axial.block0",
+                  "V10": "channel:resmlp.block0",
+                  "V11": "channel:gfnet.block0"}[self.architecture_id]
         if self.site_id != wanted:
             raise ValueError(f"{self.architecture_id} eligible growth site must be {wanted!r}")
 
@@ -61,7 +63,7 @@ class NativeFFNSpec:
 
 
 class VisualNativeFFN(VisualResidualAdapter):
-    """Single real internal FFN in a frozen ViT / ConvNeXt / PoolFormer block.
+    """Single internal FFN in a frozen attention, convolution, spatial or Fourier mixer.
 
     V03: frozen patch embedding, CLS/pos embeddings, MHA, norms, classifier;
          token-wise GELU FFN on [batch, patches+1, d] with residual.
@@ -69,6 +71,8 @@ class VisualNativeFFN(VisualResidualAdapter):
          fixed layer scale, classifier; GELU FFN on [batch, h, w, d].
     V05: frozen AvgPool2d - identity mixer, channel FFN GELU and classifier.
     V06a/b: parameter-free S2 / dual-axial zero-padded spatial shifts and FFN.
+    V10: fixed linear cross-patch token mixing and affine, channel FFN.
+    V11: fixed complex spectral filter via FFT/IFFT, real channel FFN.
     All local FFN hidden layers are eligible for native ADP operators.
     """
 
@@ -104,12 +108,30 @@ class VisualNativeFFN(VisualResidualAdapter):
                     self.pooling_mixer = nn.AvgPool2d(
                         kernel_size=3, stride=1, padding=1, count_include_pad=False,
                     )
-                else:
+                elif spec.architecture_id in {"V06a", "V06b"}:
                     self.spatial_shift = (
                         S2SpatialShift(dim) if spec.architecture_id == "V06a"
                         else AxialSpatialShift(dim)
                     )
-                self.pre_ffn_norm = nn.LayerNorm(dim)
+                elif spec.architecture_id == "V10":
+                    self.token_mixing = nn.Linear(spec.token_count, spec.token_count)
+                    self.token_affine = nn.ParameterList([
+                        nn.Parameter(torch.ones(dim), requires_grad=False),
+                        nn.Parameter(torch.zeros(dim), requires_grad=False),
+                    ])
+                else:
+                    h = spec.image_height // spec.patch_size
+                    w = spec.image_width // spec.patch_size
+                    shape = (h, w // 2 + 1, dim)
+                    # Nontrivial but bounded complex-valued frozen filter.
+                    # FFT uses the two spatial axes; hidden ADP FFN remains real.
+                    real = 1.0 + 0.02 * torch.randn(shape)
+                    imag = 0.02 * torch.randn(shape)
+                    self.global_filter = nn.ParameterList([
+                        nn.Parameter(torch.complex(real, imag), requires_grad=False),
+                    ])
+                self.pre_ffn_norm = (nn.Identity() if spec.architecture_id == "V10"
+                                     else nn.LayerNorm(dim))
                 # ConvNeXt's fixed per-channel layer scaling is noneligible.
                 self.layer_scale = nn.ParameterList([
                     nn.Parameter(torch.full((dim,), 1e-3), requires_grad=False)
@@ -142,11 +164,14 @@ class VisualNativeFFN(VisualResidualAdapter):
             )
         mixer = (self.depthwise if self.spec.architecture_id == "V04" else
                  self.pooling_mixer if self.spec.architecture_id == "V05" else
-                 self.spatial_shift)
-        return (
-            self.stem, mixer, self.pre_ffn_norm,
-            self.layer_scale, self.output_norm, self.classifier,
-        )
+                 self.spatial_shift if self.spec.architecture_id in {"V06a", "V06b"} else
+                 self.token_mixing if self.spec.architecture_id == "V10" else
+                 self.global_filter)
+        if self.spec.architecture_id == "V10":
+            return (self.stem, mixer, self.token_affine, self.pre_ffn_norm,
+                    self.layer_scale, self.output_norm, self.classifier)
+        return (self.stem, mixer, self.pre_ffn_norm,
+                self.layer_scale, self.output_norm, self.classifier)
 
     def frozen_state_sha256(self) -> str:
         digest = hashlib.sha256()
@@ -155,7 +180,10 @@ class VisualNativeFFN(VisualResidualAdapter):
              "out_norm", "classifier")
             if self.spec.architecture_id == "V03"
             else ("stem", "depthwise" if self.spec.architecture_id == "V04" else
-                  "pool" if self.spec.architecture_id == "V05" else "shift",
+                  "pool" if self.spec.architecture_id == "V05" else
+                  "shift" if self.spec.architecture_id in {"V06a", "V06b"} else
+                  "token_linear" if self.spec.architecture_id == "V10" else "complex_filter",
+                  *((["affine"] if self.spec.architecture_id == "V10" else [])),
                   "ffn_norm", "layer_scale", "out_norm", "classifier")
         )
         if self.spec.architecture_id == "V05":
@@ -197,12 +225,32 @@ class VisualNativeFFN(VisualResidualAdapter):
             if self.spec.architecture_id == "V04":
                 mixed = self.depthwise(value)
                 skip = value
-            else:
-                # PoolFormer: Pool(x)-x residual. Spatial shift families:
-                # deterministic zero-padded rearrangement, not convolutions.
+            elif self.spec.architecture_id in {"V05", "V06a", "V06b"}:
+                # PoolFormer Pool(x)-x or nonwrap spatial shifts are fixed.
                 result = (self.pooling_mixer(value) if self.spec.architecture_id == "V05"
                           else self.spatial_shift(value))
                 skip = value + (result - value)
+                mixed = skip
+            elif self.spec.architecture_id == "V10":
+                b, c, h, w = value.shape
+                tokens = value.flatten(2).transpose(1, 2).contiguous()  # B,T,D
+                affine = tokens * self.token_affine[0] + self.token_affine[1]
+                # Fixed *dense* cross-patch token mixing, no token-count growth.
+                residual = self.token_mixing(affine.transpose(1, 2)).transpose(1, 2)
+                skip = (tokens + residual).transpose(1, 2).reshape(b, c, h, w)
+                mixed = skip
+            else:
+                # GFNet fixed complex global filter [H,W//2+1,D], applied
+                # over H/W axes (not FFT over the channel dimension).
+                spatial = value.permute(0, 2, 3, 1).contiguous()
+                frequency = torch.fft.rfft2(spatial, dim=(1, 2), norm="ortho")
+                if tuple(frequency.shape[1:]) != tuple(self.global_filter[0].shape):
+                    raise ValueError("GFNet Fourier filter resolution/channel mismatch")
+                filtered = torch.fft.irfft2(
+                    frequency * self.global_filter[0],
+                    s=spatial.shape[1:3], dim=(1, 2), norm="ortho",
+                )
+                skip = filtered.permute(0, 3, 1, 2).contiguous()
                 mixed = skip
             mixed = mixed.permute(0, 2, 3, 1).contiguous()
             delta = self.local_mlp(self.pre_ffn_norm(mixed))

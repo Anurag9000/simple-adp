@@ -84,19 +84,19 @@
     },
     {
       "architecture": "V10",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "all 14 canonical ADP IDs with eight generic faithful/corrected profiles (22 original +21 variance jobs per seed/split), pending CI",
+      "site": "channel:resmlp.block0",
+      "criterion": "loss / native shadow-BGD variance-stagnation counterparts (pending CI)",
+      "status": "native frozen spatial/token operator, local channel FFN, signed search and opt-in runner implemented; CPU CI pending",
+      "reason": "Frozen dense cross-patch token mixing and affine, not trainable or expandable. Tiny random model control; no pretrained state or scientific real dataset validation."
     },
     {
       "architecture": "V11",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "all 14 canonical ADP IDs with eight generic faithful/corrected profiles (22 original +21 variance jobs per seed/split), pending CI",
+      "site": "channel:gfnet.block0",
+      "criterion": "loss / native shadow-BGD variance-stagnation counterparts (pending CI)",
+      "status": "native frozen spatial/token operator, local channel FFN, signed search and opt-in runner implemented; CPU CI pending",
+      "reason": "Frozen nontrivial complex64 Fourier spatial filtering, not trainable or expandable. Tiny random model control; no pretrained state or scientific real dataset validation."
     }
   ]
 }
