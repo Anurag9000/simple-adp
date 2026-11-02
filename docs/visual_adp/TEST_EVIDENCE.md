@@ -293,3 +293,13 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - New reporting fields (candidate search history, confusion matrix,
   parameter counts) are committed in `8e2d618b67d2db27fb0de298202c8ce31aa6d714`;
   the extended integrity tests are pending fresh CI.
+
+## V01 per-job full-search history and result integrity verified (2026-11-02)
+- https://github.com/Anurag9000/simple-adp/actions/runs/41453060345:
+  **361 selected CPU tests passed in 64.78s**, including source ADP candidate
+  history JSON, class-ordered confusion matrices, selected/frozen model
+  parameter counts and candidate-history SHA256 tamper rejection.
+- Original loss-vs-variance controller contract workflow also succeeded.
+- Tests use offline synthetic fixtures; earlier official Fashion-MNIST smoke
+  remains valid but was executed before per-candidate search_history.json was
+  added. The richer artifacts require a new real-data run.

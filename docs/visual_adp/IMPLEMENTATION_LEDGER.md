@@ -461,5 +461,16 @@ corrected generic methods. Evidence remains pending CI.
   candidate search history in checksummed `search_history.json`,
   class-ordered confusion matrix and source/head parameter counts.
   New offline tests verify generated files and reject history tampering.
-  Selected CI is pending; pre-existing Fashion smoke artifact predates
+  Selected CPU CI passed (361 tests); pre-existing Fashion smoke artifact predates
   the separate history file and is not retroactively modified.
+
+## Verified checksum-guarded V01 experiment search-history artifacts
+- Code: `8e2d618b67d2db27fb0de298202c8ce31aa6d714`.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41453060345
+  **361 selected CPU tests passed in 64.78 seconds**, including added
+  search_history.json candidate trace, class-ordered confusion matrix,
+  source/head parameter counts, tamper rejection and exact interruption
+  recovery. The original loss/variance contract CI also passed.
+- The earlier real Fashion-MNIST artifact predates the richer result JSON.
+  Do not fabricate the missing historical stage trace; only new jobs produce
+  the expanded schema automatically.
