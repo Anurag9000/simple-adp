@@ -29,6 +29,7 @@ from .training import StageTrainer
 from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_composite, restore_visual_composite
 from .visual_mixer import MixerSpec
+from .visual_multistage import MultistageSpec
 
 
 SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
@@ -61,7 +62,7 @@ class VisualResidualSearch:
     def __init__(
         self,
         model_id: str,
-        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec,
+        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec | MultistageSpec,
         *,
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
@@ -98,9 +99,8 @@ class VisualResidualSearch:
             _hash_array(digest, item)
         return stable_signature({
             "version": ("v02-dedicated-1" if isinstance(self.spec, ResidualAdapterSpec)
-                        else ("visual-mixer-both-search-v1" if self.spec.site_id == "both:block0"
-                      else "visual-mixer-search-v1") if isinstance(self.spec, MixerSpec)
-                        else "visual-native-ffn-search-1"),
+                        else "visual-native-ffn-search-1" if isinstance(self.spec, NativeFFNSpec)
+                        else self._search_kind()),
             "model": self.config.signature_dict(),
             "spec": asdict(self.spec),
             "settings": self.settings.as_dict(),
@@ -111,10 +111,14 @@ class VisualResidualSearch:
         })
 
     def _search_kind(self) -> str:
-        return ("visual-residual-search-v02" if isinstance(self.spec, ResidualAdapterSpec)
-                else ("visual-mixer-both-search-v1" if self.spec.site_id == "both:block0"
-                      else "visual-mixer-search-v1") if isinstance(self.spec, MixerSpec)
-                else "visual-native-ffn-search-v1")
+        if isinstance(self.spec, ResidualAdapterSpec):
+            return "visual-residual-search-v02"
+        if isinstance(self.spec, MultistageSpec):
+            return "visual-multistage-search-v1"
+        if isinstance(self.spec, MixerSpec):
+            return ("visual-mixer-both-search-v1" if self.spec.site_id == "both:block0"
+                    else "visual-mixer-search-v1")
+        return "visual-native-ffn-search-v1"
 
     def _new_state(self) -> dict[str, Any]:
         random.seed(self.settings.seed)

@@ -316,6 +316,9 @@ class VisualNativeFFN(VisualResidualAdapter):
 def build_visual_composite(spec, hidden_widths):
     """Explicit factory: never route V03/V04 through a V02 CNN snapshot."""
     from .visual_mixer import MixerSpec, VisualMixer
+    from .visual_multistage import MultistageSpec, VisualMultistage
+    if isinstance(spec, MultistageSpec):
+        return VisualMultistage(spec, tuple(hidden_widths))
     if isinstance(spec, MixerSpec):
         return VisualMixer(spec, tuple(hidden_widths))
     if isinstance(spec, NativeFFNSpec):
@@ -328,6 +331,9 @@ def build_visual_composite(spec, hidden_widths):
 
 def restore_visual_composite(snapshot: dict[str, object]):
     from .visual_mixer import VisualMixer
+    from .visual_multistage import VisualMultistage
+    if snapshot.get("kind") == VisualMultistage.SNAPSHOT_KIND:
+        return VisualMultistage.from_snapshot(snapshot)
     if snapshot.get("kind") in {VisualMixer.SNAPSHOT_KIND, VisualMixer.BOTH_SNAPSHOT_KIND}:
         return VisualMixer.from_snapshot(snapshot)
     if snapshot.get("kind") == VisualNativeFFN.SNAPSHOT_KIND:

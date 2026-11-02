@@ -274,3 +274,14 @@ ResMLP's token-mixing matrix and affine are fixed; GFNet's spectral filter
 is fixed complex64 with exact spatial FFT shape. Only the real channel
 MLP grows. New bounded tests cover actual math, exact restoration, source
 methods and worker pairs. No pretrained published checkpoint is provided.
+
+## V08 independent early/middle/late adapter jobs (pending CI)
+Opt into vision to register the separate `vision_v08_early`,
+`vision_v08_middle`, and `vision_v08_late` model adapters.
+Source methods/profile and paired BGD-shadow variance jobs are identical
+to the earlier single-site families. The full image always flows through all
+three fixed CNN stages and three real residual MLPs; only the declared
+stage's `C -> hidden -> C` MLP is trainable and expandable. Use
+`MultistageSpec(..., site_id="adapter:early")` and
+`VisualMultistage` for the standalone path. No joint or adaptive site
+policy has been installed as part of V08 yet.

@@ -178,3 +178,17 @@ scientific result has been executed in this increment.
   worker smoke matrix for both new architecture IDs.
 - CI and real dataset scientific execution pending; do not infer pretrained
   source behavior from these bounded controls.
+
+## V07 both site and V10/V11 verified CI (2026-11-02)
+- V07 303 passed: https://github.com/Anurag9000/simple-adp/actions/runs/41409201374
+- V10/V11 315 passed: https://github.com/Anurag9000/simple-adp/actions/runs/41409409751
+- The earlier V07 neuron-cap fixture was corrected to count the fixed
+  local output dimensions per source total_neurons(). Both new runs passed.
+
+## V08 three fixed sites implementation tests (pending CPU CI)
+- tests/test_visual_multistage.py covers early/middle/late model placement,
+  source growth and warm start, exact frozen backbone and unselected adapter
+  hashes, signed stage eviction/restart, generic search and fixed controls.
+- tests/test_runner_vision.py extends independent-site method/variance
+  matched jobs and end-to-end worker execution for each V08 site.
+- No simultaneous-growth or adaptive-site scheduling claim.

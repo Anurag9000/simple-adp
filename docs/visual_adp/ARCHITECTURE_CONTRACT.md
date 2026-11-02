@@ -164,3 +164,16 @@ A real channel `TabularMLP` (GELU hidden layers) is the sole expandable
 FFN. Frozen filter and resolution contracts are signed and strict. Both
 V10/V11 use separate opt-in runner names and the native method/criterion
 ledger. Not a published pretrained-model reproduction.
+
+## V08 fixed three-stage residual adapter contracts (pending CPU CI)
+Three preinstalled stages preserve a frozen stem and three spatial 3x3
+convolutions, with local residual channel MLPs inserted immediately after
+stage-specific convolutions. Site IDs are `adapter:early`,
+`adapter:middle`, and `adapter:late`. Each job chooses **one** eligible
+local MLP with fixed C-to-C interfaces. The other two real adapter MLPs
+remain frozen and in the differentiable forward; neither cached embeddings
+nor hidden channel-count mutation is permitted. Frozen state hashing covers
+all CNN modules, classifier and both nonselected adapters.
+The local controller and signed batch checkpoint are unchanged; the V08 model
+factory and restore dispatcher use a distinct kind/name. No adaptive
+multistage proposal allocation or joint-site policy is claimed yet.

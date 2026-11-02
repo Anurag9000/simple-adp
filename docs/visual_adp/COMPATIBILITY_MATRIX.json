@@ -63,16 +63,16 @@
       "methods": "14 canonical method identities in token-only/channel-only controls (verified); separately named synchronous-both ablation with 14 IDs (pending CI)",
       "site": "token:block0, channel:block0 independently; both:block0 only in explicit sync ablation",
       "criterion": "loss / matched shadow-BGD variance per adaptive route (pending CI)",
-      "status": "token-only and channel-only selected CPU CI verified (299 tests); synchronous-both implementation pending CI",
-      "reason": "Two independent real Mixer MLP sites; third explicitly synchronized source-growth ablation has separate signed identity, never mistaken for canonical site semantics. No pretrained source backbone or real CIFAR science."
+      "status": "all three token/channel/synchronous-both scopes synthetic CPU verified (303 passed)",
+      "reason": "Token and channel MLPs grow independently or synchronously in separate explicitly named ablations; signed cursor and stage restart verified. No pretrained Mixer or real dataset science."
     },
     {
       "architecture": "V08",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "14 canonical IDs, eight generic two-profile configurations for each separately declared early/middle/late site, pending CI",
+      "site": "adapter:early OR adapter:middle OR adapter:late (one per job)",
+      "criterion": "native loss / matched shadow-BGD variance-stagnation (21 counterpart jobs per site)",
+      "status": "fixed three-stage model, signed composite search and opt-in coordinated runner implemented; CI pending",
+      "reason": "Three real inserted residual MLPs, frozen unselected sites and backbone. Independent-site only; no joint growth, adaptive selection, pretrained weights, or scientific runs."
     },
     {
       "architecture": "V09",
@@ -87,16 +87,16 @@
       "methods": "all 14 canonical ADP IDs with eight generic faithful/corrected profiles (22 original +21 variance jobs per seed/split), pending CI",
       "site": "channel:resmlp.block0",
       "criterion": "loss / native shadow-BGD variance-stagnation counterparts (pending CI)",
-      "status": "native frozen spatial/token operator, local channel FFN, signed search and opt-in runner implemented; CPU CI pending",
-      "reason": "Frozen dense cross-patch token mixing and affine, not trainable or expandable. Tiny random model control; no pretrained state or scientific real dataset validation."
+      "status": "selected synthetic CPU CI verified (315 tests) including native inner-MLP growth, signed resume and worker",
+      "reason": "Tiny frozen-from-scratch token-affine ResMLP control; no pretrained source weights, real dataset benchmark or CUDA validation."
     },
     {
       "architecture": "V11",
       "methods": "all 14 canonical ADP IDs with eight generic faithful/corrected profiles (22 original +21 variance jobs per seed/split), pending CI",
       "site": "channel:gfnet.block0",
       "criterion": "loss / native shadow-BGD variance-stagnation counterparts (pending CI)",
-      "status": "native frozen spatial/token operator, local channel FFN, signed search and opt-in runner implemented; CPU CI pending",
-      "reason": "Frozen nontrivial complex64 Fourier spatial filtering, not trainable or expandable. Tiny random model control; no pretrained state or scientific real dataset validation."
+      "status": "selected synthetic CPU CI verified (315 tests) including native inner-MLP growth, signed resume and worker",
+      "reason": "Tiny frozen-from-scratch complex FFT/IFFT GFNet control; no pretrained source weights, real dataset benchmark or CUDA validation."
     }
   ]
 }

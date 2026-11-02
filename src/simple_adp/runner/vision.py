@@ -23,6 +23,7 @@ from ..visual import VisualADPEstimator
 from ..visual_inner import ResidualAdapterSpec
 from ..visual_native_ffn import NativeFFNSpec
 from ..visual_mixer import MixerSpec
+from ..visual_multistage import MultistageSpec
 from ..visual_search import SUPPORTED_V02_METHODS, VisualResidualSearch
 from .artifacts import estimator_model_path
 from .datasets import DatasetTaskRef, PreparedTaskData
@@ -354,6 +355,14 @@ class VisionInnerModelAdapter:
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 patch_size=patch, fixed_seed=37, site_id=site, fixed_other_width=6,
             )
+        elif self.family in {"V08-early", "V08-middle", "V08-late"}:
+            site = "adapter:" + self.family.split("-")[1]
+            spec = MultistageSpec(
+                input_channels=int(train_x.shape[1]), backbone_channels=4,
+                classes=int(np.unique(train_y).size),
+                image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
+                site_id=site, fixed_seed=41, fixed_other_width=6,
+            )
         else:
             raise ValueError("unknown native image FFN architecture family")
         architecture_label = {
@@ -365,6 +374,9 @@ class VisionInnerModelAdapter:
             "V06b": "V06b:tiny-axialshift-ffn-frozen-random",
             "V10": "V10:tiny-resmlp-channel-ffn-frozen-random",
             "V11": "V11:tiny-gfnet-fourier-channel-ffn-frozen-random",
+            "V08-early": "V08:tiny-3stage-residual-adapter-early",
+            "V08-middle": "V08:tiny-3stage-residual-adapter-middle",
+            "V08-late": "V08:tiny-3stage-residual-adapter-late",
             "V07-token": "V07:tiny-mlp-mixer-token-site",
             "V07-channel": "V07:tiny-mlp-mixer-channel-site",
             "V07-both": "V07:tiny-mlp-mixer-synchronous-both-sites",
@@ -449,3 +461,18 @@ class VisionMixerModelAdapter(VisionInnerModelAdapter):
             raise ValueError("V07 runner site must be token, channel or both")
         self.family = "V07-" + site
         self.name = "vision_v07_" + site
+
+
+
+class VisionMultistageModelAdapter(VisionInnerModelAdapter):
+    """V08 fixed early/middle/late single-site controlled experiments.
+
+    No adaptive site-selection or parallel multistage growth is claimed. Each
+    scope has separate signed job and paired variance identities.
+    """
+
+    def __init__(self, site: str):
+        if site not in {"early", "middle", "late"}:
+            raise ValueError("V08 stage must be early, middle or late")
+        self.family = "V08-" + site
+        self.name = "vision_v08_" + site

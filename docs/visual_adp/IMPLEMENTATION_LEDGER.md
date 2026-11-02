@@ -20,9 +20,10 @@ States distinguish source/static implementation from executed tests and science.
 | V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
-| V07 MLP-Mixer | token/channel independently CI verified (299 tests); explicit synchronous-both scope pending CI | true residual token/channel MLPs, signed resumed search and matched runner criteria |
-| V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
-| V10 ResMLP / V11 GFNet | native operator + search + runner implemented; pending CI | frozen dense token-affine mixer / frozen complex Fourier filter; channel FFN alone expands |
+| V07 MLP-Mixer | all 3 token/channel/synchronous-both scopes CPU CI verified (303 tests) | true residual token/channel MLPs, signed resumed search, matched variance jobs and joint budget |
+| V08 fixed three-stage residual adapter | independent-site search/runner implemented; CI pending | early/middle/late insertion sites, frozen stage graph and site-aware signed snapshots |
+| V09 strict adapter bank | missing | member isolation, frozen fixed router, selected-adapter ADP and runner |
+| V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
 | CPU/CUDA complete regression | partial | 288 selected CPU tests passed through V06a/b; CUDA and full suite not executed |
 
@@ -256,3 +257,35 @@ corrected generic methods. Evidence remains pending CI.
 - Same 43 route/criterion jobs per seed/split/repeat; pending CI.
 - Both are **tiny randomly initialized architecture controls**, not published
   pretrained ResMLP or GFNet checkpoints. No CIFAR benchmark results claimed.
+
+## V07 and V10/V11 selected CPU verification (2026-11-02)
+- V07 explicit synchronous both code `dafc5c8944af91339bc76c1f6a830b4949fb906a`,
+  corrected cap test `dc4d91d1a9a33769171ea9467d779f7f57a5414f`.
+  CI https://github.com/Anurag9000/simple-adp/actions/runs/41409201374:
+  **303 passed in 28.75 seconds**. Synchronous growth of both Mixer MLPs
+  is a separate named site-policy ablation, not a canonical method change.
+- V10/V11 code `71b0011a31ad7bc87c8e87f898f9a7a7da5a7307`.
+  CI https://github.com/Anurag9000/simple-adp/actions/runs/41409409751:
+  **315 passed in 42.53 seconds**, including actual ResMLP fixed token-linear
+  and GFNet complex FFT filtering, native local growth, runner and resume.
+- All are bounded synthetic CPU tests, not real image scientific experiments.
+
+## V08 independently selected multistage residual adapters (pending CI)
+- New `src/simple_adp/visual_multistage.py` freezes a fixed three-stage CNN,
+  inserting a real residual MLP at each predeclared early/middle/late stage.
+  Exactly one is ADP-eligible and trained per job; the other two remain frozen
+  but participate in the forward/autograd graph. No in-place CNN mutation.
+- Distinct `adapter:early`, `adapter:middle`, `adapter:late` growth sites,
+  stored with exact stage/selected-MPL weights, site-specific signed
+  checkpoint namespace and model architecture. All growth operators remain
+  local to the selected real MLP.
+- Three independent opt-in runner adapters `vision_v08_early`,
+  `vision_v08_middle`, `vision_v08_late` enumerate source 14 method IDs,
+  faithful/corrected generic profiles and paired loss/variance candidates:
+  43 per selected site/split/seed/repeat, 129 total across three sites.
+- New tests cover gradient flow through frozen later CNN stages, exact
+  frozen weights, RR/all/D1/Dcur, saved/restored architectures, eviction
+  replay, fixed/generic controls and paired worker. **CI pending**.
+- Simultaneous multistage growth, learned site selection, pretrained
+  backbone weights, real-image scientific validation and V09 bank are not yet
+  implemented.
