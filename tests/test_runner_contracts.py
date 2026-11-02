@@ -4380,8 +4380,13 @@ def test_plan_enumerates_registered_routes_and_asymmetric_repeats(tmp_path):
     # initial widths; the eight generic IDs have two profiles; fixed routes
     # include the aggregate grid and 50 individual candidates. Adaptive routes
     # run once, 51 fixed routes run on all three outer repeats, and screening
-    # contributes 22 architectures at two seeds: 51 + 153 + 44.
-    assert len(plan.runs) == 248
+    # contributes 22 architectures at two seeds. Native exact scientific
+    # pairing now adds a separate variance-growth job for each of the 51
+    # genuinely adaptive original runs: 51 original + 51 variance + 153 fixed
+    # + 44 screening = 299, without multiplying the fixed controls.
+    assert len(plan.runs) == 299
+    assert plan.manifest["variance_pair_audit"]["eligible_original_growth_runs"] == 51
+    assert plan.manifest["variance_pair_audit"]["matched_variance_counterparts"] == 51
     assert plan.manifest["effective_repeat_count"] == 3
     assert sum(spec.route.model_id == "MLP-Fixed" and not spec.route.screening_only for spec in plan.runs) == 153
     assert sum(spec.route.screening_only for spec in plan.runs) == 44
@@ -4397,7 +4402,7 @@ def test_plan_enumerates_registered_routes_and_asymmetric_repeats(tmp_path):
         dataset_providers=(provider,), dataset_suites=(("toy", "suite"),),
         model_adapters=(adapter,),
     )
-    assert len(zero_repeat.runs) == 102  # one effective pass despite configured zero
+    assert len(zero_repeat.runs) == 153  # 51 original ADP + 51 variance + 51 fixed
     assert zero_repeat.manifest["effective_repeat_count"] == 1
     assert {run.identity.suite_repeat for run in zero_repeat.runs} == {1}
 
@@ -4410,7 +4415,7 @@ def test_plan_enumerates_registered_routes_and_asymmetric_repeats(tmp_path):
         dataset_providers=(provider,), dataset_suites=(("toy", "suite"),),
         model_adapters=(adapter,),
     )
-    assert len(repeat_asymmetry.runs) == 306
+    assert len(repeat_asymmetry.runs) == 459  # 153 ADP + 153 variance + 153 fixed
     assert repeat_asymmetry.manifest["effective_repeat_count"] == 5
     assert {run.identity.suite_repeat for run in repeat_asymmetry.runs} == {1, 2, 3}
 
