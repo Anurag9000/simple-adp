@@ -232,3 +232,43 @@ Loading an arbitrary local checkpoint does **not** prove pretrained origin.
 Official test is only materialized after ADP train/validation architecture
 selection. The V01 head is the only trainable part; this does not implement
 pretrained inner-FFN injection for V03–V11.
+
+## V04 genuine source ConvNeXt-Tiny internal FFN (source-fidelity verified)
+
+`SourceConvNeXtSpec` requires a **complete** local torchvision ConvNeXt-Tiny
+checkpoint and an exact SHA256 checksum. The model is instantiated through
+`torchvision.models.convnext_tiny(weights=None)` and strict whole-model
+`load_state_dict`. It targets only `features[1][0].block[3:6]` — the
+**actual first CNBlock 96→384→96 GELU FFN**, not a lookalike CNN block.
+
+The original two Linear weights and biases are copied exactly into a
+`TabularMLP(96, (384,), 96)` with a GELU activation, then the residual source
+block continues through the original permutation, layer scale, stochastic
+depth and downstream ConvNeXt stages. The original source classifier is
+replaced with a fixed-interface **trainable target head**. All source weights
+other than the selected FFN are frozen; the target head is separately
+trainable but never eligible for architecture growth. Source pretraining
+cannot be established from an arbitrary user-supplied checkpoint by itself.
+
+The module verifies the hash of every frozen source tensor and input
+normalization buffer. Supported source operators grow/deepen only the
+selected hidden FFN, preserving the C=96 input/output and all CNN channels.
+Signed source snapshots include source-file identity, the local width cursor,
+complete candidate state, trained target head and original source-transplant
+indicator. The native full-image controller requires the initial architecture
+be exactly (384,) for faithful source initialization, and resumes only from
+matching source/config/data.
+
+**Evidence:** 4 source-fidelity and full-image training tests passed in
+9.97s: https://github.com/Anurag9000/simple-adp/actions/runs/41465492673.
+This proof used a *randomly initialized but exact original torchvision
+ConvNeXt-Tiny source state_dict*, demonstrating tensor equivalence. A
+separate published pretrained-weight + real Fashion-MNIST run succeeded:
+https://github.com/Anurag9000/simple-adp/actions/runs/41466060451.
+It grew the genuine first source FFN from width 384 to 385 while leaving
+all other pretrained source stages frozen, but was a tiny 40/20/20 smoke.
+
+This source-faithful V04 is a separate opt-in component; it is **not** a
+drop-in replacement for the older tiny `vision_v04` 817-job suite member.
+The other source architectures V03/V05–V11 still lack equivalent published
+source checkpoint integration.

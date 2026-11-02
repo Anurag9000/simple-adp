@@ -32,7 +32,16 @@
       "site": "channel:stage0.block0",
       "criterion": "loss and matched shadow BGD variance-stagnation (21 counterparts), pending CI",
       "status": "selected synthetic CPU CI verified (269 passed) including native 14-method runner, criterion pairs and exact restart",
-      "reason": "Tiny random-initialized internal FFN architecture control. Source CNN/ViT pretrained state substitution and real image scientific benchmark still missing."
+      "reason": "Tiny random-initialized internal FFN architecture control. Source CNN/ViT pretrained state substitution and real image scientific benchmark still missing.",
+      "source_pretrained_option": {
+        "implementation": "exact original torchvision first CNBlock GELU FFN weight transplant with frozen source and trainable target head",
+        "site": "convnext:features.1.0.channel_ffn",
+        "initial_width": 384,
+        "selected_width": 385,
+        "source_fidelity_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41465492673",
+        "pretrained_real_data_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41466060451",
+        "status": "published pretrained real-image small source experiment verified, not in existing tiny V04 coordinated job manifest"
+      }
     },
     {
       "architecture": "V05",

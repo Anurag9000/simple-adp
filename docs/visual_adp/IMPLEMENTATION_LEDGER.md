@@ -18,6 +18,7 @@ States distinguish source/static implementation from executed tests and science.
 | V01 opt-in coordinated runner and signed split jobs | runtime-tested (toy CPU) | runner/vision.py, plan.py, plugins.py, tests/test_runner_vision.py; toy and offline image provider only |
 | V02 residual CNN adapter with all 14 canonical methods and generic profiles | runtime-tested on synthetic CPU; 259 tests passed | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
 | V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
+| V04 original torchvision ConvNeXt source FFN | exact source-tensor equality (4 tests) AND published-pretrained real-data growth verified | first true pretrained in-block FFN 384→385 on Fashion-MNIST; distinct from tiny vision_v04 route |
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
 | V07 MLP-Mixer | all 3 token/channel/synchronous-both scopes CPU CI verified (303 tests) | true residual token/channel MLPs, signed resumed search, matched variance jobs and joint budget |
@@ -507,3 +508,61 @@ corrected generic methods. Evidence remains pending CI.
   workflow succeeded at https://github.com/Anurag9000/simple-adp/actions/runs/41462613451.
 - Still missing: pretrained source internal FFN replacement (V03–V11),
   larger real-data benchmark, full CUDA and repository-wide regression.
+
+## Source-exact first ConvNeXt-Tiny FFN architecture growth (2026-11-02)
+
+- New `visual_source_convnext.py` loads a **complete strict local source**
+  `torchvision.models.convnext_tiny` state_dict, enforces file SHA256 and
+  replaces exactly the first CNBlock's original
+  `Linear(96,384) -> GELU -> Linear(384,96)` with a trainable,
+  source-weight-transplanted `TabularMLP(96,[384],96)`.
+- The initial `source.features(...)` tensor is provably **exactly equal**
+  to the original complete torchvision source model on deterministic images,
+  before local ADP mutation. All other source parameters/stochastic-depth
+  behaviors are frozen, while a separate fixed-interface task head trains.
+  Only the selected FFN hidden units are ADP growth targets.
+- Full source tensor hash + loader checkpoint SHA256, site, width cursor,
+  model/trainer state and target head are recorded for strict recovery.
+  The existing `VisualResidualSearch` now dispatches a separate source-V04
+  model kind; it requires starting from full source hidden width **384**.
+- Dedicated actual-torchvision source tests passed **4/4 in 9.97s**:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41465492673.
+  Evidence: exact source feature equality, trainable local/head gradients,
+  frozen-source isolation, native width/depth growth, strict signed snapshot
+  and one full-image StageTrainer run. Their checkpoint was full but
+  **randomly initialized**, so this is source-architecture fidelity, *not
+  published pretrained experiment evidence*.
+- Explicit network-enabled experiment on official pretrained
+  `ConvNeXt_Tiny_Weights.IMAGENET1K_V1` and Fashion-MNIST is committed at
+  `7d380260066318dabc83ccd7695dcba754f2d43f`, **verified successful**.
+- Source V04 is not the older synthetic `vision_v04` job adapter. The
+  former's actual full-source search and local pretrained weight use must
+  be verified independently before replacing or adding source V04 to the
+  central 817-job manifest. Source-faithful V03/V05–V11 remain unfinished.
+
+## First actual published-pretrained V04 in-block source FFN growth — verified
+
+- https://github.com/Anurag9000/simple-adp/actions/runs/41466060451
+  completed real official Fashion-MNIST execution with
+  `ConvNeXt_Tiny_Weights.IMAGENET1K_V1` source, strict complete
+  state_dict and exact initial first-CNBlock `96→384→96` GELU transplant.
+- The native one-proposal `ADP-W-RR` controller trained the original
+  internal source FFN and a fixed-interface target-specific head, selected
+  width **385**, and strictly preserved all other ConvNeXt source weights.
+- 40 training, 20 validation, 20 official-test images, one epoch per
+  stage, seed 11. Validation accuracy **0.40**; official-test accuracy
+  **0.45**, macro-F1 **0.4222**. A small **integration smoke**, not a
+  benchmark or multi-seed scientific ranking.
+- Published weights provenance URL:
+  https://download.pytorch.org/models/convnext_tiny-983f1562.pth.
+  Full source saved state SHA256:
+  `48f10ea8765c304f933e395d3676017eb388634ff1a2808b8e4db08f6c91c272`.
+- Selected source-model snapshot, search history, manifest and result JSON
+  uploaded as artifact `real-v04-convnext-source-inner-ffn`, ID
+  **13151101792** (103MB). Full result and caveats are in
+  `docs/visual_adp/REAL_IMAGE_EVIDENCE.md`.
+- This is a **separate** source-faithful research path, not the tiny V04
+  option currently counted among the original 817 coordinated jobs.
+  Remaining: complete source-V04 central runner matrix, other architectures'
+  pretrained inner FFN transplants, GPU/full-suite checks and larger
+  pre-registered experiments.

@@ -28,7 +28,27 @@
       "id": "V04",
       "central_runner_jobs": "43 per one seed/split/repeat (22 method/profile routes + 21 variance counterparts), opt-in, selected CPU CI verified",
       "implementation": "tested native internal FFN search, source growth, exact signed resume and runner on synthetic CPU (269 passed)",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "source_faithful_option": {
+        "module": "src/simple_adp/visual_source_convnext.py",
+        "site": "convnext:features.1.0.channel_ffn",
+        "source_model": "torchvision.models.convnext_tiny full local state_dict",
+        "source_ffn": [
+          96,
+          384,
+          96
+        ],
+        "training": "pretrained source FFN and fresh target head trained, other source tensors strictly frozen",
+        "pretrained_provenance": "local source file SHA256 required, arbitrary local state does not prove pretraining",
+        "synthetic_source_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41465492673",
+        "synthetic_source_tests_passed": 4,
+        "source_real_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41466060451",
+        "source_real_status": "completed_success",
+        "central_runner_registered": false,
+        "pretrained_inner_ffn_scientific_experiments": 1,
+        "real_data_scope": "40 train,20 valid,20 official test, one seed, source width 384->385, tiny integration",
+        "artifact_id": 13151101792
+      }
     },
     {
       "id": "V05",
@@ -94,8 +114,8 @@
   "scientific_evidence": {
     "real_data_smoke_count": 2,
     "benchmark_quality_multi_seed_runs": 0,
-    "pretrained_inner_ffn_runs": 0,
-    "scientific_caveat": "Nine matched official Fashion-MNIST V01 jobs are real images and official pretrained ResNet18 weights, but each seed uses only 300/100/100 samples and two epochs per stage. No benchmark-quality claim; all inner FFN source models remain experimental frozen-random controls.",
+    "pretrained_inner_ffn_runs": 1,
+    "scientific_caveat": "Nine matched V01 real Fashion runs and one real pretrained V04 internal-FFN smoke are verified. Tiny sample budgets, no full pretrained multi-seed architecture comparison, CUDA/full-suite or comprehensive published-source coverage.",
     "verified_matched_comparison": {
       "dataset": "torchvision:fashion_mnist",
       "architecture": "pretrained torchvision ResNet18 frozen V01 source",
@@ -134,6 +154,21 @@
       "run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41463589627",
       "artifact_id": 13149638400,
       "comparison_signature": "65d2016bb38e5bd1cf07b5c122d788ae7a606435afae2e9e2d31998ee74c11",
+      "benchmark_quality": false
+    },
+    "first_real_pretrained_inner_ffn": {
+      "source": "torchvision ConvNeXt-Tiny IMAGENET1K_V1",
+      "architecture_id": "V04",
+      "site": "features.1.0.channel_ffn",
+      "initial_width": 384,
+      "selected_width": 385,
+      "train": 40,
+      "validation": 20,
+      "test": 20,
+      "validation_accuracy": 0.4,
+      "test_accuracy": 0.45,
+      "run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41466060451",
+      "artifact_id": 13151101792,
       "benchmark_quality": false
     }
   },

@@ -449,3 +449,49 @@ comparison completed successfully:
 https://github.com/Anurag9000/simple-adp/actions/runs/41462840053.
 Its train/validation/test sample sizes were only 300/100/100. These numbers
 are evidence of real-data execution, not benchmark-quality conclusions.
+
+## V04 real source ConvNeXt inner-FFN experiments
+
+The optional strict source module is `simple_adp.visual_source_convnext`.
+It needs local **complete** torchvision ConvNeXt-Tiny weights (not a stripped
+feature-only checkpoint). With explicit fit/validation image subsets:
+
+```python
+from simple_adp.config import SearchSettings
+from simple_adp.visual_source_convnext import SourceConvNeXtSpec, file_sha256
+from simple_adp.visual_search import VisualResidualSearch
+
+source_path = "/models/convnext_tiny_full_state_dict.pt"
+spec = SourceConvNeXtSpec(
+    classes=10, image_height=28, image_width=28, input_channels=1,
+    weights_path=source_path, weights_sha256=file_sha256(__import__("pathlib").Path(source_path)),
+    fixed_seed=11,
+)
+search = VisualResidualSearch(
+    "ADP-W-RR", spec,
+    settings=SearchSettings(
+        init_width=384, init_depth=1, max_width=385, max_depth=2,
+        max_epochs=1, max_candidates=1, batch_size=8, device="cpu",
+    ),
+)
+search.fit(train_images, train_labels,
+           validation_data=(valid_images, valid_labels),
+           checkpoint_path="results/v04/estimator.checkpoint.pt")
+```
+
+`train_images` and `valid_images` must be raw float32 NCHW pixels in
+[0,1] from **disjoint official-training-source indices**, with class
+labels encoded from training data only. For grayscale Fashion-MNIST the
+wrapper repeats channels and bilinearly resizes to at least 32x32 before
+ImageNet normalization. The model *does not download* checkpoints.
+
+The initial hidden width **must be exactly 384** for a mathematically exact
+source FFN transplant. The source feature network is frozen, while the
+original in-block FFN and new task head are trainable. Subsequent native
+width/depth search and checkpoint resume are source-site scoped. The
+pretrained-source real-data example is
+`scripts/vision_pretrained_convnext_smoke.py`; CI execution succeeded in the separate real-pretrained source run
+https://github.com/Anurag9000/simple-adp/actions/runs/41466060451.
+The selected in-block FFN grew from 384 to 385 on 40/20/20 official
+Fashion-MNIST images; this is a real integration smoke, not a benchmark. No source-full 14-method
+scientific benchmark claim is made.

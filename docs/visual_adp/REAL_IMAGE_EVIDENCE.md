@@ -141,3 +141,43 @@ study, full source architecture ADP, or GPU comparison.
 4. CUDA execution and full-repository regression; current selected CI is CPU.
 5. Extended weight provenance and durable experiment artifacts beyond
    GitHub Actions' finite retention window.
+
+## Run E — published pretrained ConvNeXt-Tiny **internal FFN** growth
+
+- **Verified success:** https://github.com/Anurag9000/simple-adp/actions/runs/41466060451
+- Source-model code: `af64f94f90571400f63a331e038a9a0d72b052b6`;
+  workflow script commit `7d380260066318dabc83ccd7695dcba754f2d43f`.
+- Exact published full torchvision checkpoint:
+  `ConvNeXt_Tiny_Weights.IMAGENET1K_V1`,
+  https://download.pytorch.org/models/convnext_tiny-983f1562.pth;
+  local full state_dict file SHA256
+  `48f10ea8765c304f933e395d3676017eb388634ff1a2808b8e4db08f6c91c272`.
+- Growth target: the real first CNBlock source channel FFN,
+  `convnext:features.1.0.channel_ffn`, initially transplanted *exactly*
+  as `96→384→96` GELU. Native `ADP-W-RR` widened its hidden layer to
+  **385 neurons** while keeping its input/output interface C=96.
+- Frozen source state SHA256:
+  `afb456139a1d70961457bbd2ceec406e3ac9216bfea1c7cd872184944ca133af`.
+  The target-specific classifier and in-block FFN are trainable; all
+  other pretrained source stages are frozen and included in the hash.
+- Official Fashion-MNIST: **40 fit / 20 validation / 20 official test**,
+  seed 11; one epoch per stage, at most one growth proposal. Official test
+  is evaluated only after architecture selection.
+- Validation accuracy **0.40**, validation macro-F1 **0.285714**,
+  validation log loss **1.8915664164**.
+- Official-test accuracy **0.45**, macro-F1 **0.422222**,
+  test log loss **1.7877205028**.
+- Uploaded `real-v04-convnext-source-inner-ffn` artifact ID
+  **13151101792**, 103,225,380 bytes; includes source manifest,
+  result JSON, local growth-history JSON and selected complete model
+  snapshot (SHA256
+  `a80346091aa5c6298c891ab6cf21d1f6cff6ceb5d32fbf7589264ca024b17752`).
+- Source-fidelity tests against the actual torchvision **architecture**
+  passed 4/4 in 9.97s:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41465492673.
+  Those tests had random source weights; this independent Run E
+  explicitly downloaded the official published pretrained weights.
+- This verifies a **single real published-pretrained source FFN route**,
+  not all V04 source methods or V03/V05–V11 pretrained internal FFNs.
+  Tiny data, one seed and a one-proposal budget mean it is not evidence of
+  benchmark superiority or trustworthy generalization.

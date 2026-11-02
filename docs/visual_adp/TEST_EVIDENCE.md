@@ -327,3 +327,39 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Official CIFAR-10 source download in run 41451620431 was cancelled
   after ~30 min at ~60%; no CIFAR metrics. Independent workflows keep
   successful Fashion evidence and CIFAR download failures separate.
+
+## V04 exact torchvision ConvNeXt FFN source transfer — verified (2026-11-02)
+
+- Source+tests: `af64f94f90571400f63a331e038a9a0d72b052b6`.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41465492673
+  **4/4 passed in 9.97s** against a complete, randomly initialized
+  torchvision ConvNeXt-Tiny source state_dict.
+- Tests establish exact original-source CNN feature tensor equality
+  before mutation, byte-identical original FFN tensor transfer,
+  GELU nonlinearities, strict frozen tensor and source-file hashes,
+  local/head-only gradients, real internal source width/depth expansion,
+  exact frozen-source snapshots and one native full-image trained stage.
+- This does **not** prove published pretrained model state was used in the
+  test. A distinct published-weight real-image experiment was committed
+  as `7d380260066318dabc83ccd7695dcba754f2d43f`,
+  https://github.com/Anurag9000/simple-adp/actions/runs/41466060451;
+  **verified completed successfully** with published pretrained weights.
+
+## Published pretrained ConvNeXt-Tiny real internal FFN growth verified
+
+- Real official-weight/official-image workflow:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41466060451,
+  commit `7d380260066318dabc83ccd7695dcba754f2d43f`.
+- **Success**: full strict original torchvision `ConvNeXt_Tiny_Weights.IMAGENET1K_V1`
+  state, real `features[1][0]` internal channel FFN transfer and true
+  width growth from **384 to 385**, trained with full-image backprop.
+  All other pretrained source parameters frozen and SHA256 verified.
+- Official Fashion-MNIST fit/validation/test: 40/20/20.
+  Validation accuracy 0.40, official-test accuracy 0.45, test macro-F1
+  0.422222, with one seed and one epoch per stage.
+- Artifact ID 13151101792, selected source model ~103MB with
+  provenance, exact source/selected-model checksums, stage history,
+  evaluation metrics and official split manifest.
+- This is a real pretrained internal FFN **micro-smoke only**. No large
+  pretrained V04 experiment grid, V03/V05–V11 source proof, or CUDA
+  execution has been claimed.
