@@ -101,6 +101,11 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     spec_path = target.command[-1]
     output = run_spec(spec_path)
     assert output["status"] == "completed"
+    assert output["parameter_accounting"]["total_parameters"] == (
+        output["parameter_accounting"]["frozen_parameters"]
+        + output["parameter_accounting"]["trainable_parameters"]
+    )
+    assert "head" in output["parameter_accounting"]["eligible_growth_sites"]
     assert output["task_family"] == "vision"
     assert output["test_metrics"]["accuracy"] >= 0
     assert output["model_id"] == "ADP-W-RR"
@@ -122,6 +127,7 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     assert inner_pair.worker_settings["expansion_criterion"] == "variance_stagnation"
     inner_result = run_spec(inner.command[-1])
     assert inner_result["status"] == "completed"
+    assert "adapter:block1" in inner_result["parameter_accounting"]["eligible_growth_sites"]
     assert inner_result["architecture_id"] == "V02:toy-frozen-residual-adapter"
     assert inner_result["growth_site"] == "adapter:block1"
     assert len(inner_result["selected_architecture"]) >= 1
