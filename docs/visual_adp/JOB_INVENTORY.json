@@ -294,8 +294,8 @@
   },
   "official_fashion_control_matrix": {
     "source": "torchvision.datasets.FashionMNIST official train/test",
-    "workflow": "https://github.com/Anurag9000/simple-adp/actions/runs/41493011813",
-    "status": "in_progress (not validated at time of inventory update)",
+    "workflow": "https://github.com/Anurag9000/simple-adp/actions/runs/41493795442",
+    "status": "success: 38/38 bounded official-image worker jobs executed",
     "architecture_site_control_adapters": 19,
     "planned_selected_jobs": 38,
     "source_methods": [
@@ -309,7 +309,11 @@
     "test_limit": 20,
     "execution_route": "existing SuitePlan signed run specification + worker.run_spec",
     "is_scientific_benchmark": false,
-    "completed_jobs_verified": 0
+    "completed_jobs_verified": 38,
+    "failed_jobs_verified": 0,
+    "artifact": "https://github.com/Anurag9000/simple-adp/actions/runs/41493795442/artifacts/13166111100",
+    "metrics_provenance": "artifact official_fashion_vision_matrix.json plus normal signed result.json per worker",
+    "scientifically_executed_full_benchmark": false
   },
   "visual_parameter_accounting": {
     "module": "src/simple_adp/visual_accounting.py",
