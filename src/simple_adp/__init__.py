@@ -28,6 +28,7 @@ _EXPORTS = {
     "VisualADPEstimator": "visual",
     "VisionInputAdapter": "vision_encoders",
     "run_vision_experiment": "vision_experiment",
+    "run_vision_comparison": "vision_comparison",
     "ResidualAdapterSpec": "visual_inner",
     "VisualResidualAdapter": "visual_inner",
     "VisualResidualSearch": "visual_search",
