@@ -567,7 +567,7 @@ corrected generic methods. Evidence remains pending CI.
   pretrained inner FFN transplants, GPU/full-suite checks and larger
   pre-registered experiments.
 
-## V04 source-faithful central job planner and worker — implemented, CI pending
+## V04 source-faithful central job planner and worker — verified selected CPU source tests
 
 - `src/simple_adp/runner/vision_source.py` introduces a **separate**
   `vision_v04_source` identity. It is registered only when both
@@ -591,7 +591,22 @@ corrected generic methods. Evidence remains pending CI.
 - A new direct worker test exercises a complete original **random
   torchvision state_dict** (no published pretrained claim), signed
   planning and one real full-source stage, with separate source pairs.
-  This integration is **pending selected GitHub Actions CI**. The already
+  This integration passed 3/3 source-specific CPU tests at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41470335656.
+  The broader visual CPU suite is running separately. The already
   verified published-pretrained single V04 full-image experiment is a
   separate successful standalone execution, not proof these 43 planned
   source runner jobs have been trained.
+
+### Verified source V04 coordinated 43-job route closure — 2026-11-02
+- Integration code and tests: `c5d4ed0bc4340af1680cd9079304c0038cc275e5`,
+  fixture-limit correction `fa1016bc554233734ac24f64c6ab332f02783544`.
+- Dedicated GitHub Actions: https://github.com/Anurag9000/simple-adp/actions/runs/41470335656.
+  **3/3 source-runner tests passed in 21.36s**.
+- Verified source disabled => exact original **817** planned jobs; explicit
+  source enabled => **860** jobs (43 additional; 22 source original and
+  21 native variance pairs). One source-V04 model trained and produced a
+  source-hashed inference bundle via the actual coordinated CPU worker.
+- Worker test used an original full **random-state** torchvision ConvNeXt
+  checkpoint. The published pretrained independent real-image experiment is
+  separately recorded; neither test executed all 43 source V04 jobs.

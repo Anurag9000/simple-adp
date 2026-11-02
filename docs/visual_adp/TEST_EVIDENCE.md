@@ -363,3 +363,18 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - This is a real pretrained internal FFN **micro-smoke only**. No large
   pretrained V04 experiment grid, V03/V05–V11 source proof, or CUDA
   execution has been claimed.
+
+## Source-faithful coordinated V04 worker / 43-job identity test — verified
+- First run 41469833279 rejected invalid synthetic global max_width=385
+  because the default runner architecture grid includes wider widths.
+  Fixture corrected to max_width=512, without changing the source model
+  or its required 384 initial FFN width.
+- Corrected test CI https://github.com/Anurag9000/simple-adp/actions/runs/41470335656:
+  **3/3 passed in 21.36s**. Assertions include original 817-job plan
+  unchanged; gated 43 source additions, exact 22/21 source/variance pairing,
+  distinct SHA-bound identities, rejection of source checksum/path mutation,
+  and an actual full original-torchvision source worker producing inference
+  artifact + frozen-source hash. Source weights in fixture were *random*;
+  this test is not a pretrained benchmark.
+- Complete selected CPU suite is separately queued/running at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41470335650.

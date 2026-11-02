@@ -204,7 +204,10 @@
     "source_identity": "full local source SHA256 bound into route label, verified by worker",
     "initial_hidden_width": 384,
     "scientific_jobs_executed_in_central_runner": 0,
-    "offline_verification": "pending CI",
-    "note": "Separate full 28M-param torchvision source route, not tiny vision_v04; explicit bounded max_epochs/max_candidates required"
+    "offline_verification": "3/3 dedicated source runner tests passed, 21.36s",
+    "note": "Separate full 28M-param torchvision source route, not tiny vision_v04; explicit bounded max_epochs/max_candidates required",
+    "ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41470335656",
+    "executed_source_fixtures": 1,
+    "full_cpu_regression": "pending run 41470335650"
   }
 }
