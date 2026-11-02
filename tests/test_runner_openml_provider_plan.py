@@ -252,6 +252,25 @@ def test_openml_plan_crosses_every_task_with_every_registered_model_route(
                    for run in alternatives)
         assert {run.identity.split_sha256 for run in task_runs} == {split_hash}
         assert all(run.identity.suite == suite for run in task_runs)
+        originals_by_id = {run.identity.run_id: run for run in originals}
+        for alt in alternatives:
+            source = originals_by_id[alt.worker_settings["counterpart_of"]]
+            assert alt.identity.model_route == (
+                source.identity.model_route + "__bgd_variance_stagnation"
+            )
+            assert alt.identity.seed == source.identity.seed
+            assert alt.identity.split_sha256 == source.identity.split_sha256
+            assert alt.result_dir == str(tmp_path / "results" / alt.identity.run_id)
+            expected_spec = (
+                tmp_path / "run" / "jobs" / alt.identity.run_id
+                / "run_spec.json"
+            )
+            assert alt.command == (
+                sys.executable, "-m", "simple_adp.runner.worker",
+                "--spec", str(expected_spec),
+            )
+            assert expected_spec.is_file()
+            assert alt.result_dir != source.result_dir
         for split_path in {run.split_file for run in task_runs}:
             with np.load(split_path, allow_pickle=False) as saved:
                 np.testing.assert_array_equal(saved["train"], train)
