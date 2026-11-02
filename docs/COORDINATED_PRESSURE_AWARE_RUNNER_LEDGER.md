@@ -643,3 +643,21 @@ end-to-end GPU benchmark, and no claim that the growing ADP
 checkpoint state has perfect exact-mid-batch restart across all
 scientific routes.
 
+### Executed targeted regression result: 49 passed
+
+The new [targeted coordinated runner regression run
+`41488734928`](https://github.com/Anurag9000/simple-adp/actions/runs/41488734928)
+**executed its test step successfully: 49 passed in 14.16 seconds**.
+It covers the formerly failing backend-admission test matrix,
+process launch controls, asymmetric source/variance route counts
+and both source-versus-generic differential subprocesses with
+neutral admission environments. The [AST map verification
+`41488374351`](https://github.com/Anurag9000/simple-adp/actions/runs/41488374351)
+also executed and passed independently.
+
+These successful CI results validate the *targeted* regression
+surface at their run commit SHAs; they do not establish a passing
+whole-repository test suite, GPU-device execution, or optimizer-step
+checkpoint recovery. The full regression runs were still
+in progress at the time of this update.
+
