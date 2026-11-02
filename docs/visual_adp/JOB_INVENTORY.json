@@ -12,7 +12,7 @@
     {
       "id": "V02",
       "central_runner_jobs": 0,
-      "implementation": "partial runtime-tested bounded CPU V02 CNN residual inner MLP native stage/growth; full canonical controller/runner/science absent",
+      "implementation": "experimental standalone dedicated search for five methods with signed per-batch resume, pending CI; no runner/generic/D1",
       "scientifically_executed": false
     },
     {

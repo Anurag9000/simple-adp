@@ -28,6 +28,7 @@ _EXPORTS = {
     "VisualADPEstimator": "visual",
     "ResidualAdapterSpec": "visual_inner",
     "VisualResidualAdapter": "visual_inner",
+    "VisualResidualSearch": "visual_search",
     "FrozenVisionEncoder": "vision_encoders",
     "create_frozen_vision_encoder": "vision_encoders",
     "ImagePartitions": "vision_data",

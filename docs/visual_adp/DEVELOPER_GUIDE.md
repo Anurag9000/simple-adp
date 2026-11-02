@@ -140,3 +140,24 @@ expanded = model.grow_width(site_id="adapter:block1",
 
 See `tests/test_visual_inner_v02.py` for full-image gradient and local
 mutation, frozen-state, depth phase and StageTrainer checks.
+
+## V02 dedicated composite controller (experimental; five configurations)
+
+```python
+from simple_adp import VisualResidualSearch, ResidualAdapterSpec, SearchSettings
+spec = ResidualAdapterSpec(input_channels=3, backbone_channels=4,
+                           local_dim=3, classes=2, image_height=8, image_width=8)
+search = VisualResidualSearch('ADP-W-RR', spec,
+    settings=SearchSettings(init_width=2, init_depth=1, max_width=4,
+                            max_candidates=1, max_epochs=1, device='cpu'))
+# search.fit(train_nchw, train_labels,
+#            validation_data=(valid_nchw, valid_labels),
+#            checkpoint_path='run-v02.ckpt')
+# predictions = search.predict(test_nchw)
+```
+
+Supported: LGND-W-Greedy, ADP-W-RR, ADP-W-All, ADP-D-Dcur,
+MLP-Fixed (requires `fixed_grid`). Refuses other methods. Its CheckpointStore
+signature covers exact train/validation bytes, method defaults, spec,
+settings and target encoding. Do not reuse checkpoints for changed image data
+or settings. Untrusted torch checkpoint files must never be loaded.

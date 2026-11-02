@@ -12,11 +12,11 @@
     },
     {
       "architecture": "V02",
-      "methods": "native RR/all-layer/DEN-RR width and D1/Dcur depth candidate operators only; no canonical controllers yet",
+      "methods": "LGND-W-Greedy, ADP-W-RR, ADP-W-All, ADP-D-Dcur, MLP-Fixed through experimental full-image dedicated V02 controller",
       "site": "adapter:block1",
-      "criterion": "native StageTrainer loss (variance observer not yet paired)",
-      "status": "partial runtime-tested candidate StageTrainer and native mutation (231-test CI); coordinated search unsupported",
-      "reason": "No canonical search-controller proposal/acceptance/global-best/resume and no signed runner route."
+      "criterion": "native StageTrainer loss and shadow-BGD variance gate for supported methods (pending CI)",
+      "status": "standalone dedicated search implementation pending CI; no V02 runner jobs",
+      "reason": "Native 5 dedicated controller policies with signed stage resume; generic 8, progressive D1, coordinated runner still unsupported"
     },
     {
       "architecture": "V03",

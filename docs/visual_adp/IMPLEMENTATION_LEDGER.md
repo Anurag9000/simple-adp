@@ -27,3 +27,15 @@ criterion pairs only where the corresponding native controller really implements
 the criterion.
 
 **Next:** integrate V02 native mutations into all canonical search-controller lifecycles and the coordinated runner; retain source RR/D1/Dcur semantics before extending V03/V04.
+
+## V02 dedicated composite architecture-search increment (pending CI)
+
+`src/simple_adp/visual_search.py` executes the original dedicated loss/variance
+stage trainer over full-image V02 candidates for LGND-W-Greedy, ADP-W-RR,
+ADP-W-All, ADP-D-Dcur and MLP-Fixed. Search covers candidate proposal,
+validation-selected best architecture, no mutation of frozen CNN parameters,
+per-batch optimizer/RNG/permutation checkpoints, restart and completed-run
+idempotence. Other methods including eight generic phase-search configurations
+and progressive ADP-D-D1 are explicitly rejected, not silently approximated.
+This first controller is a standalone library API, not yet a signed V02
+coordinated runner job. CPU execution and interruption tests pending CI.
