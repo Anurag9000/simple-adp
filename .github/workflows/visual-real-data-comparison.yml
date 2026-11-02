@@ -1,0 +1,47 @@
+name: Official Fashion-MNIST matched frozen/loss/variance V01 integration
+
+on:
+  push:
+    paths:
+      - 'scripts/vision_official_comparison.py'
+      - '.github/workflows/visual-real-data-comparison.yml'
+  workflow_dispatch:
+
+jobs:
+  pretrained-resnet18-paired:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source and image dependencies
+        run: python -m pip install -e '.[vision]'
+      - name: Run matched real-source fixed and two ADP criteria
+        run: |
+          python scripts/vision_official_comparison.py \
+            --workdir "${{ runner.temp }}/real-paired-v01" \
+            --device cpu \
+            --seeds 11 \
+            --train-limit 300 --valid-limit 100 --test-limit 100
+      - name: Retain complete paired evidence for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-fashion-resnet18-v01-loss-vs-variance
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/comparison_manifest.json
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/comparison_summary.json
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/external_source_provenance.json
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/runs/seed*/**/manifest.json
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/runs/seed*/**/result.json
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/runs/seed*/**/search_history.json
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/runs/seed*/**/estimator.model.pt
+            ${{ runner.temp }}/real-paired-v01/comparison/fashion_mnist/resnet18_v01/runs/seed*/**/estimator.model.pt.vision.json
