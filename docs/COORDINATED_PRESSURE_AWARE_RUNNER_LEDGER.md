@@ -661,3 +661,23 @@ whole-repository test suite, GPU-device execution, or optimizer-step
 checkpoint recovery. The full regression runs were still
 in progress at the time of this update.
 
+### Executed full-repository CPU regression: 19,230 passed
+
+The complete [whole-repository GitHub Actions run
+`41488650402`](https://github.com/Anurag9000/simple-adp/actions/runs/41488650402)
+at source revision
+`97d200a4ed24190b4f7d6b2849e343a757329c7e`
+**finished successfully with 19,230 passed, zero failed, in
+661.92 seconds**. This was the unfiltered
+`python -m pytest -q tests` job under the CPU regression
+workflow, not a selected subset. It closes the 27 failures
+observed in run `41475398340` for this exact revision.
+The separate 49-test focused source-versus-generic CI and
+Python AST inventory workflows are also green.
+
+Later commits may add new source/tests and require their
+own full regression. A CPU test suite does not prove
+GPU runtime correctness, scientific accuracy, native
+OPF physical simulations or exact numerical replay
+on GPU devices.
+
