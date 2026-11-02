@@ -268,3 +268,18 @@ All samples in these tests are **offline synthetic fixtures**, not real
 CIFAR-10/CIFAR-100/Fashion-MNIST or published pretrained weights.
 A real source-model checkpoint or a functioning experiment CLI alone is not
 evidence of accuracy or reproducible real-data science. CI pending.
+
+## Verified V01 official Fashion-MNIST + pretrained ResNet18 smoke (2026-11-02)
+- 360 selected CPU offline tests passed:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41450351931.
+- A separate network-enabled workflow completed on real official images
+  and published torchvision pretrained weights:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41451103405.
+- Data: 40 train / 20 validation / 20 official test; source model
+  `ResNet18_Weights.IMAGENET1K_V1`, SHA256
+  `eff99529cc4a2ad4edac486be5a9e9724e7f4e0ccc0e3b319dd07b7e48306592`.
+- Validation accuracy 0.15; test accuracy 0.15; test macro-F1 0.095;
+  test log-loss 4.2930310860. Small-scale **integration smoke only**;
+  no statistical generalization or comparative scientific claim.
+- Artifacts uploaded and verified: Fashion-MNIST V01 manifest,
+  result JSON, published source provenance and inference model.

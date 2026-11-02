@@ -24,7 +24,8 @@ States distinguish source/static implementation from executed tests and science.
 | V08 fixed three-stage residual adapter | independent sites + fixed multisite schedule verified (354 tests) | early/middle/late local growth, saved site order/weights and exact middle-site resume |
 | V09 strict adapter bank | selected CPU CI verified: 347 passed | hard frozen router, three strictly isolated adapter targets, routing counts and matched workers |
 | V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
-| Local official-image V01 experiment CLI and deterministic grayscale/RGB transform | implemented; CI pending | signed source/run artifacts and explicit post-fit official test; offline synthetic fixtures only until CI |
+| Local official-image V01 experiment CLI and deterministic grayscale/RGB transform | selected CPU CI verified; 360 passed | signed source/run artifacts and official test after fit; synthetic unit fixtures |
+| Official Fashion-MNIST + published pretrained ResNet18 micro-smoke | real-data integration verified | 40/20/20 official image partitions, GitHub Actions run 41451103405, uploaded model and provenance; **not** a performance benchmark |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
 | CPU/CUDA complete regression | partial | 354 selected CPU tests passed including V08 schedule and V09 bank; CUDA/full suite not executed |
 
@@ -425,3 +426,25 @@ corrected generic methods. Evidence remains pending CI.
 - New synthetic fixture unit tests cover preprocessing, official-test order,
   random source opt-in, artifact identity, checksum tamper detection.
   **Selected CPU CI pending**; no real dataset/pretrained experiment executed.
+
+## Verified real-data source integration (2026-11-02)
+
+- V01 experiment CLI code `78b2a0d12e7c9902f0e8d1f41548f8a7797f422e`:
+  **360 selected CPU tests passed in 44.73s**,
+  https://github.com/Anurag9000/simple-adp/actions/runs/41450351931.
+- External network smoke `cefd74e3b0bf861835437ab830b2101303e8ea1a`:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41451103405
+  completed on official Fashion-MNIST and published
+  `ResNet18_Weights.IMAGENET1K_V1` with full source-state SHA256.
+- Data counts: 40 fit, 20 validation and 20 official test. Validation and
+  test accuracy each **0.15**, test macro-F1 **0.095**, test log-loss
+  **4.2930310860**. This is a tiny smoke test, **not** benchmark accuracy.
+- GitHub Actions artifact `fashion-mnist-official-resnet18-v01-evidence`
+  (ID 13144598582) contains JSON manifest/results, external provenance,
+  and the model plus identity sidecar. Detailed record:
+  `docs/visual_adp/REAL_IMAGE_EVIDENCE.md`.
+- Official local checkpoint loader continues to label the source weights
+  as unverified local state; the smoke workflow separately records the
+  official torchvision pretrained enum, download URL and exact checksum.
+- V03–V11 genuine pretrained inner-FFN integration and multi-seed benchmarks
+  remain outstanding. A CIFAR-10 RGB smoke extension is underway.
