@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'scripts/visual_official_fashion_matrix.py'
+      - 'src/simple_adp/runner/worker.py'
+      - 'src/simple_adp/runner/vision.py'
+      - 'src/simple_adp/visual_accounting.py'
       - '.github/workflows/visual-official-family-matrix.yml'
   workflow_dispatch:
 
