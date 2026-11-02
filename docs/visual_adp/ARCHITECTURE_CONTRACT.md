@@ -88,3 +88,14 @@ weights/buffers. Frozen downstream paths remain in autograd. Full-image
 candidate search/restoration uses VisualResidualSearch's additive composite
 model factory, with a separate checkpoint namespace for V03/V04. Standalone
 constructor/search tests pending CI; no real-data or pretrained weight claim.
+
+## Experimental V05 PoolFormer channel FFN contract
+A fixed 3x3 average pooling spatial mixer computes `Pool(x)-x` and the
+residual `x + (Pool(x)-x)` before the channels-last expandable GELU MLP.
+The frozen patch stem, pool geometry, normalization, layer-scale and
+classifier remain immutable. The only eligible site is
+`channel:poolformer.block0`. V05 inherits the same signed whole-image
+search controller, source RR/all/D1/Dcur operations, fixed external channel
+dimension, and strict frozen-state restoration as V03/V04. It is a tiny
+from-scratch experimental control, not a pretrained PoolFormer checkpoint.
+Tests and opt-in runner integration pending CI.

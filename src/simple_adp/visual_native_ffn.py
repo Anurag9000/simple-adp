@@ -1,4 +1,4 @@
-"""Experimental V03 token-wise ViT FFN and V04 ConvNeXt channel FFN.
+"""Experimental V03 ViT FFN, V04 ConvNeXt FFN and V05 PoolFormer FFN.
 
 These are *tiny from-scratch controls*, not torchvision pretrained backbones.
 They use genuine frozen attention or depthwise spatial mixing and a native
@@ -32,8 +32,8 @@ class NativeFFNSpec:
     site_id: str = ""
 
     def __post_init__(self) -> None:
-        if self.architecture_id not in {"V03", "V04"}:
-            raise ValueError("native FFN architecture must be V03 or V04")
+        if self.architecture_id not in {"V03", "V04", "V05"}:
+            raise ValueError("native FFN architecture must be V03, V04 or V05")
         for key in ("input_channels", "local_dim", "classes", "image_height",
                     "image_width", "patch_size", "attention_heads"):
             if getattr(self, key) <= 0:
@@ -43,7 +43,8 @@ class NativeFFNSpec:
             raise ValueError("image resolution must be divisible by the fixed patch size")
         if self.architecture_id == "V03" and self.local_dim % self.attention_heads:
             raise ValueError("ViT embedding dimension must be divisible by attention heads")
-        wanted = "ffn:block0" if self.architecture_id == "V03" else "channel:stage0.block0"
+        wanted = {"V03": "ffn:block0", "V04": "channel:stage0.block0",
+                  "V05": "channel:poolformer.block0"}[self.architecture_id]
         if self.site_id != wanted:
             raise ValueError(f"{self.architecture_id} eligible growth site must be {wanted!r}")
 
@@ -53,12 +54,13 @@ class NativeFFNSpec:
 
 
 class VisualNativeFFN(VisualResidualAdapter):
-    """Single real internal FFN in a frozen ViT / ConvNeXt-style block.
+    """Single real internal FFN in a frozen ViT / ConvNeXt / PoolFormer block.
 
     V03: frozen patch embedding, CLS/pos embeddings, MHA, norms, classifier;
          token-wise GELU FFN on [batch, patches+1, d] with residual.
     V04: frozen strided stem and depthwise 7x7 conv, channel LayerNorm,
          fixed layer scale, classifier; GELU FFN on [batch, h, w, d].
+    V05: frozen AvgPool2d - identity mixer, channel FFN GELU and classifier.
     All local FFN hidden layers are eligible for native ADP operators.
     """
 
@@ -86,9 +88,14 @@ class VisualNativeFFN(VisualResidualAdapter):
                 self.pre_ffn_norm = nn.LayerNorm(dim)
                 self.output_norm = nn.LayerNorm(dim)
             else:
-                self.depthwise = nn.Conv2d(
-                    dim, dim, kernel_size=7, padding=3, groups=dim,
-                )
+                if spec.architecture_id == "V04":
+                    self.depthwise = nn.Conv2d(
+                        dim, dim, kernel_size=7, padding=3, groups=dim,
+                    )
+                else:
+                    self.pooling_mixer = nn.AvgPool2d(
+                        kernel_size=3, stride=1, padding=1, count_include_pad=False,
+                    )
                 self.pre_ffn_norm = nn.LayerNorm(dim)
                 # ConvNeXt's fixed per-channel layer scaling is noneligible.
                 self.layer_scale = nn.ParameterList([
@@ -120,8 +127,9 @@ class VisualNativeFFN(VisualResidualAdapter):
                 self.pre_attention_norm, self.attention, self.pre_ffn_norm,
                 self.output_norm, self.classifier,
             )
+        mixer = self.depthwise if self.spec.architecture_id == "V04" else self.pooling_mixer
         return (
-            self.stem, self.depthwise, self.pre_ffn_norm,
+            self.stem, mixer, self.pre_ffn_norm,
             self.layer_scale, self.output_norm, self.classifier,
         )
 
@@ -131,8 +139,11 @@ class VisualNativeFFN(VisualResidualAdapter):
             ("stem", "cls", "position", "attn_norm", "attention", "ffn_norm",
              "out_norm", "classifier")
             if self.spec.architecture_id == "V03"
-            else ("stem", "depthwise", "ffn_norm", "layer_scale", "out_norm", "classifier")
+            else ("stem", "depthwise" if self.spec.architecture_id == "V04" else "pool",
+                  "ffn_norm", "layer_scale", "out_norm", "classifier")
         )
+        if self.spec.architecture_id == "V05":
+            digest.update(repr(self.pooling_mixer).encode())
         for prefix, module in zip(names, self._fixed_modules()):
             for name, tensor in sorted(module.state_dict().items()):
                 arr = tensor.detach().cpu().contiguous().numpy()
@@ -165,10 +176,18 @@ class VisualNativeFFN(VisualResidualAdapter):
             representation = self.output_norm(tokens[:, 0])
         else:
             # The fixed depthwise mixer remains in the differentiable graph.
-            mixed = self.depthwise(value).permute(0, 2, 3, 1).contiguous()
+            if self.spec.architecture_id == "V04":
+                mixed = self.depthwise(value)
+                skip = value
+            else:
+                # PoolFormer token mixer is Pool(x)-x. Residual update gives
+                # exactly Pool(x), with no learnable spatial operator.
+                skip = value + (self.pooling_mixer(value) - value)
+                mixed = skip
+            mixed = mixed.permute(0, 2, 3, 1).contiguous()
             delta = self.local_mlp(self.pre_ffn_norm(mixed))
             delta = delta * self.layer_scale[0]
-            value = value + delta.permute(0, 3, 1, 2).contiguous()
+            value = skip + delta.permute(0, 3, 1, 2).contiguous()
             representation = self.output_norm(value.mean(dim=(-2, -1)))
         return self.classifier(representation)
 

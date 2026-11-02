@@ -23,24 +23,24 @@
       "methods": "14 canonical methods, eight generic in faithful/corrected profiles (22 routes per seed/split/repeat), pending CI",
       "site": "ffn:block0",
       "criterion": "loss and matched shadow BGD variance-stagnation (21 counterparts), pending CI",
-      "status": "experimental V03/V04 native FFN source + coordinated runner code, both pending CI",
-      "reason": "Independent native frozen random tiny ViT/ConvNeXt FFN jobs on image arrays. Pretrained backbone replacement, real-image benchmarks, multi-seed/GPU science not yet done."
+      "status": "selected synthetic CPU CI verified (269 passed) including native 14-method runner, criterion pairs and exact restart",
+      "reason": "Tiny random-initialized internal FFN architecture control. Source CNN/ViT pretrained state substitution and real image scientific benchmark still missing."
     },
     {
       "architecture": "V04",
       "methods": "14 canonical methods, eight generic in faithful/corrected profiles (22 routes per seed/split/repeat), pending CI",
       "site": "channel:stage0.block0",
       "criterion": "loss and matched shadow BGD variance-stagnation (21 counterparts), pending CI",
-      "status": "experimental V03/V04 native FFN source + coordinated runner code, both pending CI",
-      "reason": "Independent native frozen random tiny ViT/ConvNeXt FFN jobs on image arrays. Pretrained backbone replacement, real-image benchmarks, multi-seed/GPU science not yet done."
+      "status": "selected synthetic CPU CI verified (269 passed) including native 14-method runner, criterion pairs and exact restart",
+      "reason": "Tiny random-initialized internal FFN architecture control. Source CNN/ViT pretrained state substitution and real image scientific benchmark still missing."
     },
     {
       "architecture": "V05",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "all 14 canonical method IDs, 8 generic with 2 profiles, 22 routes plus 21 variance pairs per split/seed, pending CI",
+      "site": "channel:poolformer.block0",
+      "criterion": "loss and matched native shadow-BGD variance; pending CI",
+      "status": "source model/controller and opt-in coordinated worker implemented, pending CPU CI",
+      "reason": "Frozen parameter-free pooling mixer, native channel FFN and signed search. Tiny random initialized model; no pretrained or scientific benchmark."
     },
     {
       "architecture": "V06a",

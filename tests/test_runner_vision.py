@@ -20,6 +20,7 @@ def test_vision_is_opt_in_and_does_not_change_legacy_registries(monkeypatch):
     assert "vision_inner" not in models.adapters
     assert "vision_v03" not in models.adapters
     assert "vision_v04" not in models.adapters
+    assert "vision_v05" not in models.adapters
 
 
 def test_vision_provider_manifest_and_split_isolation(monkeypatch):
@@ -63,7 +64,7 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
         model_adapters=tuple(models.adapters.values()),
     )
     assert plan.runs
-    assert {run.model_adapter for run in plan.runs} == {"vision_adp", "vision_inner", "vision_v03", "vision_v04"}
+    assert {run.model_adapter for run in plan.runs} == {"vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05"}
     assert all(run.task_ref.provider == "vision" for run in plan.runs)
     assert any(run.route.model_id == "MLP-Fixed" for run in plan.runs)
     assert not any(
@@ -141,6 +142,7 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     [
         ("V03", "vision_v03", "ffn:block0"),
         ("V04", "vision_v04", "channel:stage0.block0"),
+        ("V05", "vision_v05", "channel:poolformer.block0"),
     ],
 )
 def test_native_ffn_runner_executes_and_pairs_variance(

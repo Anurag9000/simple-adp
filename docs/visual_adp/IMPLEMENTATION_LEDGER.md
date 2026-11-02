@@ -111,3 +111,28 @@ checkpointing. V01/V02 and all nonvisual adapters remain unchanged by default.
 Real pretrained ViT-B16/ConvNeXt-Tiny FFN replacement is **not** implemented.
 New bounded CPU worker tests cover V03/V04 source jobs, criterion pairs and
 corrected generic methods. Evidence remains pending CI.
+
+## V03/V04 combined coordinated runner verified — 2026-11-02
+- Code integration: 02dba9579030e946f768a4bd18ec426a7517b0c7.
+- Selected CI: https://github.com/Anurag9000/simple-adp/actions/runs/41397841490.
+- **269 passing CPU tests in 41.31 seconds**, including V03/V04 signed
+  standalone search and opt-in worker training, corrected generic search,
+  loss/variance counterpart and preserved earlier core/V01/V02 behavior.
+- Native method/profile and matched job generation: **43 runner jobs per
+  selected seed/split/repeat per V03 and per V04**, subject to suite settings.
+- No pretrained FFN injection, real CIFAR benchmark or GPU scientific run.
+
+## V05 PoolFormer native channel FFN (new code pending CI)
+- Same frozen-interface architecture factory now implements a distinct
+  `V05` family: fixed strided stem, parameter-free 3x3 average pooling minus
+  identity token mixer, residual update, channels-last LayerNorm and local
+  GELU FFN, fixed layer scale and pooled frozen classifier.
+- No spatial kernels, positions, channels, patch counts, normalization or
+  fixed layer scales are eligible for growth. Exact frozen hashing includes
+  the parameter-free pooling operator representation as well as modules.
+- V05 has a separate installed opt-in `vision_v05` runner adapter, 22 method/
+  profile routes plus 21 matched shadow variance gates per seed/split/repeat,
+  signed full-image model training and resume through the common controller.
+- Unit, frozen-pool, native growth, exact replay and worker tests added.
+  **CI pending**. These are random-initialized controls, not pretrained PoolFormer
+  or validated real-image science.

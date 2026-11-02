@@ -18,7 +18,8 @@ def spec(architecture: str) -> NativeFFNSpec:
         architecture_id=architecture, input_channels=3, local_dim=4,
         classes=2, image_height=8, image_width=12, patch_size=2,
         attention_heads=2, fixed_seed=19,
-        site_id=("ffn:block0" if architecture == "V03" else "channel:stage0.block0"),
+        site_id={"V03": "ffn:block0", "V04": "channel:stage0.block0",
+                 "V05": "channel:poolformer.block0"}[architecture],
     )
 
 
@@ -40,7 +41,7 @@ def settings():
     )
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
 def test_native_ffn_is_inner_and_frozen_backbone_remains_exact(arch):
     torch.manual_seed(103)
     model = VisualNativeFFN(spec(arch), (3,))
@@ -65,7 +66,7 @@ def test_native_ffn_is_inner_and_frozen_backbone_remains_exact(arch):
         NativeFFNSpec(arch, 3, 4, 2, 7, 12, site_id=spec(arch).site_id)
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
 def test_native_ffn_source_growth_and_snapshot_preserve_interfaces(arch):
     model = build_visual_composite(spec(arch), (3, 3))
     before = model.frozen_state_sha256()
@@ -107,7 +108,7 @@ def test_native_ffn_source_growth_and_snapshot_preserve_interfaces(arch):
         restored.verify_frozen()
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
 def test_native_ffn_composite_search_actual_growth_and_restart(arch, tmp_path):
     x, y, validation = sample()
     base = VisualResidualSearch("ADP-W-RR", spec(arch), settings=settings())
@@ -142,7 +143,7 @@ def test_native_ffn_composite_search_actual_growth_and_restart(arch, tmp_path):
             changed, y, validation_data=validation, checkpoint_path=path)
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
 def test_native_ffn_fixed_model_and_generic_phase_search(arch):
     x, y, validation = sample()
     control = VisualResidualSearch(
@@ -157,3 +158,22 @@ def test_native_ffn_fixed_model_and_generic_phase_search(arch):
     generic.fit(x, y, validation_data=validation)
     assert len(generic.history_) == 2
     assert generic.history_[1]["profile"] == "corrected"
+
+
+
+def test_poolformer_parameter_free_mixer_and_frozen_contract():
+    model = VisualNativeFFN(spec("V05"), (3,))
+    x = torch.randn(3, 3, 8, 12)
+    stemmed = model.stem(x)
+    mixed = model.pooling_mixer(stemmed) - stemmed
+    # PoolFormer explicitly defines a parameter-free residual Pool - Identity.
+    assert torch.allclose(stemmed + mixed, model.pooling_mixer(stemmed))
+    assert not any(model.pooling_mixer.parameters())
+    assert model(x).shape == (3, 2)
+    sha = model.frozen_state_sha256()
+    with torch.no_grad():
+        model.local_mlp.output_layer.weight.add_(0.1)
+    assert model.frozen_state_sha256() == sha
+    model.pooling_mixer.kernel_size = 5
+    with pytest.raises(ValueError, match="frozen"):
+        model.verify_frozen()

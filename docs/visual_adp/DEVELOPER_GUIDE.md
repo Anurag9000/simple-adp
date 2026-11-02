@@ -216,3 +216,12 @@ settings. Concrete runner variants are small random-initialized ViT-style
 `channel:stage0.block0`). They are **not pretrained torchvision source
 models** and no accuracy improvement is claimed. Two new worker CI tests
 exercise fixed tensors, matched variance gate and generic route execution.
+
+## V05 PoolFormer opt-in image jobs (pending CI)
+The `vision_v05` adapter enumerates `V05:<source method>` IDs, with separate
+`@faithful`/`@corrected` profiles on eight generic methods and a native
+loss-vs-shadow-BGD variance pair per adaptive route. Use the same documented
+`SIMPLE_ADP_ENABLE_VISION=1`, `tasks=["vision"]`, and `vision:toy`/
+CIFAR/Fashion-MNIST suite selectors as V01–V04. The model is a tiny
+random-initialized PoolFormer-style structure; no pretrained PoolFormer or
+validated accuracy improvement is claimed. CI status pending.

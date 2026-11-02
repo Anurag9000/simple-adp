@@ -105,3 +105,15 @@ scientific result has been executed in this increment.
   completion, fixed growth site, signed model exports, matched split/seed,
   variance shadow and corrected generic source route.
 - No real dataset benchmark or CUDA coverage claimed.
+
+## V03/V04 full runner integration verified (2026-11-02)
+- Commit: 02dba9579030e946f768a4bd18ec426a7517b0c7.
+- Workflow: https://github.com/Anurag9000/simple-adp/actions/runs/41397841490.
+- **269 passed in 41.31 seconds** on the selected synthetic CPU suite,
+  including V03 and V04 worker execution, matched variance and generic route.
+
+## V05 PoolFormer new tests (pending CI)
+- Enlarged V03/V04 native FFN test matrix to V05 for gradient flow,
+  mutation, signed replay, fixed model, generic controller and runner job.
+- Explicitly asserts parameter-free `Pool(x)-x` and checks that changes to
+  the pooling kernel invalidate the frozen-state verification.

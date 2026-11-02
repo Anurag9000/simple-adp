@@ -326,7 +326,7 @@ class VisionInnerModelAdapter:
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 site_id="adapter:block1", fixed_seed=17,
             )
-        elif self.family in {"V03", "V04"}:
+        elif self.family in {"V03", "V04", "V05"}:
             patch = (4 if train_x.shape[2] % 4 == 0 and train_x.shape[3] % 4 == 0
                      else 2)
             spec = NativeFFNSpec(
@@ -335,7 +335,8 @@ class VisionInnerModelAdapter:
                 classes=int(np.unique(train_y).size),
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 patch_size=patch, attention_heads=2, fixed_seed=23,
-                site_id=("ffn:block0" if self.family == "V03" else "channel:stage0.block0"),
+                site_id={"V03": "ffn:block0", "V04": "channel:stage0.block0",
+                         "V05": "channel:poolformer.block0"}[self.family],
             )
         else:
             raise ValueError("unknown native image FFN architecture family")
@@ -343,6 +344,7 @@ class VisionInnerModelAdapter:
             "V02": "V02:toy-frozen-residual-adapter",
             "V03": "V03:tiny-vit-ffn-frozen-random",
             "V04": "V04:tiny-convnext-ffn-frozen-random",
+            "V05": "V05:tiny-poolformer-ffn-frozen-random",
         }[self.family]
         search = VisualResidualSearch(
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
@@ -395,15 +397,15 @@ class VisionInnerModelAdapter:
 
 
 class VisionNativeFFNModelAdapter(VisionInnerModelAdapter):
-    """Opt-in V03/V04 genuine internal FFN runner with source method parity.
+    """Opt-in V03/V04/V05 genuine internal FFN runner with source method parity.
 
-    V03 and V04 are separate identities and adapters; they do not pretend to
+    V03, V04 and V05 are separate identities and adapters; they do not pretend to
     have pretrained torchvision weights. Validation/test isolation, paired
     variance routes, signatures and worker checkpointing match V02.
     """
 
     def __init__(self, family: str):
-        if family not in {"V03", "V04"}:
-            raise ValueError("only V03 and V04 native FFN runner families are supported")
+        if family not in {"V03", "V04", "V05"}:
+            raise ValueError("only V03, V04 and V05 native FFN families are supported")
         self.family = family
         self.name = "vision_" + family.lower()
