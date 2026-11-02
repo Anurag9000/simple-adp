@@ -7,6 +7,7 @@ on:
       - 'src/simple_adp/visual_search.py'
       - 'src/simple_adp/runner/vision.py'
       - 'src/simple_adp/runner/plan.py'
+      - 'src/simple_adp/runner/vision.py'
       - 'src/simple_adp/runner/plugins.py'
       - 'src/simple_adp/runner/route.py'
       - 'src/simple_adp/vision_data.py'

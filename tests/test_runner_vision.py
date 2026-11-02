@@ -17,6 +17,7 @@ def test_vision_is_opt_in_and_does_not_change_legacy_registries(monkeypatch):
     datasets, models = load_registries()
     assert "vision" not in datasets.providers
     assert "vision_adp" not in models.adapters
+    assert "vision_inner" not in models.adapters
 
 
 def test_vision_provider_manifest_and_split_isolation(monkeypatch):
@@ -60,7 +61,7 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
         model_adapters=tuple(models.adapters.values()),
     )
     assert plan.runs
-    assert all(run.model_adapter == "vision_adp" for run in plan.runs)
+    assert {run.model_adapter for run in plan.runs} == {"vision_adp", "vision_inner"}
     assert all(run.task_ref.provider == "vision" for run in plan.runs)
     assert any(run.route.model_id == "MLP-Fixed" for run in plan.runs)
     assert not any(
@@ -87,3 +88,26 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     assert output["test_metrics"]["accuracy"] >= 0
     assert output["model_id"] == "ADP-W-RR"
     assert (tmp_path / "results").exists()
+
+    inner = next(
+        run for run in plan.runs
+        if run.model_adapter == "vision_inner"
+        and run.route.model_id == "ADP-W-RR"
+        and run.worker_settings.get("expansion_criterion") != "variance_stagnation"
+    )
+    inner_pair = next(
+        run for run in plan.runs
+        if run.worker_settings.get("counterpart_of") == inner.identity.run_id
+    )
+    assert inner_pair.model_adapter == "vision_inner"
+    assert inner_pair.identity.seed == inner.identity.seed
+    assert inner_pair.identity.split_sha256 == inner.identity.split_sha256
+    assert inner_pair.worker_settings["expansion_criterion"] == "variance_stagnation"
+    inner_result = run_spec(inner.command[-1])
+    assert inner_result["status"] == "completed"
+    assert inner_result["architecture_id"] == "V02:toy-frozen-residual-adapter"
+    assert inner_result["growth_site"] == "adapter:block1"
+    assert len(inner_result["selected_architecture"]) >= 1
+    assert inner_result["test_metrics"]["accuracy"] >= 0
+    assert inner_result["artifact_path"] is not None
+

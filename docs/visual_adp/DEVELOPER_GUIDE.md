@@ -161,3 +161,14 @@ MLP-Fixed (requires `fixed_grid`). Refuses other methods. Its CheckpointStore
 signature covers exact train/validation bytes, method defaults, spec,
 settings and target encoding. Do not reuse checkpoints for changed image data
 or settings. Untrusted torch checkpoint files must never be loaded.
+
+## Opt-in central runner V02 (experimental)
+`SIMPLE_ADP_ENABLE_VISION=1` now registers `vision_inner` alongside V01. The
+existing opt-in `--dataset-suites vision:toy --set 'tasks=["vision"]'` command
+selects both families; V02 routes are `V02:LGND-W-Greedy`,
+`V02:ADP-W-RR`, `V02:ADP-W-All`, `V02:ADP-D-Dcur`,
+`V02:MLP-Fixed`, plus 4 original-vs-variance pairs. No other inner-site
+method is scheduled. Tests cover split isolation and runner execution; CI status
+must be verified before treating this path as production-ready. Both this
+experimental route and V01's default tiny frozen CNN are controlled baselines,
+not a pretrained-ResNet/CIFAR benchmark.

@@ -39,3 +39,12 @@ idempotence. Other methods including eight generic phase-search configurations
 and progressive ADP-D-D1 are explicitly rejected, not silently approximated.
 This first controller is a standalone library API, not yet a signed V02
 coordinated runner job. CPU execution and interruption tests pending CI.
+
+## V02 coordinated suite integration (pending new CI)
+A separately registered opt-in `vision_inner` ModelAdapter enumerates only the
+five standalone supported V02 controllers, with one additional variance-shadow
+counterpart per growing method. The original V01 routes remain independent.
+The V02 worker trains on full images, uses the signed native per-batch resume
+checkpoint, reports architecture ID/growth site, and writes a separately signed
+best-model artifact. All vision paths are disabled by default. A bounded
+worker end-to-end regression was added to tests/test_runner_vision.py.

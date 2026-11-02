@@ -11,8 +11,8 @@
     },
     {
       "id": "V02",
-      "central_runner_jobs": 0,
-      "implementation": "experimental standalone dedicated search for five methods with signed per-batch resume, pending CI; no runner/generic/D1",
+      "central_runner_jobs": "9 per one seed/split/repeat (5 methods + 4 nonfixed variance counterparts), opt-in and pending CI",
+      "implementation": "CI-verified standalone dedicated search five methods with exact per-batch resume; opt-in central runner pending CI; 8 generic plus D1 not implemented",
       "scientifically_executed": false
     },
     {

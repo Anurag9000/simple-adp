@@ -20,6 +20,8 @@ from ..registry import MODEL_REGISTRY
 from ..tasks import ClassificationTask
 from ..vision_data import make_image_partitions, load_torchvision_partitions
 from ..visual import VisualADPEstimator
+from ..visual_inner import ResidualAdapterSpec
+from ..visual_search import SUPPORTED_V02_METHODS, VisualResidualSearch
 from .artifacts import estimator_model_path
 from .datasets import DatasetTaskRef, PreparedTaskData
 from .plan import SplitSpec, _sha_indices
@@ -252,4 +254,114 @@ class VisionModelAdapter:
             "encoder_sha256": estimator.encoder_sha256,
             "growth_site": "head",
             "architecture_id": "v01-tiny-conv-frozen-random-control",
+        }
+
+
+class VisionInnerModelAdapter:
+    """Opt-in V02 inner residual MLP, scoped to five verified policies.
+
+    The full image composite is optimized; unlike V01 no embedding cache
+    crosses the local site. Unsupported ADP controllers are not scheduled.
+    """
+
+    name = "vision_inner"
+
+    def enumerate_routes(self, generic_profiles=("faithful", "corrected"), settings=None) -> list[ModelRoute]:
+        if settings is None or "vision" not in settings.tasks:
+            return []
+        routes: list[ModelRoute] = []
+        for model_id in sorted(SUPPORTED_V02_METHODS):
+            if model_id == "MLP-Fixed":
+                routes.append(ModelRoute(
+                    model_id, label="V02:MLP-Fixed",
+                    fixed_grid=((settings.width_to_depth_width,),),
+                    suite_group="vision", init_width=settings.width_to_depth_width,
+                    init_depth=1,
+                ))
+            else:
+                routes.append(ModelRoute(
+                    model_id, label="V02:" + model_id,
+                    suite_group="vision",
+                    init_width=settings.width_to_depth_width,
+                    init_depth=settings.width_to_depth_depth,
+                ))
+        return routes
+
+    def fit_predict(
+        self, route: ModelRoute, *, data: PreparedTaskData, split: SplitSpec,
+        seed: int, settings: SearchSettings,
+        checkpoint_path: str | None = None,
+        progress_callback: Callable[[dict[str, object]], None] | None = None,
+    ) -> dict[str, Any]:
+        if data.task_family != "vision" or route.suite_group != "vision":
+            raise ValueError("V02 adapter requires a vision-only dataset and route")
+        if route.model_id not in SUPPORTED_V02_METHODS or not route.route_label.startswith("V02:"):
+            raise ValueError("V02 adapter received a non-V02 or unsupported controller route")
+
+        def take(rows: tuple[int, ...]) -> np.ndarray:
+            return np.asarray(data.X[np.asarray(rows, dtype=np.int64)], dtype=np.float32) / 255.0
+
+        train_x, valid_x, test_x = (take(split.train_indices),
+                                   take(split.validation_indices), take(split.test_indices))
+        train_y = np.asarray(data.y[list(split.train_indices)])
+        valid_y = np.asarray(data.y[list(split.validation_indices)])
+        test_y = np.asarray(data.y[list(split.test_indices)])
+        actual = SearchSettings(**{
+            **settings.as_dict(),
+            "seed": int(seed),
+            "init_width": route.init_width or settings.init_width,
+            "init_depth": route.init_depth or settings.init_depth,
+        })
+        spec = ResidualAdapterSpec(
+            input_channels=int(train_x.shape[1]), backbone_channels=4, local_dim=4,
+            classes=int(np.unique(train_y).size),
+            image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
+            site_id="adapter:block1",
+            fixed_seed=17,
+        )
+        search = VisualResidualSearch(
+            route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
+        )
+        started = time.perf_counter()
+        search.fit(train_x, train_y, validation_data=(valid_x, valid_y),
+                   checkpoint_path=checkpoint_path, progress_callback=progress_callback)
+        elapsed = time.perf_counter() - started
+        task = search.task
+        valid_preds, valid_probs = search.predict(valid_x), search.predict_proba(valid_x)
+        test_preds, test_probs = search.predict(test_x), search.predict_proba(test_x)
+        output = search.model_(torch.as_tensor(valid_x, dtype=torch.float32, device=actual.device))
+        valid_loss = task.validation_score(output, task.encode_targets(valid_y, device=output.device))
+        artifact = None
+        if checkpoint_path is not None:
+            from ..checkpoint import CheckpointStore
+            artifact = str(estimator_model_path(checkpoint_path))
+            # Export a separately signed immutable best-only inference bundle,
+            # not a duplicate of the mutable full-search resume checkpoint.
+            CheckpointStore(artifact).save({
+                "format": "visual-v02-inference-v1",
+                "model_id": route.model_id,
+                "architecture_id": "V02:toy-frozen-residual-adapter",
+                "growth_site": spec.site_id,
+                "split_sha256": split.split_sha256,
+                "task": task.state_dict(),
+                "best_snapshot": search.model_.snapshot(cursor=search.model_._width_cursor),
+                "history": search.history_,
+                "best_score": search.result_.score,
+            }, signature=str(data.content_sha256) + ":" + str(split.split_sha256) + ":" + str(seed))
+        return {
+            "fit_seconds": elapsed,
+            "history_entries": len(search.history_),
+            "selected_architecture": list(search.model_.hidden_widths),
+            "validation_selection_score": float(valid_loss),
+            "validation_metrics": task.evaluation_metrics(valid_y, valid_preds, valid_probs),
+            "test_metrics": task.evaluation_metrics(test_y, test_preds, test_probs),
+            "task_family": "vision", "task_variant": data.task_variant,
+            "split_protocol": data.split_protocol,
+            "primary_metric": task.primary_metric,
+            "metric_directions": task.metric_directions,
+            "artifact_path": artifact,
+            "growth_site": spec.site_id,
+            "architecture_id": "V02:toy-frozen-residual-adapter",
+            "frozen_sha256": search.model_.frozen_state_sha256(),
+            "expansion_criterion": actual.expansion_criterion,
         }

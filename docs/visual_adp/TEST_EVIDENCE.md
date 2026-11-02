@@ -53,3 +53,11 @@ scientific result has been executed in this increment.
 - Scope **only** candidate training/mutation. V02 full canonical search,
   acceptance/rollback across 14 methods, exact interruption resume and central
   runner are not implemented or tested. No real-image scientific validation.
+
+## V02 dedicated-search standalone validation
+- Commit: c2ef9657ba0eb7734d5f8716d062e095c461af33
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41393058629
+- **239 passed in 27.07s**, including five dedicated V02 controllers,
+  complete candidate search/selection and mid-stage exact batch resume.
+- Standalone native variance-contract workflow for the same commit succeeded.
+- Subsequent coordinated runner V02 adapter is pending a separate test run.

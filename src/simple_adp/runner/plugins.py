@@ -35,9 +35,10 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
     models.register(SimpleADPModelAdapter())
     # Explicit opt-in retains byte-for-byte legacy model/provider inventories.
     if os.environ.get("SIMPLE_ADP_ENABLE_VISION") == "1":
-        from .vision import VisionDatasetProvider, VisionModelAdapter
+        from .vision import VisionDatasetProvider, VisionModelAdapter, VisionInnerModelAdapter
         datasets.register(VisionDatasetProvider())
         models.register(VisionModelAdapter())
+        models.register(VisionInnerModelAdapter())
     points = entry_points()
     for group, registry in (
         ("simple_adp.dataset_providers", datasets),

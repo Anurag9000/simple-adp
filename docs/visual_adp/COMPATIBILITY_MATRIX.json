@@ -15,8 +15,8 @@
       "methods": "LGND-W-Greedy, ADP-W-RR, ADP-W-All, ADP-D-Dcur, MLP-Fixed through experimental full-image dedicated V02 controller",
       "site": "adapter:block1",
       "criterion": "native StageTrainer loss and shadow-BGD variance gate for supported methods (pending CI)",
-      "status": "standalone dedicated search implementation pending CI; no V02 runner jobs",
-      "reason": "Native 5 dedicated controller policies with signed stage resume; generic 8, progressive D1, coordinated runner still unsupported"
+      "status": "standalone 5-method dedicated search CI-verified; opt-in coordinated runner and matched variance route pending CI",
+      "reason": "Signed standalone whole-image search/resume passed; V02 native runner jobs added but not yet CI-verified. Eight generic and progressive D1 remain unsupported."
     },
     {
       "architecture": "V03",
