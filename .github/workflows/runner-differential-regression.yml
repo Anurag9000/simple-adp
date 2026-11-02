@@ -1,0 +1,43 @@
+name: Runner paired-variance and CPU/GPU admission regression
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/test_runner_backend.py'
+      - 'tests/test_runner_processes.py'
+      - 'tests/test_runner_contracts.py'
+      - 'tests/test_runner_source_fidelity.py'
+      - 'src/simple_adp/runner/**'
+      - '.github/workflows/runner-differential-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  targeted-runner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install project and runner test dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Focused GPU admission, paired job counts and source differential
+        run: |
+          python -m pytest -q \
+            tests/test_runner_backend.py \
+            tests/test_runner_processes.py \
+            tests/test_runner_contracts.py::test_plan_enumerates_registered_routes_and_asymmetric_repeats \
+            tests/test_runner_source_fidelity.py::test_neutral_admission_environment_preserves_unrelated_context \
+            tests/test_runner_source_fidelity.py::test_admission_and_failure_classification_match_reference \
+            tests/test_runner_source_fidelity.py::test_source_and_generic_match_oom_and_hard_pressure_same_pass
