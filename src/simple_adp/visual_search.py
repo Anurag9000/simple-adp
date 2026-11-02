@@ -1,8 +1,7 @@
 """V02 dedicated composite-image architecture search with exact stage restart.
 
-This is intentionally limited to native LGND/width-DEN/D1-progressive/Dcur-depth/fixed
-controllers. Generic phase-search remains explicitly unsupported:
-their semantics must not be silently replaced by a different search policy.
+This is intentionally limited to native dedicated controllers and generic phase-search on full-image
+composites, with native profile semantics and signed per-batch recovery.
 """
 from __future__ import annotations
 
@@ -23,17 +22,14 @@ from .growth import (
     total_neurons,
 )
 from .models import rebuild_mlp
-from .registry import get_model_config
+from .registry import MODEL_REGISTRY, get_model_config
 from .results import SearchResult
 from .tasks import ClassificationTask
 from .training import StageTrainer
 from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 
 
-SUPPORTED_V02_METHODS = frozenset({
-    "LGND-W-Greedy", "ADP-W-RR", "ADP-W-All",
-    "ADP-D-D1", "ADP-D-Dcur", "MLP-Fixed",
-})
+SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
 
 
 def _hash_array(digest: Any, item: Any) -> None:
@@ -67,6 +63,7 @@ class VisualResidualSearch:
         *,
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
+        generic_profile: str = "faithful",
     ) -> None:
         config = get_model_config(model_id)
         if config.id not in SUPPORTED_V02_METHODS:
@@ -74,6 +71,9 @@ class VisualResidualSearch:
                 f"V02 {model_id} needs a composite-controller implementation; "
                 "do not report generic methods as supported"
             )
+        if generic_profile not in {"faithful", "corrected"}:
+            raise ValueError("generic_profile must be faithful or corrected")
+        self.generic_profile = generic_profile
         self.config = config
         self.spec = spec
         self.settings = settings or SearchSettings()
@@ -100,6 +100,7 @@ class VisualResidualSearch:
             "spec": asdict(self.spec),
             "settings": self.settings.as_dict(),
             "fixed_grid": self.fixed_grid,
+            **({"generic_profile": self.generic_profile} if self.config.generic else {}),
             "task": self.task.state_dict(),
             "raw_data_sha256": digest.hexdigest(),
         })
@@ -118,6 +119,9 @@ class VisualResidualSearch:
             "best": None, "best_score": float("inf"),
             "history": [], "failed": 0, "proposals": 0, "fixed_index": 0,
             "gate_ready": True, "in_stage": True,
+            "current_score": float("inf"),
+            "previous_candidate_score": float("inf"),
+            "phase_index": 0, "failure_counts": {},
             "stage_state": None, "rng_state": capture_rng_state(),
         }
 
@@ -144,6 +148,26 @@ class VisualResidualSearch:
         local = current.local_mlp
         s = self.settings
         site = self.spec.site_id
+        if self.config.generic:
+            if state["phase"] == "width":
+                operator = ("all_layers" if self.config.width_strategy == "all_layers"
+                            else "round_robin")
+                candidate = current.grow_width(
+                    site_id=site, operator=operator,
+                    increment=s.ex_k_width, max_width=s.max_width,
+                )
+            elif state["phase"] == "depth":
+                candidate = current.grow_depth(
+                    site_id=site,
+                    operator="Dcur" if self.config.depth_seed == "current" else "D1",
+                    max_depth=s.max_depth, seed_width=s.min_new_layer_width,
+                )
+            else:
+                raise ValueError("unsupported generic phase")
+            if (candidate is not None and self.generic_profile == "corrected"
+                    and total_neurons(candidate.local_mlp) > s.max_neurons):
+                return None
+            return candidate
         if state["phase"] == "width":
             if self.config.controller == "lgnd" or self.config.width_strategy == "all_layers":
                 eligible = can_grow_width_all_layers(local, s.ex_k_width, s.max_width, s.max_neurons)
@@ -213,19 +237,46 @@ class VisualResidualSearch:
             state["rng_state"] = capture_rng_state()
             current.verify_frozen()
             return
-        accepted = self._accept(state, score)
-        if accepted:
-            state["best_score"] = score
-            state["best"] = current.snapshot(cursor=current._width_cursor)
-            state["failed"] = 0
+        if self.config.generic and kind != "initial":
+            margin = self.settings.delta_width if kind == "width" else self.settings.delta_depth
+            if self.generic_profile == "faithful":
+                # Source faithful profile first updates stage-best=min(old,new),
+                # then checks new < stage-best - margin, which cannot hold.
+                accepted = score < float(state["previous_candidate_score"])
+                if accepted:
+                    state["best"] = current.snapshot(cursor=current._width_cursor)
+                state["best_score"] = score  # Source faithfully overwrites score.
+                state["current_score"] = score
+                state["previous_candidate_score"] = score
+                state["failed"] = int(state["failed"]) + 1
+            else:
+                improved_phase = score < float(state["current_score"]) - margin
+                accepted = score < float(state["best_score"]) - margin
+                if accepted:
+                    state["best_score"] = score
+                    state["best"] = current.snapshot(cursor=current._width_cursor)
+                if improved_phase:
+                    state["current_score"] = score
+                    state["failed"] = 0
+                else:
+                    state["failed"] = int(state["failed"]) + 1
+                state["previous_candidate_score"] = score
+            state["failure_counts"][kind] = state["failed"]
         else:
-            state["failed"] = int(state["failed"]) + 1
+            accepted = self._accept(state, score)
+            if accepted:
+                state["best_score"] = score
+                state["best"] = current.snapshot(cursor=current._width_cursor)
+                state["failed"] = 0
+            else:
+                state["failed"] = int(state["failed"]) + 1
         state["history"].append({
             "stage": kind,
             "architecture": list(current.hidden_widths),
             "score": score, "accepted": bool(accepted),
             "site": self.spec.site_id,
             "criterion": self.settings.expansion_criterion,
+            **({"profile": self.generic_profile} if self.config.generic else {}),
         })
         state["current"] = current.snapshot(cursor=current._width_cursor)
         state["gate_ready"] = bool(stage.variance_stagnated)
@@ -234,10 +285,23 @@ class VisualResidualSearch:
         state["rng_state"] = capture_rng_state()
         if kind == "initial":
             state["failed"] = 0
-            state["phase"] = "width" if self.config.order == "width" else "depth"
+            state["current_score"] = score
+            state["previous_candidate_score"] = score
+            state["phase"] = ("width" if self.config.order in {"width", "width_then_depth"}
+                              else "depth")
         elif kind == "fixed":
             state["fixed_index"] = int(state["fixed_index"]) + 1
         current.verify_frozen()
+
+    def _advance_phase(self, state: dict[str, Any]) -> bool:
+        if not self.config.generic or int(state["phase_index"]) != 0:
+            return False
+        state["phase_index"] = 1
+        state["phase"] = ("depth" if self.config.order == "width_then_depth"
+                          else "width")
+        state["failed"] = 0
+        state["rng_state"] = capture_rng_state()
+        return True
 
     def fit(self, train_images: Any, train_labels: Any, *, validation_data: tuple[Any, Any],
             checkpoint_path: str | Path | None = None,
@@ -279,7 +343,8 @@ class VisualResidualSearch:
                     self._persist(store, signature, state, progress_callback)
                 trainer = StageTrainer(
                     self.task, self.settings,
-                    optimizer_kind="adam", use_penalties=False,
+                    optimizer_kind="adamw" if self.config.generic else "adam",
+                    use_penalties=self.config.generic,
                     checkpoint_callback=persist_stage,
                 )
                 stage = trainer.train_stage(
@@ -305,9 +370,15 @@ class VisualResidualSearch:
             gated = (not warmup and self.settings.expansion_criterion == "variance_stagnation"
                      and not state["gate_ready"])
             if (not warmup and exhausted) or capped or gated:
+                if exhausted and not capped and not gated and self._advance_phase(state):
+                    self._persist(store, signature, state, progress_callback)
+                    continue
                 break
             candidate = self._propose(state)
             if candidate is None:
+                if self._advance_phase(state):
+                    self._persist(store, signature, state, progress_callback)
+                    continue
                 break
             if not warmup:
                 state["proposals"] = int(state["proposals"]) + 1

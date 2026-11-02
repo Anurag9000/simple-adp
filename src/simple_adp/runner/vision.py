@@ -270,6 +270,8 @@ class VisionInnerModelAdapter:
         if settings is None or "vision" not in settings.tasks:
             return []
         routes: list[ModelRoute] = []
+        if not generic_profiles or set(generic_profiles) - {"faithful", "corrected"}:
+            raise ValueError("V02 generic profiles must be faithful or corrected")
         for model_id in sorted(SUPPORTED_V02_METHODS):
             if model_id == "MLP-Fixed":
                 routes.append(ModelRoute(
@@ -279,12 +281,15 @@ class VisionInnerModelAdapter:
                     init_depth=1,
                 ))
             else:
-                routes.append(ModelRoute(
-                    model_id, label="V02:" + model_id,
-                    suite_group="vision",
-                    init_width=settings.width_to_depth_width,
-                    init_depth=settings.width_to_depth_depth,
-                ))
+                profiles = generic_profiles if MODEL_REGISTRY[model_id].generic else (None,)
+                for profile in profiles:
+                    routes.append(ModelRoute(
+                        model_id,
+                        label="V02:" + model_id + (f"@{profile}" if profile else ""),
+                        suite_group="vision", generic_profile=profile,
+                        init_width=settings.width_to_depth_width,
+                        init_depth=settings.width_to_depth_depth,
+                    ))
         return routes
 
     def fit_predict(
@@ -321,6 +326,7 @@ class VisionInnerModelAdapter:
         )
         search = VisualResidualSearch(
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
+            generic_profile=route.generic_profile or "faithful",
         )
         started = time.perf_counter()
         search.fit(train_x, train_y, validation_data=(valid_x, valid_y),

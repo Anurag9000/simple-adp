@@ -11,8 +11,8 @@
     },
     {
       "id": "V02",
-      "central_runner_jobs": "11 per one seed/split/repeat (6 dedicated + 5 variance counterparts), opt-in, pending latest CI",
-      "implementation": "6 native dedicated methods, including progressive D1 warmup with per-batch resume; latest D1 CI pending; 8 generic methods not implemented",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 method/profile routes including 14 IDs + 8 extra generic profiles, 21 variance counterparts); opt-in; latest generic CI pending",
+      "implementation": "14 native method identities, with 8 generic profiles faithful/corrected, signed per-batch full-image composite search; dedicated six CI verified, generic pending CI",
       "scientifically_executed": false
     },
     {

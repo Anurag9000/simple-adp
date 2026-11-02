@@ -111,3 +111,23 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     assert inner_result["test_metrics"]["accuracy"] >= 0
     assert inner_result["artifact_path"] is not None
 
+    generic = next(
+        run for run in plan.runs
+        if run.model_adapter == "vision_inner"
+        and run.route.model_id == "ADP-WD-RR-Dcur"
+        and run.route.generic_profile == "corrected"
+        and run.worker_settings.get("expansion_criterion") != "variance_stagnation"
+    )
+    generic_result = run_spec(generic.command[-1])
+    assert generic_result["status"] == "completed"
+    assert generic_result["architecture_id"] == "V02:toy-frozen-residual-adapter"
+    assert generic_result["test_metrics"]["accuracy"] >= 0
+    assert any(run.model_adapter == "vision_inner"
+               and run.route.generic_profile == "faithful" for run in plan.runs)
+
+    variance_result = run_spec(inner_pair.command[-1])
+    assert variance_result["status"] == "completed"
+    assert variance_result["expansion_criterion"] == "variance_stagnation"
+    assert variance_result["selected_architecture"]
+
+

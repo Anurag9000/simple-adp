@@ -8,6 +8,7 @@ import torch
 from simple_adp.config import SearchSettings
 from simple_adp.visual_inner import ResidualAdapterSpec
 from simple_adp.visual_search import SUPPORTED_V02_METHODS, VisualResidualSearch
+from simple_adp.registry import MODEL_REGISTRY
 
 
 def samples():
@@ -36,7 +37,7 @@ def settings(seed=7):
     )
 
 
-@pytest.mark.parametrize("method", sorted(SUPPORTED_V02_METHODS))
+@pytest.mark.parametrize("method", sorted(mid for mid in SUPPORTED_V02_METHODS if not MODEL_REGISTRY[mid].generic))
 def test_v02_supported_methods_execute_real_composite_selection(method):
     x, y, validation = samples()
     kwargs = {"fixed_grid": ((2,), (3,))} if method == "MLP-Fixed" else {}
@@ -62,9 +63,11 @@ def test_v02_supported_methods_execute_real_composite_selection(method):
         assert sum(search.history_[1]["architecture"]) > sum(search.history_[0]["architecture"])
 
 
-def test_v02_rejects_unimplemented_canonical_methods():
-    with pytest.raises(NotImplementedError, match="composite-controller"):
-        VisualResidualSearch("ADP-WD-RR-D1", spec(), settings=settings())
+def test_v02_rejects_bad_profile_or_unknown_method():
+    with pytest.raises(ValueError, match="generic_profile"):
+        VisualResidualSearch("ADP-WD-RR-D1", spec(), settings=settings(), generic_profile="fake")
+    with pytest.raises(ValueError, match="unknown model"):
+        VisualResidualSearch("not-a-method", spec(), settings=settings())
 
 
 def test_v02_exact_batch_resume_and_completed_idempotence(tmp_path):
@@ -154,3 +157,67 @@ def test_v02_progressive_d1_intermediates_and_exact_mid_warmup_resume(tmp_path):
     assert resumed.history_ == baseline.history_
     assert resumed.result_.score == baseline.result_.score
     assert np.array_equal(resumed.predict_proba(valid[0]), baseline.predict_proba(valid[0]))
+
+
+@pytest.mark.parametrize("method", sorted(mid for mid, config in MODEL_REGISTRY.items() if config.generic))
+@pytest.mark.parametrize("profile", ("faithful", "corrected"))
+def test_v02_generic_phase_methods_train_full_images(method, profile):
+    x, y, valid = samples()
+    search = VisualResidualSearch(
+        method, spec(), settings=settings(seed=62),
+        generic_profile=profile,
+    )
+    search.fit(x, y, validation_data=valid)
+    assert len(search.history_) == 2
+    assert search.history_[1]["profile"] == profile
+    expected_first = "width" if MODEL_REGISTRY[method].order == "width_then_depth" else "depth"
+    assert search.history_[1]["stage"] == expected_first
+    assert search.model_.frozen_state_sha256() == search.model_._frozen_baseline_sha256
+    assert np.isfinite(search.predict_proba(valid[0])).all()
+
+
+def test_v02_generic_width_to_depth_phase_change_when_width_unavailable():
+    x, y, valid = samples()
+    settings_value = SearchSettings(**{
+        **settings(seed=73).as_dict(), "max_width": 2,
+        "max_depth": 2, "max_candidates": 1,
+    })
+    search = VisualResidualSearch(
+        "ADP-WD-All-Dcur", spec(), settings=settings_value,
+        generic_profile="corrected",
+    )
+    search.fit(x, y, validation_data=valid)
+    assert [row["stage"] for row in search.history_] == ["initial", "depth"]
+    assert search.history_[-1]["architecture"] == [2, 2]
+
+
+def test_v02_generic_mid_batch_resume_and_profile_identity(tmp_path):
+    x, y, valid = samples()
+    config = settings(seed=81)
+    baseline = VisualResidualSearch(
+        "ADP-WD-RR-Dcur", spec(), settings=config, generic_profile="corrected",
+    )
+    baseline.fit(x, y, validation_data=valid)
+    checkpoint = tmp_path / "generic-replay.pt"
+
+    class Eviction(Exception):
+        pass
+    def interrupt(state):
+        if state["phase"] == "width" and state["batches_done"] == 1 and state["stage_status"] == "active":
+            raise Eviction()
+    with pytest.raises(Eviction):
+        VisualResidualSearch(
+            "ADP-WD-RR-Dcur", spec(), settings=config,
+            generic_profile="corrected",
+        ).fit(x, y, validation_data=valid,
+              checkpoint_path=checkpoint, progress_callback=interrupt)
+    resumed = VisualResidualSearch(
+        "ADP-WD-RR-Dcur", spec(), settings=config, generic_profile="corrected",
+    )
+    resumed.fit(x, y, validation_data=valid, checkpoint_path=checkpoint)
+    assert resumed.history_ == baseline.history_
+    assert np.array_equal(resumed.predict_proba(valid[0]), baseline.predict_proba(valid[0]))
+    with pytest.raises(ValueError, match="signature"):
+        VisualResidualSearch(
+            "ADP-WD-RR-Dcur", spec(), settings=config, generic_profile="faithful",
+        ).fit(x, y, validation_data=valid, checkpoint_path=checkpoint)

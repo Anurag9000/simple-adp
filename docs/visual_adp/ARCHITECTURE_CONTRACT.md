@@ -15,8 +15,8 @@ classification logits as embeddings unintentionally. Do not cache embeddings
 after trainable internal backbone layers. The feature-head path deliberately
 uses the existing tabular preprocessing on frozen embeddings only.
 
-## V02-V11 requested but not implemented
-V02 residual adapters; V03 native ViT FFN; V04 ConvNeXt channel FFN;
+## V03-V11 requested but not implemented
+V03 native ViT FFN; V04 ConvNeXt channel FFN;
 V05 PoolFormer channel FFN; V06a S2 spatial shift; V06b AS axial shift;
 V07 MLP-Mixer token/channel FFNs; V08 multisite adapters; V09 strict bank
 of adapters; V10 ResMLP channel FFN; V11 GFNet Fourier-mixed FFN.
@@ -51,7 +51,9 @@ participate in autograd, while frozen params/BN buffers remain unchanged.
 Candidate snapshots reconstruct the composite architecture before strict
 weight loading and do not consume source RNG draws.
 
-This establishes *candidate-level* source training/mutation, not search
-controller parity, multi-site selection, serialized mid-candidate resume or
-coordinated runner reachability. V02 remains partial until all those paths
-are working. Other requested architectures V03–V11 remain unimplemented.
+V02 has since gained standalone six-method dedicated controllers with signed
+batch-level resume and an opt-in coordinated runner. The eight generic
+phase-search controllers and their faithful/corrected profiles are newly
+implemented and pending CI. V02 remains partial because the concrete source
+backbone here is a frozen random residual CNN control, not a complete
+pretrained ResNet/ViT experiment. V03–V11 remain unimplemented.

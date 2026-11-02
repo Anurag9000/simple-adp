@@ -12,21 +12,17 @@ States distinguish source/static implementation from executed tests and science.
 | V01 packaged estimator export | static-complete | src/simple_adp/__init__.py |
 | CIFAR-10/CIFAR-100/Fashion-MNIST optional loader | runtime-tested API on offline synthetic arrays (not real datasets) | vision_data.py, torchvision optional; no real dataset execution | 
 | V01 opt-in coordinated runner and signed split jobs | runtime-tested (toy CPU) | runner/vision.py, plan.py, plugins.py, tests/test_runner_vision.py; toy and offline image provider only |
-| V02 residual CNN adapter local MLP stage + native RR/all/D1/Dcur mutation | runtime-tested (bounded CPU); canonical controller and runner missing | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
+| V02 residual CNN adapter local MLP stage + native RR/all/D1/Dcur mutation | runtime-tested (bounded CPU); dedicated controller and opt-in runner verified | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
 | V03/V04 | missing | requires composite controller and source FFN integration |
 | V05/V06a/V06b/V07 | missing | operator/model integration, mutation and resume |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
 | V10/V11 | missing | ResMLP/GFNet operators and full integration |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | partial | 231 selected CPU tests passed including V01 worker and torchvision ResNet18, plus variance contract CI; CUDA/full suite not executed |
+| CPU/CUDA complete regression | partial | 241 selected CPU tests passed including V01 worker and torchvision ResNet18, plus variance contract CI; CUDA/full suite not executed |
 
-Next: implement native inner-MLP adapter
-and snapshot codec; connect StageTrainer to composite image models; implement
-V02-V04 first. Preserve the 14 canonical methods and old runner job identities. Add loss vs variance
-criterion pairs only where the corresponding native controller really implements
-the criterion.
+Next: validate the eight generic V02 controller profiles through the coordinated runner, then integrate V03/V04. Original tabular job identities remain untouched.
 
-**Next:** integrate V02 native mutations into all canonical search-controller lifecycles and the coordinated runner; retain source RR/D1/Dcur semantics before extending V03/V04.
+**Next:** finish the V02 generic-profile CI; then extend eligible local FFN sites to V03/V04 without modifying the source taxonomy.
 
 ## V02 dedicated composite architecture-search increment (pending CI)
 
@@ -58,3 +54,20 @@ evaluated once; one logical insertion counts as one proposal. New synthetic
 CPU tests interrupt exactly at width-two warmup and compare bitwise to an
 uninterrupted run. The V02 coordinated runner enumerates this sixth method and
 its variance counterpart without affecting legacy tabular algorithms.
+
+## V02 generic composite phase-search (latest increment; pending CI)
+`VisualResidualSearch` now supports all 14 canonical IDs. Eight generic
+width-to-depth/depth-to-width algorithms run through real full-image composite
+training with the source's `faithful` and `corrected` profiles. The stage
+optimizer is native AdamW, preserving the original generic penalty objective,
+RR/all-layer width and D1/Dcur depth operators. The faithful profile preserves
+its documented source candidate score update semantics (including the known
+unusual non-global-best score reporting). Signed mid-batch checkpoints hash the
+profile as well as run data/config. The existing six dedicated checkpoints
+retain their old identity signatures and can be resumed unchanged.
+
+The opt-in V02 runner now enumerates 22 method/profile routes and their 21
+variance-stagnation counterparts per seed/split/repeat, with isolation from V01.
+The new 8-method x 2-profile controller tests, source profile identity/restart,
+phase transition tests and V02 generic/variance worker execution are **pending
+CI**. V03–V11 remain unimplemented.

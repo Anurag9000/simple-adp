@@ -181,3 +181,19 @@ they are not separately scored for global-best architecture selection. The
 per-batch authoritative checkpoint captures intermediate-stage position,
 optimizer/scheduler and RNG for interruption safety. V02 `ADP-D-D1` is also
 available as an opt-in `vision_inner` coordinated runner route.
+
+## V02 full 14-configuration source taxonomy (generic pending CI)
+All 14 native method IDs are available in the opt-in V02 controller with source
+`faithful` and `corrected` profiles for the eight phase-search variants:
+```python
+search = VisualResidualSearch('ADP-WD-RR-Dcur', spec,
+    settings=SearchSettings(init_width=2, init_depth=1, max_candidates=2,
+                            max_epochs=1), generic_profile='corrected')
+```
+The explicit `generic_profile` is part of the signed checkpoint identity.
+The `faithful` profile deliberately reproduces the source score-update behavior,
+including setting the reported score to the last candidate even when the
+selected snapshot remains earlier. For interpretable best-score comparisons,
+prefer `corrected`. With `SIMPLE_ADP_ENABLE_VISION=1`, the coordinated
+suite enumerates the method/profile jobs and matched variance gates. These
+new generic routes are not yet validated by CI or real-image benchmarks.

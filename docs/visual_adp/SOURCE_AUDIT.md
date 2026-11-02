@@ -56,3 +56,13 @@ this composite model; canonical DedicatedController/GenericCandidateSearch
 still assume TabularMLP restoration and have **not** been generalized to V02.
 This is a partial candidate-level implementation; no V02 runner job is yet
 allowed by the official compatibility matrix.
+
+## Updated V02 native composite search implementation
+The earlier audit above describes the initial unimplemented state, not the
+current V02 code. visual_search.py now implements whole-image stage optimization,
+architecture-candidate lifecycle, signed exact mid-batch restart, dedicated D1
+warmup, and generic faithful/corrected phase search. runner/vision.py registers
+`vision_inner` only under SIMPLE_ADP_ENABLE_VISION=1. Existing V01 and
+tabular execution remain separate. Last validated V02-D1 CPU CI: 241 passed;
+generic all-method extension awaits CI. No source-pretrained CNN, real CIFAR
+scientific run, or V03–V11 local FFN implementation has been verified.

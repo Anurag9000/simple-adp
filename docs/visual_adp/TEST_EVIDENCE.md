@@ -67,3 +67,16 @@ scientific result has been executed in this increment.
   optimization-only ladder, no intermediate best selection and exact
   interruption/restart inside a warmup stage. No numerical claim until
   corresponding workflow passes.
+
+## Progressive D1 CI (verified)
+- Commit: 230bdd4f7d0c5b484d19d90fe3ac3add4e118c2c
+- Workflow: https://github.com/Anurag9000/simple-adp/actions/runs/41393792798
+- **241 passed in 35.75s**, including interrupted progressive D1 width-one
+  insertion, intermediate optimization-only stages and exact warmup replay.
+- Standalone original-versus-variance contract workflow succeeded.
+
+## Full generic V02 phase-search increment (pending CI)
+- Eight generic method configurations x two profiles, phase transition,
+  signed profile identity, exact mid-batch interruption, generic V02 worker
+  execution and paired variance worker have been added. Do not call runtime
+  verified until the corresponding Actions test run is inspected.
