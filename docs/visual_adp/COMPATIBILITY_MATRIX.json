@@ -60,11 +60,11 @@
     },
     {
       "architecture": "V07",
-      "methods": "14 canonical IDs x two separate site scopes; 8 generic faithful/corrected profiles each, pending CPU CI",
-      "site": "token:block0 OR channel:block0 in separate jobs; joint site not implemented",
+      "methods": "14 canonical method identities in token-only/channel-only controls (verified); separately named synchronous-both ablation with 14 IDs (pending CI)",
+      "site": "token:block0, channel:block0 independently; both:block0 only in explicit sync ablation",
       "criterion": "loss / matched shadow-BGD variance per adaptive route (pending CI)",
-      "status": "experimental V07 site-specific mixer model, signed search and opt-in worker implemented, pending CI",
-      "reason": "Each job freezes the opposite real Mixer MLP, preserving patch/token/channel interfaces. No simultaneous multisite search, pretrained backbone, or real image benchmark."
+      "status": "token-only and channel-only selected CPU CI verified (299 tests); synchronous-both implementation pending CI",
+      "reason": "Two independent real Mixer MLP sites; third explicitly synchronized source-growth ablation has separate signed identity, never mistaken for canonical site semantics. No pretrained source backbone or real CIFAR science."
     },
     {
       "architecture": "V08",

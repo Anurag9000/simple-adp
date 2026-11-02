@@ -280,7 +280,7 @@ def build_visual_composite(spec, hidden_widths):
 
 def restore_visual_composite(snapshot: dict[str, object]):
     from .visual_mixer import VisualMixer
-    if snapshot.get("kind") == VisualMixer.SNAPSHOT_KIND:
+    if snapshot.get("kind") in {VisualMixer.SNAPSHOT_KIND, VisualMixer.BOTH_SNAPSHOT_KIND}:
         return VisualMixer.from_snapshot(snapshot)
     if snapshot.get("kind") == VisualNativeFFN.SNAPSHOT_KIND:
         return VisualNativeFFN.from_snapshot(snapshot)

@@ -431,7 +431,7 @@ class SuitePlan:
                 # every outer repeat.
                 for adapter, route in adapter_routes:
                     # Vision jobs are never sent to a tabular model or vice versa.
-                    if (provider.name == "vision") != (adapter.name in {"vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel"}):
+                    if (provider.name == "vision") != (adapter.name in {"vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel", "vision_v07_both"}):
                         continue
                     route_is_vanilla = route.model_id == "MLP-Fixed" and not route.screening_only
                     route_repeat_limit = (
@@ -531,7 +531,7 @@ class SuitePlan:
             # A third-party adapter cannot be assumed to implement the native
             # BGD shadow-growth criterion just because its route is adaptive.
             # Keep native simple-adp and opt-in V01; never fabricate custom jobs.
-            if original.model_adapter not in {"simple_adp", "vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel"}:
+            if original.model_adapter not in {"simple_adp", "vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel", "vision_v07_both"}:
                 continue
             if original.route.model_id == "MLP-Fixed" or route_group(original.route) in {"vanilla", "screening"}:
                 continue
@@ -570,7 +570,7 @@ class SuitePlan:
         originals = {
             spec.identity.run_id: spec
             for spec in run_specs
-            if (spec.model_adapter in {"simple_adp", "vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel"}
+            if (spec.model_adapter in {"simple_adp", "vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel", "vision_v07_both"}
                 and spec.route.model_id != "MLP-Fixed"
                 and route_group(spec.route) not in {"vanilla", "screening"})
         }

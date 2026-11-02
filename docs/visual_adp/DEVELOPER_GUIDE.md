@@ -253,3 +253,13 @@ The full image composite includes both residual MLP branches. A single
 joint-site candidate and pretrained weights are **not** implemented. Run
 `pytest -q tests/test_visual_mixer.py tests/test_runner_vision.py` for
 bounded CPU coverage once installed. CI results remain pending.
+
+## V07 synchronous-both scope (pending CI)
+`MixerSpec(site_id="both:block0")` selects a separately named synchronous
+site policy. It trains and grows both local token and channel FFNs together;
+one proposal means a simultaneous operation on two distinct MLP stacks,
+with a joint neuron cap and two saved RR cursors. The opt-in adapter is
+`vision_v07_both`. Match `vision_v07_token` and `vision_v07_channel`
+for controlled site-scope comparisons; each has 22 source/profile jobs and
+21 matched variance counterparts. Do not call synchronous-both a source
+single-site ADP method or an implementation of V08 multi-stage search.

@@ -154,3 +154,16 @@ scientific result has been executed in this increment.
   controllers. tests/test_runner_vision.py covers both route families,
   22+21 route inventory, matched split/seed, criterion and worker execution.
 - CI and real-world pretrained scientific jobs not yet verified.
+
+## V07 two independent site CI (verified)
+- Commit c0c6bfae7c3f6bd37c0a70f471f77f440dd6f41b.
+- Workflow https://github.com/Anurag9000/simple-adp/actions/runs/41407812970
+- **299 selected CPU tests passed in 42.75s**, including both V07
+  token/channel scopes and end-to-end paired workers; native original/variance
+  contract workflow also passed.
+
+## V07 synchronous-both proposed tests (pending CI)
+- Added dual local-MLP gradient/frozen-backbone checks, synchronized RR/all/
+  D1/Dcur, cursor-resolved snapshot, exact mid-batch restart, joint capacity
+  ceiling and source D1 serial warmup, plus coordinated-both source/variance
+  worker. Explicitly separate from V08 adaptive multi-site scheduling.

@@ -47,8 +47,8 @@
     },
     {
       "id": "V07",
-      "central_runner_jobs": "86 per split/seed/repeat (43 for token MLP + 43 for channel MLP), opt-in; pending CI",
-      "implementation": "two independent local Mixer FFN sites, true alternating token/channel forward, signed standalone controller and separate opt-in adapters; CI pending, simultaneous multisite still absent",
+      "central_runner_jobs": "129 per split/seed/repeat (43 token-only + 43 channel-only CI verified; 43 synchronous-both pending CI), opt-in",
+      "implementation": "genuine dual residual Mixer MLPs, separately signed site-scope and synchronized-both ablation, 14 source method IDs x profiles and variance gates; 2 site scopes CI verified, third pending",
       "scientifically_executed": false
     },
     {

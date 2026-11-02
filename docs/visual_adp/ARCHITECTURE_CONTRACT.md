@@ -135,3 +135,15 @@ No token count, channel interface, patch size, embeddings or frozen output
 operator may expand. A joint token/channel adaptation on one candidate is
 not yet implemented and must not be counted. Tiny random-initialized
 MLP-Mixer-style control only; no pretrained Mixer checkpoints validated.
+
+## V07 synchronous two-site ablation (pending CPU CI)
+Alongside the two canonical single-site controls, a distinctly labeled
+`MixerSpec(site_id="both:block0")` trains both real residual Mixer MLPs.
+Each ADP width/depth proposal is applied to both hidden stacks, keeping
+fixed distinct token-interface T and channel-interface D unchanged.
+Architecture selection still uses one full-image validation result per
+joint proposal, but this **explicit synchronous-both schedule is an
+additional site policy**, not an implicit redefinition of `ADP-W-All`.
+It has a separately named checkpoint/search format, a joint two-site neuron
+budget, per-site RR cursor persistence and a separate opt-in suite identity.
+This is not V08 arbitrary multistage scheduling or adaptive site selection.

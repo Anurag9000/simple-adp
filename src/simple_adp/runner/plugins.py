@@ -46,6 +46,7 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
         models.register(VisionNativeFFNModelAdapter("V06b"))
         models.register(VisionMixerModelAdapter("token"))
         models.register(VisionMixerModelAdapter("channel"))
+        models.register(VisionMixerModelAdapter("both"))
     points = entry_points()
     for group, registry in (
         ("simple_adp.dataset_providers", datasets),

@@ -341,8 +341,9 @@ class VisionInnerModelAdapter:
                          "V06a": "channel:s2.block0",
                          "V06b": "channel:axial.block0"}[self.family],
             )
-        elif self.family in {"V07-token", "V07-channel"}:
-            site = ("token:block0" if self.family == "V07-token" else "channel:block0")
+        elif self.family in {"V07-token", "V07-channel", "V07-both"}:
+            site = {"V07-token": "token:block0", "V07-channel": "channel:block0",
+                    "V07-both": "both:block0"}[self.family]
             patch = (4 if train_x.shape[2] % 4 == 0 and train_x.shape[3] % 4 == 0
                      else 2)
             spec = MixerSpec(
@@ -362,6 +363,7 @@ class VisionInnerModelAdapter:
             "V06b": "V06b:tiny-axialshift-ffn-frozen-random",
             "V07-token": "V07:tiny-mlp-mixer-token-site",
             "V07-channel": "V07:tiny-mlp-mixer-channel-site",
+            "V07-both": "V07:tiny-mlp-mixer-synchronous-both-sites",
         }[self.family]
         search = VisualResidualSearch(
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
@@ -430,15 +432,16 @@ class VisionNativeFFNModelAdapter(VisionInnerModelAdapter):
 
 
 class VisionMixerModelAdapter(VisionInnerModelAdapter):
-    """V07 explicit token-only or channel-only eligible site experiments.
+    """V07 explicit token-only/channel-only or synchronous-both ablations.
 
     The other MLP is a frozen real Mixer block, not an embedding cache.
-    Both routes have canonical ADP methods and independent paired criterion
-    jobs, but no simultaneous multi-site architecture search (V08 pending).
+    Three route families keep distinct job identities and matched criterion
+    pairs. The both scope synchronously proposes both local FFNs at every
+    candidate; this is a labeled noncanonical site-selection ablation.
     """
 
     def __init__(self, site: str):
-        if site not in {"token", "channel"}:
-            raise ValueError("V07 runner site must be token or channel")
+        if site not in {"token", "channel", "both"}:
+            raise ValueError("V07 runner site must be token, channel or both")
         self.family = "V07-" + site
         self.name = "vision_v07_" + site

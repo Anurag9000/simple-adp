@@ -20,7 +20,7 @@ States distinguish source/static implementation from executed tests and science.
 | V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
-| V07 MLP-Mixer | implemented; CPU CI pending | independent token-MLP and channel-MLP routes, full-image controller, signed restart; simultaneous joint-site search not implemented |
+| V07 MLP-Mixer | token/channel independently CI verified (299 tests); explicit synchronous-both scope pending CI | true residual token/channel MLPs, signed resumed search and matched runner criteria |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
 | V10/V11 | missing | ResMLP/GFNet operators and full integration |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
@@ -200,3 +200,34 @@ corrected generic methods. Evidence remains pending CI.
   as implemented. The control is random-initialized, not pretrained.
 - New tests for site contract, gradients, all growth operators, snapshot
   restoration, exact mid-batch replay and worker criterion pairing. CI pending.
+
+## V07 independently selectable sites verified — 2026-11-02
+- Commit: c0c6bfae7c3f6bd37c0a70f471f77f440dd6f41b
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41407812970
+- **299 selected CPU tests passed in 42.75s**, including both independently
+  trainable Mixer scopes, all local growth operators, frozen-state hashing,
+  exact mid-batch restart and two separate coordinated worker variants.
+- Original method/variance contract workflow succeeded.
+
+## Explicit V07 synchronous-both token+channel ablation (pending CI)
+- New scope `both:block0`, route family `vision_v07_both`, is a
+  **separately labeled noncanonical site policy**. Every candidate proposes
+  the *same source operator* synchronously to the token-Mixer and channel-
+  Mixer hidden MLPs (not to token count, embedding dimension, stem or norms).
+  Both site parameters train and both participate in shadow-BGD variance
+  observation. The controller's original within-local-MLP semantics remain
+  unchanged for token-only/channel-only jobs.
+- Signed snapshot records both hidden-width vectors and individual RR
+  cursors; frozen-state verification excludes the two trainable MLPs but
+  includes all other modules. Candidate neuron budget accounts for both
+  stacks. Progressive D1 warmup grows both new layers in lockstep.
+- Separate search signature and checkpoint kind prohibit accidental resume
+  between single-site and synchronous-both experiments.
+- Model adapter enumerates 22 method/profile routes + 21 matched variance
+  counterparts per split/seed/repeat, in addition to the 86 independent
+  token/channel jobs (129 V07 jobs total for all three explicit scopes).
+- New tests cover true dual gradients, native RR/all/depth expansion,
+  independent cursor restoration, exactly resumed mid-batch trajectory,
+  synchronized D1 intermediate widths and signed budget enforcement.
+  **CI pending**. This is a synchronous two-site ablation, NOT the V08
+  adaptive multi-stage scheduling algorithm.

@@ -153,3 +153,105 @@ def test_mixer_site_selection_validation():
         spec("invalid")
     with pytest.raises(ValueError, match="divide"):
         MixerSpec(3, 4, 2, 7, 12, 2, site_id="token:block0")
+
+
+
+def test_mixer_explicit_both_scope_grows_two_real_internal_mlps():
+    both = spec("both:block0")
+    model = VisualMixer(both, (3, 3))
+    frozen = model.frozen_state_sha256()
+    assert model.local_mlp.input_dim == model.local_mlp.output_dim == both.tokens
+    assert model.other_mlp.input_dim == model.other_mlp.output_dim == both.local_dim
+    assert set(model.growth_targets) == {"token:block0", "channel:block0"}
+    assert all(p.requires_grad for p in model.local_mlp.parameters())
+    assert all(p.requires_grad for p in model.other_mlp.parameters())
+    logits = model(torch.randn(4, 3, 8, 12))
+    logits.square().mean().backward()
+    assert model.local_mlp.output_layer.weight.grad.abs().sum() > 0
+    assert model.other_mlp.output_layer.weight.grad.abs().sum() > 0
+    assert all(p.grad is None for m in model._fixed_modules() for p in m.parameters())
+    assert model.frozen_state_sha256() == frozen
+
+    grown = model.grow_width(site_id="both:block0", operator="round_robin",
+                              increment=1, max_width=6)
+    assert grown is not None
+    assert grown.hidden_widths == [4, 3]
+    assert grown.other_mlp.hidden_widths == [4, 3]
+    assert grown._width_cursor == 1
+    assert getattr(grown.other_mlp, "_width_cursor") == 1
+    assert grown.frozen_state_sha256() == frozen
+    assert sum(p.numel() for p in grown.parameters()) > sum(p.numel() for p in model.parameters())
+    restored = restore_visual_composite(grown.snapshot(cursor=grown._width_cursor))
+    assert restored.spec == grown.spec
+    assert getattr(restored.other_mlp, "_width_cursor") == 1
+    further = restored.grow_width(site_id="both:block0", operator="round_robin",
+                                  increment=1, max_width=6)
+    assert further is not None
+    assert further.hidden_widths == [4, 4]
+    assert further.other_mlp.hidden_widths == [4, 4]
+    all_layers = model.grow_width(site_id="both:block0", operator="all_layers",
+                                  increment=1, max_width=6)
+    assert all_layers is not None
+    assert all_layers.hidden_widths == all_layers.other_mlp.hidden_widths == [4, 4]
+    d1 = model.grow_depth(site_id="both:block0", operator="D1", max_depth=3)
+    dcur = model.grow_depth(site_id="both:block0", operator="Dcur", max_depth=3)
+    assert d1 is not None and d1.hidden_widths == d1.other_mlp.hidden_widths == [3, 3, 1]
+    assert dcur is not None and dcur.hidden_widths == dcur.other_mlp.hidden_widths == [3, 3, 3]
+    with pytest.raises(ValueError, match="both:block0"):
+        model.grow_width(site_id="token:block0", operator="all_layers",
+                         increment=1, max_width=5)
+
+
+def test_mixer_both_scope_signed_resume_and_joint_budget(tmp_path):
+    x, y, validation = data()
+    both = spec("both:block0")
+    baseline = VisualResidualSearch("ADP-W-RR", both, settings=settings())
+    baseline.fit(x, y, validation_data=validation)
+    assert [r["architecture"] for r in baseline.history_] == [[3], [4]]
+    assert baseline.search_state_["current"]["other_widths"] == [4]
+    checkpoint = tmp_path / "both-scope.ckpt"
+
+    class Evicted(Exception):
+        pass
+
+    def evict(progress):
+        if (progress["phase"] == "width" and progress["stage_status"] == "active"
+                and progress["batches_done"] == 1):
+            raise Evicted()
+
+    with pytest.raises(Evicted):
+        VisualResidualSearch("ADP-W-RR", both, settings=settings()).fit(
+            x, y, validation_data=validation, checkpoint_path=checkpoint,
+            progress_callback=evict,
+        )
+    restored = VisualResidualSearch("ADP-W-RR", both, settings=settings())
+    restored.fit(x, y, validation_data=validation, checkpoint_path=checkpoint)
+    assert restored.history_ == baseline.history_
+    assert restored.result_.score == baseline.result_.score
+    assert np.array_equal(restored.predict_proba(validation[0]),
+                          baseline.predict_proba(validation[0]))
+    with pytest.raises(ValueError, match="signature"):
+        VisualResidualSearch("ADP-W-RR", spec("token:block0"),
+                             settings=settings()).fit(
+            x, y, validation_data=validation, checkpoint_path=checkpoint,
+        )
+    cap = SearchSettings(**{**settings().as_dict(), "max_neurons": 7})
+    constrained = VisualResidualSearch("ADP-W-RR", both, settings=cap)
+    constrained.fit(x, y, validation_data=validation)
+    # 3+3 initial hidden units fit; 4+4 proposal exceeds the combined budget.
+    assert len(constrained.history_) == 1
+
+
+def test_mixer_both_scope_progressive_depth_warmup_stays_synchronized():
+    x, y, validation = data()
+    config = SearchSettings(**{**settings().as_dict(), "max_neurons": 60})
+    search = VisualResidualSearch("ADP-D-D1", spec("both:block0"), settings=config)
+    trace = []
+    search.fit(x, y, validation_data=validation,
+               progress_callback=lambda state: trace.append(
+                   (state["phase"], tuple(state["architecture"]))))
+    assert ("depth_warmup", (3, 1)) in trace
+    assert ("depth_warmup", (3, 2)) in trace
+    assert search.history_[-1]["architecture"] == [3, 3]
+    assert search.search_state_["current"]["other_widths"] == [3, 3]
+    assert all(entry["stage"] != "depth_warmup" for entry in search.history_)

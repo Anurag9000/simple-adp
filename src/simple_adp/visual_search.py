@@ -98,7 +98,8 @@ class VisualResidualSearch:
             _hash_array(digest, item)
         return stable_signature({
             "version": ("v02-dedicated-1" if isinstance(self.spec, ResidualAdapterSpec)
-                        else "visual-mixer-search-v1" if isinstance(self.spec, MixerSpec)
+                        else ("visual-mixer-both-search-v1" if self.spec.site_id == "both:block0"
+                      else "visual-mixer-search-v1") if isinstance(self.spec, MixerSpec)
                         else "visual-native-ffn-search-1"),
             "model": self.config.signature_dict(),
             "spec": asdict(self.spec),
@@ -111,7 +112,8 @@ class VisualResidualSearch:
 
     def _search_kind(self) -> str:
         return ("visual-residual-search-v02" if isinstance(self.spec, ResidualAdapterSpec)
-                else "visual-mixer-search-v1" if isinstance(self.spec, MixerSpec)
+                else ("visual-mixer-both-search-v1" if self.spec.site_id == "both:block0"
+                      else "visual-mixer-search-v1") if isinstance(self.spec, MixerSpec)
                 else "visual-native-ffn-search-v1")
 
     def _new_state(self) -> dict[str, Any]:
@@ -193,6 +195,9 @@ class VisualResidualSearch:
             seed = 1 if self.config.progressive_depth else width
             if not can_add_depth(local, s.max_depth, s.max_neurons, seed):
                 return None
+            if isinstance(current.spec, MixerSpec) and current.spec.site_id == "both:block0":
+                if total_neurons(local) + total_neurons(current.other_mlp) + 2 * seed > s.max_neurons:
+                    return None
             if self.config.progressive_depth:
                 candidate = current.grow_depth(site_id=site, operator="D1",
                                                max_depth=s.max_depth, seed_width=1)
@@ -214,6 +219,12 @@ class VisualResidualSearch:
                 current.local_mlp, [*current.hidden_widths[:-1], new_width],
                 cursor=current._width_cursor,
             )
+            if isinstance(current.spec, MixerSpec) and current.spec.site_id == "both:block0":
+                candidate.other_mlp = rebuild_mlp(
+                    current.other_mlp,
+                    [*current.other_mlp.hidden_widths[:-1], new_width],
+                    cursor=int(getattr(current.other_mlp, "_width_cursor", 0)),
+                )
             if hasattr(candidate, "_gelu_hidden"):
                 candidate._gelu_hidden()
             candidate.train(current.training)
@@ -386,6 +397,11 @@ class VisualResidualSearch:
                     continue
                 break
             candidate = self._propose(state)
+            if (candidate is not None and isinstance(self.spec, MixerSpec)
+                    and self.spec.site_id == "both:block0"
+                    and (total_neurons(candidate.local_mlp)
+                         + total_neurons(candidate.other_mlp)) > self.settings.max_neurons):
+                candidate = None
             if candidate is None:
                 if self._advance_phase(state):
                     self._persist(store, signature, state, progress_callback)

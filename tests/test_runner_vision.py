@@ -25,6 +25,7 @@ def test_vision_is_opt_in_and_does_not_change_legacy_registries(monkeypatch):
     assert "vision_v06b" not in models.adapters
     assert "vision_v07_token" not in models.adapters
     assert "vision_v07_channel" not in models.adapters
+    assert "vision_v07_both" not in models.adapters
 
 
 def test_vision_provider_manifest_and_split_isolation(monkeypatch):
@@ -68,7 +69,7 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
         model_adapters=tuple(models.adapters.values()),
     )
     assert plan.runs
-    assert {run.model_adapter for run in plan.runs} == {"vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel"}
+    assert {run.model_adapter for run in plan.runs} == {"vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel", "vision_v07_both"}
     assert all(run.task_ref.provider == "vision" for run in plan.runs)
     assert any(run.route.model_id == "MLP-Fixed" for run in plan.runs)
     assert not any(
@@ -222,6 +223,7 @@ def test_native_ffn_runner_executes_and_pairs_variance(
     [
         ("token:block0", "vision_v07_token", 4),
         ("channel:block0", "vision_v07_channel", 4),
+        ("both:block0", "vision_v07_both", 4),
     ],
 )
 def test_coordinated_v07_mixer_sites_with_matched_variance(
