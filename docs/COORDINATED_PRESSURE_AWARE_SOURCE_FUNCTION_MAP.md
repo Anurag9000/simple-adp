@@ -439,5 +439,5 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/worker.py` | `_rebuild_spec` | 26-36 |
 | `src/simple_adp/runner/worker.py` | `_validate_task_data_matches_plan` | 39-70 |
 | `src/simple_adp/runner/worker.py` | `load_registries` | 73-77 |
-| `src/simple_adp/runner/worker.py` | `run_spec` | 80-245 |
-| `src/simple_adp/runner/worker.py` | `main` | 248-253 |
+| `src/simple_adp/runner/worker.py` | `run_spec` | 80-247 |
+| `src/simple_adp/runner/worker.py` | `main` | 250-255 |
