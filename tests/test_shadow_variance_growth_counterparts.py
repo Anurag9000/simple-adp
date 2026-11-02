@@ -114,3 +114,31 @@ def test_variance_criterion_not_cut_short_by_original_loss_patience():
         # architecture, even when the variance criterion trials more growth.
         assert base.model.hidden_widths == [1]
         assert alt.model.hidden_widths == [1]
+
+from simple_adp.shadow_bgd_variance import ShadowBGDVariance
+
+def test_variance_streak_restarts_on_architecture_shape_growth():
+    """Old-model noncontraction is not evidence on newly created neurons."""
+    import torch
+
+    small = torch.nn.Linear(2, 2)
+    grown = torch.nn.Linear(2, 3)
+    inputs = torch.tensor([[0.2, 0.5], [0.7, -0.3]])
+    labels = torch.tensor([0, 1])
+    observer = ShadowBGDVariance(
+        mc_samples=2, seed=13, tolerance=1000.0, patience=2
+    )
+    assert not observer.observe(small, inputs, labels)
+    assert observer.observe(small, inputs, labels)
+    assert observer.streak == 2
+    old_sigma = observer.sigma["weight"].clone()
+
+    # Copy learned uncertainty for common coordinates, but not eligibility.
+    observer._synchronize(grown)
+    assert torch.equal(observer.sigma["weight"][:2, :], old_sigma)
+    assert torch.all(observer.sigma["weight"][2, :] == observer.initial_std)
+    assert observer.streak == 0
+    assert observer.observations == 0
+    assert observer.contraction is None
+    assert not observer.observe(grown, inputs, labels)
+    assert observer.observations == 1
