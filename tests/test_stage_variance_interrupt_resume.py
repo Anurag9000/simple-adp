@@ -9,7 +9,7 @@ import torch
 
 from simple_adp.config import SearchSettings
 from simple_adp.models import TabularMLP
-from simple_adp.tasks import RegressionTask
+from simple_adp.tasks import ClassificationTask, RegressionTask
 from simple_adp.training import StageTrainer
 
 
@@ -42,20 +42,31 @@ def _observer_equal(a, b):
         assert torch.equal(a["rng"][key], b["rng"][key]), key
 
 
-def test_variance_mid_epoch_crash_matches_uninterrupted_training(tmp_path):
+@pytest.mark.parametrize("optimizer_kind", ["adam", "adamw"])
+@pytest.mark.parametrize("task_kind", ["regression", "classification"])
+@pytest.mark.parametrize("crash_after", [2, 6])
+def test_variance_mid_epoch_crash_matches_uninterrupted_training(
+    tmp_path, optimizer_kind, task_kind, crash_after
+):
     torch.manual_seed(100)
-    original = TabularMLP(3, [3], 1)
+    output_dim = 1 if task_kind == "regression" else 2
+    original = TabularMLP(3, [3], output_dim)
     x = torch.randn(16, 3)
-    y = torch.randn(16, 1)
-    task = RegressionTask()
-    task.fit_targets([0.0, 1.0])
+    if task_kind == "regression":
+        y = torch.randn(16, 1)
+        task = RegressionTask()
+        task.fit_targets([0.0, 1.0])
+    else:
+        y = torch.randint(0, 2, (16,))
+        task = ClassificationTask()
+        task.fit_targets(["a", "b"])
     config = _train_settings()
 
     # The uninterrupted run and the crash run start with identical weights,
     # model-local seed, data, and global RNG.
     starting_rng = torch.get_rng_state().clone()
     full_model = copy.deepcopy(original)
-    full = StageTrainer(task, config)
+    full = StageTrainer(task, config, optimizer_kind=optimizer_kind)
     torch.set_rng_state(starting_rng.clone())
     full_result = full.train_stage(full_model, x, y, x, y)
 
@@ -66,23 +77,26 @@ def test_variance_mid_epoch_crash_matches_uninterrupted_training(tmp_path):
         temporary = checkpoint.with_suffix(".tmp")
         torch.save(payload, temporary)
         os.replace(temporary, checkpoint)
-        if payload["batches_done"] == 2:
+        if payload["batches_done"] == crash_after:
             raise RuntimeError("intentional failure after durable minibatch")
 
     torch.set_rng_state(starting_rng.clone())
     with pytest.raises(RuntimeError, match="intentional failure"):
-        StageTrainer(task, config, checkpoint_callback=save_then_crash).train_stage(
+        StageTrainer(task, config, optimizer_kind=optimizer_kind,
+                     checkpoint_callback=save_then_crash).train_stage(
             interrupted_model, x, y, x, y
         )
     persisted = torch.load(checkpoint, map_location="cpu", weights_only=True)
-    assert persisted["epoch"] == 0
+    assert persisted["epoch"] == (0 if crash_after == 2 else 1)
     assert persisted["batch_cursor"] == 2
-    assert persisted["batches_done"] == 2
-    assert persisted["best_shadow_bgd_variance"] is None
-    assert persisted["shadow_bgd_variance"]["observations"] == 2
+    assert persisted["batches_done"] == crash_after
+    assert (persisted["best_shadow_bgd_variance"] is None) == (
+        crash_after == 2
+    )
+    assert persisted["shadow_bgd_variance"]["observations"] == crash_after
 
     resumed_model = copy.deepcopy(original)
-    resumed_result = StageTrainer(task, config).train_stage(
+    resumed_result = StageTrainer(task, config, optimizer_kind=optimizer_kind).train_stage(
         resumed_model, x, y, x, y, resume_state=persisted
     )
 
