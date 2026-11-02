@@ -8,6 +8,7 @@ States distinguish source/static implementation from executed tests and science.
 
 | Item | State | Evidence / missing |
 |---|---|---|
+| Coordinated held-out test-indexing isolation (V01 and V02-V11) | code committed, runtime verification pending | Held-out X/y reads moved after fit in runner/vision.py; guarded row-access regression in tests/test_runner_vision_test_isolation.py; source V03/V04 runner already defers |
 | Legacy 14 model identities | preserved | registry.py unchanged |
 | V01 frozen image feature -> native ADP MLP head | runtime-tested (bounded CPU) | src/simple_adp/visual.py |
 | V01 actual candidate growth | runtime-tested (bounded CPU) | delegates to native TabularADP; tests/test_visual_v01.py |
