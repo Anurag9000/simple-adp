@@ -92,9 +92,65 @@
     "ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41416422457"
   },
   "scientific_evidence": {
-    "real_data_smoke_count": 1,
+    "real_data_smoke_count": 2,
     "benchmark_quality_multi_seed_runs": 0,
     "pretrained_inner_ffn_runs": 0,
-    "scientific_caveat": "Official Fashion-MNIST micro-smoke is real-image execution but too small to measure benchmark-quality generalization. ResNet18 pretrained source only V01 frozen head."
+    "scientific_caveat": "Nine matched official Fashion-MNIST V01 jobs are real images and official pretrained ResNet18 weights, but each seed uses only 300/100/100 samples and two epochs per stage. No benchmark-quality claim; all inner FFN source models remain experimental frozen-random controls.",
+    "verified_matched_comparison": {
+      "dataset": "torchvision:fashion_mnist",
+      "architecture": "pretrained torchvision ResNet18 frozen V01 source",
+      "seed_count": 3,
+      "seeds": [
+        11,
+        23,
+        37
+      ],
+      "jobs_completed": 9,
+      "train_per_seed": 300,
+      "validation_per_seed": 100,
+      "test_per_seed": 100,
+      "routes": [
+        "MLP-Fixed",
+        "ADP-W-RR/loss",
+        "ADP-W-RR/variance_stagnation"
+      ],
+      "test_accuracy_by_seed": {
+        "fixed": [
+          0.28,
+          0.38,
+          0.35
+        ],
+        "loss": [
+          0.54,
+          0.57,
+          0.57
+        ],
+        "variance": [
+          0.3,
+          0.38,
+          0.34
+        ]
+      },
+      "run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41463589627",
+      "artifact_id": 13149638400,
+      "comparison_signature": "65d2016bb38e5bd1cf07b5c122d788ae7a606435afae2e9e2d31998ee74c11",
+      "benchmark_quality": false
+    }
+  },
+  "comparison_runner": {
+    "per_seed_jobs": 3,
+    "paired_same_split_and_source": true,
+    "strict_job_resume": true,
+    "comparison_manifest": true,
+    "completed_job_checksum_verification": true,
+    "official_test_selects_method": false,
+    "offline_contract_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41463404061",
+    "selected_cpu_regression_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41463404204"
+  },
+  "cifar_source_download": {
+    "run_id": 41451620431,
+    "status": "cancelled",
+    "reason": "Official CIFAR-10 archive ~60% after 30min; no model results",
+    "policy": "Manual/timeout-bounded download; never blocks automatic Fashion workflow"
   }
 }

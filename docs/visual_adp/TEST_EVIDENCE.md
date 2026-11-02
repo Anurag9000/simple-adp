@@ -303,3 +303,27 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Tests use offline synthetic fixtures; earlier official Fashion-MNIST smoke
   remains valid but was executed before per-candidate search_history.json was
   added. The richer artifacts require a new real-data run.
+
+## Matched loss/variance/fixed V01 suite — verified (2026-11-02)
+- Source code: `abbefac35c6644717a0202143705916d4e082d7a`.
+  One-seed published pretrained ResNet18 + official Fashion-MNIST:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41462840053.
+  3 completed jobs, identical source weights and split indices,
+  300/100/100 official image subsets, signed source/model/result JSON.
+- Three-seed extended source/model comparison:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41463589627.
+  **9 completed jobs** on seeds 11/23/37, all matched source and split
+  within each seed. Official-test accuracy fixed=[.28,.38,.35],
+  loss=[.54,.57,.57], variance=[.30,.38,.34]. Not a statistical benchmark.
+- Offline signed comparison contract originally failed one test fixture
+  asserting validation count 8 for 32 samples and 20% stratification;
+  actual correct source validation size is 6. Corrected test in
+  `5a1d09e31958026277b6c5428e61f3d229869b8b`.
+- Dedicated CI:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41463404061
+  **15 passed**. Full selected image/core CI:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41463404204
+  **365 passed in 73.32 seconds**.
+- Official CIFAR-10 source download in run 41451620431 was cancelled
+  after ~30 min at ~60%; no CIFAR metrics. Independent workflows keep
+  successful Fashion evidence and CIFAR download failures separate.

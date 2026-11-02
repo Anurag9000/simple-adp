@@ -26,6 +26,7 @@ States distinguish source/static implementation from executed tests and science.
 | V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
 | Local official-image V01 experiment CLI and deterministic grayscale/RGB transform | selected CPU CI verified; 360 passed | signed source/run artifacts and official test after fit; synthetic unit fixtures |
 | Official Fashion-MNIST + published pretrained ResNet18 micro-smoke | real-data integration verified | 40/20/20 official image partitions, GitHub Actions run 41451103405, uploaded model and provenance; **not** a performance benchmark |
+| V01 matched loss/variance vs fixed real-image comparison | three-seed CPU real-data runs verified | 9 predeclared jobs on official Fashion-MNIST, pretrained ResNet18, 300/100/100 per seed; tiny controlled study, not benchmark-quality |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
 | CPU/CUDA complete regression | partial | 354 selected CPU tests passed including V08 schedule and V09 bank; CUDA/full suite not executed |
 
@@ -474,3 +475,35 @@ corrected generic methods. Evidence remains pending CI.
 - The earlier real Fashion-MNIST artifact predates the richer result JSON.
   Do not fabricate the missing historical stage trace; only new jobs produce
   the expanded schema automatically.
+
+## Verified paired V01 real-data and split provenance closure — 2026-11-02
+- New `vision_comparison.py` + `simple-adp-vision-compare` CLI registers a
+  fixed MLP head and matched loss/variance `ADP-W-RR` jobs for each seed,
+  with independent signed checkpoint/model/result paths.
+- Comparison manifest signs all seed-specific source partitions, source weight
+  identity, settings, method/criterion routes and data limits. Every result
+  is checksum verified and must preserve the same frozen source and split
+  across the three methods within each seed. Official test results are
+  reported *descriptively*, never used to choose the best architecture.
+- First verified one-seed Fashion-MNIST pretrained ResNet18 run:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41462840053,
+  3 real jobs, 300 train/100 validation/100 test. Fixed/loss/variance
+  official-test accuracy respectively 0.28/0.54/0.30.
+- Expanded **3-seed, 9-job** run verified:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41463589627,
+  seeds 11/23/37, per-method test accuracy fixed [0.28,0.38,0.35],
+  loss [0.54,0.57,0.57], variance [0.30,0.38,0.34]. Predeclared
+  source and criterion. No inference of statistical superiority from
+  three small seeds. Artifacts retained on GitHub Actions (30-day retention).
+- Signed offline paired contract: 15 passing tests at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41463404061;
+  full selected CPU suite: **365 passed** at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41463404204.
+  Earlier `41462977800` had a fixture validation-count error only, corrected
+  by `5a1d09e31958026277b6c5428e61f3d229869b8b`.
+- Attempted official CIFAR-10 download in `41451620431` timed out at about
+  60%; model training never ran. Automatic Fashion job and on-demand
+  timeout-bounded CIFAR jobs are now independent. The separated Fashion
+  workflow succeeded at https://github.com/Anurag9000/simple-adp/actions/runs/41462613451.
+- Still missing: pretrained source internal FFN replacement (V03–V11),
+  larger real-data benchmark, full CUDA and repository-wide regression.

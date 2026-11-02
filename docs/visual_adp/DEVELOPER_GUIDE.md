@@ -389,3 +389,63 @@ verifies both model/identity checksums and candidate history checksum.
 Runs created by the earlier CLI version may not contain the new artifact;
 use a fresh output directory to regenerate reporting without altering a
 previously signed result.
+
+## Signed fixed/loss/variance V01 real-image comparisons
+
+Use the separately installed `simple-adp-vision-compare` command for a
+reproducible **matched three-way comparison** of the frozen fixed-width MLP
+head, canonical `ADP-W-RR` loss trigger, and `ADP-W-RR` shadow-variance
+stagnation trigger:
+
+```bash
+simple-adp-vision-compare \
+  --dataset fashion_mnist --root /data/vision --out results/v01_paired \
+  --architecture resnet18 --weights /models/resnet18_full_state_dict.pt \
+  --weights-sha256 YOUR_ACTUAL_SHA256 \
+  --seeds 11,23,37 --fixed-width 16 \
+  --train-limit 1000 --valid-limit 200 --test-limit 200 \
+  --epochs 4 --candidates 2 --init-width 16 --max-width 24 \
+  --batch-size 32 --device cuda
+```
+
+The CUDA argument is intended for a machine with working CUDA; the current
+GitHub Actions evidence is CPU-only. Downloads are disabled unless
+`--download` is explicitly supplied. Random-source studies must explicitly
+set `--allow-random-backbone` and cannot be described as pretrained.
+
+The comparison predeclares all seed-specific partitions and creates three
+separately signed result/checkpoint folders per seed:
+
+```
+results/v01_paired/
+  comparison_manifest.json
+  comparison_summary.json
+  runs/
+    seed11/
+      fixed/
+      adp_loss/
+      adp_variance/
+    seed23/...
+    seed37/...
+```
+
+Every per-job directory contains `manifest.json`, `result.json`,
+`search_history.json`, `estimator.checkpoint.pt`, and the selected
+model/identity sidecar. Both ADP criteria share identical source image
+indices, weights checksum, frozen encoder SHA256, normalized input mapping,
+and settings other than the criterion. The fixed control shares the same
+source and training budget but has no growth operator. Each per-run result
+checksum is pinned in the final comparison summary.
+
+A killed comparison can be restarted with the **same command and output
+directory**. Completed jobs are checksum-checked and reused; missing jobs
+continue with their own signed mid-batch checkpoints. Any mismatch in
+seeds, limits, source data, weights, settings or methods is rejected.
+Comparison results report all official-test metrics descriptively and do
+**not** choose a winning method based on the official test set.
+
+An actual single-seed **official pretrained-source Fashion-MNIST**
+comparison completed successfully:
+https://github.com/Anurag9000/simple-adp/actions/runs/41462840053.
+Its train/validation/test sample sizes were only 300/100/100. These numbers
+are evidence of real-data execution, not benchmark-quality conclusions.

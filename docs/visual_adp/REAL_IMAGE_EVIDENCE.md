@@ -44,18 +44,98 @@ run, not a reliable statistical performance estimate. There was no repeated
 seed distribution, baseline, confidence interval, hyperparameter selection
 study, full source architecture ADP, or GPU comparison.
 
-## Run B — CIFAR-10
+## Run B — attempted CIFAR-10, not completed
 
-The same bounded official ResNet18 source and V01 procedure were added in
-`22f3cee27b5f4a362047c9dd1efa1535bd902d10` to test native RGB data.
-**Pending** the new network-enabled GitHub Actions run; do not record
-CIFAR-10 metrics until the separate workflow succeeds.
+- Run: https://github.com/Anurag9000/simple-adp/actions/runs/41451620431
+- **Cancelled** after 30 minutes, at approximately 60.1% of the
+  official CIFAR-10 archive download. No CIFAR-10 training or test metrics
+  were produced. The run's partial artifact includes only the already
+  completed Fashion-MNIST data.
+- Remediation: the source-data workflow now runs Fashion-MNIST as an
+  independent automatic job, and supports CIFAR-10/100 only through an
+  explicitly requested, timeout-bounded on-demand job.
+- The new separated Fashion-MNIST job succeeded:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41462613451.
+  Artifact `fashion-mnist-official-source-v01`, ID 13150322032,
+  includes the newer signed `search_history.json` as well.
+
+## Run C — real Fashion-MNIST matched frozen/loss/variance V01 comparison
+
+- Code: `abbefac35c6644717a0202143705916d4e082d7a`, external
+  workflow commit `a1987748510c7f460773f20f62cc94b7181262f8`.
+- **Verified success:**
+  https://github.com/Anurag9000/simple-adp/actions/runs/41462840053
+- Pretrained encoder: published torchvision
+  `ResNet18_Weights.IMAGENET1K_V1`, same strict local source and frozen
+  encoder SHA256 `c747d20ed87f67d619438f6f072235eb69db114df73bb89481f23e66bacd9601`
+  across **all three** runs.
+- Data: official Fashion-MNIST, seed 11, identical class-stratified
+  300 fit / 100 validation / 100 official-test images across every method.
+  All routes use two maximum training epochs per stage, at most one
+  candidate expansion, and matched common hyperparameters.
+- Comparison manifest signature:
+  `b60357431f19c0645a030ed384a61a64a7489bbe3717c9799ce22ba4766b5183`.
+
+| V01 route | Selected hidden width | Validation accuracy | Official test accuracy | Test macro-F1 |
+|---|---:|---:|---:|---:|
+| Fixed `MLP-Fixed` | 8 | 0.30 | 0.28 | 0.184284 |
+| `ADP-W-RR`, loss trigger | 10 | 0.47 | 0.54 | 0.460163 |
+| `ADP-W-RR`, variance-stagnation trigger | 8 | 0.28 | 0.30 | 0.210817 |
+
+- Artifact `real-fashion-resnet18-v01-loss-vs-variance`, ID
+  **13149472698**, contains **18 files** (signed summary, source
+  provenance, per-method manifests, candidate search histories,
+  inference model sidecars and outputs).
+- All three method/criterion jobs were defined in advance. The experiment
+  does not use the official test outcomes to choose a method; no comparative
+  superiority claim is warranted from a single seed and small subset.
+- A separate follow-up with three predefined seeds 11/23/37 was committed
+  as `315f9cd0510f3191378efaa5e866a06a9f5781a4` and is **verified** as Run D below; it has a distinct signed
+  comparison summary and separate artifacts.
+
+## Run D — matched three-seed real Fashion-MNIST comparison
+
+- **Verified success:** https://github.com/Anurag9000/simple-adp/actions/runs/41463589627
+- Workflow commit `315f9cd0510f3191378efaa5e866a06a9f5781a4`.
+- Official real Fashion-MNIST, published torchvision
+  `ResNet18_Weights.IMAGENET1K_V1` frozen source; seeds **11, 23, 37**.
+- Predeclared **nine independent jobs** (fixed/loss/variance per seed).
+  Within each seed, all methods share the exact source, class-stratified
+  official train/validation/test indices and training settings except
+  expansion criterion.
+- Per seed: **300 train, 100 validation, 100 official test**;
+  two training epochs per stage, one maximum growth proposal.
+- Comparison signature:
+  `65d2016bb38e5bd1cf07b5c122d788ae7a606435afae2e9e2d31998ee74c11`.
+
+| V01 route | Seed 11 test | Seed 23 test | Seed 37 test | Mean test accuracy |
+|---|---:|---:|---:|---:|
+| Fixed MLP | 0.28 | 0.38 | 0.35 | 0.3367 |
+| `ADP-W-RR` loss trigger | 0.54 | 0.57 | 0.57 | 0.5600 |
+| `ADP-W-RR` variance-stagnation trigger | 0.30 | 0.38 | 0.34 | 0.3400 |
+
+- Artifact `real-fashion-resnet18-v01-3seed-loss-vs-variance`,
+  GitHub Actions artifact ID **13149638400**, approximately **384 KB**.
+  Includes all model outputs, manifests, candidate histories, and signed
+  comparison summary.
+- Full selected regression https://github.com/Anurag9000/simple-adp/actions/runs/41463404204:
+  **365 tests passed in 73.32s**. Dedicated comparison tests
+  https://github.com/Anurag9000/simple-adp/actions/runs/41463404061:
+  **15 passed**.
+- Earlier failed contract run `41462977800` only had an incorrect
+  synthetic fixture expectation: 32 samples with a 20% per-class
+  validation split give six validation examples, not eight. The corrected
+  fixture was committed `5a1d09e31958026277b6c5428e61f3d229869b8b`;
+  production split logic was unchanged.
+- The means are descriptive for **only three small seeds**. No official-test
+  outcomes were used to select candidate architectures or a winning route.
+  These are *not* benchmark-quality superiority claims.
 
 ## Remaining scientific and technical work
 
 1. Complete CIFAR-10 and CIFAR-100 actual dataset/split smoke runs.
-2. Real multisplit/multiseed comparisons on meaningful sample sizes,
-   including a frozen-head baseline and loss-versus-variance matched routes.
+2. Larger pre-registered multisplit/multiseed comparisons with uncertainty
+   estimates and meaningful training budgets; three small runs are now verified.
 3. Verified pretrained **inner-FFN** replacement (V03–V11) rather than only
    tiny from-scratch architecture-shaped controls.
 4. CUDA execution and full-repository regression; current selected CI is CPU.
