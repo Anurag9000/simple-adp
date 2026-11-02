@@ -505,3 +505,29 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Real source-faithful pretrained V03/V04 runs are separate from this
   controlled-family one-epoch matrix. This smoke never certifies scientific
   accuracy improvements or equal total search budgets.
+
+## Real-image matrix exposed worker serialization contract (2026-11-02)
+
+- Source settings corrected to canonical width/depth limits in
+  `a06c084416eea806606c47078365f1504991ee3b`. The CI job
+  https://github.com/Anurag9000/simple-adp/actions/runs/41493354984
+  then executed **all 38 native workers to successful worker completion**
+  (from recorded per-row post-worker checks), but the matrix run
+  correctly **failed**: every parent `runner.worker.run_spec` record
+  omitted the new `parameter_accounting` payload even though each
+  model adapter had computed it. This is a real output-contract gap;
+  the matrix artifacts preserve all 38 failure labels and worker records.
+- Fixed `runner/worker.py` to conditionally propagate the adapter's
+  exact accounting into the normal persisted `result.json`, without
+  changing tabular outputs, in
+  `d27a404cd67a9a57866cdf58379e15e02ae9ffc7`.
+  Added V01/V02 signed worker tests in
+  `tests/test_runner_vision.py` (`8ab1d745a88b67d929d6eaad66739375d4c67de0`).
+- The mandatory AST map was refreshed in
+  `cd59ab5226154613904415604831d88eabaf2ee3`;
+  the dedicated source map check
+  https://github.com/Anurag9000/simple-adp/actions/runs/41493727646
+  **passed**.
+- Fresh 38-route real-image run with serialization fix:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41493795442.
+  **Pending outcome as of this documentation update.**
