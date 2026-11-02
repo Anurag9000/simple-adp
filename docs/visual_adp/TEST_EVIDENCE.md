@@ -241,3 +241,11 @@ scientific result has been executed in this increment.
   original/variance matched worker. Variance contract workflow also passed.
 - These are synthetic CPU implementation tests, not full pretrained real
   CIFAR-10/100, Fashion-MNIST, full-suite, or GPU scientific validation.
+
+## 817-job full opt-in vision manifest closure (pending CI)
+- New test: test_opt_in_full_visual_route_inventory_has_exact_817_paired_jobs.
+- Tests all 19 architecture/site-policy families enumerate 22 original
+  method/profile jobs and exactly 21 source-matched variance counterparts;
+  no fixed-control duplicates, identity collisions, split/fold/seed/profile
+  changes or loss/variance pairing gaps. This test creates a plan only,
+  and executes **zero** training jobs. GitHub Actions evidence pending.

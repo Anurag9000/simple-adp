@@ -374,3 +374,18 @@ corrected generic methods. Evidence remains pending CI.
   The correction is in current main; the above test run confirms success.
 - Scientific image training, pretrained source implementations, full
   repo-wide regression and CUDA correctness remain unverified.
+
+## Complete opt-in source/variance route-identity closure (pending CI)
+- Added a **no-training** manifest regression over all 12 architectures and
+  19 explicit architecture/site-policy families, including V07 three scopes,
+  V08 four scopes and V09 three bank members.
+- Expected for one vision toy task/split/seed/repeat: **19 × (22 source
+  method/profile routes + 21 matched shadow-BGD variance counterparts) =
+  817 distinct job identities**. Fixed MLP controls never get a fake variance
+  companion. IDs, split hashes, fold, source method/profile and seed must
+  match each paired criterion. Training/test datasets must stay isolated.
+- These are planned / enumerated job descriptors only, **not** 817 completed
+  training runs or scientific results. test_runner_vision.py verifies closure;
+  CI pending. This does not yet establish the larger dimensions of task
+  sequences, real CIFAR datasets, multi-seed/repeat scientific validation or
+  GPU execution.

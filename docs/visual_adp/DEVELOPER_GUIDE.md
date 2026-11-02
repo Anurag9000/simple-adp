@@ -317,3 +317,11 @@ CI: https://github.com/Anurag9000/simple-adp/actions/runs/41415527242.
 The run restored each local MLP's weights/cursor after a middle-site eviction
 and exactly reproduced the baseline trajectory. This is a fixed site policy,
 not a validation-selected/adaptive site router.
+
+## Inspect the complete opt-in vision job matrix without training
+Run `pytest -q tests/test_runner_vision.py -k exact_817_paired_jobs`.
+This is a no-training manifest dry-run, with 19 distinct site-policy
+families, 22 original source/profile routes per family, 21 matched variance
+counterparts per family, and a total of 817 job identities per selected
+single split/seed/repeat on `vision:toy`. Real dataset providers are
+supported separately and are not automatically executed by the test.

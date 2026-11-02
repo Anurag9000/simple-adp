@@ -462,3 +462,76 @@ def test_v08_predeclared_site_rr_scheduled_worker_pairs_and_trace(monkeypatch, t
     generic = next(x for x in originals if x.route.model_id == "ADP-WD-RR-Dcur"
                    and x.route.generic_profile == "corrected")
     assert run_spec(generic.command[-1])["status"] == "completed"
+
+
+
+def test_opt_in_full_visual_route_inventory_has_exact_817_paired_jobs(monkeypatch, tmp_path):
+    """No-training manifest closure over every *registered* visual scope.
+
+    There are 19 explicit model/site-policy families (12 architecture IDs).
+    Each has 22 original source-method/profile routes and 21 corresponding
+    variance-gated adaptive routes. The fixed non-growing control has none.
+    This does NOT mean these 817 synthetic/real dataset jobs were trained.
+    """
+    monkeypatch.setenv("SIMPLE_ADP_ENABLE_VISION", "1")
+    providers, adapters = load_registries()
+    configured = RunnerSettings(
+        tasks=("vision",), run_hardness_screen=False,
+        repeat_count=1, missing_present_task_repeats=1,
+        model_seeds=(0,), smoke_test=True, cpu_only=True,
+        width_to_depth_width=2, width_to_depth_depth=1,
+        max_candidates=1, max_epochs=1, batch_size=16,
+    )
+    plan = SuitePlan.build(
+        settings=configured,
+        results_dir=tmp_path / "result",
+        run_root=tmp_path / "run",
+        dataset_providers=tuple(providers.providers.values()),
+        dataset_suites=(("vision", "toy"),),
+        model_adapters=tuple(adapters.adapters.values()),
+    )
+    expected = {
+        "vision_adp", "vision_inner",
+        "vision_v03", "vision_v04", "vision_v05",
+        "vision_v06a", "vision_v06b",
+        "vision_v07_token", "vision_v07_channel", "vision_v07_both",
+        "vision_v08_early", "vision_v08_middle", "vision_v08_late",
+        "vision_v08_schedule",
+        "vision_v09_bank0", "vision_v09_bank1", "vision_v09_bank2",
+        "vision_v10", "vision_v11",
+    }
+    assert len(expected) == 19
+    assert {r.model_adapter for r in plan.runs} == expected
+    assert len(plan.runs) == 817
+    all_job_ids = [r.identity.run_id for r in plan.runs]
+    assert len(all_job_ids) == len(set(all_job_ids))
+    for family in sorted(expected):
+        jobs = [r for r in plan.runs if r.model_adapter == family]
+        originals = {
+            r.identity.run_id: r for r in jobs
+            if r.worker_settings.get("expansion_criterion") != "variance_stagnation"
+        }
+        alternates = [
+            r for r in jobs
+            if r.worker_settings.get("expansion_criterion") == "variance_stagnation"
+        ]
+        assert len(originals) == 22, family
+        assert len(alternates) == 21, family
+        assert len(jobs) == 43, family
+        assert len({r.route.route_label for r in originals.values()}) == 22, family
+        assert sum(r.route.model_id == "MLP-Fixed" for r in originals.values()) == 1
+        claimed = set()
+        for variant in alternates:
+            parent_id = variant.worker_settings.get("counterpart_of")
+            assert parent_id in originals, (family, parent_id)
+            assert parent_id not in claimed
+            claimed.add(parent_id)
+            parent = originals[parent_id]
+            assert parent.route.model_id != "MLP-Fixed"
+            assert variant.route.model_id == parent.route.model_id
+            assert variant.route.generic_profile == parent.route.generic_profile
+            assert variant.identity.seed == parent.identity.seed
+            assert variant.identity.split_sha256 == parent.identity.split_sha256
+            assert variant.identity.fold == parent.identity.fold
+            assert variant.identity.split_repeat == parent.identity.split_repeat
+        assert len(claimed) == 21
