@@ -198,11 +198,10 @@ class VisionModelAdapter:
         def take(rows):
             values = np.asarray(data.X[np.asarray(rows, dtype=np.int64)], dtype=np.float32)
             return values / 255.0
-        train_x, valid_x, test_x = (take(split.train_indices), take(split.validation_indices),
-                                   take(split.test_indices))
+        # Do not even materialize held-out test rows until after fit/selection.
+        train_x, valid_x = take(split.train_indices), take(split.validation_indices)
         train_y = np.asarray(data.y[list(split.train_indices)])
         valid_y = np.asarray(data.y[list(split.validation_indices)])
-        test_y = np.asarray(data.y[list(split.test_indices)])
         actual_settings = SearchSettings(**{
             **settings.as_dict(),
             "seed": int(seed),
@@ -233,6 +232,10 @@ class VisionModelAdapter:
                       checkpoint_path=checkpoint_path,
                       progress_callback=progress_callback)
         duration = time.perf_counter() - start
+        # Architecture search, early stopping and candidate rollback are now
+        # complete; the official held-out split can first be accessed here.
+        test_x = take(split.test_indices)
+        test_y = np.asarray(data.y[list(split.test_indices)])
         task = estimator.head.task
         valid_pred = estimator.predict(valid_x)
         valid_prob = estimator.predict_proba(valid_x)
@@ -312,11 +315,11 @@ class VisionInnerModelAdapter:
         def take(rows: tuple[int, ...]) -> np.ndarray:
             return np.asarray(data.X[np.asarray(rows, dtype=np.int64)], dtype=np.float32) / 255.0
 
-        train_x, valid_x, test_x = (take(split.train_indices),
-                                   take(split.validation_indices), take(split.test_indices))
+        # Keep the held-out split unmaterialized throughout all candidate
+        # training, validation comparisons and global-best restoration.
+        train_x, valid_x = take(split.train_indices), take(split.validation_indices)
         train_y = np.asarray(data.y[list(split.train_indices)])
         valid_y = np.asarray(data.y[list(split.validation_indices)])
-        test_y = np.asarray(data.y[list(split.test_indices)])
         actual = SearchSettings(**{
             **settings.as_dict(),
             "seed": int(seed),
@@ -411,6 +414,10 @@ class VisionInnerModelAdapter:
         search.fit(train_x, train_y, validation_data=(valid_x, valid_y),
                    checkpoint_path=checkpoint_path, progress_callback=progress_callback)
         elapsed = time.perf_counter() - started
+        # The selected model is fixed before official test images or labels
+        # become visible to the coordinator's model adapter.
+        test_x = take(split.test_indices)
+        test_y = np.asarray(data.y[list(split.test_indices)])
         task = search.task
         valid_preds, valid_probs = search.predict(valid_x), search.predict_proba(valid_x)
         test_preds, test_probs = search.predict(test_x), search.predict_proba(test_x)
