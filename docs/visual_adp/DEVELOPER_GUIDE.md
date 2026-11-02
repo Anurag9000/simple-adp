@@ -495,3 +495,36 @@ https://github.com/Anurag9000/simple-adp/actions/runs/41466060451.
 The selected in-block FFN grew from 384 to 385 on 40/20/20 official
 Fashion-MNIST images; this is a real integration smoke, not a benchmark. No source-full 14-method
 scientific benchmark claim is made.
+
+## Optional coordinated source-faithful V04 job family
+
+The coordinated runner can now additionally opt in to the **original
+pretrained-model-compatible ConvNeXt-Tiny internal FFN** in a separately
+labeled `vision_v04_source` family (distinct from the 19 synthetic source
+controls). This requires two opt-in flags plus the exact local full
+torchvision checkpoint and its SHA256:
+
+```bash
+export SIMPLE_ADP_ENABLE_VISION=1
+export SIMPLE_ADP_ENABLE_V04_SOURCE=1
+export SIMPLE_ADP_V04_SOURCE_WEIGHTS=/models/convnext_tiny_full_state_dict.pt
+export SIMPLE_ADP_V04_SOURCE_SHA256=REPLACE_WITH_REAL_SHA256
+```
+
+The saved source path must also be mounted at the same absolute location
+in every worker. The planner verifies file checksum and includes its prefix
+in the route identity; workers verify the full checksum again before
+training. The 43 source V04 routes per selected task/split/seed consist
+of 22 original model/profile combinations and 21 variance counterparts,
+with no variance clone of `MLP-Fixed`. No source route is registered
+unless `SIMPLE_ADP_ENABLE_V04_SOURCE=1`; the previous 817-planned-job
+matrix is preserved by default.
+
+Set **finite nonzero** `max_candidates` and `max_epochs`, and
+`max_width >= 384` and `max_neurons >= 384` in central runner settings.
+For a genuine widening experiment, use `max_width >= 385`. All source
+models begin with width 384/depth 1; do not substitute the general
+runner's small width-to-depth grid for a pretrained inner FFN. Full
+checkpoints can exceed 100 MB per job, so account for disk and queue pressure.
+Standalone published-pretrained weights execution and central runner
+planning/execution have independent verification records.

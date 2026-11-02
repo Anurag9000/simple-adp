@@ -566,3 +566,32 @@ corrected generic methods. Evidence remains pending CI.
   Remaining: complete source-V04 central runner matrix, other architectures'
   pretrained inner FFN transplants, GPU/full-suite checks and larger
   pre-registered experiments.
+
+## V04 source-faithful central job planner and worker — implemented, CI pending
+
+- `src/simple_adp/runner/vision_source.py` introduces a **separate**
+  `vision_v04_source` identity. It is registered only when both
+  `SIMPLE_ADP_ENABLE_VISION=1` and `SIMPLE_ADP_ENABLE_V04_SOURCE=1`.
+  It requires `SIMPLE_ADP_V04_SOURCE_WEIGHTS` (complete original full
+  ConvNeXt-Tiny state_dict) and `SIMPLE_ADP_V04_SOURCE_SHA256`.
+- The exact 20-character prefix of the verified complete source SHA256
+  is embedded in each `ModelRoute` label and therefore in planned
+  run identities. A worker refuses a changed or missing source file.
+  Training resumes only from a matching checkpoint/data/settings signature.
+- The source runner enumerates 22 original native source-method/profile
+  routes and 21 native variance-stagnation counterparts per one split/seed.
+  The existing source-unaware 817-job matrix remains unchanged when
+  source support is disabled. A separately gated plan contains 860 jobs
+  (817 earlier + 43 new source).
+- Source route starts at hidden width 384, depth 1 and never substitutes
+  a tiny proxy; all 14 native ADP families remain distinct. Nonzero
+  finite max_candidates and max_epochs are mandatory for this expensive
+  28M-parameter source model. Inference artifacts and worker JSON include
+  source checksum, frozen SHA256, site, architecture and growth criterion.
+- A new direct worker test exercises a complete original **random
+  torchvision state_dict** (no published pretrained claim), signed
+  planning and one real full-source stage, with separate source pairs.
+  This integration is **pending selected GitHub Actions CI**. The already
+  verified published-pretrained single V04 full-image experiment is a
+  separate successful standalone execution, not proof these 43 planned
+  source runner jobs have been trained.

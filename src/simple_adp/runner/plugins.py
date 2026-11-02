@@ -55,6 +55,10 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
         models.register(VisionMultistageScheduleAdapter())
         for member in range(3):
             models.register(VisionAdapterBankModelAdapter(member))
+        # Independent explicit gate; never change the existing 817 toy jobs.
+        if os.environ.get("SIMPLE_ADP_ENABLE_V04_SOURCE") == "1":
+            from .vision_source import VisionSourceConvNeXtModelAdapter
+            models.register(VisionSourceConvNeXtModelAdapter())
     points = entry_points()
     for group, registry in (
         ("simple_adp.dataset_providers", datasets),

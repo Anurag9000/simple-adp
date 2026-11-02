@@ -222,6 +222,10 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "architecture_id": result.get("architecture_id"),
         "growth_site": result.get("growth_site"),
         "frozen_sha256": result.get("frozen_sha256"),
+        **({
+            "source_weights_sha256": result["source_weights_sha256"],
+            "source_ffn_exact_at_initialization": result["source_ffn_exact_at_initialization"],
+        } if result.get("source_weights_sha256") is not None else {}),
         "expansion_criterion": settings_value.get("expansion_criterion", "loss"),
         **({
             "site_schedule_kind": result["site_schedule_kind"],

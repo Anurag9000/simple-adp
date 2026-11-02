@@ -187,5 +187,24 @@
     "status": "cancelled",
     "reason": "Official CIFAR-10 archive ~60% after 30min; no model results",
     "policy": "Manual/timeout-bounded download; never blocks automatic Fashion workflow"
+  },
+  "source_v04_coordinated_runner": {
+    "adapter": "vision_v04_source",
+    "opt_in": [
+      "SIMPLE_ADP_ENABLE_VISION=1",
+      "SIMPLE_ADP_ENABLE_V04_SOURCE=1",
+      "SIMPLE_ADP_V04_SOURCE_WEIGHTS",
+      "SIMPLE_ADP_V04_SOURCE_SHA256"
+    ],
+    "original_routes": 22,
+    "variance_counterparts": 21,
+    "extra_jobs_per_seed_split": 43,
+    "total_jobs_when_enabled": 860,
+    "existing_jobs_when_disabled": 817,
+    "source_identity": "full local source SHA256 bound into route label, verified by worker",
+    "initial_hidden_width": 384,
+    "scientific_jobs_executed_in_central_runner": 0,
+    "offline_verification": "pending CI",
+    "note": "Separate full 28M-param torchvision source route, not tiny vision_v04; explicit bounded max_epochs/max_candidates required"
   }
 }
