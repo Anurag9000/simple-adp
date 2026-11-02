@@ -46,7 +46,7 @@ def options():
         tasks=("vision",), run_hardness_screen=False,
         repeat_count=1, missing_present_task_repeats=1, model_seeds=(0,),
         width_to_depth_width=2, width_to_depth_depth=1,
-        max_width=385, max_neurons=1000, max_candidates=1,
+        max_width=512, max_neurons=1000, max_candidates=1,
         max_epochs=1, batch_size=16, smoke_test=False, cpu_only=True,
     )
 
