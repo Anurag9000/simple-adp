@@ -481,3 +481,27 @@ evidence of accuracy or reproducible real-data science. CI pending.
   https://github.com/Anurag9000/simple-adp/actions/runs/41492296951
   **success**. The dedicated parameter/holdout job and complete current-main
   pytest still require a successful run before runtime-tested designation.
+
+## Official controlled-family Fashion-MNIST matrix workflow
+
+- First scheduled live run
+  https://github.com/Anurag9000/simple-adp/actions/runs/41493011813
+  **failed before any worker started**. The actual CI log identified
+  `ValueError: width grid exceeds max_width`: the matrix requested
+  `RunnerSettings.max_width=4` although the canonical runner validates
+  its global default width grids (up to 512), independently of the subset of
+  jobs being executed. The dataset was successfully downloaded.
+- Commits `f1e1587d945e135b2cc2403bac473a82fd75f6bf` and
+  `a06c084416eea806606c47078365f1504991ee3b` restore canonical
+  source-runner width and depth caps (512/5); actual controlled smoke
+  remains bounded by tiny initial widths, `max_neurons=128`, one
+  growth proposal, one training epoch per stage, one seed and 40/20/20
+  official Fashion-MNIST samples.
+- Corrected live run:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41493354984.
+  **Pending result; no completed workers or metrics are claimed.**
+  The script saves independently labeled partial success/failure rows
+  and exits nonzero if any of the 38 selected native worker routes fails.
+- Real source-faithful pretrained V03/V04 runs are separate from this
+  controlled-family one-epoch matrix. This smoke never certifies scientific
+  accuracy improvements or equal total search budgets.
