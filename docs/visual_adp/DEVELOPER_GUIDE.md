@@ -182,7 +182,7 @@ per-batch authoritative checkpoint captures intermediate-stage position,
 optimizer/scheduler and RNG for interruption safety. V02 `ADP-D-D1` is also
 available as an opt-in `vision_inner` coordinated runner route.
 
-## V02 full 14-configuration source taxonomy (generic pending CI)
+## V02 full 14-configuration source taxonomy (selected CPU CI verified)
 All 14 native method IDs are available in the opt-in V02 controller with source
 `faithful` and `corrected` profiles for the eight phase-search variants:
 ```python
@@ -195,5 +195,11 @@ The `faithful` profile deliberately reproduces the source score-update behavior,
 including setting the reported score to the last candidate even when the
 selected snapshot remains earlier. For interpretable best-score comparisons,
 prefer `corrected`. With `SIMPLE_ADP_ENABLE_VISION=1`, the coordinated
-suite enumerates the method/profile jobs and matched variance gates. These
-new generic routes are not yet validated by CI or real-image benchmarks.
+suite enumerates the method/profile jobs and matched variance gates. These generic routes passed selected synthetic CPU CI (259 tests), but
+not real-image benchmarks.
+
+### Latest verification
+The complete 14-method V02 controller and opt-in runner passed 259 selected
+CPU tests: https://github.com/Anurag9000/simple-adp/actions/runs/41394281464.
+The `MLP-Fixed` route never grows; dedicated D1 performs real intermediate
+optimization; the eight generic methods have separately signed profile routes.

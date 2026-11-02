@@ -15,8 +15,8 @@
       "methods": "all 14 canonical IDs; eight phase-search methods have faithful and corrected profiles; dedicated D1 progressive depth",
       "site": "adapter:block1",
       "criterion": "native Adam/AdamW stage optimizers, signed loss and shadow-BGD variance-stagnation counterparts",
-      "status": "6 dedicated methods and opt-in runner runtime-tested (241 CPU tests); 8 generic methods/profile routes pending CI",
-      "reason": "Generic V02 full-image controller is implemented but not yet verified. V02 backbone remains synthetic frozen random CNN; real pretrained and all other vision architectures absent."
+      "status": "all 14 canonical IDs / eight two-profile generic methods runtime-tested via selected synthetic CPU CI (259 passed)",
+      "reason": "Whole-image V02 controller, D1 warmup, generic phases, signed exact stage restart, opt-in worker and variance counterpart tested. No pretrained internal-backbone or real CIFAR scientific benchmark."
     },
     {
       "architecture": "V03",

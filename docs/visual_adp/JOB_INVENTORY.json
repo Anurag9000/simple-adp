@@ -11,8 +11,8 @@
     },
     {
       "id": "V02",
-      "central_runner_jobs": "43 per one seed/split/repeat (22 method/profile routes including 14 IDs + 8 extra generic profiles, 21 variance counterparts); opt-in; latest generic CI pending",
-      "implementation": "14 native method identities, with 8 generic profiles faithful/corrected, signed per-batch full-image composite search; dedicated six CI verified, generic pending CI",
+      "central_runner_jobs": "43 per seed/split/repeat (22 method/profile routes + 21 variance counterparts), opt-in, verified selected CPU worker CI",
+      "implementation": "synthetic CPU CI verified all 14 canonical IDs, 8 generic faithful/corrected profiles, exact signed batch resume and opt-in runner",
       "scientifically_executed": false
     },
     {

@@ -80,3 +80,14 @@ scientific result has been executed in this increment.
   signed profile identity, exact mid-batch interruption, generic V02 worker
   execution and paired variance worker have been added. Do not call runtime
   verified until the corresponding Actions test run is inspected.
+
+## All 14 canonical V02 IDs and generic runner profiles verified (2026-11-02)
+- Commit: b51eac1ea9555e2398d05afc8e5384e32e5603ec.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41394281464.
+- **259 passing tests in 35.61s** on selected synthetic CPU suite.
+- Tested generic phase transitions, both source profiles, signed profile-specific
+  stage checkpoints, interruption/recovery, V02 full-image worker and native
+  variance-shadow counterpart, while retaining V01/tabular regression checks.
+- Original ADP native loss/variance contract workflow also succeeded.
+- No real pretrained source backbones, CIFAR scientific benchmarks, CUDA or
+  complete repository-wide test suite were executed in this increment.

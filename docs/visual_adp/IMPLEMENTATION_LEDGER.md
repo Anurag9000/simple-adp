@@ -12,13 +12,13 @@ States distinguish source/static implementation from executed tests and science.
 | V01 packaged estimator export | static-complete | src/simple_adp/__init__.py |
 | CIFAR-10/CIFAR-100/Fashion-MNIST optional loader | runtime-tested API on offline synthetic arrays (not real datasets) | vision_data.py, torchvision optional; no real dataset execution | 
 | V01 opt-in coordinated runner and signed split jobs | runtime-tested (toy CPU) | runner/vision.py, plan.py, plugins.py, tests/test_runner_vision.py; toy and offline image provider only |
-| V02 residual CNN adapter local MLP stage + native RR/all/D1/Dcur mutation | runtime-tested (bounded CPU); dedicated controller and opt-in runner verified | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
+| V02 residual CNN adapter with all 14 canonical methods and generic profiles | runtime-tested on synthetic CPU; 259 tests passed | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
 | V03/V04 | missing | requires composite controller and source FFN integration |
 | V05/V06a/V06b/V07 | missing | operator/model integration, mutation and resume |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
 | V10/V11 | missing | ResMLP/GFNet operators and full integration |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | partial | 241 selected CPU tests passed including V01 worker and torchvision ResNet18, plus variance contract CI; CUDA/full suite not executed |
+| CPU/CUDA complete regression | partial | 259 selected CPU tests passed including V01 worker and torchvision ResNet18, plus variance contract CI; CUDA/full suite not executed |
 
 Next: validate the eight generic V02 controller profiles through the coordinated runner, then integrate V03/V04. Original tabular job identities remain untouched.
 
@@ -55,7 +55,7 @@ CPU tests interrupt exactly at width-two warmup and compare bitwise to an
 uninterrupted run. The V02 coordinated runner enumerates this sixth method and
 its variance counterpart without affecting legacy tabular algorithms.
 
-## V02 generic composite phase-search (latest increment; pending CI)
+## V02 generic composite phase-search (selected CPU CI verified)
 `VisualResidualSearch` now supports all 14 canonical IDs. Eight generic
 width-to-depth/depth-to-width algorithms run through real full-image composite
 training with the source's `faithful` and `corrected` profiles. The stage
@@ -68,6 +68,17 @@ retain their old identity signatures and can be resumed unchanged.
 
 The opt-in V02 runner now enumerates 22 method/profile routes and their 21
 variance-stagnation counterparts per seed/split/repeat, with isolation from V01.
-The new 8-method x 2-profile controller tests, source profile identity/restart,
-phase transition tests and V02 generic/variance worker execution are **pending
-CI**. V03–V11 remain unimplemented.
+The 8-method x 2-profile controller tests, profile identity/restart, phase
+transitions and V02 generic/variance worker execution all passed selected CPU
+CI (259 tests). V03–V11 remain unimplemented.
+
+## Current verified V02 summary — 2026-11-02
+- Commit: b51eac1ea9555e2398d05afc8e5384e32e5603ec
+- CPU CI: https://github.com/Anurag9000/simple-adp/actions/runs/41394281464
+- 259 selected tests passed, covering all 14 V02 canonical method IDs,
+  faithful/corrected generic profiles, signed mid-batch resume, V01/V02
+  coordinated workers, progressive D1 and shadow-BGD variance counterpart.
+- Original tabular method/variance workflow also passed.
+- Still missing: V03–V11 (with V06a/V06b distinct), real pretrained internal
+  image backbones, actual CIFAR experiments, multi-seed science, full-suite
+  regression and CUDA behavior verification.

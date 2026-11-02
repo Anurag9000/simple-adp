@@ -53,7 +53,19 @@ weight loading and do not consume source RNG draws.
 
 V02 has since gained standalone six-method dedicated controllers with signed
 batch-level resume and an opt-in coordinated runner. The eight generic
-phase-search controllers and their faithful/corrected profiles are newly
-implemented and pending CI. V02 remains partial because the concrete source
+phase-search controllers and their faithful/corrected profiles have passed
+selected CPU CI (259 tests). V02 remains partial because the concrete source
 backbone here is a frozen random residual CNN control, not a complete
 pretrained ResNet/ViT experiment. V03–V11 remain unimplemented.
+
+## V02 current controller evidence
+All 14 canonical IDs run through the V02 full-image composite controller.
+Dedicated D1 includes intermediate optimization-only stages. Generic phase
+search retains its faithful and corrected source profiles. Signed checkpoints
+include model snapshots, architecture/history, optimizer/epoch/batch/RNG,
+and the exact method/profile/data identity. The opt-in runner enumerates
+22 method/profile routes plus 21 variance counterparts per seed/split/repeat.
+Synthetic CPU integration passed at
+https://github.com/Anurag9000/simple-adp/actions/runs/41394281464.
+V02 uses a frozen random CNN control, not a verified pretrained ResNet-like
+adapter or empirical model-quality claim.

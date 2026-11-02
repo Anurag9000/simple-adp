@@ -64,5 +64,5 @@ architecture-candidate lifecycle, signed exact mid-batch restart, dedicated D1
 warmup, and generic faithful/corrected phase search. runner/vision.py registers
 `vision_inner` only under SIMPLE_ADP_ENABLE_VISION=1. Existing V01 and
 tabular execution remain separate. Last validated V02-D1 CPU CI: 241 passed;
-generic all-method extension awaits CI. No source-pretrained CNN, real CIFAR
+generic all-method extension passed 259 selected CPU tests. No source-pretrained CNN, real CIFAR
 scientific run, or V03–V11 local FFN implementation has been verified.
