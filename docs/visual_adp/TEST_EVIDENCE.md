@@ -283,3 +283,13 @@ evidence of accuracy or reproducible real-data science. CI pending.
   no statistical generalization or comparative scientific claim.
 - Artifacts uploaded and verified: Fashion-MNIST V01 manifest,
   result JSON, published source provenance and inference model.
+
+## V01 exact experiment resume verified (2026-11-02)
+
+- New offline fixture test interrupted the native V01 head after a batch,
+  preserved signed manifest/checkpoint and resumed identically.
+- GitHub Actions https://github.com/Anurag9000/simple-adp/actions/runs/41452649913:
+  **361 selected CPU tests passed in 47.32 seconds**.
+- New reporting fields (candidate search history, confusion matrix,
+  parameter counts) are committed in `8e2d618b67d2db27fb0de298202c8ce31aa6d714`;
+  the extended integrity tests are pending fresh CI.

@@ -448,3 +448,18 @@ corrected generic methods. Evidence remains pending CI.
   official torchvision pretrained enum, download URL and exact checksum.
 - V03–V11 genuine pretrained inner-FFN integration and multi-seed benchmarks
   remain outstanding. A CIFAR-10 RGB smoke extension is underway.
+
+## V01 exact interruption recovery and detailed result records (2026-11-02)
+
+- `c183aed986190f00cb68822a4f4bea4f9596b140`: adds deliberate
+  mid-training eviction and exact restart to the real-image experiment
+  wrapper; selected GitHub Actions
+  https://github.com/Anurag9000/simple-adp/actions/runs/41452649913
+  passed **361 CPU tests in 47.32s**. Selected architecture, validation/test
+  metrics and search-history count matched the uninterrupted baseline.
+- `8e2d618b67d2db27fb0de298202c8ce31aa6d714`: stores full
+  candidate search history in checksummed `search_history.json`,
+  class-ordered confusion matrix and source/head parameter counts.
+  New offline tests verify generated files and reject history tampering.
+  Selected CI is pending; pre-existing Fashion smoke artifact predates
+  the separate history file and is not retroactively modified.

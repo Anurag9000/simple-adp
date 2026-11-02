@@ -375,3 +375,17 @@ The V01 ADP head alone is trained/expanded; backbone weights remain frozen.
 The CLI is independent of the existing 817-job opt-in planner and does not
 automatically execute 817 jobs. The initial tests use **synthetic image
 fixtures**, not actual CIFAR/Fashion-MNIST files or verified pretrained weights.
+
+### Per-job candidate history and confusion evidence
+
+New V01 experiment runs also write `search_history.json` containing the
+native candidate-by-candidate ADP architecture-search records, protected by
+a SHA256 in `result.json`. The result includes `class_order`,
+`confusion_matrix` (rows: true classes; columns: predicted classes),
+and parameter counts for the frozen source encoder versus selected ADP head.
+This evidence is computed strictly after fit for the official test partition
+and is not fed back to candidate selection. Reopening a completed result
+verifies both model/identity checksums and candidate history checksum.
+Runs created by the earlier CLI version may not contain the new artifact;
+use a fresh output directory to regenerate reporting without altering a
+previously signed result.
