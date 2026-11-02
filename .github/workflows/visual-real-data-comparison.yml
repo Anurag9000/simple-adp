@@ -10,7 +10,7 @@ on:
 jobs:
   pretrained-resnet18-paired:
     runs-on: ubuntu-latest
-    timeout-minutes: 22
+    timeout-minutes: 25
     env:
       OMP_NUM_THREADS: '2'
       MKL_NUM_THREADS: '2'
@@ -27,13 +27,13 @@ jobs:
           python scripts/vision_official_comparison.py \
             --workdir "${{ runner.temp }}/real-paired-v01" \
             --device cpu \
-            --seeds 11 \
+            --seeds 11,23,37 \
             --train-limit 300 --valid-limit 100 --test-limit 100
       - name: Retain complete paired evidence for inspection
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: real-fashion-resnet18-v01-loss-vs-variance
+          name: real-fashion-resnet18-v01-3seed-loss-vs-variance
           if-no-files-found: warn
           retention-days: 30
           path: |
