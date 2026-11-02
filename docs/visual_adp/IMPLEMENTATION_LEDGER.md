@@ -24,6 +24,7 @@ States distinguish source/static implementation from executed tests and science.
 | V08 fixed three-stage residual adapter | independent sites + fixed multisite schedule verified (354 tests) | early/middle/late local growth, saved site order/weights and exact middle-site resume |
 | V09 strict adapter bank | selected CPU CI verified: 347 passed | hard frozen router, three strictly isolated adapter targets, routing counts and matched workers |
 | V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
+| Local official-image V01 experiment CLI and deterministic grayscale/RGB transform | implemented; CI pending | signed source/run artifacts and explicit post-fit official test; offline synthetic fixtures only until CI |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
 | CPU/CUDA complete regression | partial | 354 selected CPU tests passed including V08 schedule and V09 bank; CUDA/full suite not executed |
 
@@ -401,3 +402,26 @@ corrected generic methods. Evidence remains pending CI.
   source method/criterion provenance.
 - This is **not 817 completed training jobs**. No complete real dataset,
   GPU or repository-wide experimental validation is claimed.
+
+
+## Official image source V01 experiment integration (pending selected CPU CI)
+
+- \`src/simple_adp/vision_experiment.py\` provides a bounded one-job CLI over
+  locally available official torchvision CIFAR-10/CIFAR-100/Fashion-MNIST files.
+  A complete local pretrained-claim-*unverified* source model state_dict is
+  supported via the existing frozen ResNet18/ConvNeXt-Tiny/ViT-B16 factory.
+  Random backbones require \`--allow-random-backbone\`; no hidden downloads.
+- \`VisionInputAdapter\` is a frozen deterministic grayscale→RGB repeat and
+  32×32 / 224×224 bilinear resize with declared geometry and no augmentation.
+- Only the official training source enters candidate fit/validation. Official
+  test materialization/evaluation happens **after** architecture fit, with
+  separate validation and test metrics. The V01 frozen-feature head alone
+  trains; no pretrained internal FFN mutation is claimed.
+- Per-job manifest stores raw sample/split indices, source data SHA256,
+  image transform and encoder SHA256, local checkpoint origin/checksum,
+  method/profile/settings and explicit run signature. A signed estimator
+  checkpoint, inference artifact, model checksum and atomic result JSON
+  support idempotent resumption and reject cross-job identity collisions.
+- New synthetic fixture unit tests cover preprocessing, official-test order,
+  random source opt-in, artifact identity, checksum tamper detection.
+  **Selected CPU CI pending**; no real dataset/pretrained experiment executed.

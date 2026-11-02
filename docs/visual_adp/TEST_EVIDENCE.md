@@ -256,3 +256,15 @@ scientific result has been executed in this increment.
 - **355 selected CPU tests passed in 50.96s**, including the new no-training
   method/profile/architecture/scope original-versus-variance manifest closure.
 - No 817-job execution or real pretrained dataset was performed.
+
+
+## V01 real-data experiment runner tests (pending selected CI)
+
+Added \`tests/test_vision_experiment.py\` to test the explicit grayscale
+repeat/bilinear resize bridge, frozen model/geometry contract, random
+backbone opt-in, deterministic split/manifest, test-partition materialization
+only after fit, signed experiment result and model checksum checks.
+All samples in these tests are **offline synthetic fixtures**, not real
+CIFAR-10/CIFAR-100/Fashion-MNIST or published pretrained weights.
+A real source-model checkpoint or a functioning experiment CLI alone is not
+evidence of accuracy or reproducible real-data science. CI pending.

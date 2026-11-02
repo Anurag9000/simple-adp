@@ -217,3 +217,18 @@ signed per-site state passed 354 selected CPU tests at
 https://github.com/Anurag9000/simple-adp/actions/runs/41415527242.
 This validates real fixed-stage local MLP training/mutations, not learned
 site selection or a pretrained three-stage source backbone.
+
+
+## V01 official-dataset and frozen source transform identity
+
+\`VisionInputAdapter\` accepts raw float32 [N,1|3,H,W] official dataset
+partitions, repeats grayscale to RGB, and applies deterministic bilinear
+resizing to source-compatible 32×32 (ResNet18/ConvNeXt) or 224×224 (ViT).
+All input/output resolutions, channel policies, normalization and frozen
+encoder state SHA256 are signed with the run; there is no fitted transform,
+stochastic augmentation or test-label-dependent preprocessing. The source
+checkpoint (when supplied) must be a complete strict torchvision state_dict.
+Loading an arbitrary local checkpoint does **not** prove pretrained origin.
+Official test is only materialized after ADP train/validation architecture
+selection. The V01 head is the only trainable part; this does not implement
+pretrained inner-FFN injection for V03–V11.

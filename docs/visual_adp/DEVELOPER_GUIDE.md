@@ -331,3 +331,47 @@ The complete synthetic opt-in plan count was validated by the selected
 `355 passed` Actions run:
 https://github.com/Anurag9000/simple-adp/actions/runs/41416422457.
 This checks job identities and pair provenance without training 817 models.
+
+
+## Local official-image V01 experiment command (experimental)
+
+Install \`pip install -e '.[vision]'\`. Place CIFAR-10, CIFAR-100 or
+Fashion-MNIST official torchvision data under \`--root\`; downloads are disabled
+unless you explicitly set \`--download\`. Provide a *complete* local
+torchvision model state_dict and preferably its file SHA256. For example:
+
+\`\`\`bash
+sha256sum /models/resnet18_full_state_dict.pt
+simple-adp-vision-experiment \
+  --dataset cifar10 --root /data/vision \
+  --out results/cifar10/resnet18_adp_w_rr_seed11 \
+  --architecture resnet18 --weights /models/resnet18_full_state_dict.pt \
+  --weights-sha256 REPLACE_WITH_ACTUAL_SHA256 \
+  --model-id ADP-W-RR --seed 11 \
+  --train-limit 500 --valid-limit 100 --test-limit 100 \
+  --max-epochs 5 --max-candidates 2 --batch-size 64
+\`\`\`
+
+Pretraining is *not* inferred from an arbitrary local checkpoint. Such weights
+are recorded as \`unverified_local_state_dict\` with \`pretrained=null\`.
+For an intentional random feature control, omit \`--weights\` and supply
+\`--allow-random-backbone\`; random source weights are never labeled pretrained.
+
+The deterministic input bridge repeats grayscale into three channels and
+bilinearly resizes Fashion-MNIST to 32×32 for ResNet18/ConvNeXt-Tiny.
+ViT-B/16 receives 224×224 bilinearly resized images. ImageNet normalization
+is handled by the frozen backbone wrapper and is recorded separately.
+Candidate selection uses **only** fit/validation subsets of the official
+training source; official test is materialized and measured after fitting.
+
+Each isolated \`--out\` directory contains \`manifest.json\`,
+\`estimator.checkpoint.pt\`, \`estimator.model.pt\`, its \`.vision.json\`
+identity sidecar, and \`result.json\`. The manifest includes source sample
+indices, split signatures, raw data hashes, encoder weight/state hashes,
+preprocessing, method/profile and settings. A mismatch rejects resumption;
+completed results are reused only when model and identity SHA256 match.
+The V01 ADP head alone is trained/expanded; backbone weights remain frozen.
+
+The CLI is independent of the existing 817-job opt-in planner and does not
+automatically execute 817 jobs. The initial tests use **synthetic image
+fixtures**, not actual CIFAR/Fashion-MNIST files or verified pretrained weights.
