@@ -23,13 +23,15 @@ jobs:
           python-version: '3.11'
       - name: Install native vision requirements
         run: python -m pip install -e '.[vision]'
-      - name: Fetch official dataset and pretrained source then run bounded V01 ADP
-        run: python scripts/vision_official_smoke.py --workdir "${{ runner.temp }}/real-vision-v01" --device cpu
+      - name: Fetch official datasets and pretrained source then run bounded V01 ADP
+        run: |
+          python scripts/vision_official_smoke.py --workdir "${{ runner.temp }}/real-vision-v01" --dataset fashion_mnist --device cpu
+          python scripts/vision_official_smoke.py --workdir "${{ runner.temp }}/real-vision-v01" --dataset cifar10 --device cpu
       - name: Retain actual run manifest and metrics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fashion-mnist-official-resnet18-v01-evidence
+          name: fashion-mnist-and-cifar10-official-resnet18-v01-evidence
           if-no-files-found: warn
           retention-days: 30
           path: |
@@ -38,3 +40,8 @@ jobs:
             ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/external_source_provenance.json
             ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/estimator.model.pt
             ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/estimator.model.pt.vision.json
+            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/manifest.json
+            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/result.json
+            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/external_source_provenance.json
+            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/estimator.model.pt
+            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/estimator.model.pt.vision.json
