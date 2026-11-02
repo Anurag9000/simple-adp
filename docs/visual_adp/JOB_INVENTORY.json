@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source_main": "3bff656fceeaa62e0feef6398124a261366d7273",
-  "note": "Opt-in V01 coordinated provider+adapter with 22 native model/profile variants and 21 matched variance counterparts per single seed/split/repeat, subject to job settings. ResNet18 factory locally tested; ConvNeXt and ViT source constructors static. Not validated on real dataset.",
+  "note": "Opt-in controlled V01-V11 (V06a/V06b distinct) official raw-image provider and 19 architecture/site adapter routes, each with 22 native/profile jobs plus 21 paired variance counterparts per split/seed; total 817 planned and not all executed. Source-faithful ViT and ConvNeXt FFN routes are separately gated by full local checkpoint SHA256. Runtime evidence and science must be recorded separately.",
   "architectures": [
     {
       "id": "V01",
@@ -67,10 +67,11 @@
         "synthetic_source_tests_passed": 4,
         "source_real_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41466060451",
         "source_real_status": "completed_success",
-        "central_runner_registered": false,
+        "central_runner_registered": true,
         "pretrained_inner_ffn_scientific_experiments": 1,
         "real_data_scope": "40 train,20 valid,20 official test, one seed, source width 384->385, tiny integration",
-        "artifact_id": 13151101792
+        "artifact_id": 13151101792,
+        "source_runner_verification": "https://github.com/Anurag9000/simple-adp/actions/runs/41470335656"
       }
     },
     {
@@ -284,6 +285,45 @@
       "odds"
     ],
     "status": "running at final documentation checkpoint",
-    "initial_run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41475398340"
+    "initial_run_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41475398340",
+    "pre_increment_verified_status": "success",
+    "pre_increment_verified_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41488650402",
+    "new_accounting_and_isolation_changes_full_suite_status": "in_progress at this inventory snapshot; not yet verified",
+    "focused_holdout_and_accounting_status": "verified success",
+    "focused_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41492546181"
+  },
+  "official_fashion_control_matrix": {
+    "source": "torchvision.datasets.FashionMNIST official train/test",
+    "workflow": "https://github.com/Anurag9000/simple-adp/actions/runs/41493011813",
+    "status": "in_progress (not validated at time of inventory update)",
+    "architecture_site_control_adapters": 19,
+    "planned_selected_jobs": 38,
+    "source_methods": [
+      "MLP-Fixed",
+      "ADP-W-RR"
+    ],
+    "seed_count": 1,
+    "epoch_per_stage": 1,
+    "train_limit": 40,
+    "validation_limit": 20,
+    "test_limit": 20,
+    "execution_route": "existing SuitePlan signed run specification + worker.run_spec",
+    "is_scientific_benchmark": false,
+    "completed_jobs_verified": 0
+  },
+  "visual_parameter_accounting": {
+    "module": "src/simple_adp/visual_accounting.py",
+    "public_export": "simple_adp.visual_parameter_accounting",
+    "worker_scope": [
+      "vision_adp",
+      "vision_inner",
+      "vision_v03_source",
+      "vision_v04_source",
+      "all other controlled vision adapters inheriting vision_inner"
+    ],
+    "focused_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41492546181",
+    "focused_status": "success",
+    "whole_model_flops": false,
+    "notes": "Read-only unique-parameter counts and per-local-MLP invocation Linear MACs; inactive V08 sites distinguished"
   }
 }
