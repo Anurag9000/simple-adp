@@ -43,8 +43,9 @@ def visual_parameter_accounting(
             raise ValueError(f"growth target {site_id!r} is not an owned model submodule")
         if eligible_ids & local_ids:
             raise ValueError("distinct growth-site IDs must not alias parameters")
-        if any(not owned[p].requires_grad for p in local_ids):
-            raise ValueError(f"growth target {site_id!r} contains frozen parameters")
+        flags = {bool(owned[p].requires_grad) for p in local_ids}
+        if len(flags) != 1:
+            raise ValueError(f"growth target {site_id!r} has partially frozen coordinates")
         eligible_ids.update(local_ids)
         sites_total = sum(owned[p].numel() for p in local_ids)
         linear_macs = sum(
@@ -57,16 +58,19 @@ def visual_parameter_accounting(
             "output_dim": int(target.output_dim),
             "hidden_widths": list(target.hidden_widths),
             "parameter_count": int(sites_total),
+            "currently_trainable": bool(next(iter(flags))),
             "linear_macs_per_mlp_invocation": int(linear_macs),
         }
 
     eligible = sum(owned[p].numel() for p in eligible_ids)
+    active_eligible = sum(owned[p].numel() for p in eligible_ids if owned[p].requires_grad)
     return {
         "total_parameters": int(all_total),
         "frozen_parameters": int(all_total - trainable),
         "trainable_parameters": int(trainable),
         "eligible_mlp_parameters": int(eligible),
-        "other_trainable_parameters": int(trainable - eligible),
+        "currently_trainable_eligible_mlp_parameters": int(active_eligible),
+        "other_trainable_parameters": int(trainable - active_eligible),
         "eligible_growth_sites": site_records,
         "linear_compute_note": (
             "Linear MACs are per MLP invocation; spatial/token repetition "
