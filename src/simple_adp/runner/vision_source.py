@@ -21,6 +21,7 @@ from ..checkpoint import CheckpointStore
 from ..config import SearchSettings
 from ..registry import MODEL_REGISTRY
 from ..visual_search import VisualResidualSearch
+from ..visual_accounting import visual_parameter_accounting
 from ..visual_source_convnext import SourceConvNeXtSpec, file_sha256
 from ..visual_source_vit import SourceViTSpec
 from .artifacts import estimator_model_path
@@ -186,6 +187,9 @@ class VisionSourceConvNeXtModelAdapter:
             "architecture_id": self.SOURCE_ARCHITECTURE,
             "source_weights_sha256": source_sha,
             "frozen_sha256": search.model_.frozen_state_sha256(),
+            "parameter_accounting": visual_parameter_accounting(
+                search.model_, search.model_.growth_targets,
+            ),
             "expansion_criterion": real_settings.expansion_criterion,
             "source_ffn_exact_at_initialization": (
                 search.model_.source_ffn_exact_at_initialization),
