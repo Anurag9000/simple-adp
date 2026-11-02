@@ -122,6 +122,14 @@ def test_launch_persists_launching_before_environment_and_log_creation(tmp_path,
 
 
 def test_launch_popen_failure_closes_log_and_keeps_launching_state(tmp_path, monkeypatch):
+    # A simulated GPU worker cannot inherit a real CI worker's CPU mask.
+    for name in (
+        "CPU_ONLY", "TRAINING_CONTROL_CPU_ONLY",
+        "OPF_ADP_DISABLE_GPU_ACCELERATORS", "TABULAR_CPU_ONLY",
+        "SIMPLE_ADP_DISABLE_GPU_ACCELERATORS",
+        "TRAINING_CONTROL_BACKEND", "TABULAR_BACKEND",
+    ):
+        monkeypatch.delenv(name, raising=False)
     identity = RunIdentity(
         provider="toy", suite="suite", task_id="popen-failure", split_repeat=0,
         fold=0, sample=0, suite_repeat=1, model_route="route", seed=7,
@@ -212,6 +220,13 @@ def test_single_inherited_gpu_mask_can_differ_from_coordinator_sensor_index(
     from simple_adp.runner.scheduler import SuiteCoordinator
     from simple_adp.runner.plan import SuitePlan
 
+    for name in (
+        "CPU_ONLY", "TRAINING_CONTROL_CPU_ONLY",
+        "OPF_ADP_DISABLE_GPU_ACCELERATORS", "TABULAR_CPU_ONLY",
+        "SIMPLE_ADP_DISABLE_GPU_ACCELERATORS",
+        "TRAINING_CONTROL_BACKEND", "TABULAR_BACKEND",
+    ):
+        monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "2")
     monkeypatch.setattr(tuning, "detected_cpus", lambda: (0, 1))
     identity = RunIdentity(
