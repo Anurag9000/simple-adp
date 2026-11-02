@@ -581,3 +581,65 @@ The final pass over all of `universal_main.py` found several handoff details tha
 - Ported execution first adds standard flags only for truthy parsed options (except seed, which is always included), then appends every unknown token unchanged. It separately parses unknown assignments solely to suppress generated ADP defaults; an unknown `max_epochs=0` suppresses the generated max-epoch flag. It starts the nested command with the current interpreter and `-u`, merges stderr into stdout, enables text line buffering, and creates `logs/` relative to current working directory. Log names have one-second timestamp precision and open in write mode, so two same-model launches in that second can target the same file. Each line is echoed and flushed to dispatcher stdout and written/flushed to the nested log. The outer scheduler's per-job log receives the echoed stream.
 - The nested ported process gets a copied environment with results and seed variables assigned; native execution instead mutates the dispatcher's own environment and runs in-process. Ported execution starts a new POSIX session, allowing the dispatcher's signal handler to signal the process group; on Windows only the direct process handle is terminated/killed. The handler sends TERM, polls the direct process every 0.1 seconds up to at least 0.1 seconds (default 10), then sends KILL and clears the global handle without a final wait. If the child exits during the poll, the handle is cleared and the handler returns. A ported nonzero exit is propagated with `sys.exit(returncode)`; signal handling exits 130. The main execution block catches `KeyboardInterrupt` and routes it through the same handler.
 - This also clarifies a boundary in the parent scheduler: its launch handle supervises the dispatcher PID/process group; the dispatcher's nested ported process is separately supervised by the dispatcher's signal path. A crash that bypasses that path can leave nested-process cleanup dependent on OS/session behavior rather than an explicit dispatcher `finally` block.
+
+## 2 November 2026: full-suite failure triage and runner scientific-pair test closure
+
+The actual whole-repository CPU regression run
+[`41475398340`](https://github.com/Anurag9000/simple-adp/actions/runs/41475398340)
+completed pytest with **19,202 passed and 27 failed**. This is
+executed evidence, unlike GitHub runs that fail before a test step.
+Failure analysis identified three categories and resulted in directly
+committed test and inventory repairs, with **no production GPU
+admission semantics weakened**:
+
+1. **GPU-admission tests inheriting the parent CPU mask.** The
+   whole-repository workflow sets
+   `SIMPLE_ADP_DISABLE_GPU_ACCELERATORS=1` and
+   `TRAINING_CONTROL_CPU_ONLY=1`. The isolated GPU tests simulated
+   different parent environments but did not remove these ambient
+   masks, causing 21 backend test failures and two process-launch
+   test failures. The dedicated backend and process tests now clear
+   only the ambient CPU/GPU admission inputs before their own
+   explicit monkeypatches.
+   Commits `63673d05ba58df5ffe0a74f14523562a25bd98d3`
+   and `bd5d705d010f852296a85ddc93b7f266bcab669b`.
+2. **Job counts stale after native variance counterpart registration.**
+   The original test asserted 248 jobs, but the planner now
+   correctly registers 51 additional matched variance jobs.
+   The expected totals are 299 for the 3-repeat baseline,
+   153 for a single effective pass, and 459 for the asymmetric
+   three-pass plan. The test now also checks the explicit
+   `variance_pair_audit` counts. Commit
+   `fa308481c19947330d958569b020f3adc140e984`.
+3. **Source map stale after runner source extension.**
+   Regenerated
+   `docs/COORDINATED_PRESSURE_AWARE_SOURCE_FUNCTION_MAP.md`
+   to cover shifted launcher/plan/plugin/worker function spans
+   and the V01/ConvNeXt vision adapters. A new independently
+   executable `Runner source function map AST contract` workflow
+   reports **success** on [run `41488374351`](https://github.com/Anurag9000/simple-adp/actions/runs/41488374351).
+   Commits `57853e3eabde53924d8548b3fa487771f048002b`
+   and `37ac65477b9672a07ce5f5b5a7112e4abe3b826e`.
+4. **Source-versus-generic differential test inherited the same
+   generic-only CPU mask.** The differential scripts explicitly
+   enumerate GPU visibility and source/ported child admission;
+   inheriting an unrelated CI mask contaminated those comparisons.
+   The two failing subprocess tests now launch with a neutral
+   admission environment and retain their full enumerated coverage.
+   Commit `97d200a4ed24190b4f7d6b2849e343a757329c7e`.
+
+A targeted workflow now exercises the formerly failing backend,
+process, asymmetric planner and source-fidelity tests without
+waiting for an entire 19,000+-test suite. Commit
+`d5219939a9740aebef74455c444da14b5161ede9`.
+The later **full-suite** and targeted tests must be evaluated from
+their actual GitHub Actions conclusions before declaring a
+regression fully closed; the independent AST workflow is the
+only newly confirmed green result at the time of this ledger entry.
+
+**Unchanged boundaries:** all implementation stays on `main`;
+no pressure-aware CUDA-admission bypass, no claimed absolute
+end-to-end GPU benchmark, and no claim that the growing ADP
+checkpoint state has perfect exact-mid-batch restart across all
+scientific routes.
+
