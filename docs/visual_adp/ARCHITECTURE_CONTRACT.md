@@ -119,3 +119,19 @@ The V06a/V06b native shift-MLP implementation and paired coordinated runner
 passed 288 selected CPU tests at
 https://github.com/Anurag9000/simple-adp/actions/runs/41399092726.
 V01/V02 remain supported along with V03/V04/V05. V07–V11 remain missing.
+
+## V07 MLP-Mixer single-site control contract (pending CI)
+The fixed patch embedding creates T tokens with D channels. The first Mixer
+residual branch transposes [B,T,D] to [B,D,T] and applies a token-mixing
+MLP of fixed T input/output; the second branch applies a channel-mixing MLP
+of fixed D input/output. A real frozen opposing MLP remains in each job, so
+there is no no_grad boundary in the composite forward.
+`MixerSpec(site_id="token:block0")` selects internal hidden layers in
+only the token MLP; `MixerSpec(site_id="channel:block0")` selects hidden
+layers in only the channel MLP. Different sites have different checkpoint
+signatures and independent coordinated-runner route identities.
+The frozen opposite site, stem, norms and classifier are hashed and checked.
+No token count, channel interface, patch size, embeddings or frozen output
+operator may expand. A joint token/channel adaptation on one candidate is
+not yet implemented and must not be counted. Tiny random-initialized
+MLP-Mixer-style control only; no pretrained Mixer checkpoints validated.

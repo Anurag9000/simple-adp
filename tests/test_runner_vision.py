@@ -23,6 +23,8 @@ def test_vision_is_opt_in_and_does_not_change_legacy_registries(monkeypatch):
     assert "vision_v05" not in models.adapters
     assert "vision_v06a" not in models.adapters
     assert "vision_v06b" not in models.adapters
+    assert "vision_v07_token" not in models.adapters
+    assert "vision_v07_channel" not in models.adapters
 
 
 def test_vision_provider_manifest_and_split_isolation(monkeypatch):
@@ -66,7 +68,7 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
         model_adapters=tuple(models.adapters.values()),
     )
     assert plan.runs
-    assert {run.model_adapter for run in plan.runs} == {"vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b"}
+    assert {run.model_adapter for run in plan.runs} == {"vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05", "vision_v06a", "vision_v06b", "vision_v07_token", "vision_v07_channel"}
     assert all(run.task_ref.provider == "vision" for run in plan.runs)
     assert any(run.route.model_id == "MLP-Fixed" for run in plan.runs)
     assert not any(
@@ -212,3 +214,68 @@ def test_native_ffn_runner_executes_and_pairs_variance(
         row.model_adapter == adapter_name and row.route.generic_profile == "faithful"
         for row in plan.runs
     )
+
+
+
+@pytest.mark.parametrize(
+    ("site", "adapter_name", "expected_target"),
+    [
+        ("token:block0", "vision_v07_token", 4),
+        ("channel:block0", "vision_v07_channel", 4),
+    ],
+)
+def test_coordinated_v07_mixer_sites_with_matched_variance(
+    monkeypatch, tmp_path, site, adapter_name, expected_target,
+):
+    monkeypatch.setenv("SIMPLE_ADP_ENABLE_VISION", "1")
+    monkeypatch.setenv("TABULAR_SKIP_SYSTEMD_SCOPE", "1")
+    monkeypatch.setenv("TABULAR_BACKEND", "cpu")
+    monkeypatch.setenv("SIMPLE_ADP_DISABLE_GPU_ACCELERATORS", "1")
+    monkeypatch.setenv("TRAINING_CONTROL_CPU_ONLY", "1")
+    datasets, models = load_registries()
+    settings = RunnerSettings(
+        tasks=("vision",), run_hardness_screen=False, repeat_count=1,
+        missing_present_task_repeats=1, model_seeds=(0,),
+        width_to_depth_width=2, width_to_depth_depth=1,
+        max_candidates=1, max_epochs=1, batch_size=16,
+        smoke_test=True, cpu_only=True,
+    )
+    plan = SuitePlan.build(
+        settings=settings, results_dir=tmp_path / "results",
+        run_root=tmp_path / "runs",
+        dataset_providers=tuple(datasets.providers.values()),
+        dataset_suites=(("vision", "toy"),),
+        model_adapters=tuple(models.adapters.values()),
+    )
+    originals = [
+        r for r in plan.runs
+        if r.model_adapter == adapter_name
+        and r.worker_settings.get("expansion_criterion") != "variance_stagnation"
+    ]
+    variances = [r for r in plan.runs if r.model_adapter == adapter_name
+                 and r.worker_settings.get("expansion_criterion") == "variance_stagnation"]
+    assert len(originals) == 22
+    assert len(variances) == 21
+    route = next(r for r in originals if r.route.model_id == "ADP-W-RR")
+    alternate = next(r for r in variances
+                     if r.worker_settings.get("counterpart_of") == route.identity.run_id)
+    assert alternate.identity.seed == route.identity.seed
+    assert alternate.identity.split_sha256 == route.identity.split_sha256
+    assert alternate.route.model_id == route.route.model_id
+    assert route.route.route_label.startswith("V07-")
+    result = run_spec(route.command[-1])
+    assert result["status"] == "completed"
+    assert result["growth_site"] == site
+    assert result["architecture_id"].startswith("V07:tiny-mlp-mixer-")
+    assert len(result["selected_architecture"]) == 1
+    assert result["selected_architecture"][0] >= 2
+    assert len(result["frozen_sha256"]) == 64
+    assert result["artifact_path"] is not None
+    assert result["test_metrics"]["accuracy"] >= 0
+    alt_result = run_spec(alternate.command[-1])
+    assert alt_result["status"] == "completed"
+    assert alt_result["expansion_criterion"] == "variance_stagnation"
+    generic = next(r for r in originals
+                   if r.route.model_id == "ADP-WD-RR-Dcur"
+                   and r.route.generic_profile == "corrected")
+    assert run_spec(generic.command[-1])["status"] == "completed"

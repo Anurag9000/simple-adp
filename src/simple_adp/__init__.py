@@ -31,6 +31,8 @@ _EXPORTS = {
     "VisualResidualSearch": "visual_search",
     "NativeFFNSpec": "visual_native_ffn",
     "VisualNativeFFN": "visual_native_ffn",
+    "MixerSpec": "visual_mixer",
+    "VisualMixer": "visual_mixer",
     "S2SpatialShift": "visual_shift",
     "AxialSpatialShift": "visual_shift",
     "build_visual_composite": "visual_native_ffn",

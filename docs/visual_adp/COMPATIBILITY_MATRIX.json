@@ -60,11 +60,11 @@
     },
     {
       "architecture": "V07",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "14 canonical IDs x two separate site scopes; 8 generic faithful/corrected profiles each, pending CPU CI",
+      "site": "token:block0 OR channel:block0 in separate jobs; joint site not implemented",
+      "criterion": "loss / matched shadow-BGD variance per adaptive route (pending CI)",
+      "status": "experimental V07 site-specific mixer model, signed search and opt-in worker implemented, pending CI",
+      "reason": "Each job freezes the opposite real Mixer MLP, preserving patch/token/channel interfaces. No simultaneous multisite search, pretrained backbone, or real image benchmark."
     },
     {
       "architecture": "V08",

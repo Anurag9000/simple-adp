@@ -242,3 +242,14 @@ V06a/V06b native shift/growth/restart and worker tests passed 288 selected
 CPU checks in https://github.com/Anurag9000/simple-adp/actions/runs/41399092726.
 Only synthetic controlled architectures were tested. Real-data/pretraining
 benchmark claims are expressly excluded.
+
+## V07 independently selectable MLP-Mixer sites (pending CI)
+The opt-in worker registers `vision_v07_token` and `vision_v07_channel`
+under `SIMPLE_ADP_ENABLE_VISION=1`, with 22 method/profile routes and 21
+matched native variance criteria per site/split/seed/repeat.
+`MixerSpec` accepts exactly `token:block0` or `channel:block0`, and
+`VisualMixer` grows the selected local MLP while the other remains frozen.
+The full image composite includes both residual MLP branches. A single
+joint-site candidate and pretrained weights are **not** implemented. Run
+`pytest -q tests/test_visual_mixer.py tests/test_runner_vision.py` for
+bounded CPU coverage once installed. CI results remain pending.

@@ -28,6 +28,7 @@ from .tasks import ClassificationTask
 from .training import StageTrainer
 from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_composite, restore_visual_composite
+from .visual_mixer import MixerSpec
 
 
 SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
@@ -60,7 +61,7 @@ class VisualResidualSearch:
     def __init__(
         self,
         model_id: str,
-        spec: ResidualAdapterSpec | NativeFFNSpec,
+        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec,
         *,
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
@@ -97,6 +98,7 @@ class VisualResidualSearch:
             _hash_array(digest, item)
         return stable_signature({
             "version": ("v02-dedicated-1" if isinstance(self.spec, ResidualAdapterSpec)
+                        else "visual-mixer-search-v1" if isinstance(self.spec, MixerSpec)
                         else "visual-native-ffn-search-1"),
             "model": self.config.signature_dict(),
             "spec": asdict(self.spec),
@@ -109,6 +111,7 @@ class VisualResidualSearch:
 
     def _search_kind(self) -> str:
         return ("visual-residual-search-v02" if isinstance(self.spec, ResidualAdapterSpec)
+                else "visual-mixer-search-v1" if isinstance(self.spec, MixerSpec)
                 else "visual-native-ffn-search-v1")
 
     def _new_state(self) -> dict[str, Any]:
@@ -211,7 +214,7 @@ class VisualResidualSearch:
                 current.local_mlp, [*current.hidden_widths[:-1], new_width],
                 cursor=current._width_cursor,
             )
-            if isinstance(candidate, VisualNativeFFN):
+            if hasattr(candidate, "_gelu_hidden"):
                 candidate._gelu_hidden()
             candidate.train(current.training)
             candidate.verify_frozen()

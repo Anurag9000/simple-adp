@@ -145,3 +145,12 @@ scientific result has been executed in this increment.
   coordinated worker original-versus-shadow-BGD variance counterpart.
 - Standalone original-versus-variance controller contract CI also succeeded.
 - No pretrained published architecture, real CIFAR training or CUDA validation.
+
+## V07 Mixer dual site-scoped search and worker tests (pending CI)
+- tests/test_visual_mixer.py covers both independent site contracts,
+  end-to-end gradients through frozen opposite Mixer MLP, RR/all/DEN RR/D1/
+  Dcur growth, fixed dimensional interfaces, copied weights, frozen hash,
+  strict state reconstruction, signed mid-batch exact resume and generic/fixed
+  controllers. tests/test_runner_vision.py covers both route families,
+  22+21 route inventory, matched split/seed, criterion and worker execution.
+- CI and real-world pretrained scientific jobs not yet verified.

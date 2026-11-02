@@ -22,6 +22,7 @@ from ..vision_data import make_image_partitions, load_torchvision_partitions
 from ..visual import VisualADPEstimator
 from ..visual_inner import ResidualAdapterSpec
 from ..visual_native_ffn import NativeFFNSpec
+from ..visual_mixer import MixerSpec
 from ..visual_search import SUPPORTED_V02_METHODS, VisualResidualSearch
 from .artifacts import estimator_model_path
 from .datasets import DatasetTaskRef, PreparedTaskData
@@ -340,6 +341,16 @@ class VisionInnerModelAdapter:
                          "V06a": "channel:s2.block0",
                          "V06b": "channel:axial.block0"}[self.family],
             )
+        elif self.family in {"V07-token", "V07-channel"}:
+            site = ("token:block0" if self.family == "V07-token" else "channel:block0")
+            patch = (4 if train_x.shape[2] % 4 == 0 and train_x.shape[3] % 4 == 0
+                     else 2)
+            spec = MixerSpec(
+                input_channels=int(train_x.shape[1]), local_dim=4,
+                classes=int(np.unique(train_y).size),
+                image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
+                patch_size=patch, fixed_seed=37, site_id=site, fixed_other_width=6,
+            )
         else:
             raise ValueError("unknown native image FFN architecture family")
         architecture_label = {
@@ -349,6 +360,8 @@ class VisionInnerModelAdapter:
             "V05": "V05:tiny-poolformer-ffn-frozen-random",
             "V06a": "V06a:tiny-s2shift-ffn-frozen-random",
             "V06b": "V06b:tiny-axialshift-ffn-frozen-random",
+            "V07-token": "V07:tiny-mlp-mixer-token-site",
+            "V07-channel": "V07:tiny-mlp-mixer-channel-site",
         }[self.family]
         search = VisualResidualSearch(
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
@@ -413,3 +426,19 @@ class VisionNativeFFNModelAdapter(VisionInnerModelAdapter):
             raise ValueError("only V03, V04, V05, V06a and V06b native FFN families are supported")
         self.family = family
         self.name = "vision_" + family.lower()
+
+
+
+class VisionMixerModelAdapter(VisionInnerModelAdapter):
+    """V07 explicit token-only or channel-only eligible site experiments.
+
+    The other MLP is a frozen real Mixer block, not an embedding cache.
+    Both routes have canonical ADP methods and independent paired criterion
+    jobs, but no simultaneous multi-site architecture search (V08 pending).
+    """
+
+    def __init__(self, site: str):
+        if site not in {"token", "channel"}:
+            raise ValueError("V07 runner site must be token or channel")
+        self.family = "V07-" + site
+        self.name = "vision_v07_" + site

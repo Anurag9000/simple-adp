@@ -47,8 +47,8 @@
     },
     {
       "id": "V07",
-      "central_runner_jobs": 0,
-      "implementation": "missing",
+      "central_runner_jobs": "86 per split/seed/repeat (43 for token MLP + 43 for channel MLP), opt-in; pending CI",
+      "implementation": "two independent local Mixer FFN sites, true alternating token/channel forward, signed standalone controller and separate opt-in adapters; CI pending, simultaneous multisite still absent",
       "scientifically_executed": false
     },
     {

@@ -20,7 +20,7 @@ States distinguish source/static implementation from executed tests and science.
 | V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
-| V07 MLP-Mixer | missing | token/channel dual-site model and source controller integration |
+| V07 MLP-Mixer | implemented; CPU CI pending | independent token-MLP and channel-MLP routes, full-image controller, signed restart; simultaneous joint-site search not implemented |
 | V08/V09 | missing | multistage/bank routing, isolation and candidate scheduling |
 | V10/V11 | missing | ResMLP/GFNet operators and full integration |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
@@ -178,3 +178,25 @@ corrected generic methods. Evidence remains pending CI.
 - These are tiny experimental fixed-shift backbones; no pretrained model,
   published-architecture numerical equivalence, real dataset benchmarks or
   CUDA-wide scientific tests are claimed.
+
+## V07 MLP-Mixer independent token/channel sites (pending CI)
+- `src/simple_adp/visual_mixer.py` implements a genuine residual one-block
+  Mixer with fixed patch embedding, separate token-mixing and channel-mixing
+  GELU MLPs, two LayerNorms, and frozen final classifier.
+- `MixerSpec` allows exactly one eligible site per *job*: `token:block0`
+  expands hidden layers of the [B,D,T] token MLP with fixed T; `channel:block0`
+  expands hidden layers of the [B,T,D] channel MLP with fixed D. The opposite
+  real Mixer MLP stays frozen and participates in forward/backward.
+- Both modes use all canonical 14 ADP method IDs, 8 generic methods with
+  faithful/corrected profiles, a separately matched variance-stagnation
+  counterpart for each growing job. `vision_v07_token` and
+  `vision_v07_channel` are independently identified opt-in model adapters.
+- Complete source growth, overlap-copy, frozen-module hashing, exact signed
+  mid-batch resume, fixed models and generic phases reuse the prior visual
+  controller without touching tabular semantics.
+- 43 route/criterion jobs per selected split/seed/repeat/site, 86 across
+  both sites. **Not yet a joint two-site growth route**: simultaneous
+  token+channel growth is deferred to V08 multisite search and not recorded
+  as implemented. The control is random-initialized, not pretrained.
+- New tests for site contract, gradients, all growth operators, snapshot
+  restoration, exact mid-batch replay and worker criterion pairing. CI pending.
