@@ -177,3 +177,21 @@ all CNN modules, classifier and both nonselected adapters.
 The local controller and signed batch checkpoint are unchanged; the V08 model
 factory and restore dispatcher use a distinct kind/name. No adaptive
 multistage proposal allocation or joint-site policy is claimed yet.
+
+## V09 fixed hard-routing adapter-bank contract (pending CI)
+A fixed frozen convolutional backbone produces [B,C,H,W] features.
+The fixed projected feature mean passes through a hard argmax K-way router,
+selecting exactly one adapter member per image independent of labels and
+other images in its batch. K=3 in the built-in worker. All candidate members
+share the unchanged d->d local interface and frozen project-in/out operators.
+Only one job-declared `bank:0`/`bank:1`/`bank:2` member is trainable:
+nonselected adapters, routing projections and CNN remain eval/frozen and are
+included in the immutable SHA-256 state identity. The selected MLP can grow
+width or depth; the bank size, output logits and router scores cannot.
+
+The signature and serialized snapshot declare the selected member, bank size,
+router kind and exact fixed state. Recording training/test routing occupancy
+per member does not make it a learned router, and is not a guarantee of
+balanced routing; a selected member may receive few or no routed samples.
+The explicit frozen hard router is a controlled baseline, not a task-id router
+or an adaptive/generative posterior gate. Tests pending CI.

@@ -53,14 +53,14 @@
     },
     {
       "id": "V08",
-      "central_runner_jobs": "129 per seed/split/repeat across 3 independent stages (43 each), opt-in, pending CI",
-      "implementation": "three-stage frozen CNN with source ADP at one declared early/middle/late residual MLP; per-site checkpoints, coordinated runner pending CPU CI; no multi-site schedule",
+      "central_runner_jobs": "129 per one seed/split/repeat (43 each for independent early/middle/late), selected CPU CI verified",
+      "implementation": "three-stage frozen CNN with real isolated per-stage residual adapter, exact signed resume, paired runner verified (331 passing tests)",
       "scientifically_executed": false
     },
     {
       "id": "V09",
-      "central_runner_jobs": 0,
-      "implementation": "missing",
+      "central_runner_jobs": "129 per one seed/split/repeat (43 per bank member 0/1/2), opt-in, pending CI",
+      "implementation": "fixed hard argmax CNN-feature router with three actual isolated adapter MLPs, signed member-specific search, route occupancies and matched worker pairs, pending CI",
       "scientifically_executed": false
     },
     {

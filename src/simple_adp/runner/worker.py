@@ -223,6 +223,11 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "growth_site": result.get("growth_site"),
         "frozen_sha256": result.get("frozen_sha256"),
         "expansion_criterion": settings_value.get("expansion_criterion", "loss"),
+        **({
+            "router_kind": result["router_kind"],
+            "router_histogram_train": result["router_histogram_train"],
+            "router_histogram_test": result["router_histogram_test"],
+        } if result.get("router_kind") is not None else {}),
         "worker_seconds": time.perf_counter() - started,
         "artifact_path": result.get("artifact_path"),
         "smoke_test": smoke,

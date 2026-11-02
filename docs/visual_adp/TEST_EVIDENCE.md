@@ -192,3 +192,19 @@ scientific result has been executed in this increment.
 - tests/test_runner_vision.py extends independent-site method/variance
   matched jobs and end-to-end worker execution for each V08 site.
 - No simultaneous-growth or adaptive-site scheduling claim.
+
+## V08 independent early/middle/late stage CI verified (2026-11-02)
+- Commit 916c560c94a2d1d474f6e5e7c356fa4786ecb1a5.
+- https://github.com/Anurag9000/simple-adp/actions/runs/41410224145:
+  **331 passed in 53.35s**. Original/variance controller contract also passed.
+
+## V09 fixed hard-routing bank tests (pending CPU CI)
+- New tests/test_visual_adapter_bank.py covers immutable hard gating,
+  label-free/batch-order-independent member routing, local-only backprop,
+  trainable/immutable bank isolation, source RR/all/DEN/D1/Dcur,
+  snapshot and RNG identity, exact signed batch recovery and generic/fixed
+  controllers across all three members.
+- tests/test_runner_vision.py exercises all three bank adapter routes with
+  matching original/variance seeds/split identities, immutable routing-count
+  JSON diagnostics, artifact outputs and corrected generic controller.
+- Fresh Actions status pending. No pretrained source or real-image benchmark.

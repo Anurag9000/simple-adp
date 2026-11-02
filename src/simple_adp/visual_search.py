@@ -30,6 +30,7 @@ from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_composite, restore_visual_composite
 from .visual_mixer import MixerSpec
 from .visual_multistage import MultistageSpec
+from .visual_adapter_bank import BankSpec
 
 
 SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
@@ -62,7 +63,7 @@ class VisualResidualSearch:
     def __init__(
         self,
         model_id: str,
-        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec | MultistageSpec,
+        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec | MultistageSpec | BankSpec,
         *,
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
@@ -115,6 +116,8 @@ class VisualResidualSearch:
             return "visual-residual-search-v02"
         if isinstance(self.spec, MultistageSpec):
             return "visual-multistage-search-v1"
+        if isinstance(self.spec, BankSpec):
+            return "visual-adapter-bank-search-v1"
         if isinstance(self.spec, MixerSpec):
             return ("visual-mixer-both-search-v1" if self.spec.site_id == "both:block0"
                     else "visual-mixer-search-v1")

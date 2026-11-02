@@ -71,16 +71,16 @@
       "methods": "14 canonical IDs, eight generic two-profile configurations for each separately declared early/middle/late site, pending CI",
       "site": "adapter:early OR adapter:middle OR adapter:late (one per job)",
       "criterion": "native loss / matched shadow-BGD variance-stagnation (21 counterpart jobs per site)",
-      "status": "fixed three-stage model, signed composite search and opt-in coordinated runner implemented; CI pending",
-      "reason": "Three real inserted residual MLPs, frozen unselected sites and backbone. Independent-site only; no joint growth, adaptive selection, pretrained weights, or scientific runs."
+      "status": "selected synthetic CPU CI verified (331 passing tests) for independent early/middle/late site jobs",
+      "reason": "Full-image frozen three-stage CNN, selected local adapter mutation and exact signed resume tested; no adaptive multi-site policy or pretrained backbone science."
     },
     {
       "architecture": "V09",
-      "methods": "none yet",
-      "site": "unimplemented internal site",
-      "criterion": "unimplemented",
-      "status": "unsupported (not implemented)",
-      "reason": "No composite train/mutation/snapshot/runner integration"
+      "methods": "14 canonical IDs plus 8 generic two-profile routes per bank member, with 21 matched variance counterparts (pending CI)",
+      "site": "bank:0 OR bank:1 OR bank:2 (one eligible member per job)",
+      "criterion": "native loss/variance-stagnation paired jobs, frozen hard label-free router",
+      "status": "implemented strict fixed hard router bank and coordinated jobs; pending CPU CI",
+      "reason": "Three frozen/eligible-by-member MLPs, other members held immutable; signed router identity and train/test route histogram. No learned router, pretrained backbone or real-data scientific verification."
     },
     {
       "architecture": "V10",

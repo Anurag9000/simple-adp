@@ -21,14 +21,15 @@ States distinguish source/static implementation from executed tests and science.
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
 | V07 MLP-Mixer | all 3 token/channel/synchronous-both scopes CPU CI verified (303 tests) | true residual token/channel MLPs, signed resumed search, matched variance jobs and joint budget |
-| V08 fixed three-stage residual adapter | independent-site search/runner implemented; CI pending | early/middle/late insertion sites, frozen stage graph and site-aware signed snapshots |
-| V09 strict adapter bank | missing | member isolation, frozen fixed router, selected-adapter ADP and runner |
+| V08 fixed three-stage residual adapter | verified selected CPU CI: 331 passed | early/middle/late independent growth with signed resume and paired worker |
+| V09 strict adapter bank | implemented, pending CI | hard fixed router, three isolated adapter targets, routing histograms and signed worker jobs |
 | V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
-| CPU/CUDA complete regression | partial | 288 selected CPU tests passed through V06a/b; CUDA and full suite not executed |
+| CPU/CUDA complete regression | partial | 331 selected CPU tests passed through V08; V09 pending; CUDA and full suite not executed |
 
-**Next:** implement V07 token/channel mixer scopes, V08–V11, pretrained source FFNs and
-real-data science. Original tabular identities remain unchanged.
+**Next:** verify V09 bank CI; then implement adaptive multisite scheduling,
+strict pretrained-source FFN integration, real-image benchmarking and GPU/full-suite checks.
+Original tabular identities remain unchanged.
 
 ## V02 dedicated composite architecture-search increment (historical superseded phase)
 
@@ -289,3 +290,36 @@ corrected generic methods. Evidence remains pending CI.
 - Simultaneous multistage growth, learned site selection, pretrained
   backbone weights, real-image scientific validation and V09 bank are not yet
   implemented.
+
+## V08 fixed three-stage site search verified — 2026-11-02
+- Code commit: `916c560c94a2d1d474f6e5e7c356fa4786ecb1a5`.
+- Workflow: https://github.com/Anurag9000/simple-adp/actions/runs/41410224145.
+- **331 selected CPU tests passed in 53.35s**, including three independently
+  selected real residual sites, exact source architecture growth/restart,
+  coordinated worker and original-versus-variance counterparts. Separate
+  loss/variance contract CI also succeeded.
+- No adaptive multi-site selection or real pretrained CNN experiment.
+
+## V09 strict hard-routed adapter bank (new, pending CI)
+- `visual_adapter_bank.py` implements a frozen CNN, shared frozen in/out
+  projections and classifier, **three real residual local MLP members** and
+  immutable hard argmax K-way router based solely on CNN features. No label
+  or test-time task-id leakage into routing. Zero learnable gate parameters.
+- Each job selects one eligible member `bank:0`, `bank:1`, `bank:2`;
+  all other member weights, gate parameters and fixed CNN state are frozen,
+  unchanged under growth and signed into the checkpoint. Source RR/all/D1/
+  Dcur operators mutate only that member's hidden units, preserving bank
+  count, routing behavior and fixed external interface.
+- Three independently registered opt-in worker adapters
+  `vision_v09_bank0/1/2` enumerate all 14 source ADP IDs plus the eight
+  additional generic faithful/corrected profiles and 21 matched variance
+  counterparts (43 jobs each, 129 total per split/seed/repeat).
+- Per-run `router_kind`, `router_histogram_train` and
+  `router_histogram_test` are persisted to result.json with the original
+  split, architecture and frozen-state identity. These are **occupancy
+  diagnostics**, not learned routing accuracy or head-selection metrics.
+- Signed model/checkpoint snapshots carry the router semantics and bank
+  site; mid-batch interrupted resume rejects changed member/settings/data.
+  Unit+runner tests are **pending CI**. This is a small random-initialized
+  hard-routed adapter-bank control, not a trained mixture-of-experts gate,
+  pretrained architecture or real-image benchmark.

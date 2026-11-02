@@ -317,6 +317,9 @@ def build_visual_composite(spec, hidden_widths):
     """Explicit factory: never route V03/V04 through a V02 CNN snapshot."""
     from .visual_mixer import MixerSpec, VisualMixer
     from .visual_multistage import MultistageSpec, VisualMultistage
+    from .visual_adapter_bank import BankSpec, VisualAdapterBank
+    if isinstance(spec, BankSpec):
+        return VisualAdapterBank(spec, tuple(hidden_widths))
     if isinstance(spec, MultistageSpec):
         return VisualMultistage(spec, tuple(hidden_widths))
     if isinstance(spec, MixerSpec):
@@ -332,6 +335,9 @@ def build_visual_composite(spec, hidden_widths):
 def restore_visual_composite(snapshot: dict[str, object]):
     from .visual_mixer import VisualMixer
     from .visual_multistage import VisualMultistage
+    from .visual_adapter_bank import VisualAdapterBank
+    if snapshot.get("kind") == VisualAdapterBank.SNAPSHOT_KIND:
+        return VisualAdapterBank.from_snapshot(snapshot)
     if snapshot.get("kind") == VisualMultistage.SNAPSHOT_KIND:
         return VisualMultistage.from_snapshot(snapshot)
     if snapshot.get("kind") in {VisualMixer.SNAPSHOT_KIND, VisualMixer.BOTH_SNAPSHOT_KIND}:

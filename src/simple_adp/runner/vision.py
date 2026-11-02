@@ -24,6 +24,7 @@ from ..visual_inner import ResidualAdapterSpec
 from ..visual_native_ffn import NativeFFNSpec
 from ..visual_mixer import MixerSpec
 from ..visual_multistage import MultistageSpec
+from ..visual_adapter_bank import BankSpec, VisualAdapterBank
 from ..visual_search import SUPPORTED_V02_METHODS, VisualResidualSearch
 from .artifacts import estimator_model_path
 from .datasets import DatasetTaskRef, PreparedTaskData
@@ -363,6 +364,15 @@ class VisionInnerModelAdapter:
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 site_id=site, fixed_seed=41, fixed_other_width=6,
             )
+        elif self.family in {"V09-bank0", "V09-bank1", "V09-bank2"}:
+            member = int(self.family.rsplit("bank", 1)[1])
+            spec = BankSpec(
+                input_channels=int(train_x.shape[1]), backbone_channels=4,
+                local_dim=4, classes=int(np.unique(train_y).size),
+                image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
+                bank_size=3, fixed_other_width=5, fixed_seed=47,
+                site_id=f"bank:{member}",
+            )
         else:
             raise ValueError("unknown native image FFN architecture family")
         architecture_label = {
@@ -377,6 +387,9 @@ class VisionInnerModelAdapter:
             "V08-early": "V08:tiny-3stage-residual-adapter-early",
             "V08-middle": "V08:tiny-3stage-residual-adapter-middle",
             "V08-late": "V08:tiny-3stage-residual-adapter-late",
+            "V09-bank0": "V09:tiny-frozen-hard-router-bank0",
+            "V09-bank1": "V09:tiny-frozen-hard-router-bank1",
+            "V09-bank2": "V09:tiny-frozen-hard-router-bank2",
             "V07-token": "V07:tiny-mlp-mixer-token-site",
             "V07-channel": "V07:tiny-mlp-mixer-channel-site",
             "V07-both": "V07:tiny-mlp-mixer-synchronous-both-sites",
@@ -427,6 +440,13 @@ class VisionInnerModelAdapter:
             "architecture_id": architecture_label,
             "frozen_sha256": search.model_.frozen_state_sha256(),
             "expansion_criterion": actual.expansion_criterion,
+            **({
+                "router_histogram_train": search.model_.routing_histogram(
+                    torch.as_tensor(train_x, dtype=torch.float32, device=actual.device)),
+                "router_histogram_test": search.model_.routing_histogram(
+                    torch.as_tensor(test_x, dtype=torch.float32, device=actual.device)),
+                "router_kind": "hard-argmax-cosine-v1",
+            } if isinstance(search.model_, VisualAdapterBank) else {}),
         }
 
 
@@ -476,3 +496,18 @@ class VisionMultistageModelAdapter(VisionInnerModelAdapter):
             raise ValueError("V08 stage must be early, middle or late")
         self.family = "V08-" + site
         self.name = "vision_v08_" + site
+
+
+
+class VisionAdapterBankModelAdapter(VisionInnerModelAdapter):
+    """V09 fixed hard-router bank, one selected eligible member per job.
+
+    Three fixed bank members share exactly the same frozen router; identity,
+    routed sample counts and the target member are exported for audit.
+    """
+
+    def __init__(self, member: int):
+        if not isinstance(member, int) or member not in {0, 1, 2}:
+            raise ValueError("V09 runner requires one existing bank member 0/1/2")
+        self.family = f"V09-bank{member}"
+        self.name = f"vision_v09_bank{member}"

@@ -285,3 +285,16 @@ stage's `C -> hidden -> C` MLP is trainable and expandable. Use
 `MultistageSpec(..., site_id="adapter:early")` and
 `VisualMultistage` for the standalone path. No joint or adaptive site
 policy has been installed as part of V08 yet.
+
+## V09 strict bank of local residual adapters (pending CI)
+Opt into `vision:toy` and `tasks=["vision"]` to register
+`vision_v09_bank0`, `vision_v09_bank1`, `vision_v09_bank2`.
+The standalone API is `BankSpec(...,site_id="bank:0",bank_size=3)` with
+`VisualAdapterBank` through `VisualResidualSearch`. The fixed hard router
+receives only frozen backbone features, selects exactly one bank member per
+image, and has no trainable parameters. The candidate only changes its
+selected local MLP. Result JSON retains `router_kind` and the train/test
+member-count vectors (they should be compared with class labels only on
+permitted training/validation data, not used to leak test labels into routing).
+The three bank jobs have 43 original/profile/variance variants apiece; none
+are real pretrained or learned-router science experiments. Tests pending CI.
