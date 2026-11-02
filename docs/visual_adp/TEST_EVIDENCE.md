@@ -379,3 +379,21 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Complete selected CPU suite is separately queued/running at
   https://github.com/Anurag9000/simple-adp/actions/runs/41470335650:
   **373 passing selected CPU tests in 112.18s**.
+
+## Verified source V03 ViT-B16 architecture and central runner (2026-11-02)
+
+- Exact full architecture source test CI:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41472976307,
+  **4 passed in 23.28s**. Original first source FFN tensor values and
+  whole source encoder features are equal before mutation. Width, frozen
+  source SHA256, strict restore and native training tested with a complete
+  random initialization from torchvision, not published pretrained weights.
+- Strict coordinated source V03 test CI:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41473641002,
+  **3 passed in 51.52s**. Default 817-job plan unchanged; explicit V03
+  gate adds 43 source-bound jobs (22/21 original/variance), matches
+  split/seed/model, refuses SHA or file drift, and executes one full-source
+  ViT CPU worker saving a model artifact.
+- Published pretrained experiment https://github.com/Anurag9000/simple-adp/actions/runs/41474035681
+  is a separate real-data workflow **pending**. The full selected CPU
+  regression after source V03 runner integration is also separately pending.

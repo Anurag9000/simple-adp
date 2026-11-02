@@ -22,7 +22,29 @@
       "id": "V03",
       "central_runner_jobs": "43 per one seed/split/repeat (22 method/profile routes + 21 variance counterparts), opt-in, selected CPU CI verified",
       "implementation": "tested native internal FFN search, source growth, exact signed resume and runner on synthetic CPU (269 passed)",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "source_faithful_option": {
+        "module": "src/simple_adp/visual_source_vit.py",
+        "site": "vit:encoder_layer_0.channel_ffn",
+        "source_model": "torchvision.models.vit_b_16 complete local state_dict",
+        "source_ffn": [
+          768,
+          3072,
+          768
+        ],
+        "source_resolution": [
+          224,
+          224
+        ],
+        "pretraining_provenance": "arbitrary local state_dict does not prove pretrained",
+        "source_fidelity_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41472976307",
+        "source_fidelity_tests_passed": 4,
+        "source_runner_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41473641002",
+        "source_runner_tests_passed": 3,
+        "central_runner_registered": "optional separate family gated",
+        "published_pretrained_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41474035681",
+        "published_pretrained_status": "pending"
+      }
     },
     {
       "id": "V04",
@@ -211,5 +233,21 @@
     "full_cpu_regression": "passed 373 selected CPU tests in 112.18s",
     "full_cpu_regression_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41470335650",
     "selected_suite_status": "verified"
+  },
+  "source_v03_coordinated_runner": {
+    "adapter": "vision_v03_source",
+    "gate": "SIMPLE_ADP_ENABLE_V03_SOURCE=1",
+    "source_file": "SIMPLE_ADP_V03_SOURCE_WEIGHTS",
+    "source_sha": "SIMPLE_ADP_V03_SOURCE_SHA256",
+    "default_jobs": 817,
+    "source_v03_only_jobs": 860,
+    "increment": 43,
+    "source_methods": 22,
+    "variance_pairs": 21,
+    "initial_width": 3072,
+    "tested_real_worker_on_random_full_source": true,
+    "verified_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41473641002",
+    "published_pretrained_real_test_status": "pending",
+    "scientific_jobs_in_central_runner": 0
   }
 }

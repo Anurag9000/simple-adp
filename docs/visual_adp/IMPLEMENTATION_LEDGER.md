@@ -18,6 +18,7 @@ States distinguish source/static implementation from executed tests and science.
 | V01 opt-in coordinated runner and signed split jobs | runtime-tested (toy CPU) | runner/vision.py, plan.py, plugins.py, tests/test_runner_vision.py; toy and offline image provider only |
 | V02 residual CNN adapter with all 14 canonical methods and generic profiles | runtime-tested on synthetic CPU; 259 tests passed | visual_inner.py; direct StageTrainer with whole-image gradient, site-specific growth, frozen-state snapshots |
 | V03/V04 tiny FFN controls | runtime-tested (selected CPU CI) | 269 selected tests passed; native internal FFNs with opt-in runner, not pretrained torchvision models |
+| V03 original torchvision ViT-B16 source FFN | exact first transformer FFN transfer + worker execution verified | full random-source 768→3072→768 GELU FFN and checksum-gated 43-job optional runner; pretrained official image smoke pending |
 | V04 original torchvision ConvNeXt source FFN | exact source-tensor equality (4 tests) AND published-pretrained real-data growth verified | first true pretrained in-block FFN 384→385 on Fashion-MNIST; distinct from tiny vision_v04 route |
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
@@ -623,3 +624,42 @@ corrected generic methods. Evidence remains pending CI.
   https://github.com/Anurag9000/simple-adp/actions/runs/41470335656,
   **3 passed in 21.36 seconds**. This selected test set is not a claim
   of full repository regression or GPU correctness.
+
+## V03 original ViT-B/16 source architecture and coordinated runner (2026-11-02)
+
+- Source `visual_source_vit.py` strict-loads a **complete** torchvision
+  ViT-B/16 checkpoint; checks its exact local SHA256, and transplants
+  original first transformer block `encoder_layer_0.mlp`'s
+  **768→3072→768** GELU FFN into an ADP-expandable `TabularMLP`.
+  The rest of the real 12-block ViT, attention, positional embedding,
+  normalization, and fixed image-patch topology are preserved and frozen.
+  The task head is replaced with a separately trainable fixed-interface
+  classifier that never participates in ADP architecture growth.
+- The source ViT has fixed 224x224 positional geometry; deterministic
+  raw-grayscale repeat, bilinear resize to 224x224 and ImageNet mean/std
+  normalization form part of the source model. One local FFN site only.
+  Original source initialization must use hidden width **3072**, depth 1.
+- Dedicated full-source fidelity test suite:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41472976307
+  **4 passed in 23.28s** (random official torchvision architecture weights),
+  including exact whole-encoder feature equivalence before mutation,
+  strict tensor transplant, width growth, signed snapshots, frozen-state
+  corruption detection and a native full-image training stage.
+- Source runner `vision_v03_source` requires both
+  `SIMPLE_ADP_ENABLE_VISION=1` and
+  `SIMPLE_ADP_ENABLE_V03_SOURCE=1`, plus a complete existing source
+  checkpoint and `SIMPLE_ADP_V03_SOURCE_SHA256`. Source SHA256 prefix is
+  embedded in route identity. Finite search candidates and epochs are
+  mandatory due ~86M source model parameters.
+- With V03 source disabled the **817** original jobs are unchanged; a
+  separately enabled single-source V03 run produces **860** planned
+  routes (22 original, 21 matched variance counterparts). Dedicated CI
+  https://github.com/Anurag9000/simple-adp/actions/runs/41473641002
+  **3 tests passed in 51.52s**, including an actual coordinated full ViT
+  worker on tiny offline images. The source test weights were **random**;
+  43 registered jobs are not 43 training runs.
+- Published pretrained `ViT_B_16_Weights.IMAGENET1K_V1` real
+  Fashion-MNIST source FFN job launched through network-enabled
+  https://github.com/Anurag9000/simple-adp/actions/runs/41474035681,
+  **pending** execution verification; no accuracy claim until success.
+  This route is separate from tiny randomly initialized `vision_v03`.

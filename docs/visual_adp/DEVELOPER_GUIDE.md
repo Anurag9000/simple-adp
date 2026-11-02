@@ -528,3 +528,39 @@ runner's small width-to-depth grid for a pretrained inner FFN. Full
 checkpoints can exceed 100 MB per job, so account for disk and queue pressure.
 Standalone published-pretrained weights execution and central runner
 planning/execution have independent verification records.
+
+## Original ViT-B/16 internal FFN (V03 source) central runner
+
+Source V03 is an **additional** opt-in route, not the existing tiny V03
+control. A complete original torchvision ViT-B/16 source checkpoint must
+already exist locally; random checkpoints must never be labeled pretrained.
+
+```bash
+export SIMPLE_ADP_ENABLE_VISION=1
+export SIMPLE_ADP_ENABLE_V03_SOURCE=1
+export SIMPLE_ADP_V03_SOURCE_WEIGHTS=/models/vit_b16_full_state_dict.pt
+export SIMPLE_ADP_V03_SOURCE_SHA256=REPLACE_WITH_ACTUAL_64_CHAR_SHA256
+```
+
+The coordinated family is `vision_v03_source`; all planned route labels
+contain the exact source SHA256 prefix. It predeclares 22 source method
+and generic-profile original jobs and 21 matched variance counterparts
+per split/seed. Each worker rechecks the complete file SHA256, preserves
+the initial **3072-neuron** first transformer FFN, performs only native
+ADP local growth at the source site, and saves source-hashed selected
+inference artifacts. The target classifier is trainable but not growable.
+
+Choose finite `max_candidates` and `max_epochs`, with
+`max_width >= 3072` and `max_neurons >= 3072` in the coordinator.
+Real widening needs `max_width >= 3073`. The complete 86M-parameter
+source model plus checkpoint snapshots are memory/disk intensive;
+avoid blindly executing every registered job. The existing **817** tiny
+visual jobs remain unchanged unless a source gate is explicitly enabled.
+
+Dedicated source-V03 CI:
+https://github.com/Anurag9000/simple-adp/actions/runs/41472976307,
+and opt-in source-runner CI:
+https://github.com/Anurag9000/simple-adp/actions/runs/41473641002.
+Both used full original torchvision models with **random** source
+weights. The published-pretrained source smoke is a separate workflow
+`scripts/vision_pretrained_vit_smoke.py`.

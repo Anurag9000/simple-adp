@@ -272,3 +272,28 @@ This source-faithful V04 is a separate opt-in component; it is **not** a
 drop-in replacement for the older tiny `vision_v04` 817-job suite member.
 The other source architectures V03/V05–V11 still lack equivalent published
 source checkpoint integration.
+
+## V03 genuine source torchvision ViT-B/16 first transformer FFN
+
+`SourceViTSpec` records the complete local source-checkpoint path, strict
+SHA256, 1/3 image channel contract, original spatial dimensions, normalized
+preprocessing and fixed source seed. It strictly loads the **original full**
+`torchvision.models.vit_b_16` (224x224 patch and positional embedding)
+before transplanting only `encoder.layers[0].mlp`. Its two original
+`Linear(768,3072)` and `Linear(3072,768)` tensors are transferred byte-for-byte
+to `TabularMLP(768,[3072],768)` with GELU, preserving all source features
+exactly in frozen eval mode. Remaining transformer attention/MLPs, the
+positional embedding and patch mixer are untouched; the new task head is
+trainable but fixed in size. Only the first local FFN's hidden neurons
+are eligible for ADP width/depth mutation; signatures include the full
+source model SHA256, local site and trainable model state. Existing source
+V04 and tiny V03 architectures retain separate identities.
+
+Unit tests verify whole-encoder tensor equality at initialization,
+real local parameter-only growth, strict frozen hash, and full-source
+native StageTrainer operation. Initial hidden geometry must be 3072 and
+the original 224x224 input encoding is respected via deterministic
+bilinear resize, including grayscale channel repeat. These tests use a
+random original torchvision checkpoint. A separate network-enabled
+published-pretrained experiment is the only permitted basis for actual
+pretrained source claims.
