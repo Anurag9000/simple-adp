@@ -33,7 +33,7 @@ def file_sha256(path: Path) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Network-enabled official vision data smoke")
     parser.add_argument("--workdir", required=True)
-    parser.add_argument("--dataset", choices=("fashion_mnist", "cifar10"), default="fashion_mnist")
+    parser.add_argument("--dataset", choices=("fashion_mnist", "cifar10", "cifar100"), default="fashion_mnist")
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args(argv)
 
@@ -93,7 +93,7 @@ def main(argv: list[str] | None = None) -> int:
         "complete_local_state_dict_sha256": source_digest,
         "source_dataset": "ImageNet-1K (as named by torchvision enum)",
         "model_local_loader_pretrained_field": None,
-        "data_source": "torchvision.datasets." + ("FashionMNIST" if args.dataset == "fashion_mnist" else "CIFAR10") + " official train/test",
+        "data_source": "torchvision.datasets." + ("FashionMNIST" if args.dataset == "fashion_mnist" else "CIFAR10" if args.dataset == "cifar10" else "CIFAR100") + " official train/test",
         "network_enabled": True,
         "python_version": platform.python_version(),
         "pytorch_version": torch.__version__,

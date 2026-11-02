@@ -1,17 +1,28 @@
-name: Official Fashion-MNIST + ResNet18 real-data V01 smoke
+name: Official pretrained ResNet18 V01 source-data smoke
 
 on:
-  # Separate from the fully offline 360+ test suite; explicit network access.
   push:
     paths:
       - 'scripts/vision_official_smoke.py'
       - '.github/workflows/visual-real-data-smoke.yml'
   workflow_dispatch:
+    inputs:
+      dataset:
+        description: 'Official image dataset (CIFAR explicitly opt-in due slow network)'
+        type: choice
+        default: fashion_mnist
+        required: true
+        options:
+          - fashion_mnist
+          - cifar10
+          - cifar100
 
 jobs:
-  official-data-frozen-v01:
+  official-fashion:
+    # Fast verified source; CIFAR is not chained to this job.
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dataset == 'fashion_mnist')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     env:
       OMP_NUM_THREADS: '2'
       MKL_NUM_THREADS: '2'
@@ -21,27 +32,54 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install native vision requirements
-        run: python -m pip install -e '.[vision]'
-      - name: Fetch official datasets and pretrained source then run bounded V01 ADP
-        run: |
-          python scripts/vision_official_smoke.py --workdir "${{ runner.temp }}/real-vision-v01" --dataset fashion_mnist --device cpu
-          python scripts/vision_official_smoke.py --workdir "${{ runner.temp }}/real-vision-v01" --dataset cifar10 --device cpu
-      - name: Retain actual run manifest and metrics
+      - run: python -m pip install -e '.[vision]'
+      - name: Official Fashion-MNIST and ResNet18 source
+        run: python scripts/vision_official_smoke.py --dataset fashion_mnist --workdir "${{ runner.temp }}/vision" --device cpu
+      - name: Persist actual signed result and model
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fashion-mnist-and-cifar10-official-resnet18-v01-evidence
+          name: fashion-mnist-official-source-v01
           if-no-files-found: warn
           retention-days: 30
           path: |
-            ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/manifest.json
-            ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/result.json
-            ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/external_source_provenance.json
-            ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/estimator.model.pt
-            ${{ runner.temp }}/real-vision-v01/fashion_mnist/resnet18/ADP-W-RR/seed11/estimator.model.pt.vision.json
-            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/manifest.json
-            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/result.json
-            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/external_source_provenance.json
-            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/estimator.model.pt
-            ${{ runner.temp }}/real-vision-v01/cifar10/resnet18/ADP-W-RR/seed11/estimator.model.pt.vision.json
+            ${{ runner.temp }}/vision/fashion_mnist/resnet18/ADP-W-RR/seed11/manifest.json
+            ${{ runner.temp }}/vision/fashion_mnist/resnet18/ADP-W-RR/seed11/result.json
+            ${{ runner.temp }}/vision/fashion_mnist/resnet18/ADP-W-RR/seed11/search_history.json
+            ${{ runner.temp }}/vision/fashion_mnist/resnet18/ADP-W-RR/seed11/external_source_provenance.json
+            ${{ runner.temp }}/vision/fashion_mnist/resnet18/ADP-W-RR/seed11/estimator.model.pt
+            ${{ runner.temp }}/vision/fashion_mnist/resnet18/ADP-W-RR/seed11/estimator.model.pt.vision.json
+
+  official-cifar:
+    # The official Toronto CIFAR source timed out in cancelled run 41451620431.
+    if: github.event_name == 'workflow_dispatch' && (inputs.dataset == 'cifar10' || inputs.dataset == 'cifar100')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[vision]'
+      - name: Explicit bounded official CIFAR download
+        run: |
+          timeout --signal=TERM 420s python scripts/vision_official_smoke.py \
+            --dataset "${{ inputs.dataset }}" --workdir "${{ runner.temp }}/vision" --device cpu
+      - name: Persist any actually completed signed run
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-cifar-resnet18-v01
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/vision/cifar*/resnet18/ADP-W-RR/seed11/manifest.json
+            ${{ runner.temp }}/vision/cifar*/resnet18/ADP-W-RR/seed11/result.json
+            ${{ runner.temp }}/vision/cifar*/resnet18/ADP-W-RR/seed11/search_history.json
+            ${{ runner.temp }}/vision/cifar*/resnet18/ADP-W-RR/seed11/external_source_provenance.json
+            ${{ runner.temp }}/vision/cifar*/resnet18/ADP-W-RR/seed11/estimator.model.pt
+            ${{ runner.temp }}/vision/cifar*/resnet18/ADP-W-RR/seed11/estimator.model.pt.vision.json
