@@ -101,3 +101,26 @@ def test_variance_mid_epoch_crash_matches_uninterrupted_training(tmp_path):
         full_result.checkpoint_state["generator_state"],
         resumed_result.checkpoint_state["generator_state"],
     )
+
+
+def test_safe_checkpoint_rng_roundtrip_preserves_numpy_python_torch():
+    import io
+    import random
+    import numpy as np
+
+    from simple_adp.checkpoint import capture_rng_state, restore_rng_state
+
+    random.seed(407)
+    np.random.seed(407)
+    torch.manual_seed(407)
+    state = capture_rng_state()
+    # The NumPy RNG key vector must be a list, not an unpickled ndarray.
+    assert isinstance(state["numpy"][1], list)
+    stream = io.BytesIO()
+    torch.save({"rng": state}, stream)
+    stream.seek(0)
+    restored = torch.load(stream, map_location="cpu", weights_only=True)["rng"]
+    expected = (random.random(), float(np.random.random()), float(torch.rand(())))
+    restore_rng_state(restored)
+    actual = (random.random(), float(np.random.random()), float(torch.rand(())))
+    assert actual == expected

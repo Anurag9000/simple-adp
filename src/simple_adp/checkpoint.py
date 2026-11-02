@@ -20,9 +20,19 @@ def stable_signature(payload: dict[str, Any]) -> str:
 
 
 def capture_rng_state() -> dict[str, object]:
+    # Keep NumPy MT19937 state in Python primitives. Raw ndarray RNG state
+    # requires pickle globals under Torch 2.6 and cannot be safely loaded
+    # from a durable checkpoint with weights_only=True.
+    numpy_state = np.random.get_state()
     return {
         "python": random.getstate(),
-        "numpy": np.random.get_state(),
+        "numpy": (
+            str(numpy_state[0]),
+            numpy_state[1].tolist(),
+            int(numpy_state[2]),
+            int(numpy_state[3]),
+            float(numpy_state[4]),
+        ),
         "torch": torch.get_rng_state(),
         "cuda": (
             torch.cuda.get_rng_state_all()

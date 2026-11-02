@@ -139,3 +139,18 @@ metadata rather than silently using mismatched evidence.
 Original loss-mode models and their optimizer trajectory
 are unaffected. Regression:
 `tests/test_stage_variance_best_epoch_alignment.py`.
+
+
+## Safe NumPy RNG state under Torch 2.6 (2 November 2026)
+
+A real GitHub Actions fault-injection test initially failed while loading
+the durable mid-epoch checkpoint under `weights_only=True`, because the
+legacy `numpy.random.get_state()` record contained a NumPy ndarray.
+New checkpoints serialize that MT19937 key vector as ordinary Python
+integers, which NumPy's restore routine accepts without conversion.
+The scientific RNG stream is unchanged and existing in-memory legacy
+tuple/array state still restores. The new regression exercises safe
+disk load, interrupted minibatch recovery and posterior/RNG identity.
+Older checkpoints containing raw ndarray RNG records may require
+trusted legacy-load migration; no silent unsafe fallback has been
+introduced to this test.
