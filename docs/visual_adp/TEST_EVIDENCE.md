@@ -217,3 +217,13 @@ scientific result has been executed in this increment.
   exact interruption recovery and loss/variance matched worker were tested.
 - Original-vs-variance method contract workflow also succeeded.
 - No learned routing or pretrained bank experiment performed.
+
+## V08 predefined multi-site source policy tests (pending CI)
+- New tests/test_visual_multistage_schedule.py covers real separate local
+  MLPs and active-only gradients, frozen CNN invariance, source RR/all/D1/Dcur
+  growth within the selected site, per-site cursor and snapshot exactness,
+  explicit early/middle/late trace, mid-middle-site crash/replay, aggregate
+  capacity ceiling, generic phase/fixed controls and invalid site order.
+- tests/test_runner_vision.py adds the fourth V08 family, signed per-job
+  schedule trace, 22 original/21 variance route matching and source workers.
+- No pretrained scientific run; CI pending.

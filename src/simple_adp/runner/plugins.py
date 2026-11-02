@@ -35,7 +35,7 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
     models.register(SimpleADPModelAdapter())
     # Explicit opt-in retains byte-for-byte legacy model/provider inventories.
     if os.environ.get("SIMPLE_ADP_ENABLE_VISION") == "1":
-        from .vision import VisionDatasetProvider, VisionModelAdapter, VisionInnerModelAdapter, VisionNativeFFNModelAdapter, VisionMixerModelAdapter, VisionMultistageModelAdapter, VisionAdapterBankModelAdapter
+        from .vision import VisionDatasetProvider, VisionModelAdapter, VisionInnerModelAdapter, VisionNativeFFNModelAdapter, VisionMixerModelAdapter, VisionMultistageModelAdapter, VisionAdapterBankModelAdapter, VisionMultistageScheduleAdapter
         datasets.register(VisionDatasetProvider())
         models.register(VisionModelAdapter())
         models.register(VisionInnerModelAdapter())
@@ -52,6 +52,7 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
         models.register(VisionMultistageModelAdapter("early"))
         models.register(VisionMultistageModelAdapter("middle"))
         models.register(VisionMultistageModelAdapter("late"))
+        models.register(VisionMultistageScheduleAdapter())
         for member in range(3):
             models.register(VisionAdapterBankModelAdapter(member))
     points = entry_points()

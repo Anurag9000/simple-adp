@@ -195,3 +195,18 @@ per member does not make it a learned router, and is not a guarantee of
 balanced routing; a selected member may receive few or no routed samples.
 The explicit frozen hard router is a controlled baseline, not a task-id router
 or an adaptive/generative posterior gate. Tests pending CI.
+
+## V08 noncanonical fixed round-robin multisite scheduling (pending CI)
+`ScheduledMultistageSpec` has exactly three fixed local growth targets,
+`adapter:early`, `adapter:middle`, `adapter:late`, and immutable outer
+order `early -> middle -> late`. The site controller uses the *proposal
+index*, not hidden-layer RR, to choose the next target. At each optimization
+stage only that target MLP is trainable. All three MLP weights and per-site
+layer cursors are saved and restored independently; nonactive MLPs and fixed
+CNN operations remain in the differentiable forward.
+The fixed-state hash covers backbone/head only; per-site weights are tracked
+in the signed candidate snapshot and verified by stage-resume comparisons.
+Aggregate neuron budget sums all three local MLPs. This route has a separate
+opt-in runner name, snapshot kind, source-version signature and site schedule
+history. It is not a learned site selector or a change to the canonical
+within-MLP method taxonomy. Tests pending CI.

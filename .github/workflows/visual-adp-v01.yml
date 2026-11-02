@@ -7,6 +7,7 @@ on:
       - 'src/simple_adp/visual_native_ffn.py'
       - 'src/simple_adp/visual_mixer.py'
       - 'src/simple_adp/visual_multistage.py'
+      - 'src/simple_adp/visual_multistage_schedule.py'
       - 'src/simple_adp/visual_adapter_bank.py'
       - 'src/simple_adp/visual_shift.py'
       - 'src/simple_adp/visual_search.py'
@@ -23,6 +24,7 @@ on:
       - 'tests/test_visual_native_ffn.py'
       - 'tests/test_visual_mixer.py'
       - 'tests/test_visual_multistage.py'
+      - 'tests/test_visual_multistage_schedule.py'
       - 'tests/test_visual_adapter_bank.py'
       - 'tests/test_visual_search_v02.py'
       - 'tests/test_runner_vision.py'
@@ -39,4 +41,4 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -e '.[dev,vision]'
-      - run: python -m pytest -q tests/test_runner_vision.py tests/test_runner_plugins.py tests/test_runner_models.py tests/test_visual_v01.py tests/test_vision_data.py tests/test_vision_encoders.py tests/test_visual_inner_v02.py tests/test_visual_search_v02.py tests/test_visual_native_ffn.py tests/test_visual_mixer.py tests/test_visual_multistage.py tests/test_visual_adapter_bank.py tests/test_core.py
+      - run: python -m pytest -q tests/test_runner_vision.py tests/test_runner_plugins.py tests/test_runner_models.py tests/test_visual_v01.py tests/test_vision_data.py tests/test_vision_encoders.py tests/test_visual_inner_v02.py tests/test_visual_search_v02.py tests/test_visual_native_ffn.py tests/test_visual_mixer.py tests/test_visual_multistage.py tests/test_visual_multistage_schedule.py tests/test_visual_adapter_bank.py tests/test_core.py

@@ -25,6 +25,7 @@ from ..visual_native_ffn import NativeFFNSpec
 from ..visual_mixer import MixerSpec
 from ..visual_multistage import MultistageSpec
 from ..visual_adapter_bank import BankSpec, VisualAdapterBank
+from ..visual_multistage_schedule import ScheduledMultistageSpec
 from ..visual_search import SUPPORTED_V02_METHODS, VisualResidualSearch
 from .artifacts import estimator_model_path
 from .datasets import DatasetTaskRef, PreparedTaskData
@@ -364,6 +365,13 @@ class VisionInnerModelAdapter:
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 site_id=site, fixed_seed=41, fixed_other_width=6,
             )
+        elif self.family == "V08-schedule":
+            spec = ScheduledMultistageSpec(
+                input_channels=int(train_x.shape[1]), backbone_channels=4,
+                classes=int(np.unique(train_y).size),
+                image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
+                fixed_seed=43,
+            )
         elif self.family in {"V09-bank0", "V09-bank1", "V09-bank2"}:
             member = int(self.family.rsplit("bank", 1)[1])
             spec = BankSpec(
@@ -387,6 +395,7 @@ class VisionInnerModelAdapter:
             "V08-early": "V08:tiny-3stage-residual-adapter-early",
             "V08-middle": "V08:tiny-3stage-residual-adapter-middle",
             "V08-late": "V08:tiny-3stage-residual-adapter-late",
+            "V08-schedule": "V08:tiny-3stage-predeclared-rr-sites",
             "V09-bank0": "V09:tiny-frozen-hard-router-bank0",
             "V09-bank1": "V09:tiny-frozen-hard-router-bank1",
             "V09-bank2": "V09:tiny-frozen-hard-router-bank2",
@@ -440,6 +449,14 @@ class VisionInnerModelAdapter:
             "architecture_id": architecture_label,
             "frozen_sha256": search.model_.frozen_state_sha256(),
             "expansion_criterion": actual.expansion_criterion,
+            **({
+                "site_schedule_trace": [
+                    {"stage": entry["stage"], "site": entry["site"],
+                     "architecture": entry["architecture"]}
+                    for entry in search.history_
+                ],
+                "site_schedule_kind": "predeclared-early-middle-late-rr-v1",
+            } if isinstance(spec, ScheduledMultistageSpec) else {}),
             **({
                 "router_histogram_train": search.model_.routing_histogram(
                     torch.as_tensor(train_x, dtype=torch.float32, device=actual.device)),
@@ -511,3 +528,16 @@ class VisionAdapterBankModelAdapter(VisionInnerModelAdapter):
             raise ValueError("V09 runner requires one existing bank member 0/1/2")
         self.family = f"V09-bank{member}"
         self.name = f"vision_v09_bank{member}"
+
+
+
+class VisionMultistageScheduleAdapter(VisionInnerModelAdapter):
+    """V08 explicit early/middle/late round-robin site-policy ablation.
+
+    Within each site source ADP policy stays unchanged. Each candidate rotates
+    site according to saved successful proposal index, without any learned
+    router or validation-based site selection.
+    """
+
+    family = "V08-schedule"
+    name = "vision_v08_schedule"

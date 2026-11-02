@@ -21,13 +21,13 @@ States distinguish source/static implementation from executed tests and science.
 | V05 PoolFormer channel FFN | runtime-tested (selected CPU CI) | 275 selected tests passed, synthetic toy worker and native growth |
 | V06a S2 / V06b axial shift FFN | runtime-tested (selected CPU CI) | 288 passing selected tests, real zero-padded shift operators, source growth and paired workers |
 | V07 MLP-Mixer | all 3 token/channel/synchronous-both scopes CPU CI verified (303 tests) | true residual token/channel MLPs, signed resumed search, matched variance jobs and joint budget |
-| V08 fixed three-stage residual adapter | verified selected CPU CI: 331 passed | early/middle/late independent growth with signed resume and paired worker |
+| V08 fixed three-stage residual adapter | 3 independent sites verified (331 tests); fixed multisite schedule pending CI | early/middle/late source growth and a separate predeclared round-robin site policy |
 | V09 strict adapter bank | selected CPU CI verified: 347 passed | hard frozen router, three strictly isolated adapter targets, routing counts and matched workers |
 | V10 ResMLP / V11 GFNet | selected CPU CI verified (315 tests) | fixed dense token/affine mixer and complex FFT filter, native channel ADP and paired worker |
 | Real image scientific mini-runs and multi-seed benchmarks | missing | do not infer from synthetic CI |
 | CPU/CUDA complete regression | partial | 347 selected CPU tests passed through V09; CUDA and full suite not executed |
 
-**Next:** implement fixed predeclared multi-site V08 scheduling; then adaptive selection,
+**Next:** verify the V08 predefined multistage schedule; then adaptive selection,
 strict pretrained-source FFN integration, real-image benchmarking and GPU/full-suite checks.
 Original tabular identities remain unchanged.
 
@@ -334,3 +334,27 @@ corrected generic methods. Evidence remains pending CI.
 - Standalone ADP original-versus-variance contract workflow also passed.
 - This is a frozen hard router; no learned gate, new-member creation,
   pretrained backbone, real-image scientific experiment or CUDA validation.
+
+## V08 predefined multisite stage schedule (separate ablation, pending CI)
+- New `visual_multistage_schedule.py` holds three genuine trainable local
+  C-to-C residual MLPs inside a fixed three-convolutional-stage CNN, with an
+  explicit immutable site order `early -> middle -> late`.
+- The outer policy rotates the **site** by completed growth proposal index.
+  The original 14 source ADP operators still choose hidden layers *within*
+  the selected MLP; they never silently grow all eligible backbone sites.
+  Per-candidate only the active MLP has trainable parameters; earlier selected
+  site weights stay committed and frozen until the schedule selects them again.
+- New `vision_v08_schedule` source family has 22 original method/profile
+  jobs and 21 paired variance counterparts per seed/split/repeat, in addition
+  to V08's 129 separately signed fixed-site jobs (172 total V08 jobs).
+- Every signed snapshot stores the three distinct per-site hidden widths,
+  weights, within-MLP cursors, active site and fixed backbone checksum.
+  The controller records the actual site in every result history entry, uses
+  whole-bank (3 local MLP) neuron capacity and supports exact mid-stage
+  interruption/replay. Worker exports `site_schedule_kind` and
+  `site_schedule_trace` to result.json.
+- This is a **predeclared round-robin site policy**, not learned site routing,
+  validation-based adaptive site choice or the canonical ADP-W-All definition.
+  Synthetic CPU tests, including a mid-middle-site eviction and exact resume,
+  are added but **CI is pending**. Pretrained source and real-image science
+  remain absent.

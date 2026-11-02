@@ -31,6 +31,7 @@ from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_comp
 from .visual_mixer import MixerSpec
 from .visual_multistage import MultistageSpec
 from .visual_adapter_bank import BankSpec
+from .visual_multistage_schedule import ScheduledMultistageSpec, VisualMultistageScheduled, SITES
 
 
 SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
@@ -63,7 +64,7 @@ class VisualResidualSearch:
     def __init__(
         self,
         model_id: str,
-        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec | MultistageSpec | BankSpec,
+        spec: ResidualAdapterSpec | NativeFFNSpec | MixerSpec | MultistageSpec | BankSpec | ScheduledMultistageSpec,
         *,
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
@@ -116,6 +117,8 @@ class VisualResidualSearch:
             return "visual-residual-search-v02"
         if isinstance(self.spec, MultistageSpec):
             return "visual-multistage-search-v1"
+        if isinstance(self.spec, ScheduledMultistageSpec):
+            return "visual-multistage-rr-sites-search-v1"
         if isinstance(self.spec, BankSpec):
             return "visual-adapter-bank-search-v1"
         if isinstance(self.spec, MixerSpec):
@@ -150,7 +153,11 @@ class VisualResidualSearch:
         if progress_callback is not None:
             progress_callback({
                 "configuration_id": self.config.id,
-                "growth_site": self.spec.site_id,
+                "growth_site": (
+                    "adapter:" + state["current"]["active_site"]
+                    if isinstance(self.spec, ScheduledMultistageSpec)
+                    else self.spec.site_id
+                ),
                 "phase": state["phase"],
                 "stage_status": (state["stage_state"] or {}).get("stage_status", "idle"),
                 "architecture": list(state["current"]["hidden_widths"]),
@@ -163,6 +170,8 @@ class VisualResidualSearch:
 
     def _propose(self, state: dict[str, Any]) -> VisualResidualAdapter | None:
         current = _restore(state["current"], self.settings.device)
+        if isinstance(self.spec, ScheduledMultistageSpec):
+            current.activate(SITES[int(state["proposals"]) % len(SITES)])
         local = current.local_mlp
         s = self.settings
         site = self.spec.site_id
@@ -222,10 +231,14 @@ class VisualResidualSearch:
             if new_width > target or new_width > s.max_width or total_neurons(local) + 1 > s.max_neurons:
                 return None
             candidate = copy.deepcopy(current)
-            candidate.local_mlp = rebuild_mlp(
+            replacement = rebuild_mlp(
                 current.local_mlp, [*current.hidden_widths[:-1], new_width],
                 cursor=current._width_cursor,
             )
+            if isinstance(candidate, VisualMultistageScheduled):
+                candidate.site_mlps[candidate._active] = replacement
+            else:
+                candidate.local_mlp = replacement
             if isinstance(current.spec, MixerSpec) and current.spec.site_id == "both:block0":
                 candidate.other_mlp = rebuild_mlp(
                     current.other_mlp,
@@ -303,7 +316,9 @@ class VisualResidualSearch:
             "stage": kind,
             "architecture": list(current.hidden_widths),
             "score": score, "accepted": bool(accepted),
-            "site": self.spec.site_id,
+            "site": ("adapter:" + current._active
+                     if isinstance(self.spec, ScheduledMultistageSpec)
+                     else self.spec.site_id),
             "criterion": self.settings.expansion_criterion,
             **({"profile": self.generic_profile} if self.config.generic else {}),
         })
@@ -408,6 +423,9 @@ class VisualResidualSearch:
                     and self.spec.site_id == "both:block0"
                     and (total_neurons(candidate.local_mlp)
                          + total_neurons(candidate.other_mlp)) > self.settings.max_neurons):
+                candidate = None
+            if (candidate is not None and isinstance(self.spec, ScheduledMultistageSpec)
+                    and candidate.total_local_neurons() > self.settings.max_neurons):
                 candidate = None
             if candidate is None:
                 if self._advance_phase(state):

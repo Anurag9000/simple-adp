@@ -68,11 +68,11 @@
     },
     {
       "architecture": "V08",
-      "methods": "14 canonical IDs, eight generic two-profile configurations for each separately declared early/middle/late site, pending CI",
-      "site": "adapter:early OR adapter:middle OR adapter:late (one per job)",
+      "methods": "14 canonical IDs per scope; 3 independent source scopes verified; one extra fixed-site round-robin policy pending CI",
+      "site": "adapter:early / adapter:middle / adapter:late independent (CI verified); separate adapter:round_robin_sites schedule (pending CI)",
       "criterion": "native loss / matched shadow-BGD variance-stagnation (21 counterpart jobs per site)",
-      "status": "selected synthetic CPU CI verified (331 passing tests) for independent early/middle/late site jobs",
-      "reason": "Full-image frozen three-stage CNN, selected local adapter mutation and exact signed resume tested; no adaptive multi-site policy or pretrained backbone science."
+      "status": "three independent-site policies verified with 331 selected CPU tests; fixed multisite RR policy implemented, pending CI",
+      "reason": "Fixed CNN with real local adapters, exact per-site candidate snapshot and aggregate neuron budget; source within-MLP methods remain intact, no learned adaptive site selection or real pretrained model."
     },
     {
       "architecture": "V09",

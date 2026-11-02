@@ -298,3 +298,15 @@ member-count vectors (they should be compared with class labels only on
 permitted training/validation data, not used to leak test labels into routing).
 The three bank jobs have 43 original/profile/variance variants apiece; none
 are real pretrained or learned-router science experiments. Tests pending CI.
+
+## V08 predefined early/middle/late site-rotation ablation (pending CI)
+The opt-in `vision_v08_schedule` adapter declares one separate family of
+22 original source/profile and 21 matched native variance jobs.
+`ScheduledMultistageSpec` fixes both the backbone interface and stage order.
+`VisualMultistageScheduled` rotates *site selection* by the completed growth
+proposal index; its underlying width/depth source method still operates only
+on the active site. The worker's result.json includes
+`site_schedule_kind="predeclared-early-middle-late-rr-v1"` and an explicit
+per-candidate `site_schedule_trace`. Per-site hidden widths/weights and
+within-local-MPL RR cursors are signed. This is **not** the canonical ADP-W-RR
+within-layer selection, and no adaptive learned controller is implied.

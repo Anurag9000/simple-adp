@@ -318,6 +318,9 @@ def build_visual_composite(spec, hidden_widths):
     from .visual_mixer import MixerSpec, VisualMixer
     from .visual_multistage import MultistageSpec, VisualMultistage
     from .visual_adapter_bank import BankSpec, VisualAdapterBank
+    from .visual_multistage_schedule import ScheduledMultistageSpec, VisualMultistageScheduled
+    if isinstance(spec, ScheduledMultistageSpec):
+        return VisualMultistageScheduled(spec, tuple(hidden_widths))
     if isinstance(spec, BankSpec):
         return VisualAdapterBank(spec, tuple(hidden_widths))
     if isinstance(spec, MultistageSpec):
@@ -336,6 +339,9 @@ def restore_visual_composite(snapshot: dict[str, object]):
     from .visual_mixer import VisualMixer
     from .visual_multistage import VisualMultistage
     from .visual_adapter_bank import VisualAdapterBank
+    from .visual_multistage_schedule import VisualMultistageScheduled
+    if snapshot.get("kind") == VisualMultistageScheduled.SNAPSHOT_KIND:
+        return VisualMultistageScheduled.from_snapshot(snapshot)
     if snapshot.get("kind") == VisualAdapterBank.SNAPSHOT_KIND:
         return VisualAdapterBank.from_snapshot(snapshot)
     if snapshot.get("kind") == VisualMultistage.SNAPSHOT_KIND:

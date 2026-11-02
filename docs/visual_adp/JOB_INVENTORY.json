@@ -53,8 +53,8 @@
     },
     {
       "id": "V08",
-      "central_runner_jobs": "129 per one seed/split/repeat (43 each for independent early/middle/late), selected CPU CI verified",
-      "implementation": "three-stage frozen CNN with real isolated per-stage residual adapter, exact signed resume, paired runner verified (331 passing tests)",
+      "central_runner_jobs": "172 per seed/split/repeat: 129 independent early/middle/late CI verified + 43 explicit predeclared RR site schedule pending CI",
+      "implementation": "three independent fixed-site CNN adapter controls plus separate predeclared multisite RR policy with per-site weight/cursor snapshots, true frozen inactive local MLPs and site history, schedule CI pending",
       "scientifically_executed": false
     },
     {

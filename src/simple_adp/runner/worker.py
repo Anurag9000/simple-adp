@@ -224,6 +224,10 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "frozen_sha256": result.get("frozen_sha256"),
         "expansion_criterion": settings_value.get("expansion_criterion", "loss"),
         **({
+            "site_schedule_kind": result["site_schedule_kind"],
+            "site_schedule_trace": result["site_schedule_trace"],
+        } if result.get("site_schedule_kind") is not None else {}),
+        **({
             "router_kind": result["router_kind"],
             "router_histogram_train": result["router_histogram_train"],
             "router_histogram_test": result["router_histogram_test"],

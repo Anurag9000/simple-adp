@@ -35,6 +35,8 @@ _EXPORTS = {
     "VisualMixer": "visual_mixer",
     "MultistageSpec": "visual_multistage",
     "VisualMultistage": "visual_multistage",
+    "ScheduledMultistageSpec": "visual_multistage_schedule",
+    "VisualMultistageScheduled": "visual_multistage_schedule",
     "BankSpec": "visual_adapter_bank",
     "VisualAdapterBank": "visual_adapter_bank",
     "S2SpatialShift": "visual_shift",
