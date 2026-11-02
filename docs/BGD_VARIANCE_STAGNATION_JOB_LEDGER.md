@@ -223,3 +223,25 @@ after `for site in SITES`. This syntax defect was corrected on `main`
 at commit `73db80bfd43229762f0a0158d356f6f00e639716`.
 The corrected visual workflow has not been verified green by this ledger.
 The variance and visual paths must be tracked separately.
+
+
+## 2026-11-02: run-ID, result and worker-path source pair integrity
+
+The unsliced native suite-plan pairing audit now verifies that a
+variance alternative is an exact `RunIdentity` copy of its parent
+except for the `__bgd_variance_stagnation` route suffix. The
+alternative must write to `results/<alternate-run-id>` and launch
+`simple_adp.runner.worker --spec <run-root>/jobs/<alternate-run-id>/run_spec.json`.
+Device-capability metadata must be unchanged. This prevents a
+scientifically distinct variance run from accidentally sharing the
+original job's checkpoint, result directory, or worker specification.
+The earlier seed, dataset split, model adapter, route, task, and
+training-configuration comparisons remain in effect.
+
+Source: `src/simple_adp/runner/plan.py`
+(commit `8f6eb14adb4b5ff06e0f897a4d83b122df3f356b`).
+Regression: `tests/test_runner_openml_provider_plan.py`
+(commit `a2224d55bece7900c16fe76551df0ebdddc3a2cf`).
+This checks source-plan identities across OpenML task fixtures; it
+does not establish that all OPF, vision, OpenML and interruption
+paths executed on real datasets with GPU parity.
