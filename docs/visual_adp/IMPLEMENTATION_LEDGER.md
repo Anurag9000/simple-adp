@@ -10,7 +10,7 @@ States distinguish source/static implementation from executed tests and science.
 |---|---|---|
 | Coordinated held-out test-indexing isolation (V01 and V02-V11) | runtime-tested bounded CPU | Held-out X/y reads moved after fit in runner/vision.py; guarded row-access regression in tests/test_runner_vision_test_isolation.py; dedicated GitHub Actions run 41491589807 succeeded; source V03/V04 runner already defers |
 | Read-only visual parameter accounting in V01-V11 and source V03/V04 workers | runtime-tested bounded CPU | src/simple_adp/visual_accounting.py, tests/test_visual_accounting.py and coordinated V01/V02 report assertions; dedicated run 41492546181 succeeded; not whole-model FLOPs |
-| Real Fashion-MNIST controlled architecture/site matrix | implementation committed, actual outcome pending | scripts/visual_official_fashion_matrix.py and .github/workflows/visual-official-family-matrix.yml; 19 architecture/site identities × paired MLP-Fixed/ADP-W-RR=38 deliberately selected signed worker jobs, source full dataset loaded; run 41493011813 in progress when recorded |
+| Real Fashion-MNIST controlled architecture/site matrix | verified bounded official-image CPU execution, not full benchmark | 38/38 paired fixed/ADP-W-RR jobs across 19 architecture/site adapters ran successfully through SuitePlan and signed worker, after fixing global cap settings and worker accounting serialization; run 41493795442; artifact 13166111100 |
 | Legacy 14 model identities | preserved | registry.py unchanged |
 | V01 frozen image feature -> native ADP MLP head | runtime-tested (bounded CPU) | src/simple_adp/visual.py |
 | V01 actual candidate growth | runtime-tested (bounded CPU) | delegates to native TabularADP; tests/test_visual_v01.py |
