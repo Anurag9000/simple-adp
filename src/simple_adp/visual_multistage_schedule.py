@@ -249,7 +249,7 @@ class VisualMultistageScheduled(VisualResidualAdapter):
             raise ValueError("V08 scheduled snapshot active site/widths mismatch")
         with torch.random.fork_rng(devices=[]):
             model = cls(spec, tuple(widths[active]), site_widths={
-                site: tuple(int(x) for x in widths[site]) for site in SITES,
+                site: tuple(int(x) for x in widths[site]) for site in SITES
             })
         model._active = active
         model.load_state_dict(record["state_dict"], strict=True)
