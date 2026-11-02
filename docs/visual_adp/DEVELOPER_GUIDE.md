@@ -325,3 +325,9 @@ families, 22 original source/profile routes per family, 21 matched variance
 counterparts per family, and a total of 817 job identities per selected
 single split/seed/repeat on `vision:toy`. Real dataset providers are
 supported separately and are not automatically executed by the test.
+
+### Route manifest verification
+The complete synthetic opt-in plan count was validated by the selected
+`355 passed` Actions run:
+https://github.com/Anurag9000/simple-adp/actions/runs/41416422457.
+This checks job identities and pair provenance without training 817 models.

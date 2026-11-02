@@ -76,7 +76,7 @@
       "scientifically_executed": false
     }
   ],
-  "last_verified_visual_sha": "73db80bfd43229762f0a0158d356f6f00e639716",
+  "last_verified_visual_sha": "0ec34b7324a7b60a01dec70be45065298f229ae2",
   "planned_single_split_seed_repeat": {
     "architecture_ids": 12,
     "explicit_site_policy_families": 19,
@@ -84,7 +84,8 @@
     "variance_counterparts": 399,
     "total_jobs": 817,
     "executed_scientific_runs": 0,
-    "validation_status": "manifest regression added, pending CI",
-    "note": "Numbers apply only to one opt-in vision:toy task/split/seed/repeat with all 19 adapter families; not a real benchmark or a completed training suite"
+    "validation_status": "CI verified on 0ec34b7324a7b60a01dec70be45065298f229ae2; 355 passing selected CPU tests in 50.96s",
+    "note": "Numbers apply only to one opt-in vision:toy task/split/seed/repeat with all 19 adapter families; not a real benchmark or a completed training suite",
+    "ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41416422457"
   }
 }

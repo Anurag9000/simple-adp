@@ -375,7 +375,7 @@ corrected generic methods. Evidence remains pending CI.
 - Scientific image training, pretrained source implementations, full
   repo-wide regression and CUDA correctness remain unverified.
 
-## Complete opt-in source/variance route-identity closure (pending CI)
+## Complete opt-in source/variance route-identity closure (verified CI)
 - Added a **no-training** manifest regression over all 12 architectures and
   19 explicit architecture/site-policy families, including V07 three scopes,
   V08 four scopes and V09 three bank members.
@@ -386,6 +386,18 @@ corrected generic methods. Evidence remains pending CI.
   match each paired criterion. Training/test datasets must stay isolated.
 - These are planned / enumerated job descriptors only, **not** 817 completed
   training runs or scientific results. test_runner_vision.py verifies closure;
-  CI pending. This does not yet establish the larger dimensions of task
+  Selected CI passed. This does not yet establish the larger dimensions of task
   sequences, real CIFAR datasets, multi-seed/repeat scientific validation or
   GPU execution.
+
+## Verified exhaustive vision routing manifest — 2026-11-02
+- Source test commit: `0ec34b7324a7b60a01dec70be45065298f229ae2`.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41416422457
+- **355 selected CPU tests passed in 50.96s**, including the precise
+  `19 scopes × (22 original routes + 21 variance counterparts) = 817`
+  opt-in `vision:toy` per-one-split/seed/repeat job identities.
+- Test verifies uniqueness, canonical method/profile, matching split SHA,
+  seed/fold/repeat, no dummy fixed-model variance jobs and correct paired
+  source method/criterion provenance.
+- This is **not 817 completed training jobs**. No complete real dataset,
+  GPU or repository-wide experimental validation is claimed.

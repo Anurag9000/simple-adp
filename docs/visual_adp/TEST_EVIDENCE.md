@@ -242,10 +242,17 @@ scientific result has been executed in this increment.
 - These are synthetic CPU implementation tests, not full pretrained real
   CIFAR-10/100, Fashion-MNIST, full-suite, or GPU scientific validation.
 
-## 817-job full opt-in vision manifest closure (pending CI)
+## 817-job full opt-in vision manifest closure (verified CI)
 - New test: test_opt_in_full_visual_route_inventory_has_exact_817_paired_jobs.
 - Tests all 19 architecture/site-policy families enumerate 22 original
   method/profile jobs and exactly 21 source-matched variance counterparts;
   no fixed-control duplicates, identity collisions, split/fold/seed/profile
   changes or loss/variance pairing gaps. This test creates a plan only,
-  and executes **zero** training jobs. GitHub Actions evidence pending.
+  and executes **zero** training jobs. CI verified at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41416422457.
+
+## 817-job opt-in plan check succeeded (2026-11-02)
+- CI https://github.com/Anurag9000/simple-adp/actions/runs/41416422457
+- **355 selected CPU tests passed in 50.96s**, including the new no-training
+  method/profile/architecture/scope original-versus-variance manifest closure.
+- No 817-job execution or real pretrained dataset was performed.
