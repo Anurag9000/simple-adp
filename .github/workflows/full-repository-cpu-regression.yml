@@ -1,0 +1,33 @@
+name: Whole-repository CPU pytest regression
+
+on:
+  push:
+    paths:
+      - 'src/simple_adp/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - '.github/workflows/full-repository-cpu-regression.yml'
+  workflow_dispatch:
+
+jobs:
+  all-tests-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      SIMPLE_ADP_ENABLE_VISION: '0'
+      SIMPLE_ADP_ENABLE_V03_SOURCE: '0'
+      SIMPLE_ADP_ENABLE_V04_SOURCE: '0'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install all project testing extras
+        run: python -m pip install -e '.[dev,vision,benchmark,physionet,odds]'
+      - name: Run every repository pytest test, without filtering source modules
+        run: python -m pytest -q tests
