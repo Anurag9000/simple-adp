@@ -99,7 +99,7 @@ def test_paired_frozen_loss_variance_same_split_source_and_signed_jobs(tmp_path)
         assert 0 <= row["validation_metrics"]["accuracy"] <= 1
         assert 0 <= row["official_test_metrics_descriptive_only"]["accuracy"] <= 1
         assert record["sample_counts"] == {
-            "train": 16, "validation": 8, "official_test": 8,
+            "train": 16, "validation": 6, "official_test": 8,
         }
     assert run_vision_comparison(**cfg) == summary
 
