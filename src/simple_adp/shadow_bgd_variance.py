@@ -49,6 +49,17 @@ class ShadowBGDVariance:
                 sl = tuple(slice(0, min(a, b)) for a, b in zip(prev.shape, new.shape))
                 new[sl] = prev.to(device=p.device, dtype=p.dtype)[sl]
             result[name] = new
+        # Posterior values on overlapping coordinates remain useful after
+        # widening, but their previous stagnation votes are not evidence for
+        # the expanded architecture. Require a fresh persistence window.
+        if self.sigma and (
+            set(self.sigma) != set(result)
+            or any(self.sigma[name].shape != tensor.shape
+                   for name, tensor in result.items())
+        ):
+            self.streak = 0
+            self.observations = 0
+            self.contraction = None
         self.sigma = result
 
     def observe(self, model, x, y, loss_function=None):
