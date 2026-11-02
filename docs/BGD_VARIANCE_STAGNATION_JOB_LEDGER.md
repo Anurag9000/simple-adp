@@ -204,3 +204,22 @@ The source and test were committed, but this ledger **does not claim a
 successful new full-suite run**, GPU parity, real-dataset execution, or
 fault-injected exact-resume equivalence on that commit. These remain
 verification requirements; existing original loss-trigger jobs are unchanged.
+
+
+## 2026-11-02: bounded CI evidence and distinct visual-path blocker
+
+The source/test variance-geometry change above passed the
+**Standalone ADP original-versus-variance contracts** GitHub Actions workflow
+on commit `d156a809a6e6809dd2cf825e8e1f4da1318ea425`:
+https://github.com/Anurag9000/simple-adp/actions/runs/41415123296 .
+This verifies that workflow's focused CPU tests, **not** the complete
+cross-dataset scientific suite, CUDA parity, or every interruption boundary.
+
+A separate visual workflow
+https://github.com/Anurag9000/simple-adp/actions/runs/41415150793
+failed during test collection because a dictionary comprehension in
+`src/simple_adp/visual_multistage_schedule.py` had a trailing comma
+after `for site in SITES`. This syntax defect was corrected on `main`
+at commit `73db80bfd43229762f0a0158d356f6f00e639716`.
+The corrected visual workflow has not been verified green by this ledger.
+The variance and visual paths must be tracked separately.
