@@ -564,3 +564,40 @@ https://github.com/Anurag9000/simple-adp/actions/runs/41473641002.
 Both used full original torchvision models with **random** source
 weights. The published-pretrained source smoke is a separate workflow
 `scripts/vision_pretrained_vit_smoke.py`.
+
+## Official real-image all-controlled-family CPU matrix
+
+The canonical worker-plan integration smoke is available via
+`scripts/visual_official_fashion_matrix.py`. It explicitly downloads
+**official Fashion-MNIST** into a local isolated directory, opts in to the
+`vision` dataset provider, builds the authoritative `SuitePlan`, selects
+each of the 19 controlled architecture/site adapters with one `MLP-Fixed`
+and one `ADP-W-RR` route, then invokes the saved native
+`runner.worker.run_spec` for each. No new ADP optimizer or shadow
+search controller is introduced. Source ViT/ConvNeXt pretrained checkpoints
+remain separate, explicitly gated workflows.
+
+```bash
+python -m pip install -e '.[vision,dev]'
+python scripts/visual_official_fashion_matrix.py \
+  --workdir /tmp/simple-adp-official-fashion-matrix \
+  --train-limit 40 --valid-limit 20 --test-limit 20
+```
+
+For unattended GitHub Actions execution, see
+`.github/workflows/visual-official-family-matrix.yml`.
+`official_fashion_vision_matrix.json` records each **completed or failed**
+worker, the exact split SHA256, selected architecture, per-site parameter
+partition and actual validation/test metrics. `results/` contains the
+independently signed normal worker reports and inference/checkpoint evidence.
+A failed run remains incomplete and the script exits nonzero; do not interpret
+mere job selection as execution. The one-epoch setup is deliberately unfit for
+accuracy or budget-parity claims. Use independently matched training budgets
+and multi-seed evaluations for any scientific comparisons.
+
+The core model-level read-only accounting also ships as an installed-package
+lazy export `from simple_adp import visual_parameter_accounting`.
+For each whole-image model, pass its actual `growth_targets`, or for a
+frozen V01 encoder include the encoder and native head together in a
+temporary `nn.ModuleDict`. The returned `linear_macs_per_mlp_invocation`
+is **not** whole-model FLOPs.
