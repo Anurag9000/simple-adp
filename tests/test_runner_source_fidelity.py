@@ -2,9 +2,41 @@
 
 import subprocess
 import sys
+import os
 from pathlib import Path
 
 import pytest
+
+
+def _neutral_admission_env():
+    """Differential tests set simulated CPU/GPU flags explicitly.
+
+    Inherited host scheduler masks are not inputs to those cases. Without
+    isolation, generic-only aliases poison supposedly GPU-admitted cases
+    although the immutable source remains unaffected.
+    """
+    env = os.environ.copy()
+    for name in (
+        "CPU_ONLY", "TRAINING_CONTROL_CPU_ONLY",
+        "OPF_ADP_DISABLE_GPU_ACCELERATORS", "TABULAR_CPU_ONLY",
+        "SIMPLE_ADP_DISABLE_GPU_ACCELERATORS",
+        "TRAINING_CONTROL_BACKEND", "TABULAR_BACKEND",
+        "CUDA_VISIBLE_DEVICES",
+    ):
+        env.pop(name, None)
+    return env
+
+
+def test_neutral_admission_environment_preserves_unrelated_context(monkeypatch):
+    monkeypatch.setenv("SIMPLE_ADP_DISABLE_GPU_ACCELERATORS", "1")
+    monkeypatch.setenv("OPF_ADP_DISABLE_GPU_ACCELERATORS", "1")
+    monkeypatch.setenv("TABULAR_BACKEND", "cpu")
+    monkeypatch.setenv("SOURCE_TEST_UNRELATED", "present")
+    neutral = _neutral_admission_env()
+    assert neutral["SOURCE_TEST_UNRELATED"] == "present"
+    assert "TABULAR_BACKEND" not in neutral
+    assert "SIMPLE_ADP_DISABLE_GPU_ACCELERATORS" not in neutral
+    assert "OPF_ADP_DISABLE_GPU_ACCELERATORS" not in neutral
 
 
 def test_admission_and_failure_classification_match_reference():
@@ -818,6 +850,7 @@ print(
         check=False,
         capture_output=True,
         text=True,
+        env=_neutral_admission_env(),
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == (
@@ -1697,6 +1730,7 @@ print("source and generic matched OOM retry, two ordered pauses, same-lane resum
     result = subprocess.run(
         [sys.executable, "-B", "-c", script, str(repository), str(tmp_path)],
         cwd=repository, check=False, capture_output=True, text=True,
+        env=_neutral_admission_env(),
     )
     assert result.returncode == 0, result.stderr + "\n" + result.stdout
     assert result.stdout.strip().endswith(
