@@ -599,6 +599,29 @@ class SuitePlan:
                 baseline_settings.pop(criterion_field, None)
             if baseline_settings != original.worker_settings:
                 raise RuntimeError("ADP variance pair changed native training settings")
+            expected_identity = replace(
+                original.identity,
+                model_route=original.identity.model_route
+                + "__bgd_variance_stagnation",
+            )
+            expected_spec_path = (
+                runtime_root / "jobs" / expected_identity.run_id / "run_spec.json"
+            )
+            expected_command = (
+                sys.executable, "-m", "simple_adp.runner.worker",
+                "--spec", str(expected_spec_path),
+            )
+            if (
+                alternative.identity != expected_identity
+                or alternative.result_dir
+                   != str(result_root / expected_identity.run_id)
+                or alternative.command != expected_command
+                or alternative.device_capable != original.device_capable
+            ):
+                raise RuntimeError(
+                    "ADP variance pair changed identity, output isolation "
+                    "or worker launch command"
+                )
             matched[parent] = alternative.identity.run_id
         if set(originals) != set(matched):
             raise RuntimeError("unpaired original ADP growth jobs in native suite plan")
