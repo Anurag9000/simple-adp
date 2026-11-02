@@ -77,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
         # Keep the runner's global baseline width grids valid. The selected
         # one-step RR jobs are independently bounded by init width, candidate
         # count, epochs and max_neurons.
-        max_width=512, max_depth=2, max_neurons=128,
+        max_width=512, max_depth=5, max_neurons=128,
         max_candidates=1, max_epochs=1, batch_size=16,
         smoke_test=True, cpu_only=True,
     )
