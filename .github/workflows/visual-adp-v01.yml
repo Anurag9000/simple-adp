@@ -5,6 +5,7 @@ on:
       - 'src/simple_adp/visual.py'
       - 'src/simple_adp/visual_inner.py'
       - 'src/simple_adp/visual_native_ffn.py'
+      - 'src/simple_adp/visual_shift.py'
       - 'src/simple_adp/visual_search.py'
       - 'src/simple_adp/runner/vision.py'
       - 'src/simple_adp/runner/plan.py'

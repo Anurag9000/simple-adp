@@ -99,3 +99,17 @@ search controller, source RR/all/D1/Dcur operations, fixed external channel
 dimension, and strict frozen-state restoration as V03/V04. It is a tiny
 from-scratch experimental control, not a pretrained PoolFormer checkpoint.
 Tests and opt-in runner integration pending CI.
+
+## V06a and V06b parameter-free spatial-shift contracts
+V06a `S2SpatialShift` divides frozen channels into four equal groups and
+shifts up, down, left and right by one position with zero boundaries.
+V06b `AxialSpatialShift` forms separate vertical and horizontal signed
+shift branches and combines their outputs equally; it is intentionally
+distinct from V06a. Both preserve image/token geometry and have no trainable
+spatial mixer parameters. No circular wrap, convolutional-channel change or
+attention operation is permitted. Their selected local channels-last GELU
+FFN is the only trainable/expandable site. They reuse the whole-image
+composite controller/checkpoint, an independently signed architecture spec,
+source growth/method profile identities and paired original/variance routes.
+The small models are architecture-shaped controls, not the exact pretrained
+published network or scientific demonstration. New CI evidence pending.

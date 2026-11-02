@@ -42,6 +42,8 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
         models.register(VisionNativeFFNModelAdapter("V03"))
         models.register(VisionNativeFFNModelAdapter("V04"))
         models.register(VisionNativeFFNModelAdapter("V05"))
+        models.register(VisionNativeFFNModelAdapter("V06a"))
+        models.register(VisionNativeFFNModelAdapter("V06b"))
     points = entry_points()
     for group, registry in (
         ("simple_adp.dataset_providers", datasets),

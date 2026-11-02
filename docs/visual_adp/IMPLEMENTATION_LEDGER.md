@@ -136,3 +136,29 @@ corrected generic methods. Evidence remains pending CI.
 - Unit, frozen-pool, native growth, exact replay and worker tests added.
   **CI pending**. These are random-initialized controls, not pretrained PoolFormer
   or validated real-image science.
+
+## V06a and V06b independent shift-MLP channel FFN routes (pending CI)
+- `src/simple_adp/visual_shift.py` defines separate zero-padded,
+  parameter-free **S2SpatialShift** (four directional channel groups) and
+  **AxialSpatialShift** (separate height/width branches, averaged).
+  Neither circular wraps boundaries nor changes channels/tokens. Both
+  are differentiable without trainable shift weights.
+- `NativeFFNSpec` identifies distinct `V06a` / `V06b`, sites
+  `channel:s2.block0` / `channel:axial.block0`, fixed spatial dimensions,
+  groupability checks and immutable shift operator representation. The
+  channel FFN alone uses original source RR/all/D1/Dcur architecture growth.
+- The installed opt-in `vision_v06a` and `vision_v06b` model adapters
+  enumerate separately 22 method/profile routes plus 21 matched variance
+  counterparts per seed/split/repeat through the existing worker/ledger.
+- Tests cover exact no-wrap geometry and gradients, model frozen-shift
+  hashing, source growth, whole-image exact stage restart and criterion
+  paired worker execution. **Pending CI.** These are tiny from-scratch
+  shift-MLP controls, not verified published S²-MLP/AS-MLP checkpoints.
+
+## Verified V05 checkpoint and coordinated worker — 2026-11-02
+- Commit: debf351a6fa5edb280abeb5ea1534697cbead81e.
+- CPU CI: https://github.com/Anurag9000/simple-adp/actions/runs/41398371660
+- **275 selected tests passed in 21.92 seconds**, including native V05
+  pooling-operator verification, source ADP growth, snapshot/mid-batch replay,
+  fixed/generic routes, central worker and matched variance-gated job.
+- Only synthetic toy images and randomly initialized feature backbones tested.

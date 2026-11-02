@@ -326,7 +326,7 @@ class VisionInnerModelAdapter:
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 site_id="adapter:block1", fixed_seed=17,
             )
-        elif self.family in {"V03", "V04", "V05"}:
+        elif self.family in {"V03", "V04", "V05", "V06a", "V06b"}:
             patch = (4 if train_x.shape[2] % 4 == 0 and train_x.shape[3] % 4 == 0
                      else 2)
             spec = NativeFFNSpec(
@@ -336,7 +336,9 @@ class VisionInnerModelAdapter:
                 image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
                 patch_size=patch, attention_heads=2, fixed_seed=23,
                 site_id={"V03": "ffn:block0", "V04": "channel:stage0.block0",
-                         "V05": "channel:poolformer.block0"}[self.family],
+                         "V05": "channel:poolformer.block0",
+                         "V06a": "channel:s2.block0",
+                         "V06b": "channel:axial.block0"}[self.family],
             )
         else:
             raise ValueError("unknown native image FFN architecture family")
@@ -345,6 +347,8 @@ class VisionInnerModelAdapter:
             "V03": "V03:tiny-vit-ffn-frozen-random",
             "V04": "V04:tiny-convnext-ffn-frozen-random",
             "V05": "V05:tiny-poolformer-ffn-frozen-random",
+            "V06a": "V06a:tiny-s2shift-ffn-frozen-random",
+            "V06b": "V06b:tiny-axialshift-ffn-frozen-random",
         }[self.family]
         search = VisualResidualSearch(
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
@@ -405,7 +409,7 @@ class VisionNativeFFNModelAdapter(VisionInnerModelAdapter):
     """
 
     def __init__(self, family: str):
-        if family not in {"V03", "V04", "V05"}:
-            raise ValueError("only V03, V04 and V05 native FFN families are supported")
+        if family not in {"V03", "V04", "V05", "V06a", "V06b"}:
+            raise ValueError("only V03, V04, V05, V06a and V06b native FFN families are supported")
         self.family = family
         self.name = "vision_" + family.lower()

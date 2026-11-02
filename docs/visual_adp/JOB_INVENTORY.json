@@ -29,20 +29,20 @@
     },
     {
       "id": "V05",
-      "central_runner_jobs": "43 per seed/split/repeat (22 method/profile routes + 21 matched variance counterparts), pending CI",
-      "implementation": "PoolFormer fixed pooling mixer + genuine trainable channel FFN, signed source search and opt-in runner implemented, pending CI",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 native method/profile routes + 21 variance counterparts), opt-in, selected CPU CI verified",
+      "implementation": "synthetic CPU CI verified native PoolFormer fixed pooling/channel FFN, source search, exact resume and opt-in runner",
       "scientifically_executed": false
     },
     {
       "id": "V06a",
-      "central_runner_jobs": 0,
-      "implementation": "missing",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 native methods/profiles + 21 variance counterparts), opt-in, pending CI",
+      "implementation": "genuine separate parameter-free shift mixer and expandable channel FFN, signed composite controller and worker, pending CPU CI",
       "scientifically_executed": false
     },
     {
       "id": "V06b",
-      "central_runner_jobs": 0,
-      "implementation": "missing",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 native methods/profiles + 21 variance counterparts), opt-in, pending CI",
+      "implementation": "genuine separate parameter-free shift mixer and expandable channel FFN, signed composite controller and worker, pending CPU CI",
       "scientifically_executed": false
     },
     {

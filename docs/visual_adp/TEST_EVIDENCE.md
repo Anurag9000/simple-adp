@@ -117,3 +117,21 @@ scientific result has been executed in this increment.
   mutation, signed replay, fixed model, generic controller and runner job.
 - Explicitly asserts parameter-free `Pool(x)-x` and checks that changes to
   the pooling kernel invalidate the frozen-state verification.
+
+## V06a/V06b shift operators, models and paired jobs (pending CI)
+- tests/test_visual_native_ffn.py now includes V06a/b in the frozen backbone,
+  native growth, snapshot, interrupted resume, fixed control and generic
+  method suite. Explicit mathematical shift geometry/zero boundary tests
+  compare distinct S2 versus axial mixing, prove no learnable mixer weights
+  and verify backprop through both spatial permutations.
+- tests/test_runner_vision.py extends native worker/variance route tests to
+  both V06a and V06b, preserving the same split and seed provenance.
+- Do not claim CI success or a real pretrained backbone here yet.
+
+## V05 PoolFormer native FFN verified (2026-11-02)
+- Commit: debf351a6fa5edb280abeb5ea1534697cbead81e.
+- CI: https://github.com/Anurag9000/simple-adp/actions/runs/41398371660.
+- **275 passed in 21.92s**, selected synthetic CPU suite with V05
+  pooling-operator frozen identity, native growth, restarts, worker routes,
+  generic method and criterion counterpart.
+- No real-image scientific runs or pretrained source weights.

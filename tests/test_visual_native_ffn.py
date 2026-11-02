@@ -19,7 +19,9 @@ def spec(architecture: str) -> NativeFFNSpec:
         classes=2, image_height=8, image_width=12, patch_size=2,
         attention_heads=2, fixed_seed=19,
         site_id={"V03": "ffn:block0", "V04": "channel:stage0.block0",
-                 "V05": "channel:poolformer.block0"}[architecture],
+                 "V05": "channel:poolformer.block0",
+                 "V06a": "channel:s2.block0",
+                 "V06b": "channel:axial.block0"}[architecture],
     )
 
 
@@ -41,7 +43,7 @@ def settings():
     )
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
 def test_native_ffn_is_inner_and_frozen_backbone_remains_exact(arch):
     torch.manual_seed(103)
     model = VisualNativeFFN(spec(arch), (3,))
@@ -66,7 +68,7 @@ def test_native_ffn_is_inner_and_frozen_backbone_remains_exact(arch):
         NativeFFNSpec(arch, 3, 4, 2, 7, 12, site_id=spec(arch).site_id)
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
 def test_native_ffn_source_growth_and_snapshot_preserve_interfaces(arch):
     model = build_visual_composite(spec(arch), (3, 3))
     before = model.frozen_state_sha256()
@@ -108,7 +110,7 @@ def test_native_ffn_source_growth_and_snapshot_preserve_interfaces(arch):
         restored.verify_frozen()
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
 def test_native_ffn_composite_search_actual_growth_and_restart(arch, tmp_path):
     x, y, validation = sample()
     base = VisualResidualSearch("ADP-W-RR", spec(arch), settings=settings())
@@ -143,7 +145,7 @@ def test_native_ffn_composite_search_actual_growth_and_restart(arch, tmp_path):
             changed, y, validation_data=validation, checkpoint_path=path)
 
 
-@pytest.mark.parametrize("arch", ["V03", "V04", "V05"])
+@pytest.mark.parametrize("arch", ["V03", "V04", "V05", "V06a", "V06b"])
 def test_native_ffn_fixed_model_and_generic_phase_search(arch):
     x, y, validation = sample()
     control = VisualResidualSearch(
@@ -177,3 +179,39 @@ def test_poolformer_parameter_free_mixer_and_frozen_contract():
     model.pooling_mixer.kernel_size = 5
     with pytest.raises(ValueError, match="frozen"):
         model.verify_frozen()
+
+
+
+def test_s2_and_axial_spatial_shifts_are_distinct_and_zero_padded():
+    from simple_adp.visual_shift import S2SpatialShift, AxialSpatialShift
+    x = torch.arange(1, 1 + 4 * 3 * 4, dtype=torch.float32).reshape(1, 4, 3, 4)
+    s2, axial = S2SpatialShift(4), AxialSpatialShift(4)
+    left, right = s2(x), axial(x)
+    assert left.shape == right.shape == x.shape
+    # First S2 group moves one pixel up, with no circular wrap.
+    assert torch.equal(left[:, 0, 0], x[:, 0, 1])
+    assert torch.all(left[:, 0, -1] == 0)
+    # Axial branches average height and width shifts. Not equal to S2.
+    assert not torch.equal(left, right)
+    assert not any(s2.parameters()) and not any(axial.parameters())
+    var = x.clone().requires_grad_(True)
+    (s2(var).square().sum() + axial(var).square().sum()).backward()
+    assert var.grad is not None and var.grad.abs().sum() > 0
+    with pytest.raises(ValueError, match="multiple-of-four"):
+        S2SpatialShift(6)
+    with pytest.raises(ValueError, match="even"):
+        AxialSpatialShift(3)
+
+
+@pytest.mark.parametrize("arch", ["V06a", "V06b"])
+def test_shift_family_frozen_operator_identity_is_snapshot_checked(arch):
+    original = VisualNativeFFN(spec(arch), (3,))
+    images = torch.randn(2, 3, 8, 12)
+    assert original(images).shape == (2, 2)
+    saved = original.snapshot()
+    restored = restore_visual_composite(saved)
+    assert torch.equal(original.eval()(images), restored.eval()(images))
+    assert restored.frozen_state_sha256() == original.frozen_state_sha256()
+    restored.spatial_shift.channels = 8
+    with pytest.raises(ValueError, match="frozen"):
+        restored.verify_frozen()

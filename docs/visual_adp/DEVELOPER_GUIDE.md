@@ -225,3 +225,13 @@ loss-vs-shadow-BGD variance pair per adaptive route. Use the same documented
 CIFAR/Fashion-MNIST suite selectors as V01–V04. The model is a tiny
 random-initialized PoolFormer-style structure; no pretrained PoolFormer or
 validated accuracy improvement is claimed. CI status pending.
+
+## V06a and V06b shift-MLP jobs (pending CPU CI)
+The installed opt-in image job runner exposes distinct `V06a:` / `V06b:`
+route labels and fixed sites `channel:s2.block0` / `channel:axial.block0`.
+All 14 canonical source methods, two profiles on eight generic variants,
+and matched shadow variance counterparts follow the V03–V05 identity
+protocol. `S2SpatialShift` and `AxialSpatialShift` are exported standalone
+for inspecting boundary/grouping semantics. Their concrete frozen random
+tiny backbones are not pretrained or faithful end-to-end published source
+models. New CPU tests and real-dataset benchmarks remain unverified.
