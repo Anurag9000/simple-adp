@@ -1,4 +1,54 @@
 # Live source audit: visual ADP
+
+## Re-audit of current main (2026-11-02)
+
+The original baseline paragraphs below are a chronological record, **not the
+present implementation boundary**. At the inspected main
+`9b1d7fb96a4a2e71e056a7bd8eaef01130fc897e`, the tree already includes
+`visual.py`, `visual_search.py`, `visual_inner.py`,
+`visual_native_ffn.py`, `visual_shift.py`, `visual_mixer.py`,
+`visual_multistage.py`, `visual_multistage_schedule.py`,
+`visual_adapter_bank.py`, `visual_source_convnext.py` and
+`visual_source_vit.py`. All original 14 identities remain in
+`registry.py`; the tiny controlled vision models are explicitly distinct
+from source-faithful torchvision FFNs.
+
+Actual controller path for V02-V11:
+`VisionInnerModelAdapter.fit_predict` -> `VisualResidualSearch.fit`
+-> `build_visual_composite` -> `StageTrainer.train_stage` ->
+`VisualResidualSearch._finish_stage` -> signed
+`search.model_.snapshot` inference artifact. Growth mutates only the
+local eligible dense stack. `VisionSourceConvNeXtModelAdapter` and
+`VisionSourceViTModelAdapter` use distinct explicit source gates and
+full-file SHA256 identity; V01 remains
+`VisionModelAdapter` -> `VisualADPEstimator` -> `TabularADP`.
+This is a dependency/data-flow map, not a claim that all jobs have been
+scientifically executed.
+
+The latest inspected baseline complete CPU suite passed:
+https://github.com/Anurag9000/simple-adp/actions/runs/41488650402.
+Selected real pretrained internal source-FFN micro-smokes also exist for
+V03 and V04, but are not full multi-seed scientific comparisons.
+No physical CUDA full-suite pass or source-faithful coverage for all
+controlled V05-V11 designs was established.
+
+On top of that baseline, commits `a07034219e7f4eac0f8fb8f39409e66687352663`
+and `41e7410405adf8bcba5028499079e5880db8bd98` defer held-out
+image **and label** indexing in both V01 and V02-V11 coordinated adapters
+until after `fit()` returns and add a guarded-access regression for both.
+The dedicated source V03/V04 runner already deferred test indexing.
+The canonical runner AST navigation map was updated in
+`fe8447b478289d19fec42574bbf7a07eec204e18`.
+CI validation of these new changes must be recorded separately before
+marking the regression runtime-tested.
+
+Unclosed science/engineering issues: CUDA hardware coverage, per-candidate
+memory/FLOP accounting and OOM rejection, real source-faithful V05-V11
+backbones, bounded official-image experiments for all controlled families,
+matched computation-budget analyses and larger multi-seed evaluations.
+
+---
+
 Baseline main: a2e6b6325a80ca6da41b1898ebf71c6ec8829a62 (2026-10-29).
 This is an incremental evidence ledger, not a claim that the full vision suite is finished.
 
