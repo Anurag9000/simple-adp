@@ -13,7 +13,7 @@
   `tests/test_runner_vision_test_isolation.py`.
   Guarded data arrays raise on any held-out test-row access until the
   actual fixed-model search has completed, covering both V01 and V02.
-  **Pending new CI result; committed test code alone is not execution evidence.**
+  The original holdout-only dedicated CI https://github.com/Anurag9000/simple-adp/actions/runs/41491589807 **succeeded**. After that, source runner parameter accounting and expanded test assertions were added; their new full-suite and focused workflows are separate, pending results.
 - Runner function-map spans refreshed:
   `fe8447b478289d19fec42574bbf7a07eec204e18`.
 - Last inspected **pre-change** complete repository CPU pytest run:
@@ -462,3 +462,22 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Initial whole repository `python -m pytest -q tests`:
   https://github.com/Anurag9000/simple-adp/actions/runs/41475398340,
   pending verification, rather than a confirmed green suite.
+
+## Visual parameter accounting follow-up (2026-11-02)
+
+- The code at `src/simple_adp/visual_accounting.py` partitions unique
+  composite parameters into frozen, total trainable, eligible MLP, actively
+  trainable eligible MLP and other trainable counts. V08's three potential
+  sites include two inactive frozen sites without misreporting them as
+  currently trainable. Per-site linear MACs are **one MLP invocation only**.
+- Coordinated V01, V02-V11, source V03 and source V04 worker results now
+  return this read-only signed job payload extension. Original model
+  snapshots, source tensors and canonical method registry are not changed.
+- Added `tests/test_visual_accounting.py` for exact arithmetic, actual
+  width growth, inactive eligible sites and alias/foreign/non-MLP rejection.
+  Expanded `tests/test_runner_vision_test_isolation.py` to assert actual
+  coordinated output count partitions.
+- AST source-function map check on the updated runner sources:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41492296951
+  **success**. The dedicated parameter/holdout job and complete current-main
+  pytest still require a successful run before runtime-tested designation.
