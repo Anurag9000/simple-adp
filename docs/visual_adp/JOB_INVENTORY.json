@@ -17,14 +17,14 @@
     },
     {
       "id": "V03",
-      "central_runner_jobs": 0,
-      "implementation": "experimental native inner FFN + shared standalone composite controller and snapshot, pending CI",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 method/profile routes + 21 variance counterparts), opt-in, pending CI",
+      "implementation": "standalone native internal FFN controller, signed snapshots, opt-in coordinated model adapter, pending CI",
       "scientifically_executed": false
     },
     {
       "id": "V04",
-      "central_runner_jobs": 0,
-      "implementation": "experimental native inner FFN + shared standalone composite controller and snapshot, pending CI",
+      "central_runner_jobs": "43 per one seed/split/repeat (22 method/profile routes + 21 variance counterparts), opt-in, pending CI",
+      "implementation": "standalone native internal FFN controller, signed snapshots, opt-in coordinated model adapter, pending CI",
       "scientifically_executed": false
     },
     {

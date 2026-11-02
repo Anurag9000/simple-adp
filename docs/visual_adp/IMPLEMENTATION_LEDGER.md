@@ -99,3 +99,15 @@ CI (259 tests). V03–V11 remain unimplemented.
   actual training/growth and mid-stage signed replay. **Pending CI.**
 - This pass implements the standalone library search path; central runner
   route registration and full real-data experiments are still missing.
+
+## V03/V04 opt-in coordinated runner extension (pending CI)
+`VisionNativeFFNModelAdapter` registers independent adapter IDs
+`vision_v03` / `vision_v04` under `SIMPLE_ADP_ENABLE_VISION=1`.
+Each enumerates 14 canonical IDs / 22 method-profile combinations, with 21
+matched shadow-BGD variance counterparts per split, seed and repeat through
+the existing SuitePlan. The worker trains full images with true internal FFN
+gradients, selected-candidate exports, frozen SHA checks and signed exact
+checkpointing. V01/V02 and all nonvisual adapters remain unchanged by default.
+Real pretrained ViT-B16/ConvNeXt-Tiny FFN replacement is **not** implemented.
+New bounded CPU worker tests cover V03/V04 source jobs, criterion pairs and
+corrected generic methods. Evidence remains pending CI.

@@ -203,3 +203,16 @@ The complete 14-method V02 controller and opt-in runner passed 259 selected
 CPU tests: https://github.com/Anurag9000/simple-adp/actions/runs/41394281464.
 The `MLP-Fixed` route never grows; dedicated D1 performs real intermediate
 optimization; the eight generic methods have separately signed profile routes.
+
+## Experimental native V03/V04 coordinated jobs (pending CI)
+Enable the existing vision adapter registration with
+`SIMPLE_ADP_ENABLE_VISION=1` and explicitly request `tasks=["vision"]`.
+V03 routes use `V03:ADP-W-RR` / `V03:ADP-WD-RR-Dcur@corrected`;
+V04 uses `V04:` counterparts. They share the same `vision:toy`,
+`vision:cifar10`, `vision:cifar100` and `vision:fashion_mnist`
+provider contracts, train/validation/test isolation and native search
+settings. Concrete runner variants are small random-initialized ViT-style
+(token FFN site `ffn:block0`) or ConvNeXt-style (channel FFN site
+`channel:stage0.block0`). They are **not pretrained torchvision source
+models** and no accuracy improvement is claimed. Two new worker CI tests
+exercise fixed tensors, matched variance gate and generic route execution.

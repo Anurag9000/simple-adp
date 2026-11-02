@@ -98,3 +98,10 @@ scientific result has been executed in this increment.
   native RR/all/D1/Dcur, GELU/weights transfer, exact checkpoint restoration,
   fixed model and generic search, and mid-batch fault/restart.
 - Do not count new routes or scientific jobs as executed until verified by CI.
+
+## V03/V04 coordinated runner test addition (pending CI)
+- Test: test_native_ffn_runner_executes_and_pairs_variance, for V03/V04.
+- Checks source job registration, distinct family identity, genuine worker
+  completion, fixed growth site, signed model exports, matched split/seed,
+  variance shadow and corrected generic source route.
+- No real dataset benchmark or CUDA coverage claimed.

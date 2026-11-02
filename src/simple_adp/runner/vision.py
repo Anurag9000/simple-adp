@@ -21,6 +21,7 @@ from ..tasks import ClassificationTask
 from ..vision_data import make_image_partitions, load_torchvision_partitions
 from ..visual import VisualADPEstimator
 from ..visual_inner import ResidualAdapterSpec
+from ..visual_native_ffn import NativeFFNSpec
 from ..visual_search import SUPPORTED_V02_METHODS, VisualResidualSearch
 from .artifacts import estimator_model_path
 from .datasets import DatasetTaskRef, PreparedTaskData
@@ -265,6 +266,7 @@ class VisionInnerModelAdapter:
     """
 
     name = "vision_inner"
+    family = "V02"
 
     def enumerate_routes(self, generic_profiles=("faithful", "corrected"), settings=None) -> list[ModelRoute]:
         if settings is None or "vision" not in settings.tasks:
@@ -275,7 +277,7 @@ class VisionInnerModelAdapter:
         for model_id in sorted(SUPPORTED_V02_METHODS):
             if model_id == "MLP-Fixed":
                 routes.append(ModelRoute(
-                    model_id, label="V02:MLP-Fixed",
+                    model_id, label=f"{self.family}:MLP-Fixed",
                     fixed_grid=((settings.width_to_depth_width,),),
                     suite_group="vision", init_width=settings.width_to_depth_width,
                     init_depth=1,
@@ -285,7 +287,7 @@ class VisionInnerModelAdapter:
                 for profile in profiles:
                     routes.append(ModelRoute(
                         model_id,
-                        label="V02:" + model_id + (f"@{profile}" if profile else ""),
+                        label=self.family + ":" + model_id + (f"@{profile}" if profile else ""),
                         suite_group="vision", generic_profile=profile,
                         init_width=settings.width_to_depth_width,
                         init_depth=settings.width_to_depth_depth,
@@ -300,7 +302,7 @@ class VisionInnerModelAdapter:
     ) -> dict[str, Any]:
         if data.task_family != "vision" or route.suite_group != "vision":
             raise ValueError("V02 adapter requires a vision-only dataset and route")
-        if route.model_id not in SUPPORTED_V02_METHODS or not route.route_label.startswith("V02:"):
+        if route.model_id not in SUPPORTED_V02_METHODS or not route.route_label.startswith(self.family + ":"):
             raise ValueError("V02 adapter received a non-V02 or unsupported controller route")
 
         def take(rows: tuple[int, ...]) -> np.ndarray:
@@ -317,13 +319,31 @@ class VisionInnerModelAdapter:
             "init_width": route.init_width or settings.init_width,
             "init_depth": route.init_depth or settings.init_depth,
         })
-        spec = ResidualAdapterSpec(
-            input_channels=int(train_x.shape[1]), backbone_channels=4, local_dim=4,
-            classes=int(np.unique(train_y).size),
-            image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
-            site_id="adapter:block1",
-            fixed_seed=17,
-        )
+        if self.family == "V02":
+            spec = ResidualAdapterSpec(
+                input_channels=int(train_x.shape[1]), backbone_channels=4, local_dim=4,
+                classes=int(np.unique(train_y).size),
+                image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
+                site_id="adapter:block1", fixed_seed=17,
+            )
+        elif self.family in {"V03", "V04"}:
+            patch = (4 if train_x.shape[2] % 4 == 0 and train_x.shape[3] % 4 == 0
+                     else 2)
+            spec = NativeFFNSpec(
+                architecture_id=self.family,
+                input_channels=int(train_x.shape[1]), local_dim=4,
+                classes=int(np.unique(train_y).size),
+                image_height=int(train_x.shape[2]), image_width=int(train_x.shape[3]),
+                patch_size=patch, attention_heads=2, fixed_seed=23,
+                site_id=("ffn:block0" if self.family == "V03" else "channel:stage0.block0"),
+            )
+        else:
+            raise ValueError("unknown native image FFN architecture family")
+        architecture_label = {
+            "V02": "V02:toy-frozen-residual-adapter",
+            "V03": "V03:tiny-vit-ffn-frozen-random",
+            "V04": "V04:tiny-convnext-ffn-frozen-random",
+        }[self.family]
         search = VisualResidualSearch(
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
             generic_profile=route.generic_profile or "faithful",
@@ -344,9 +364,9 @@ class VisionInnerModelAdapter:
             # Export a separately signed immutable best-only inference bundle,
             # not a duplicate of the mutable full-search resume checkpoint.
             CheckpointStore(artifact).save({
-                "format": "visual-v02-inference-v1",
+                "format": f"visual-{self.family.lower()}-inference-v1",
                 "model_id": route.model_id,
-                "architecture_id": "V02:toy-frozen-residual-adapter",
+                "architecture_id": architecture_label,
                 "growth_site": spec.site_id,
                 "split_sha256": split.split_sha256,
                 "task": task.state_dict(),
@@ -367,7 +387,23 @@ class VisionInnerModelAdapter:
             "metric_directions": task.metric_directions,
             "artifact_path": artifact,
             "growth_site": spec.site_id,
-            "architecture_id": "V02:toy-frozen-residual-adapter",
+            "architecture_id": architecture_label,
             "frozen_sha256": search.model_.frozen_state_sha256(),
             "expansion_criterion": actual.expansion_criterion,
         }
+
+
+
+class VisionNativeFFNModelAdapter(VisionInnerModelAdapter):
+    """Opt-in V03/V04 genuine internal FFN runner with source method parity.
+
+    V03 and V04 are separate identities and adapters; they do not pretend to
+    have pretrained torchvision weights. Validation/test isolation, paired
+    variance routes, signatures and worker checkpointing match V02.
+    """
+
+    def __init__(self, family: str):
+        if family not in {"V03", "V04"}:
+            raise ValueError("only V03 and V04 native FFN runner families are supported")
+        self.family = family
+        self.name = "vision_" + family.lower()

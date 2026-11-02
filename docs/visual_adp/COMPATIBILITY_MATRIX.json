@@ -20,19 +20,19 @@
     },
     {
       "architecture": "V03",
-      "methods": "all 14 canonical method IDs via shared composite controller (pending standalone CPU CI)",
+      "methods": "14 canonical methods, eight generic in faithful/corrected profiles (22 routes per seed/split/repeat), pending CI",
       "site": "ffn:block0",
-      "criterion": "loss / BGD-shadow variance-stagnation (pending tests)",
-      "status": "experimental standalone native FFN implementation; CI and coordinated runner pending",
-      "reason": "Synthetic tiny frozen random feature backbone with internal GELU FFN. Not a pretrained torchvision model, not a scientific image experiment."
+      "criterion": "loss and matched shadow BGD variance-stagnation (21 counterparts), pending CI",
+      "status": "experimental V03/V04 native FFN source + coordinated runner code, both pending CI",
+      "reason": "Independent native frozen random tiny ViT/ConvNeXt FFN jobs on image arrays. Pretrained backbone replacement, real-image benchmarks, multi-seed/GPU science not yet done."
     },
     {
       "architecture": "V04",
-      "methods": "all 14 canonical method IDs via shared composite controller (pending standalone CPU CI)",
+      "methods": "14 canonical methods, eight generic in faithful/corrected profiles (22 routes per seed/split/repeat), pending CI",
       "site": "channel:stage0.block0",
-      "criterion": "loss / BGD-shadow variance-stagnation (pending tests)",
-      "status": "experimental standalone native FFN implementation; CI and coordinated runner pending",
-      "reason": "Synthetic tiny frozen random feature backbone with internal GELU FFN. Not a pretrained torchvision model, not a scientific image experiment."
+      "criterion": "loss and matched shadow BGD variance-stagnation (21 counterparts), pending CI",
+      "status": "experimental V03/V04 native FFN source + coordinated runner code, both pending CI",
+      "reason": "Independent native frozen random tiny ViT/ConvNeXt FFN jobs on image arrays. Pretrained backbone replacement, real-image benchmarks, multi-seed/GPU science not yet done."
     },
     {
       "architecture": "V05",
