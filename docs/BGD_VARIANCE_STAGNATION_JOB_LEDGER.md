@@ -185,3 +185,22 @@ part of the original tabular inventory and must be audited
 and executed independently as new scientific job families.
 V03 onwards are not declared supported jobs; unfinished
 architectures are not counted as executable counterparts.
+
+
+## 2026-11-02: fresh evidence after parameter-geometry changes
+
+The auxiliary Adam/AdamW shadow-BGD observer now detects a change in
+the **named trainable parameter geometry** (new/removed name or resized
+tensor). It retains learned diagonal sigma estimates on overlapping
+coordinates and initializes newly added coordinates at the configured
+prior standard deviation, but clears the old architecture's contraction
+measurement, observation count, and non-contraction streak. This
+prevents old-model stagnation votes from authorizing growth before
+the new model has accumulated a fresh persistence window.
+
+Source: `src/simple_adp/shadow_bgd_variance.py`. Regression: `tests/test_shadow_variance_growth_counterparts.py`.
+Source-and-test integration commit: `d156a809a6e6809dd2cf825e8e1f4da1318ea425` on `main`.
+The source and test were committed, but this ledger **does not claim a
+successful new full-suite run**, GPU parity, real-dataset execution, or
+fault-injected exact-resume equivalence on that commit. These remain
+verification requirements; existing original loss-trigger jobs are unchanged.
