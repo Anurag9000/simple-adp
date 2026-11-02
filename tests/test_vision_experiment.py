@@ -184,3 +184,35 @@ def test_random_encoder_requires_explicit_opt_in_and_rejects_identity_drift(tmp_
         run_vision_experiment(**{**cfg, "weights_path": tmp_path / "not-real.pt"})
     with pytest.raises(ValueError, match="dataset must be"):
         run_vision_experiment(**{**cfg, "dataset": "arbitrary"})
+
+
+
+def test_v01_experiment_resume_mid_batch_is_metric_identical(tmp_path):
+    """Real-image runner honors the canonical signed V01 batch checkpoint."""
+    original = kwargs(tmp_path / "baseline")
+    original["model_id"] = "ADP-W-RR"
+    original["fixed_grid"] = None
+    baseline = run_vision_experiment(**original)
+    evicted = kwargs(tmp_path / "evicted")
+    evicted["model_id"] = "ADP-W-RR"
+    evicted["fixed_grid"] = None
+
+    class Eviction(Exception):
+        pass
+
+    def interrupt(progress):
+        if (progress.get("stage_status") == "active"
+                and progress.get("batches_done") == 1):
+            raise Eviction()
+
+    with pytest.raises(Eviction):
+        run_vision_experiment(**evicted, progress_callback=interrupt)
+    assert (evicted["output_dir"] / "manifest.json").is_file()
+    assert (evicted["output_dir"] / "estimator.checkpoint.pt").is_file()
+    assert not (evicted["output_dir"] / "result.json").exists()
+    recovered = run_vision_experiment(**evicted)
+    assert recovered["run_signature"] == baseline["run_signature"]
+    assert recovered["selected_architecture"] == baseline["selected_architecture"]
+    assert recovered["history_entries"] == baseline["history_entries"]
+    assert recovered["validation_metrics"] == baseline["validation_metrics"]
+    assert recovered["test_metrics"] == baseline["test_metrics"]

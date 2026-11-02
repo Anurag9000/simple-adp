@@ -13,7 +13,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Callable, Sequence
 
 import numpy as np
 import torch
@@ -69,6 +69,7 @@ def run_vision_experiment(
     split_seed: int = 11,
     encoder_seed: int = 0,
     encoder_batch_size: int = 32,
+    progress_callback: Callable[[dict[str, object]], None] | None = None,
     # Synthetic fixture injection, for offline unit tests only. Not a CLI path.
     partitions: ImagePartitions | None = None,
     encoder: nn.Module | None = None,
@@ -183,7 +184,7 @@ def run_vision_experiment(
     )
     estimator.fit(
         train_x, train_y, validation_data=(valid_x, valid_y),
-        checkpoint_path=checkpoint_path,
+        checkpoint_path=checkpoint_path, progress_callback=progress_callback,
     )
     if estimator.encoder_sha256 != source_state_sha:
         raise ValueError("frozen encoder hash changed during architecture search")
