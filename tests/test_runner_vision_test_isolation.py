@@ -85,3 +85,14 @@ def test_coordinated_visual_test_rows_remain_unread_until_fit(
     assert data.X.held_out_reads > 0
     assert data.y.held_out_reads > 0
     assert result["test_metrics"]["accuracy"] >= 0
+    accounting = result["parameter_accounting"]
+    assert accounting["total_parameters"] == (
+        accounting["frozen_parameters"] + accounting["trainable_parameters"]
+    )
+    assert accounting["trainable_parameters"] == (
+        accounting["currently_trainable_eligible_mlp_parameters"]
+        + accounting["other_trainable_parameters"]
+    )
+    assert "head" in accounting["eligible_growth_sites"] if adapter_class is VisionModelAdapter else (
+        "adapter:block1" in accounting["eligible_growth_sites"]
+    )
