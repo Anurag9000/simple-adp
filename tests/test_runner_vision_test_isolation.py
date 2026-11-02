@@ -93,6 +93,5 @@ def test_coordinated_visual_test_rows_remain_unread_until_fit(
         accounting["currently_trainable_eligible_mlp_parameters"]
         + accounting["other_trainable_parameters"]
     )
-    assert "head" in accounting["eligible_growth_sites"] if adapter_class is VisionModelAdapter else (
-        "adapter:block1" in accounting["eligible_growth_sites"]
-    )
+    expected_site = "head" if adapter_class is VisionModelAdapter else "adapter:block1"
+    assert expected_site in accounting["eligible_growth_sites"]
