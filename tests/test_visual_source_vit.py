@@ -146,3 +146,49 @@ def test_true_vit_native_fixed_stage_and_gradient(source):
     probs = search.predict_proba(x[2:])
     assert probs.shape == (2, 2)
     assert np.isfinite(probs).all()
+
+
+
+def test_true_vit_exact_interrupted_batch_relaunch(source, tmp_path):
+    """Signed 86M-param original source resumes the *same* batch/optimizer state."""
+    x = np.random.default_rng(24).random((8, 3, 32, 32), dtype=np.float32)
+    y = np.asarray([0, 1] * 4, dtype=np.int64)
+    config = SearchSettings(
+        init_width=3072, init_depth=1, max_width=3072,
+        max_depth=2, max_neurons=5000, max_epochs=1,
+        max_candidates=1, batch_size=2, patience_es=1,
+        device="cpu", seed=29,
+    )
+    fit, valid = (x[:4], y[:4]), (x[4:], y[4:])
+    baseline = VisualResidualSearch("ADP-W-RR", spec(source), settings=config)
+    baseline.fit(*fit, validation_data=valid)
+
+    class Evicted(Exception):
+        pass
+
+    def evict_after_first_batch(progress):
+        if (progress["phase"] == "initial"
+                and progress["stage_status"] == "active"
+                and progress["batches_done"] == 1):
+            raise Evicted()
+
+    checkpoint = tmp_path / "vit-full-ffn.checkpoint.pt"
+    with pytest.raises(Evicted):
+        VisualResidualSearch("ADP-W-RR", spec(source), settings=config).fit(
+            *fit, validation_data=valid, checkpoint_path=checkpoint,
+            progress_callback=evict_after_first_batch,
+        )
+    assert checkpoint.is_file()
+    resumed = VisualResidualSearch("ADP-W-RR", spec(source), settings=config)
+    resumed.fit(*fit, validation_data=valid, checkpoint_path=checkpoint)
+    assert resumed.history_ == baseline.history_
+    assert resumed.model_.hidden_widths == baseline.model_.hidden_widths
+    assert resumed.result_.score == baseline.result_.score
+    assert resumed.model_.frozen_state_sha256() == baseline.model_.frozen_state_sha256()
+    assert np.array_equal(resumed.predict_proba(valid[0]),
+                          baseline.predict_proba(valid[0]))
+    with pytest.raises(ValueError, match="signature"):
+        drift = SearchSettings(**{**config.as_dict(), "seed": 30})
+        VisualResidualSearch("ADP-W-RR", spec(source), settings=drift).fit(
+            *fit, validation_data=valid, checkpoint_path=checkpoint,
+        )
