@@ -593,7 +593,9 @@ corrected generic methods. Evidence remains pending CI.
   planning and one real full-source stage, with separate source pairs.
   This integration passed 3/3 source-specific CPU tests at
   https://github.com/Anurag9000/simple-adp/actions/runs/41470335656.
-  The broader visual CPU suite is running separately. The already
+  The expanded selected visual CPU suite passed **373 tests** at
+  https://github.com/Anurag9000/simple-adp/actions/runs/41470335650.
+  The already
   verified published-pretrained single V04 full-image experiment is a
   separate successful standalone execution, not proof these 43 planned
   source runner jobs have been trained.
@@ -610,3 +612,14 @@ corrected generic methods. Evidence remains pending CI.
 - Worker test used an original full **random-state** torchvision ConvNeXt
   checkpoint. The published pretrained independent real-image experiment is
   separately recorded; neither test executed all 43 source V04 jobs.
+
+### Complete selected visual CPU regression after source-V04 integration
+- GitHub Actions https://github.com/Anurag9000/simple-adp/actions/runs/41470335650:
+  **373 tests passed in 112.18 seconds** (CPU). The new source runner,
+  previously working 817-job opt-in matrix, V01–V11 controlled families,
+  V04 original source fidelity and exact resume, paired V01 comparison,
+  and existing source/native method tests remained green.
+- Dedicated source-specific test workflow:
+  https://github.com/Anurag9000/simple-adp/actions/runs/41470335656,
+  **3 passed in 21.36 seconds**. This selected test set is not a claim
+  of full repository regression or GPU correctness.

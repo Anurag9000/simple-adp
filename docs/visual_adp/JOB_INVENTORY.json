@@ -208,6 +208,8 @@
     "note": "Separate full 28M-param torchvision source route, not tiny vision_v04; explicit bounded max_epochs/max_candidates required",
     "ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41470335656",
     "executed_source_fixtures": 1,
-    "full_cpu_regression": "pending run 41470335650"
+    "full_cpu_regression": "passed 373 selected CPU tests in 112.18s",
+    "full_cpu_regression_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41470335650",
+    "selected_suite_status": "verified"
   }
 }

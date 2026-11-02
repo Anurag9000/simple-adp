@@ -377,4 +377,5 @@ evidence of accuracy or reproducible real-data science. CI pending.
   artifact + frozen-source hash. Source weights in fixture were *random*;
   this test is not a pretrained benchmark.
 - Complete selected CPU suite is separately queued/running at
-  https://github.com/Anurag9000/simple-adp/actions/runs/41470335650.
+  https://github.com/Anurag9000/simple-adp/actions/runs/41470335650:
+  **373 passing selected CPU tests in 112.18s**.
