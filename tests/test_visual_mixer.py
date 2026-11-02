@@ -31,7 +31,7 @@ def data():
 def settings():
     return SearchSettings(
         device="cpu", seed=48, init_width=3, init_depth=1,
-        max_width=5, max_depth=2, max_neurons=35, max_candidates=1,
+        max_width=5, max_depth=2, max_neurons=45, max_candidates=1,
         max_epochs=1, batch_size=4, ex_k_width=1,
         patience_es=1, patience_width_exp=1, patience_depth_exp=1,
     )
@@ -235,10 +235,11 @@ def test_mixer_both_scope_signed_resume_and_joint_budget(tmp_path):
                              settings=settings()).fit(
             x, y, validation_data=validation, checkpoint_path=checkpoint,
         )
-    cap = SearchSettings(**{**settings().as_dict(), "max_neurons": 7})
+    cap = SearchSettings(**{**settings().as_dict(), "max_neurons": 35})
     constrained = VisualResidualSearch("ADP-W-RR", both, settings=cap)
     constrained.fit(x, y, validation_data=validation)
-    # 3+3 initial hidden units fit; 4+4 proposal exceeds the combined budget.
+    # The source counts hidden + output units per site: 27+7=34 at
+    # initialization, then 28+8=36 after one synchronized growth.
     assert len(constrained.history_) == 1
 
 
