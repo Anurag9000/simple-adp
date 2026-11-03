@@ -143,6 +143,12 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError("worker did not report completion")
                 if value.get("task_family") != "vision":
                     raise AssertionError("worker did not use vision task contract")
+                for part in ("validation_metrics", "test_metrics"):
+                    metrics = value[part]
+                    if not (0 <= metrics.get("top_label_ece_10", -1) <= 1):
+                        raise AssertionError(f"{part}: missing valid top-label ECE")
+                    if not (0 <= metrics.get("multiclass_brier", -1) <= 2):
+                        raise AssertionError(f"{part}: missing valid multiclass Brier")
                 if "parameter_accounting" not in value:
                     raise AssertionError("composite parameter accounting missing")
                 counts = value["parameter_accounting"]
