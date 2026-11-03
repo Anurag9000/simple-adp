@@ -23,6 +23,7 @@ from ..registry import MODEL_REGISTRY
 from ..visual_search import VisualResidualSearch
 from ..visual_accounting import visual_parameter_accounting
 from ..visual_compute import visual_linear_conv_macs
+from ..visual_metrics import visual_calibration_metrics
 from ..visual_source_convnext import SourceConvNeXtSpec, file_sha256
 from ..visual_source_vit import SourceViTSpec
 from .artifacts import estimator_model_path
@@ -176,10 +177,16 @@ class VisionSourceConvNeXtModelAdapter:
             "training_budget": dict(search.search_state_["training_budget"]),
             "selected_architecture": list(search.model_.hidden_widths),
             "validation_selection_score": float(validation_loss),
-            "validation_metrics": task.evaluation_metrics(
-                valid_y, valid_prediction, valid_probability),
-            "test_metrics": task.evaluation_metrics(
-                test_y, test_prediction, test_probability),
+            "validation_metrics": {
+                **task.evaluation_metrics(
+                    valid_y, valid_prediction, valid_probability),
+                **visual_calibration_metrics(task, valid_y, valid_probability),
+            },
+            "test_metrics": {
+                **task.evaluation_metrics(
+                    test_y, test_prediction, test_probability),
+                **visual_calibration_metrics(task, test_y, test_probability),
+            },
             "task_family": "vision", "task_variant": data.task_variant,
             "split_protocol": data.split_protocol,
             "primary_metric": task.primary_metric,
