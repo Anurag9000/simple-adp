@@ -88,6 +88,7 @@ class VisionSourceConvNeXtModelAdapter:
         seed: int, settings: SearchSettings,
         checkpoint_path: str | None = None,
         progress_callback: Callable[[dict[str, object]], None] | None = None,
+        max_model_tensor_payload_bytes: int | None = None,
     ) -> dict[str, Any]:
         if data.task_family != "vision" or route.suite_group != "vision":
             raise ValueError("source V04 adapter only accepts official/synthetic vision tasks")
@@ -131,6 +132,7 @@ class VisionSourceConvNeXtModelAdapter:
             route.model_id, spec, settings=real_settings,
             generic_profile=route.generic_profile or "faithful",
             fixed_grid=route.fixed_grid,
+            max_model_tensor_payload_bytes=max_model_tensor_payload_bytes,
         )
         started = time.perf_counter()
         search.fit(
