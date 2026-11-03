@@ -236,3 +236,49 @@ are unbounded-by-byte-cap smoke tests; their new memory reporting
 must not be described as actual GPU memory measurements. Physical
 CUDA OOM testing and full activation/optimizer accounting remain
 outstanding.
+
+
+## Exact local-MLP growth payload preflight (2026-11-03)
+
+Before building a new native visual FFN candidate, the optional memory
+admission policy now applies a **zero-candidate-allocation forecast**
+to standard `TabularMLP` parameters and registered BatchNorm buffers.
+For widths (w_1,\ldots,w_L), input dimension (d), output dimension
+(c), floating dtype itemsize (b) and optional BatchNorm, the
+modeled logical payload is:
+
+```text
+Linear parameter elements =
+    (d+1)*w1 + sum_(i=2..L) (w[i-1]+1)*w[i]
+    + (w[L]+1)*c
+
+Per BatchNorm1d hidden layer =
+    4*w[i]*b + 8 bytes (two affine vectors, two running-stat vectors,
+                         one int64 num_batches_tracked)
+```
+
+The preflight first verifies that this source model's **existing**
+payload matches the analytic formula; if its structure/dtype is
+different or cannot be proven, it safely leaves the existing
+postconstruction check in place and marks preallocation prediction
+unavailable. For supported structures, it replaces only the eligible
+MLP's predicted bytes in the whole-model logical payload. Synchronous
+V07 token/channel growth includes the second MLP delta; V08 scheduled
+growth uses its active site. Fixed grid, width-RR, all-layer width,
+source DEN RR, D1/Dcur depth and intermediate D1 warmup are covered.
+
+Over-cap candidates are refused *before allocating new growth
+weights or deep-copying the model*, with
+`memory_admission_rejections[].before_candidate_construction=true`
+and a signed `prediction_kind`. The local model still must first be
+restored from its snapshot, and the initial model/source checkpoint
+must be loaded before memory accounting; this is not a global
+no-allocation or OOM guarantee. The existing **postconstruction**
+cap remains the final defense for unsupported modules or mismatches,
+and the existing accepted-candidate source optimizer/training logic
+is unchanged.
+
+No forecast is assumed to measure optimizer moments, activations,
+CUDA graph/kernel workspaces or allocator fragmentation. Neither
+this cap nor the whole-model inference MAC sum is equivalent to
+matching the full training-memory or training-compute budget.
