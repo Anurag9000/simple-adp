@@ -48,3 +48,15 @@ def test_rejects_unknown_dataset_before_download(tmp_path, capsys):
         ])
     assert exc.value.code == 2
     assert "invalid choice" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("seeds", [0, -1])
+def test_multiseed_worker_count_checked_before_official_download(tmp_path, seeds, capsys):
+    with pytest.raises(SystemExit) as exc:
+        _matrix_main()([
+            "--dataset", "cifar10", "--workdir", str(tmp_path),
+            "--model-seeds", str(seeds),
+        ])
+    assert exc.value.code == 2
+    assert "--model-seeds must be a positive integer" in capsys.readouterr().err
+    assert not (tmp_path / "dataset").exists()
