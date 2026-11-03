@@ -68,6 +68,8 @@ def test_opt_in_cap_in_signed_worker_spec_allows_valid_native_cpu_job(monkeypatc
     assert result["status"] == "completed"
     assert result["model_tensor_payload_cap_bytes"] == cap
     assert result["memory_admission_rejections"] == []
+    assert result["trained_model_memory_trace_complete"] is True
+    assert len(result["trained_model_memory_trace"]) == result["training_budget"]["trained_stages"]
     mem = result["model_memory_accounting"]
     assert 0 < mem["total_model_tensor_payload_bytes"] < cap
     assert mem["total_model_tensor_payload_bytes"] == (
