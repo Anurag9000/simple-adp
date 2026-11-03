@@ -10,7 +10,10 @@ import json
 import os
 from pathlib import Path
 
-from simple_adp.visual_paired_metrics import summarize_visual_paired_metrics
+from simple_adp.visual_paired_metrics import (
+    summarize_visual_paired_metrics,
+    verify_visual_worker_result_artifacts,
+)
 from visual_official_fashion_matrix import CONTROL_ADAPTERS
 
 
@@ -20,6 +23,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="completed official visual fixed/RR matrix JSON")
     parser.add_argument("--output", type=Path,
                         help="output path; defaults to _paired_metrics suffix")
+    parser.add_argument("--results-root", type=Path,
+                        help="optional original signed worker result.json root; verify every worker")
     args = parser.parse_args(argv)
     matrix = json.loads(args.matrix.read_text(encoding="utf-8"))
     if not isinstance(matrix, dict) or matrix.get("status") != "completed":
@@ -53,6 +58,12 @@ def main(argv: list[str] | None = None) -> int:
 
     analysis = summarize_visual_paired_metrics(
         rows, expected_adapters=CONTROL_ADAPTERS, expected_seeds=run_seeds,
+    )
+    analysis["original_worker_artifact_verification"] = (
+        verify_visual_worker_result_artifacts(
+            rows, results_root=args.results_root,
+        ) if args.results_root is not None
+        else {"status": "not-requested; matrix metadata only"}
     )
     analysis["dataset"] = matrix.get("dataset")
     analysis["source_matrix_format"] = matrix.get("format")
