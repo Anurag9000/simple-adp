@@ -783,5 +783,52 @@
       "official_workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-isolated-memory.yml",
       "status": "implementation and tests committed; new isolated worker run pending"
     }
+  },
+  "visual_paired_metric_descriptive_analysis": {
+    "code": "src/simple_adp/visual_paired_metrics.py",
+    "cli": "scripts/visual_paired_metrics_analysis.py",
+    "docs": "docs/visual_adp/PAIRED_RESULTS_ANALYSIS.md",
+    "input": "completed original signed worker matrix; strict dataset/split/seed/architecture/site pairing",
+    "jobs_per_seed": 38,
+    "controlled_adapter_sites": 19,
+    "heldout_metric_directions": {
+      "maximize": [
+        "accuracy",
+        "balanced_accuracy",
+        "macro_f1"
+      ],
+      "minimize": [
+        "log_loss",
+        "multiclass_brier",
+        "top_label_ece_10"
+      ]
+    },
+    "per_seed_report": "fixed/growth values and signed improvement; no adapter pooling",
+    "statistics": "mean, median, sample std (n>=2), wins/ties/losses; each architecture separate",
+    "confidence_intervals_computed": false,
+    "multiple_comparisons_adjusted": false,
+    "full_training_flops_matched": null,
+    "scientific_performance_conclusion": null,
+    "rejection_cases": [
+      "missing or duplicate worker job IDs",
+      "failed/missing jobs",
+      "mismatched dataset or split checksums",
+      "mismatched derived seeds or site/architecture",
+      "nonfinite/missing/out-of-range metrics"
+    ],
+    "test_path": [
+      "tests/test_visual_paired_metrics.py",
+      "tests/test_visual_paired_metrics_cli.py"
+    ],
+    "focused_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41616732211",
+    "focused_passed": 201,
+    "focused_skipped": 2,
+    "official_fashion_real_image_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41616572651",
+    "official_fashion_real_image_artifact": 13222170910,
+    "official_fashion_worker_count": 76,
+    "official_fashion_seed_count": 2,
+    "official_fashion_adapter_count": 19,
+    "official_fashion_result": "success; post-run paired report verified with 19 adapters and no statistical claims",
+    "other_dataset_ci_status": "new Fashion/CIFAR10/CIFAR100/stepbalanced/isolated workflows launched; verification pending"
   }
 }
