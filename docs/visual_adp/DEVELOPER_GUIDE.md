@@ -1076,3 +1076,58 @@ and it is not an endorsement of tiny smoke-test
 accuracy. The original worker matrix and its
 temporary staging path are protected from being
 overwritten by the report.
+
+
+## Trace actual native training forwards, without another forward pass
+
+```python
+from simple_adp.visual_search import VisualResidualSearch
+from simple_adp.runner.config import RunnerSettings
+
+search = VisualResidualSearch(
+    "ADP-W-RR", native_visual_spec,
+    settings=your_search_settings,
+    track_training_forward_macs=True,  # opt-in and checkpoint-signed
+)
+search.fit(train_images, train_labels, validation_data=(valid_images, valid_labels))
+print(search.search_state_["training_forward_compute"])
+print(search.search_state_["trained_forward_mac_trace"])
+
+# Coordinator: only native visual and separate V03/V04 source routes are
+# instrumented; V01 original tabular-head training stays unmeasured.
+settings = RunnerSettings(
+    tasks=("vision",), visual_training_forward_macs=True,
+    # ... provide all source dataset/growth/epoch constraints as usual
+)
+```
+
+For real official-image 19-family fixed/RR integration:
+
+```bash
+python scripts/visual_official_fashion_matrix.py \
+  --dataset fashion_mnist \
+  --step-balanced --observe-training-forwards --batch-size 16 \
+  --train-limit 40 --valid-limit 20 --test-limit 20 \
+  --workdir /tmp/actual-train-forward
+python scripts/visual_paired_metrics_analysis.py \
+  --matrix /tmp/actual-train-forward/official_fashion_vision_matrix_stepbalanced_observedtrain.json \
+  --results-root /tmp/actual-train-forward/results
+```
+
+The flag is **not enabled by default**. False is omitted
+from `RunnerSettings.as_dict` and from the visual search
+checkpoint signature, preserving historical run and restart
+identities. True is carried in signed individual worker
+specifications and exact-resume stage checkpoints. The
+post-hoc report gains `training_forward_work_audit` only
+when native observed work was supplied, while preserving
+original classification/calibration metrics.
+
+The observer's context spans only the real `model(xb)`
+training call and is detached before gradient backward.
+This avoids counting validation or auxiliary shadow
+passes, but it also deliberately means backward and
+Adam/AdamW work is **not counted**. Comparing the ratio of
+these partial forward MACs is stronger than comparing
+optimizer steps alone, but cannot establish equal
+full-training FLOPs or wall-clock parity.
