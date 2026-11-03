@@ -248,3 +248,24 @@ source backbone restoration/allocation remains necessary to
 know model payload; optimizer/activation VRAM peaks are not
 forecast. New optional cap semantics are separate from
 the original uncapped 14 native model configurations.
+
+
+## Native multi-seed experimental identity closure
+
+The separate `audit_visual_multiseed_worker_pairs` function
+subdivides the authoritative 19-site × 2-controller
+official-image worker matrix by the real
+`SuitePlan` `RunIdentity.seed`, not a manually invented
+reporting key. The fixed and growth jobs must agree on
+dataset ID, split source checksum, seed, architecture ID and
+growth site before any optimizer budget comparison.
+The existing zero-budget V01 legacy uncertainty remains
+explicit; no historical model or method is modified.
+The new CLI flag to the existing dataset driver defaults
+to one seed and leaves all prior output names and formats
+unchanged.
+
+Complete provenance-based multi-seed *execution* is
+not a scientific evaluation unless the official full
+training dataset, matched resources, multiple seeds
+and confidence intervals are also available.
