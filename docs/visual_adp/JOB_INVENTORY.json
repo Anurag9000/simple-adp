@@ -5,18 +5,35 @@
   "architectures": [
     {
       "id": "V01",
-      "central_runner_jobs": "43 per one seed/split/repeat, including 22 native (14 IDs with 8 additional generic profiles) plus 21 matched variance; opt-in; no real dataset execution",
-      "implementation": "v01_frozen_random_cnn_native_head_plus_opt_in_coordinated_runner_pending_CI",
+      "central_runner_jobs": "43 per one seed/split/repeat, including 22 native (14 IDs with 8 additional generic profiles) plus 21 matched variance; opt-in; bounded real-image worker execution verified; no scientific benchmark",
+      "implementation": "v01_frozen_random_cnn_native_head_plus_opt_in_coordinated_runner_bounded_official_image_cpu_verified",
       "scientifically_executed": false,
       "real_data_smoke_executed": true,
       "real_data_smoke_experiment": "official Fashion-MNIST 40/20/20, pretrained torchvision ResNet18, V01 ADP-W-RR",
-      "real_data_smoke_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41451103405"
+      "real_data_smoke_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41451103405",
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V02",
       "central_runner_jobs": "43 per seed/split/repeat (22 method/profile routes + 21 variance counterparts), opt-in, verified selected CPU worker CI",
       "implementation": "synthetic CPU CI verified all 14 canonical IDs, 8 generic faithful/corrected profiles, exact signed batch resume and opt-in runner",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V03",
@@ -45,6 +62,15 @@
         "published_pretrained_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41474035681",
         "published_pretrained_status": "verified real-image 3072→3073 source FFN growth, small smoke",
         "published_pretrained_artifact_id": 13157600366
+      },
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
       }
     },
     {
@@ -72,55 +98,136 @@
         "real_data_scope": "40 train,20 valid,20 official test, one seed, source width 384->385, tiny integration",
         "artifact_id": 13151101792,
         "source_runner_verification": "https://github.com/Anurag9000/simple-adp/actions/runs/41470335656"
+      },
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
       }
     },
     {
       "id": "V05",
       "central_runner_jobs": "43 per one seed/split/repeat (22 native method/profile routes + 21 variance counterparts), opt-in, selected CPU CI verified",
       "implementation": "synthetic CPU CI verified native PoolFormer fixed pooling/channel FFN, source search, exact resume and opt-in runner",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V06a",
       "central_runner_jobs": "43 per seed/split/repeat (22 methods/profiles + 21 variance counterparts), opt-in, selected CPU CI verified",
       "implementation": "selected synthetic CPU CI verified parameter-free spatial shifts, native channel growth, signed replay and worker",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V06b",
       "central_runner_jobs": "43 per seed/split/repeat (22 methods/profiles + 21 variance counterparts), opt-in, selected CPU CI verified",
       "implementation": "selected synthetic CPU CI verified parameter-free spatial shifts, native channel growth, signed replay and worker",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V07",
       "central_runner_jobs": "129 per split/seed/repeat (43 token-only + 43 channel-only + 43 synchronous-both), all selected CPU CI verified",
       "implementation": "all 3 explicit Mixer site policy scopes synthetic CPU verified, signed joint cursor/restart and matched runner, 303 tests",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 6,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V08",
       "central_runner_jobs": "172 per seed/split/repeat: 129 independent early/middle/late plus 43 predeclared RR site policy, opt-in; all selected CPU CI verified",
       "implementation": "three independent local stage MLPs plus fixed early-middle-late scheduled policy, signed distinct per-site weights/cursors, true local-only training, matched variance, selected CPU CI verified (354 tests)",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 8,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V09",
       "central_runner_jobs": "129 per one seed/split/repeat (43 each for bank0/1/2), opt-in, selected CPU CI verified",
       "implementation": "fixed hard routed bank of 3 isolated real adapters, signed exact interrupted replay, trained one selected local MLP, matched original/variance worker and routing counts; 347 selected CPU tests passing",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 6,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V10",
       "central_runner_jobs": "43 per seed/split/repeat (22 source methods/profiles +21 variance counterparts), opt-in, selected CPU CI verified",
       "implementation": "native frozen ResMLP token/affine operator, channel FFN ADP, exact resume, paired worker, 315 selected CI tests",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     },
     {
       "id": "V11",
       "central_runner_jobs": "43 per seed/split/repeat (22 source methods/profiles +21 variance counterparts), opt-in, selected CPU CI verified",
       "implementation": "native frozen GFNet complex Fourier operator, channel FFN ADP, exact resume, paired worker, 315 selected CI tests",
-      "scientifically_executed": false
+      "scientifically_executed": false,
+      "real_data_smoke_executed": true,
+      "controlled_family_real_image_smoke": {
+        "dataset": "torchvision FashionMNIST original official train/test (40/20/20 subset)",
+        "worker_jobs_passed": 2,
+        "worker_jobs_failed": 0,
+        "verification_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+        "source_faithful_architecture_claim": false,
+        "multi_seed_scientific_benchmark": false
+      }
     }
   ],
   "last_verified_visual_sha": "0ec34b7324a7b60a01dec70be45065298f229ae2",
@@ -406,7 +513,20 @@
       "v01_missing_step_budget": "unknown, not implicitly zero",
       "full_training_flops_matched": null,
       "scientific_performance_conclusion": null,
-      "status": "matrix/audit CI running; implementation committed"
+      "status": "bounded Fashion-MNIST official 38-route run passed including audit; CIFAR execution pending",
+      "verified_fashion_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349"
     }
+  },
+  "official_cifar_control_matrix": {
+    "dataset_cifar10": "torchvision.datasets.CIFAR10 original official train/test; RGB 32x32",
+    "dataset_cifar100": "torchvision.datasets.CIFAR100 original official train/test; RGB 32x32",
+    "controller": "existing 19 controlled architecture/site adapters x fixed/RR = 38 signed worker jobs",
+    "driver": "scripts/visual_official_fashion_matrix.py --dataset cifar10|cifar100",
+    "workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-cifar-matrix.yml",
+    "cifar10_source_runtime_verification": "in progress; record run evidence after completion",
+    "cifar100_source_runtime_verification": "not yet executed",
+    "classification_guard": "all three partition limits must cover 10 CIFAR10 / 100 CIFAR100 classes",
+    "matched_training_compute": false,
+    "scientific_benchmark": false
   }
 }
