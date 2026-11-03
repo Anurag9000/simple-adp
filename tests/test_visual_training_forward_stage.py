@@ -144,3 +144,30 @@ def test_training_forward_tracker_input_type_validation():
             ClassificationTask(), _settings(),
             track_visual_training_forward_macs="yes",
         )
+
+
+def test_progressive_d1_training_forward_cost_includes_nonselectable_warmups():
+    x, y, valid = _toy()
+    settings = SearchSettings(**{
+        **_settings().as_dict(),
+        "init_width": 3, "max_neurons": 30,
+    })
+    search = VisualResidualSearch(
+        "ADP-D-D1", _spec(), settings=settings,
+        track_training_forward_macs=True,
+    ).fit(x, y, validation_data=valid)
+    trace = search.search_state_["trained_forward_mac_trace"]
+    budget = search.search_state_["training_budget"]
+    assert len(search.history_) == 2
+    assert budget["trained_stages"] == len(trace) == 4
+    assert budget["warmup_stages"] == 2
+    assert [row["stage"] for row in trace] == [
+        "initial", "depth_warmup", "depth_warmup", "depth",
+    ]
+    assert [row["architecture"] for row in trace] == [
+        [3], [3, 1], [3, 2], [3, 3],
+    ]
+    assert search.search_state_["training_forward_compute"]["recorded_training_forward_batches"] == 16
+    assert search.search_state_["training_forward_compute"]["recorded_training_samples"] == 64
+    assert search.search_state_["training_forward_compute"]["complete"] is True
+    assert all(row["partial_training_forward_macs"] > 0 for row in trace)
