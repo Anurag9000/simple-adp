@@ -339,12 +339,21 @@
         "nn.Linear",
         "nn.Conv2d"
       ],
-      "excluded": "functional attention projections/attention kernels; Fourier FFT; normalization; pooling; activation; interpolation; training/backward",
+      "excluded": "other functional/fused attention outside nn.MultiheadAttention; softmax/mask/sparse savings; FFT; normalization; pooling; activation; interpolation; backward and optimizer",
       "whole_model_flops": null,
       "focused_cpu_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575556560",
       "official_image_matrix_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575563341",
       "focused_status": "success",
-      "official_image_matrix_status": "success"
+      "official_image_matrix_status": "success",
+      "format": "simple-adp-observed-linear-conv2d-plus-analytical-mha-macs-v2",
+      "extra_fields": [
+        "analytical_multihead_attention_macs_per_image",
+        "analytical_multihead_attention_modules",
+        "partial_dense_attention_inclusive_macs_per_image"
+      ],
+      "analytical_attention_description": "module shape-based QKV/output projections and dense QK^T/AV products, not CUDA kernel observation",
+      "attention_official_image_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41582544787",
+      "attention_focused_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41582508146"
     },
     "native_training_budget": {
       "module": "src/simple_adp/visual_search.py",
@@ -383,6 +392,21 @@
       }
     },
     "scientific_benchmark_completed": false,
-    "physical_cuda_verified": false
+    "physical_cuda_verified": false,
+    "budget_pair_audit": {
+      "module": "src/simple_adp/visual_budget_audit.py",
+      "matrix_field": "fixed_vs_growth_budget_audit",
+      "method_pair": [
+        "MLP-Fixed",
+        "ADP-W-RR"
+      ],
+      "number_of_controlled_adapters": 19,
+      "prevents_duplicate_missing_or_cross_split_comparison": true,
+      "reports": "optimizer step equality/ratio only when complete native step records exist",
+      "v01_missing_step_budget": "unknown, not implicitly zero",
+      "full_training_flops_matched": null,
+      "scientific_performance_conclusion": null,
+      "status": "matrix/audit CI running; implementation committed"
+    }
   }
 }
