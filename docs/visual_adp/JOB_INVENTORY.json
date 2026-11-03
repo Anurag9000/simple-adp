@@ -917,6 +917,16 @@
     ],
     "source_model_coverage": "source ViT/ConvNeXt native instrumentation contract wired, separate physical hardware test pending",
     "scientific_gain_conclusion": null,
-    "status": "implemented and committed; new focused, official-image and full-repository CI pending"
+    "status": "implemented and committed; new focused, official-image and full-repository CI pending",
+    "ci_tracking": {
+      "focused_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41621677208",
+      "full_repository_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41621677240",
+      "official_original_image_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41621020991",
+      "runner_ast_source_map_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41620310687",
+      "status_at_update": "queued; results not yet available, no successful training-work execution asserted"
+    },
+    "native_v03_training_probe": "new V03 native tiny model executes MHA and must yield positive analytical attention MACs",
+    "native_v11_training_probe": "new V11 native tiny GFNet must not misattribute FFT operations to MHA",
+    "d1_stage_probe": "progressive D1 extra width-1/width-2 warmup stages included in signed actual forward work"
   }
 }
