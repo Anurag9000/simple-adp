@@ -1087,3 +1087,40 @@ but do not explicitly prove ENOSPC. The complete
 full-suite workflow now frees unrelated hosted-runner
 SDKs before execution and captures disk diagnostics
 on failure, without skipping any original tests.
+
+
+## 2026-11-03 continuation: executed training-forward partial MACs
+
+`src/simple_adp/visual_train_compute.py` adds a side-effect-free
+opt-in module-hook observer over the *actual* training forward
+of every minibatch. New unit tests cover convolution/linear
+batch arithmetic, dense self-attention without output
+projection double-counting, no validation forward
+contamination, failed forward rollback, hook cleanup,
+invalid batch geometry and stage counter restoration.
+
+The original `StageTrainer` now optionally persists
+`training_forward_macs` after every successful optimizer
+step. Native visual architecture search records exact
+per-stage work across initial, growth and D1 warmup
+stages and aggregate work under a checkpoint-signed
+opt-in setting. Tests interrupt at the second training
+batch and verify exact resumed work, rather than just
+counting completed epochs. A coordinated `RunnerSettings`
+opt-in signs this control into the plan and worker
+specifications; the original V01 route remains unmeasured.
+
+`src/simple_adp/visual_training_work_audit.py` independently
+rejects tampered stage totals, fake full FLOPs, mismatched
+optimizer batch counts, cross-seed dataset/split changes and
+duplicate/missing original jobs. Its ratio of growth/fixed
+partial forward MAC work remains descriptive. Real-image
+workflow `.github/workflows/visual-official-forward-work.yml`
+runs 38 original Fashion workers, step-balanced and
+forward-observed, and retains original job artifacts.
+
+**This newly implemented work is not yet claimed CI-passed
+or scientifically validated** pending the matching focused
+regression and real-image workflow results. Earlier
+19,404-pass full-repository evidence predates this
+opt-in addition.
