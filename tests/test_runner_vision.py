@@ -129,6 +129,8 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     assert inner_pair.worker_settings["expansion_criterion"] == "variance_stagnation"
     inner_result = run_spec(inner.command[-1])
     assert inner_result["status"] == "completed"
+    assert inner_result["training_budget"]["optimizer_steps"] > 0
+    assert inner_result["training_budget"]["complete"] is True
     assert "adapter:block1" in inner_result["parameter_accounting"]["eligible_growth_sites"]
     assert inner_result["architecture_id"] == "V02:toy-frozen-residual-adapter"
     assert inner_result["growth_site"] == "adapter:block1"
