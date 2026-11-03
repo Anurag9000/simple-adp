@@ -50,9 +50,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--test-limit", type=int, default=20)
     parser.add_argument("--model-seeds", type=int, default=1,
                         help="number of independently derived native runner seeds")
+    parser.add_argument("--step-balanced", action="store_true",
+                        help="request 2 fixed epochs vs two 1-epoch ADP stages; audit actual steps")
+    parser.add_argument("--batch-size", type=int, default=16,
+                        help="used in step-balanced mode; standard smoke uses full train batch")
     args = parser.parse_args(argv)
     if args.model_seeds < 1:
         parser.error("--model-seeds must be a positive integer")
+    if args.batch_size < 1:
+        parser.error("--batch-size must be a positive integer")
     required_classes = 100 if args.dataset == "cifar100" else 10
     if min(args.train_limit, args.valid_limit, args.test_limit) < required_classes:
         parser.error(
@@ -96,8 +102,11 @@ def main(argv: list[str] | None = None) -> int:
         # one-step RR jobs are independently bounded by init width, candidate
         # count, epochs and max_neurons.
         max_width=512, max_depth=5, max_neurons=128,
-        max_candidates=1, max_epochs=1, batch_size=16,
-        smoke_test=True, cpu_only=True,
+        max_candidates=1, max_epochs=None if args.step_balanced else 1,
+        max_epochs_vanilla=2 if args.step_balanced else 0,
+        max_epochs_adp=1 if args.step_balanced else 0,
+        batch_size=args.batch_size,
+        smoke_test=not args.step_balanced, cpu_only=True,
     )
     plan = SuitePlan.build(
         settings=settings,
@@ -142,9 +151,13 @@ def main(argv: list[str] | None = None) -> int:
         matrix_basename = matrix_basename.replace(
             ".json", f"_{args.model_seeds}seeds.json",
         )
+    if args.step_balanced:
+        matrix_basename = matrix_basename.replace(".json", "_stepbalanced.json")
     summary_path = root / matrix_basename
     summary: dict[str, object] = {
         "format": (
+            "simple-adp-official-visual-stepbalanced-controls-v1"
+            if args.step_balanced else
             "simple-adp-official-visual-multiseed-controls-v1"
             if args.model_seeds > 1 else
             "simple-adp-official-fashion-visual-controls-v1"
@@ -161,11 +174,24 @@ def main(argv: list[str] | None = None) -> int:
         "planned_full_vision_jobs": len(plan.runs),
         "selected_worker_jobs": len(selected),
         "scientific_scope": (
+            "explicit optimizer-step balancing attempt: two fixed epochs vs "
+            "two one-epoch ADP stages, actual steps individually audited; "
+            "not whole-model FLOP matching or a scientific benchmark"
+            if args.step_balanced else
             "small multiple-seed, one-epoch-per-candidate official-image smoke; "
             "not a matched-compute benchmark"
             if args.model_seeds > 1 else
             "small one-seed, one-epoch official-image smoke; not a benchmark"
         ),
+        **({
+            "requested_step_balance": {
+                "fixed_epoch_cap": 2, "adp_per_candidate_epoch_cap": 1,
+                "max_structural_proposals": 1,
+                "batch_size": args.batch_size,
+                "actual_optimizer_steps_checked_by_pair_audit": True,
+                "whole_model_training_flops_matched": None,
+            },
+        } if args.step_balanced else {}),
         **({
             "model_seed_count": args.model_seeds,
             "derived_run_seeds": run_seeds,
