@@ -694,3 +694,47 @@ V01 `VisualADPEstimator` head has no native
 `VisualResidualSearch.training_budget`, and remains unknown.
 `full_training_flops_matched=None` always: an optimizer step does
 not have identical work across changed architectures.
+
+
+## Original official RGB CIFAR image worker matrix
+
+The single authoritative `SuitePlan`/`run_spec` 38-job controlled
+vision smoke driver supports three official torchvision inputs without
+forking the ADP training implementation:
+
+```bash
+# Historical default and historical artifact/schema preserved
+python scripts/visual_official_fashion_matrix.py \
+  --dataset fashion_mnist --workdir /tmp/visual-fashion \
+  --train-limit 40 --valid-limit 20 --test-limit 20
+
+# Actual RGB 32x32 CIFAR-10; 19 controlled families x fixed/RR
+python scripts/visual_official_fashion_matrix.py \
+  --dataset cifar10 --workdir /tmp/visual-cifar10 \
+  --train-limit 40 --valid-limit 20 --test-limit 20
+
+# CIFAR-100; every one of its 100 classes requires >=1 example in
+# EACH of the three partitions (prefer substantially more in science)
+python scripts/visual_official_fashion_matrix.py \
+  --dataset cifar100 --workdir /tmp/visual-cifar100 \
+  --train-limit 200 --valid-limit 100 --test-limit 100
+```
+
+Dataset download is an explicit step in this standalone integration
+driver; the underlying historical `VisionDatasetProvider` retains
+`download=False` and never begins implicit network access. The
+official test group stays inaccessible until fitting and validation
+selection complete. The output file follows dataset identity:
+`official_fashion_vision_matrix.json`,
+`official_cifar10_vision_matrix.json` or
+`official_cifar100_vision_matrix.json`.
+The **original Fashion-MNIST summary format** is preserved for
+existing consumers. Each summary includes 38 individual signed worker
+results and the conservative `fixed_vs_growth_budget_audit`.
+
+This driver is a smoke test with one seed, tiny class-balanced
+subsets, only one epoch per candidate and one adaptive proposal.
+It does not compare scientific performance under matched budgets;
+full datasets, repeated seeds and source-faithful V05–V11 remain
+separate uncompleted work. Real CIFAR-10 workflow:
+`.github/workflows/visual-official-cifar-matrix.yml`.
