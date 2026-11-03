@@ -356,3 +356,26 @@ must use `worker_logs/**/*.log` rather than only
 isolation but did not retain the nested log paths;
 the subsequent workflow revision corrects that
 artifact path (verification pending).
+
+
+## Descriptive paired metric analysis is isolated from algorithms
+
+`summarize_visual_paired_metrics` takes only existing
+`run_spec` summary rows. It invokes the authoritative
+multiseed budget auditor, requires exact per-pair
+dataset/split/seed/architecture/site identity and a single
+dataset/split fingerprint across all seeds, and checks
+all original job IDs are distinct. Then, for each of the
+six post-selection validation and official-test metrics,
+it computes descriptive signed Fixed-vs-ADP improvements
+within each seed. There is **no dataset access, model
+construction, training, validation selection or test
+feedback** in this process.
+
+It refuses failed/partial jobs, missing/nonfinite/out-of-range
+metrics and swapped architecture identities. It preserves
+source `metric_directions` and an explicit null for
+unmeasured full training FLOPs and scientific conclusions.
+The existing model/controller and checkpoint implementations
+are untouched; the original official worker matrix format
+remains backward compatible.
