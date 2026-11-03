@@ -24,6 +24,7 @@ from ..visual_accounting import visual_parameter_accounting
 from ..visual_compute import visual_linear_conv_macs
 from ..visual_metrics import visual_calibration_metrics
 from ..visual_memory import visual_model_tensor_payload
+from ..visual_resources import visual_process_resource_snapshot, visual_fit_resource_window
 from ..visual_inner import ResidualAdapterSpec
 from ..visual_native_ffn import NativeFFNSpec
 from ..visual_mixer import MixerSpec
@@ -239,9 +240,12 @@ class VisionModelAdapter:
             fixed_grid=route.fixed_grid,
         )
         start = time.perf_counter()
+        fit_resources_before = visual_process_resource_snapshot(actual_settings.device)
         estimator.fit(train_x, train_y, validation_data=(valid_x, valid_y),
                       checkpoint_path=checkpoint_path,
                       progress_callback=progress_callback)
+        fit_resources = visual_fit_resource_window(
+            fit_resources_before, visual_process_resource_snapshot(actual_settings.device))
         duration = time.perf_counter() - start
         # Architecture search, early stopping and candidate rollback are now
         # complete; the official held-out split can first be accessed here.
@@ -260,7 +264,8 @@ class VisionModelAdapter:
             artifact = str(estimator_model_path(checkpoint_path))
             estimator.save(artifact)
         return {
-            "fit_seconds": duration, "history_entries": len(estimator.head.history_),
+            "fit_seconds": duration, "fit_process_resources": fit_resources,
+            "history_entries": len(estimator.head.history_),
             "selected_architecture": list(estimator.head.model_.hidden_widths),
             "validation_selection_score": float(valid_loss),
             "validation_metrics": {
@@ -446,8 +451,11 @@ class VisionInnerModelAdapter:
             max_model_tensor_payload_bytes=max_model_tensor_payload_bytes,
         )
         started = time.perf_counter()
+        fit_resources_before = visual_process_resource_snapshot(actual.device)
         search.fit(train_x, train_y, validation_data=(valid_x, valid_y),
                    checkpoint_path=checkpoint_path, progress_callback=progress_callback)
+        fit_resources = visual_fit_resource_window(
+            fit_resources_before, visual_process_resource_snapshot(actual.device))
         elapsed = time.perf_counter() - started
         # The selected model is fixed before official test images or labels
         # become visible to the coordinator's model adapter.
@@ -476,7 +484,7 @@ class VisionInnerModelAdapter:
                 "best_score": search.result_.score,
             }, signature=str(data.content_sha256) + ":" + str(split.split_sha256) + ":" + str(seed))
         return {
-            "fit_seconds": elapsed,
+            "fit_seconds": elapsed, "fit_process_resources": fit_resources,
             "history_entries": len(search.history_),
             "training_budget": dict(search.search_state_["training_budget"]),
             "trained_model_memory_trace": list(
