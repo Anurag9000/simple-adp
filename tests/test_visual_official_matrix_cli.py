@@ -60,3 +60,15 @@ def test_multiseed_worker_count_checked_before_official_download(tmp_path, seeds
     assert exc.value.code == 2
     assert "--model-seeds must be a positive integer" in capsys.readouterr().err
     assert not (tmp_path / "dataset").exists()
+
+
+@pytest.mark.parametrize("size", [0, -8])
+def test_stepbalanced_batch_size_checked_before_download(tmp_path, size, capsys):
+    with pytest.raises(SystemExit) as exc:
+        _matrix_main()([
+            "--dataset", "fashion_mnist", "--step-balanced",
+            "--batch-size", str(size), "--workdir", str(tmp_path),
+        ])
+    assert exc.value.code == 2
+    assert "--batch-size must be a positive integer" in capsys.readouterr().err
+    assert not (tmp_path / "dataset").exists()
