@@ -1,0 +1,60 @@
+name: Official visual observed training-forward MAC and step-budget comparison
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/visual_train_compute.py'
+      - 'src/simple_adp/visual_training_work_audit.py'
+      - 'src/simple_adp/training.py'
+      - 'src/simple_adp/visual_search.py'
+      - 'scripts/visual_official_fashion_matrix.py'
+      - 'scripts/visual_paired_metrics_analysis.py'
+      - '.github/workflows/visual-official-forward-work.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  observed-real-training-forwards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      PYTHONUNBUFFERED: '1'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source image provider and native visual runner
+        run: python -m pip install -e '.[vision,dev]'
+      - name: Execute fixed-vs-RR on official Fashion with actual training forward counters
+        run: |
+          python scripts/visual_official_fashion_matrix.py \
+            --dataset fashion_mnist \
+            --step-balanced --observe-training-forwards --batch-size 16 \
+            --train-limit 40 --valid-limit 20 --test-limit 20 \
+            --workdir "${{ runner.temp }}/official-visual-forwardwork"
+      - name: Independently reverify signed original job artifacts and descriptive paired metrics
+        run: |
+          python scripts/visual_paired_metrics_analysis.py \
+            --matrix "${{ runner.temp }}/official-visual-forwardwork/official_fashion_vision_matrix_stepbalanced_observedtrain.json" \
+            --results-root "${{ runner.temp }}/official-visual-forwardwork/results"
+      - name: Preserve actual minibatch forward MACs with exact original signed job results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-fashion-training-forward-partial-macs
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/official-visual-forwardwork/official_fashion_vision_matrix_stepbalanced_observedtrain.json
+            ${{ runner.temp }}/official-visual-forwardwork/official_fashion_vision_matrix_stepbalanced_observedtrain_paired_metrics.json
+            ${{ runner.temp }}/official-visual-forwardwork/results/**/result.json
+            ${{ runner.temp }}/official-visual-forwardwork/results/**/output.json
