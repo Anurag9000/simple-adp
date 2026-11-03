@@ -432,6 +432,12 @@
       "failed": 0,
       "status": "success",
       "note": "does not include latest step-balanced script and associated regression tests"
+    },
+    "last_pre_resource_telemetry_success": {
+      "run": "https://github.com/Anurag9000/simple-adp/actions/runs/41593730866",
+      "passed": 19346,
+      "skipped_no_cuda": 1,
+      "failed": 0
     }
   },
   "official_fashion_control_matrix": {
@@ -671,5 +677,36 @@
       "growth": 185064,
       "note": "partial inference MACs differ despite matching training optimizer steps"
     }
+  },
+  "visual_fit_process_resources": {
+    "module": "src/simple_adp/visual_resources.py",
+    "api": [
+      "visual_process_resource_snapshot",
+      "visual_fit_resource_window"
+    ],
+    "scope": "observed RSS and PyTorch CUDA allocator counters sampled before and after actual fit, not per-stage exact peak",
+    "adapters": [
+      "V01 original frozen encoder/head",
+      "V02–V11 native composite",
+      "V03 source ViT-B/16",
+      "V04 source ConvNeXt-Tiny"
+    ],
+    "worker_field": "fit_process_resources",
+    "cpu_source": "Linux procfs VmRSS/VmHWM whole-process current and lifetime peak; null if unavailable",
+    "gpu_source": "PyTorch current-device CUDA memory_allocated/memory_reserved and lifetime maxima; hardware conditional",
+    "gpu_hardware_verified": false,
+    "cuda_peak_counters_reset": false,
+    "exact_fit_peak_bytes": null,
+    "model_tensor_or_optimizer_state_attribution": false,
+    "official_image_summary_field": "rows[].fit_process_resources",
+    "tests": [
+      "tests/test_visual_resources.py",
+      "tests/test_runner_vision_test_isolation.py",
+      "tests/test_runner_vision_memory_cap.py"
+    ],
+    "current_status": "implementation on main, updated focused CI in progress; failed previous focused run 41604543571 due case-only test assertion, corrected",
+    "latest_focused_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41605042362",
+    "latest_full_suite_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41605041980",
+    "source_map_ci_verified": "https://github.com/Anurag9000/simple-adp/actions/runs/41604664674"
   }
 }
