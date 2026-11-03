@@ -746,3 +746,33 @@ preflight CI is pending** as of this evidence update and is
 not included in the prior successful 90-test focused run.
 The physical CUDA device and real source V03/V04 preflight
 memory peaks remain untested.
+
+
+### Source-faithful preallocation prediction and multi-seed official work
+
+The first complete preconstruction controlled-image test pass
+**127 passed, 1 CUDA skipped**:
+https://github.com/Anurag9000/simple-adp/actions/runs/41592128312.
+After adding nominal Adam/AdamW working tensor payload,
+the focused source-independent path passed
+**129 tests, 1 skipped**:
+https://github.com/Anurag9000/simple-adp/actions/runs/41592535617.
+Genuine torchvision pretrained-compatible source FFN forecast
+equivalence tests were added *inside* existing source growth tests,
+so they reuse the same real full-backbone fixture. Their independent
+source CI runs completed:
+- V03 ViT-B/16 source: **5 passed**,
+  https://github.com/Anurag9000/simple-adp/actions/runs/41592646848.
+- V04 ConvNeXt-Tiny source: **5 passed**,
+  https://github.com/Anurag9000/simple-adp/actions/runs/41592638223.
+
+The `visual_budget_audit.audit_visual_multiseed_worker_pairs`
+helper now refuses incomplete, duplicate, noninteger or cross-seed
+fixed/RR evidence. The official-image script can execute
+`--model-seeds 2` as 76 real signed worker jobs rather than
+reusing a single seed. Pure tests verify grouped counts and
+source identity failure modes, while
+`.github/workflows/visual-official-multiseed.yml`
+executes the two-seed official Fashion data. **The newest 76-job
+workflow is pending** at this evidence checkpoint; do not
+credit it with a successful execution until CI confirms it.
