@@ -108,6 +108,8 @@ def test_coordinated_vision_job_is_routed_and_executed(monkeypatch, tmp_path):
     assert "head" in output["parameter_accounting"]["eligible_growth_sites"]
     assert output["inference_compute"]["observed_linear_conv_macs_per_image"] > 0
     assert output["inference_compute"]["whole_model_flops"] is None
+    assert output["model_memory_accounting"]["total_model_tensor_payload_bytes"] > 0
+    assert output["model_memory_accounting"]["peak_training_memory_bytes"] is None
     assert output["task_family"] == "vision"
     assert output["test_metrics"]["accuracy"] >= 0
     assert output["model_id"] == "ADP-W-RR"
