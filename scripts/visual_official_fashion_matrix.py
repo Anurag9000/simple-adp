@@ -165,6 +165,7 @@ def main(argv: list[str] | None = None) -> int:
                     "growth_site": value["growth_site"],
                     "selected_architecture": value["selected_architecture"],
                     "candidate_stages_executed": value["history_entries"],
+                    "training_budget": value.get("training_budget"),
                     "validation_metrics": value["validation_metrics"],
                     "test_metrics": value["test_metrics"],
                     "parameter_accounting": counts,
