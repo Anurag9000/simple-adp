@@ -21,6 +21,7 @@ from ..tasks import ClassificationTask
 from ..vision_data import make_image_partitions, load_torchvision_partitions
 from ..visual import VisualADPEstimator
 from ..visual_accounting import visual_parameter_accounting
+from ..visual_compute import visual_linear_conv_macs
 from ..visual_inner import ResidualAdapterSpec
 from ..visual_native_ffn import NativeFFNSpec
 from ..visual_mixer import MixerSpec
@@ -265,6 +266,11 @@ class VisionModelAdapter:
                 nn.ModuleDict({"encoder": estimator.encoder, "head": estimator.head.model_}),
                 {"head": estimator.head.model_},
             ),
+            "inference_compute": visual_linear_conv_macs(
+                nn.Sequential(estimator.encoder, estimator.head.model_),
+                torch.as_tensor(valid_x[:1], dtype=torch.float32,
+                                device=actual_settings.device),
+            ),
             "growth_site": "head",
             "architecture_id": "v01-tiny-conv-frozen-random-control",
         }
@@ -462,6 +468,10 @@ class VisionInnerModelAdapter:
             "frozen_sha256": search.model_.frozen_state_sha256(),
             "parameter_accounting": visual_parameter_accounting(
                 search.model_, search.model_.growth_targets,
+            ),
+            "inference_compute": visual_linear_conv_macs(
+                search.model_,
+                torch.as_tensor(valid_x[:1], dtype=torch.float32, device=actual.device),
             ),
             "expansion_criterion": actual.expansion_criterion,
             **({
