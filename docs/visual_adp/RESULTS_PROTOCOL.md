@@ -442,3 +442,18 @@ A job may still allocate memory before the first fit
 snapshot. This setup is a *better controlled measured
 memory baseline*, not a scientific comparison by
 itself.
+
+
+## Verified RSS schema in official real-image worker results
+
+The official 38-worker Fashion step-balanced run
+https://github.com/Anurag9000/simple-adp/actions/runs/41605309264
+passed with measured `fit_process_resources` present
+in every result, in addition to model tensor estimates.
+The run's 38 workers were called in one **shared**
+Python process; their process-lifetime VmHWM values
+are therefore *not* independent per-worker peaks.
+The subsequent isolated-process workflow addresses
+that comparability gap, but its results need independent
+verification. No observed CPU RSS measure should be
+presented as a physical GPU/VRAM memory benchmark.
