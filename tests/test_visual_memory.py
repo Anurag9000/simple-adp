@@ -9,7 +9,17 @@ from torch import nn
 from simple_adp.config import SearchSettings
 from simple_adp.visual_inner import ResidualAdapterSpec
 from simple_adp.visual_native_ffn import build_visual_composite
-from simple_adp.visual_memory import visual_model_tensor_payload
+from simple_adp.visual_memory import (
+    visual_model_tensor_payload, projected_tabular_mlp_payload_bytes,
+    prospective_tabular_growth_widths, forecast_visual_growth_payload_bytes,
+)
+from simple_adp.models import TabularMLP, rebuild_mlp
+from simple_adp.growth import (
+    expand_width_all_layers, expand_width_round_robin,
+    expand_width_den_round_robin, expand_depth, expand_depth_match_width,
+)
+from simple_adp.visual_inner import VisualResidualAdapter
+from simple_adp.visual_mixer import MixerSpec
 from simple_adp.visual_search import VisualResidualSearch
 
 
@@ -104,6 +114,8 @@ def test_optional_memory_cap_blocks_growth_but_preserves_initial_model_and_histo
     assert rejected[0]["cap_bytes"] == base
     assert rejected[0]["logical_model_tensor_payload_bytes"] > base
     assert rejected[0]["reason"] == "model-parameter-buffer-payload-limit"
+    assert rejected[0]["before_candidate_construction"] is True
+    assert rejected[0]["prediction_kind"] == "native-TabularMLP-geometry-v1"
     assert search.search_state_["proposals"] == 0  # proposal was never admitted
     assert checkpoint.is_file()
 
@@ -150,3 +162,112 @@ def test_optional_unlimited_policy_retains_source_search_signature():
     x, y, valid = data()
     assert search._signature(x, y, *valid) != capped._signature(x, y, *valid)
     assert search.max_model_tensor_payload_bytes is None
+
+
+@pytest.mark.parametrize("widths", [
+    (2,), (3,), (2, 4), (4, 2, 5), (1, 1, 1),
+])
+@pytest.mark.parametrize("batch_norm", [False, True])
+def test_static_tabular_payload_prediction_exact_for_new_widths(widths, batch_norm):
+    model = TabularMLP(4, (2, 3), 5, batch_norm=batch_norm)
+    predicted = projected_tabular_mlp_payload_bytes(model, widths)
+    actual = rebuild_mlp(model, widths)
+    assert predicted == visual_model_tensor_payload(actual)["total_model_tensor_payload_bytes"]
+    assert projected_tabular_mlp_payload_bytes(
+        model, tuple(model.hidden_widths)
+    ) == visual_model_tensor_payload(model)["total_model_tensor_payload_bytes"]
+
+
+def test_static_payload_returns_unknown_for_nondefault_dtype():
+    model = TabularMLP(3, (2,), 2).double()
+    assert projected_tabular_mlp_payload_bytes(model, (3,)) is None
+
+
+@pytest.mark.parametrize("operator,source,expected", [
+    ("all_layers", (2, 3), (3, 4)),
+    ("round_robin", (2, 3), (3, 3)),
+    ("den_round_robin", (2, 3), (3, 3)),
+    ("D1", (2, 2), (2, 2, 1)),
+    ("Dcur", (2, 3), (2, 3, 3)),
+])
+def test_static_growth_geometry_matches_real_native_growth(operator, source, expected):
+    model = TabularMLP(3, source, 2)
+    predicted = prospective_tabular_growth_widths(
+        model, operator=operator, increment=1, max_width=4,
+        max_depth=3, seed_width=1,
+    )
+    assert predicted == expected
+    grow = {
+        "all_layers": lambda: expand_width_all_layers(model, 1, 4),
+        "round_robin": lambda: expand_width_round_robin(model, 1, 4),
+        "den_round_robin": lambda: expand_width_den_round_robin(model, 1, 4),
+        "D1": lambda: expand_depth(model, 3, 1),
+        "Dcur": lambda: expand_depth_match_width(model, 3),
+    }[operator]()
+    assert grow is not None
+    assert tuple(grow.hidden_widths) == predicted
+
+
+def test_static_proposal_forecast_matches_full_composite_payload_with_mixer_both():
+    spec_both = MixerSpec(
+        input_channels=3, local_dim=4, classes=2,
+        image_height=8, image_width=8, patch_size=4,
+        site_id="both:block0",
+    )
+    original = build_visual_composite(spec_both, (2,))
+    widened = original.grow_width(
+        site_id="both:block0", operator="den_round_robin",
+        increment=1, max_width=4,
+    )
+    assert widened is not None
+    predicted = forecast_visual_growth_payload_bytes(
+        original, (3,), other_hidden_widths=(3,),
+    )
+    assert predicted == visual_model_tensor_payload(widened)[
+        "total_model_tensor_payload_bytes"
+    ]
+
+
+def test_preflight_blocks_growth_without_invoking_growth_allocator(monkeypatch):
+    cap = initial_bytes()
+    x, y, valid = data()
+
+    def forbidden_growth(*args, **kwargs):
+        raise AssertionError("oversized candidate growth must not be constructed")
+
+    monkeypatch.setattr(VisualResidualAdapter, "grow_width", forbidden_growth)
+    search = VisualResidualSearch(
+        "ADP-W-RR", spec(), settings=settings(),
+        max_model_tensor_payload_bytes=cap,
+    )
+    search.fit(x, y, validation_data=valid)
+    assert search.search_state_["memory_admission_rejections"][0][
+        "before_candidate_construction"
+    ] is True
+
+
+def test_memory_preflight_rejects_fixed_grid_before_new_model_construction(monkeypatch):
+    from simple_adp import visual_search as source
+    x, y, valid = data()
+    cap = initial_bytes()
+    original = source.build_visual_composite
+    calls = []
+
+    def tracked(*args, **kwargs):
+        calls.append(args[1])
+        if args[1] != (2,):
+            raise AssertionError("over-cap fixed grid should be preflight-rejected")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(source, "build_visual_composite", tracked)
+    search = VisualResidualSearch(
+        "MLP-Fixed", spec(), settings=settings(), fixed_grid=((2,), (3,)),
+        max_model_tensor_payload_bytes=cap,
+    )
+    search.fit(x, y, validation_data=valid)
+    assert len(search.history_) == 1
+    assert calls == [(2,)]
+    assert len(search.search_state_["memory_admission_rejections"]) == 1
+    assert search.search_state_["memory_admission_rejections"][0][
+        "before_candidate_construction"
+    ] is True
