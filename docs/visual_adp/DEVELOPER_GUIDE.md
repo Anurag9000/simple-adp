@@ -630,3 +630,34 @@ optimizer steps/epochs, candidate parameter counts and excludes D1
 warmup stages from acceptance decisions while counting their cost.
 V01's original tabular head controller remains untouched and does not
 claim a native composite search-budget field.
+
+
+## Visual validation/test calibration
+
+The opt-in vision worker outputs add the fields
+`top_label_ece_10` and `multiclass_brier` inside both
+`validation_metrics` and `test_metrics`. They are post-selection,
+not replacement architecture-scoring criteria. The source
+`ClassificationTask` still owns the training label mapping and
+cross-entropy validation objective.
+
+For stand-alone, explicitly fitted classification task experiments:
+
+```python
+from simple_adp import visual_calibration_metrics
+metrics = visual_calibration_metrics(task, labels, predicted_probabilities, bins=10)
+```
+
+`predicted_probabilities` must be [N,C] in the fitted
+`ClassificationTask` order and sum to one. Small-image smoke ECE/Brier
+figures are merely integration checks. No claim of calibrated confidence
+or model advantage is supported by one seed and 20 held-out images.
+
+The native composite search now stores `training_budget` in its
+signed checkpoint and worker summary, and per-candidate
+`trained_epochs`, `optimizer_steps` and parameter counts in its
+history. It counts D1 catch-up stages in total computation without
+treating them as independent accepted candidates. A resumed historical
+checkpoint without prior budget provenance is marked
+`complete=false`; this prevents pretending unobserved training
+steps have been reconstructed.
