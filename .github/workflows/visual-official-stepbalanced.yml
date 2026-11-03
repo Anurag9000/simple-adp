@@ -40,7 +40,8 @@ jobs:
       - name: Describe paired held-out step-balanced metrics without claiming FLOP parity
         run: |
           python scripts/visual_paired_metrics_analysis.py \
-            --matrix "${{ runner.temp }}/official-visual-stepbalanced/official_fashion_vision_matrix_stepbalanced.json"
+            --matrix "${{ runner.temp }}/official-visual-stepbalanced/official_fashion_vision_matrix_stepbalanced.json" \\
+            --results-root "${{ runner.temp }}/official-visual-stepbalanced/results"
       - name: Preserve step-budget evidence, real-image metrics and worker provenance
         if: always()
         uses: actions/upload-artifact@v4
