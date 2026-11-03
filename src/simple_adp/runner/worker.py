@@ -227,6 +227,10 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "history_entries": result.get("history_entries"),
         **({"training_budget": result["training_budget"]}
            if result.get("training_budget") is not None else {}),
+        **({
+            "trained_model_memory_trace": result["trained_model_memory_trace"],
+            "trained_model_memory_trace_complete": result["trained_model_memory_trace_complete"],
+        } if result.get("trained_model_memory_trace") is not None else {}),
         "architecture_id": result.get("architecture_id"),
         "growth_site": result.get("growth_site"),
         **({"parameter_accounting": result["parameter_accounting"]}
