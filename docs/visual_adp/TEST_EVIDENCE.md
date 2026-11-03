@@ -920,3 +920,41 @@ The 38-worker *official* process-isolated matrix
 https://github.com/Anurag9000/simple-adp/actions/runs/41605486116
 was still running when this note was entered, and must
 be confirmed separately before citing as completed.
+
+
+### Isolated-process official source execution — verified results
+
+The first official bounded Fashion-MNIST
+`--step-balanced --isolated-workers` workflow completed
+**38 of 38 signed workers successfully**, with no failures:
+https://github.com/Anurag9000/simple-adp/actions/runs/41605486116.
+The actual source artifact
+`official-visual-isolated-memory-budget-matrix`
+(ID `13215889941`) was downloaded and its JSON examined.
+Its `official_fashion_vision_matrix_stepbalanced_isolated.json`
+recorded `worker_process_scope=one-process-per-signed-run`
+and **38 distinct fit-resource process IDs for 38 jobs**.
+The grouped native budget audit recorded **18 same-step
+pairs, zero unequal-step pairs, and one unknown V01
+legacy pair**. This is true job isolation, not just a
+mock/subprocess unit test.
+
+On that GitHub-hosted Linux CPU runner, observed
+`lifetime_peak_rss_after_bytes` values ranged
+approximately **1,111,314,432–1,112,145,920 bytes**,
+and before/after fit RSS deltas ranged
+approximately **44,703,744–56,217,600 bytes**.
+These are **whole-child-process RSS observations**,
+not model-specific or exact fit peaks, and this
+tiny-source test is *not* a resource performance
+benchmark. CUDA allocator fields remained null, as
+expected for CPU-only jobs.
+
+The initial workflow used a top-level log archive
+glob while signed run IDs actually contain nested
+path segments. Thus its uploaded artifact captured
+the summary and 38 signed result records but **not
+the nested child logs**. A subsequent workflow-only
+commit replaced the log glob with `**/*.log` and
+triggered a separate official rerun; log archival is
+not marked verified until the rerun completes.
