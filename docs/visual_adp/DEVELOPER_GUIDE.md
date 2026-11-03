@@ -661,3 +661,36 @@ treating them as independent accepted candidates. A resumed historical
 checkpoint without prior budget provenance is marked
 `complete=false`; this prevents pretending unobserved training
 steps have been reconstructed.
+
+
+## Attention MACs and conservative fixed/RR job-budget audits
+
+Visual native V03 or source ViT models additionally report
+`inference_compute.analytical_multihead_attention_macs_per_image`
+and `inference_compute.analytical_multihead_attention_modules`,
+which include forward call count and separate dense projections
+versus score/value MACs. The analytically estimated stream is
+kept separate from observed module-hook Linear/Conv2d MACs,
+preventing double counting. Both are partial inference arithmetic
+only; even the combined total is **not model FLOPs**.
+
+The real-image matrix script now produces
+`official_fashion_vision_matrix.json` with
+`fixed_vs_growth_budget_audit`. To analyze a different complete
+set of worker rows without retraining:
+
+```python
+from simple_adp.visual_budget_audit import audit_visual_worker_pairs
+
+audit = audit_visual_worker_pairs(rows, expected_adapters=all_visual_adapters)
+for pair in audit["paired_budget_evidence"]:
+    print(pair["adapter"], pair["same_optimizer_step_count"],
+          pair["growth_to_fixed_step_ratio"])
+```
+
+`same_optimizer_step_count=None` indicates unknown/partial or
+mismatched provenance, not equality. In particular the historical
+V01 `VisualADPEstimator` head has no native
+`VisualResidualSearch.training_budget`, and remains unknown.
+`full_training_flops_matched=None` always: an optimizer step does
+not have identical work across changed architectures.
