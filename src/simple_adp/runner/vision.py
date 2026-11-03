@@ -345,6 +345,7 @@ class VisionInnerModelAdapter:
         checkpoint_path: str | None = None,
         progress_callback: Callable[[dict[str, object]], None] | None = None,
         max_model_tensor_payload_bytes: int | None = None,
+        track_training_forward_macs: bool = False,
     ) -> dict[str, Any]:
         if data.task_family != "vision" or route.suite_group != "vision":
             raise ValueError("V02 adapter requires a vision-only dataset and route")
@@ -449,6 +450,7 @@ class VisionInnerModelAdapter:
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
             generic_profile=route.generic_profile or "faithful",
             max_model_tensor_payload_bytes=max_model_tensor_payload_bytes,
+            track_training_forward_macs=track_training_forward_macs,
         )
         started = time.perf_counter()
         fit_resources_before = visual_process_resource_snapshot(actual.device)
@@ -487,6 +489,12 @@ class VisionInnerModelAdapter:
             "fit_seconds": elapsed, "fit_process_resources": fit_resources,
             "history_entries": len(search.history_),
             "training_budget": dict(search.search_state_["training_budget"]),
+            **({
+                "training_forward_compute": dict(search.search_state_["training_forward_compute"]),
+                "trained_forward_mac_trace": list(search.search_state_["trained_forward_mac_trace"]),
+                "trained_forward_mac_trace_complete": bool(
+                    search.search_state_["trained_forward_mac_trace_complete"]),
+            } if track_training_forward_macs else {}),
             "trained_model_memory_trace": list(
                 search.search_state_.get("trained_model_memory_trace", [])),
             "trained_model_memory_trace_complete": bool(
