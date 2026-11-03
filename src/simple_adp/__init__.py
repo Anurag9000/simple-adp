@@ -35,6 +35,7 @@ _EXPORTS = {
     "visual_parameter_accounting": "visual_accounting",
     "visual_linear_conv_macs": "visual_compute",
     "visual_calibration_metrics": "visual_metrics",
+    "visual_model_tensor_payload": "visual_memory",
     "NativeFFNSpec": "visual_native_ffn",
     "VisualNativeFFN": "visual_native_ffn",
     "MixerSpec": "visual_mixer",
