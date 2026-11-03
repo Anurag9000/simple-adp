@@ -417,6 +417,13 @@
       "skipped_physical_cuda": 1,
       "failed": 0,
       "status": "success"
+    },
+    "post_preflight_real_source_latest_success": {
+      "run": "https://github.com/Anurag9000/simple-adp/actions/runs/41592646855",
+      "passed": 19332,
+      "skipped": 1,
+      "failed": 0,
+      "note": "pre-multi-seed script revisions; do not extrapolate to latest commits"
     }
   },
   "official_fashion_control_matrix": {
@@ -591,7 +598,7 @@
       "focused_skipped_no_cuda": 1,
       "source_faithful_v03_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41592646848",
       "source_faithful_v04_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41592638223",
-      "status": "source and controlled CPU verification passed; newest full regression pending"
+      "status": "127 focused CPU tests passed, V03 ViT and V04 ConvNeXt real-source CPU integrity passed"
     },
     "nominal_adam_working_set": {
       "fields": [
@@ -601,7 +608,7 @@
       ],
       "assumption": "all trainable params have dense gradients; two same-dtype Adam/AdamW moments; excludes step scalars, activations, peak allocator",
       "focused_cpu_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41592535617",
-      "status": "129 focused CPU tests passed, 1 CUDA-only skip"
+      "status": "129 focused CPU tests passed, one physical CUDA test skipped; actual image worker smoke passed"
     }
   },
   "official_visual_multiseed": {
@@ -616,8 +623,32 @@
     "first_matrix_dataset": "official torchvision FashionMNIST",
     "first_matrix_seed_count": 2,
     "first_matrix_worker_count": 76,
-    "status": "first 76-worker real-image CI pending at inventory checkpoint",
+    "status": "verified success: 76 of 76 genuine official Fashion-MNIST worker jobs; zero failures",
     "matches_training_flops": false,
-    "scientific_performance_conclusion": null
+    "scientific_performance_conclusion": null,
+    "evidence_artifact_id": 13210649696,
+    "actual_workflows_seed_verified": 2
+  },
+  "official_visual_step_balanced": {
+    "entrypoint": "scripts/visual_official_fashion_matrix.py --step-balanced --batch-size 16",
+    "native_runner_configuration": {
+      "max_epochs": null,
+      "max_epochs_vanilla": 2,
+      "max_epochs_adp": 1,
+      "max_candidates": 1,
+      "smoke_test": false,
+      "batch_size": 16
+    },
+    "purpose": "actual optimizer-step parity attempt for native Fixed2 epochs vs initial+growth each1 epoch",
+    "paired_budget_audit": "actual per-stage optimizer steps checked; equality not inferred",
+    "full_training_flops_matched": null,
+    "scientific_performance_conclusion": null,
+    "v01_native_training_budget": "unknown; original TabularADP unchanged",
+    "artifact_suffix": "_stepbalanced.json",
+    "real_image_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41593647892",
+    "real_image_status": "in progress; no outcome claimed",
+    "toy_integration_test": "tests/test_runner_vision_step_balanced.py",
+    "toy_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41593617878",
+    "status": "code and tests committed, newest CI pending"
   }
 }
