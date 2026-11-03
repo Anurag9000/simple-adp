@@ -20,6 +20,7 @@ from simple_adp.runner.config import RunnerSettings
 from simple_adp.runner.plan import SuitePlan
 from simple_adp.runner.plugins import load_registries
 from simple_adp.runner.worker import run_spec
+from simple_adp.visual_budget_audit import audit_visual_worker_pairs
 
 CONTROL_ADAPTERS = (
     "vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05",
@@ -197,6 +198,12 @@ def main(argv: list[str] | None = None) -> int:
     summary["completed_jobs"] = len(selected) - failures
     summary["failed_jobs"] = failures
     summary["status"] = "completed" if failures == 0 else "incomplete"
+    # A one-epoch-per-candidate smoke is not a compute-matched comparison.
+    # In particular, native ADP typically trains more than one candidate;
+    # V01's legacy tabular head does not expose the native-stage budget.
+    summary["fixed_vs_growth_budget_audit"] = audit_visual_worker_pairs(
+        summary["rows"], expected_adapters=CONTROL_ADAPTERS,
+    )
     _save(summary_path, summary)
     if failures:
         raise RuntimeError(f"{failures} official-image workers failed; consult {summary_path}")
