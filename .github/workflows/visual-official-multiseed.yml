@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/visual_official_fashion_matrix.py'
       - 'src/simple_adp/visual_budget_audit.py'
+      - 'src/simple_adp/visual_paired_metrics.py'
+      - 'scripts/visual_paired_metrics_analysis.py'
       - '.github/workflows/visual-official-multiseed.yml'
   workflow_dispatch:
 
@@ -36,6 +38,10 @@ jobs:
             --dataset fashion_mnist --model-seeds 2 \
             --workdir "${{ runner.temp }}/official-visual-multiseed" \
             --train-limit 40 --valid-limit 20 --test-limit 20
+      - name: Verify strict seed-paired descriptive metrics and calibration provenance
+        run: |
+          python scripts/visual_paired_metrics_analysis.py \
+            --matrix "${{ runner.temp }}/official-visual-multiseed/official_fashion_vision_matrix_2seeds.json"
       - name: Retain signed per-seed worker and conservative budget audit
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,5 +51,6 @@ jobs:
           retention-days: 30
           path: |
             ${{ runner.temp }}/official-visual-multiseed/official_fashion_vision_matrix_2seeds.json
+            ${{ runner.temp }}/official-visual-multiseed/official_fashion_vision_matrix_2seeds_paired_metrics.json
             ${{ runner.temp }}/official-visual-multiseed/results/**/result.json
             ${{ runner.temp }}/official-visual-multiseed/results/**/output.json
