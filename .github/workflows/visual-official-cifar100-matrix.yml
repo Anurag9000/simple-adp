@@ -1,0 +1,50 @@
+name: Official CIFAR-100 all-controlled-visual-family worker smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/visual_official_fashion_matrix.py'
+      - 'src/simple_adp/visual_budget_audit.py'
+      - '.github/workflows/visual-official-cifar100-matrix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bounded-cifar100-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      PYTHONUNBUFFERED: '1'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install genuine CIFAR-100 and native visual runner dependencies
+        run: python -m pip install -e '.[vision,dev]'
+      - name: Run all controlled sites on real CIFAR-100 RGB with all 100 training classes
+        run: |
+          python scripts/visual_official_fashion_matrix.py \
+            --dataset cifar100 \
+            --workdir "${{ runner.temp }}/official-cifar100-matrix" \
+            --train-limit 200 --valid-limit 100 --test-limit 100
+      - name: Retain every official CIFAR-100 signed worker and matched-work audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cifar100-all-visual-controlled-workers
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/official-cifar100-matrix/official_cifar100_vision_matrix.json
+            ${{ runner.temp }}/official-cifar100-matrix/results/**/result.json
+            ${{ runner.temp }}/official-cifar100-matrix/results/**/output.json
+            ${{ runner.temp }}/official-cifar100-matrix/results/**/search_history.json
