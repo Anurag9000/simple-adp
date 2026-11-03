@@ -180,3 +180,23 @@ validation objective; missing legacy V01 optimizer-work records
 remain unquantified. Since equal optimizer steps need not mean equal
 full-model FLOPs, the audit does not label any pair compute-matched
 or make scientific performance claims.
+
+
+## Source dataset extension without duplicating training controllers
+
+The bounded official-image driver keeps all real data loading
+in torchvision's existing `FashionMNIST`, `CIFAR10`, or
+`CIFAR100`, then passes only the selected dataset identifier
+to `VisionDatasetProvider` via `SuitePlan.build`. That provider
+retains `download=False`, class-balanced separate fit/
+validation/official-test source indices, raw uint8 checksums,
+and no test access until after `fit()`. No new model builder,
+controller or optimizer was introduced for CIFAR.
+
+CIFAR10/RGB input is 32x32x3 and stays 3-channel after
+`_raw_nchw`; Fashion-MNIST is grayscale and remains 28x28x1.
+The script's one-seed, 40/20/20 smoke configuration is
+**not** full-source or source-network fidelity evidence for
+V05–V11. CIFAR100 requires at least 100 class-balanced examples
+in every partition; its full official-source worker CI has
+not been run as part of this incremental code addition.
