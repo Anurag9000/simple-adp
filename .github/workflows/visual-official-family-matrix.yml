@@ -45,7 +45,8 @@ jobs:
       - name: Produce descriptive paired accuracy, F1 and calibration report
         run: |
           python scripts/visual_paired_metrics_analysis.py \
-            --matrix "${{ runner.temp }}/official-image-matrix/official_fashion_vision_matrix.json"
+            --matrix "${{ runner.temp }}/official-image-matrix/official_fashion_vision_matrix.json" \\
+            --results-root "${{ runner.temp }}/official-image-matrix/results"
       - name: Retain actual official source worker results, including failures
         if: always()
         uses: actions/upload-artifact@v4
