@@ -158,3 +158,25 @@ partial measured Linear/Conv2d inference MAC count rather than
 whole-model FLOPs and does not claim genuine calibration with tiny
 test samples. Physical CUDA and source-faithful V05–V11 remain
 unvalidated/unfinished respectively.
+
+
+## Additional inference evidence and scientific comparability caveat
+
+The `visual_compute` path now estimates dense
+`nn.MultiheadAttention` projection and QKᵀ/AV MACs using actual
+executed module input geometry; this measures an analytical operation
+count rather than instrumenting CUDA kernels. The parent MHA's
+`out_proj` Linear submodule is excluded from the directly observed
+Linear count, preventing duplicate costs. Other functional attention
+and Fourier kernels remain explicitly unmeasured. Source V03's
+true torchvision MultiheadAttention submodules are included in the
+estimator; V11 global FFT is not converted to a fake dense MAC count.
+
+The official controlled model matrix now invokes
+`audit_visual_worker_pairs` after all normal signed workers finish,
+giving a provenance-checked 19-pair budget audit. This audit never
+modifies a method, checkpoint, model, training loop, job plan or
+validation objective; missing legacy V01 optimizer-work records
+remain unquantified. Since equal optimizer steps need not mean equal
+full-model FLOPs, the audit does not label any pair compute-matched
+or make scientific performance claims.
