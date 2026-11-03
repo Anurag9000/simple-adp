@@ -59,7 +59,8 @@ jobs:
         run: |
           for matrix in "${{ runner.temp }}/isolated-visual"/official_*_vision_matrix_stepbalanced_isolated.json; do
             test -f "$matrix" || exit 1
-            python scripts/visual_paired_metrics_analysis.py --matrix "$matrix"
+            python scripts/visual_paired_metrics_analysis.py --matrix "$matrix" \
+              --results-root "${{ runner.temp }}/isolated-visual/results"
           done
       - name: Preserve per-job OS memory observation, split provenance and logs
         if: always()
