@@ -316,3 +316,24 @@ measurements are explicitly distinct from a per-job
 peak (especially when 38 worker calls share one
 Python process). CUDA hardware is required to
 validate the CUDA branch.
+
+
+## Process-isolated matrix measurement keeps original worker source
+
+The default official matrix remains a fast in-process
+sequence of signed worker calls. Explicit
+`--isolated-workers` launches
+`python -m simple_adp.runner.worker --spec <signed-json>`
+once per route through the same data/model registries,
+checkpoint identity, native controllers, source weights
+and held-out boundary. The parent reads only the
+worker's saved result after child success, verifies
+the signed identity and keeps child logs. This
+avoids falsely comparing long-lived parent process
+VmHWM across multiple jobs and provides a genuine
+independent per-worker OS process highwater.
+It does *not* claim fit-stage peak RSS, CUDA
+allocator isolation between unrelated GPU processes,
+or full model-training FLOP parity. Existing
+legacy one-seed one-process matrix CLI behavior
+remains unchanged.
