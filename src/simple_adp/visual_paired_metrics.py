@@ -177,3 +177,72 @@ def summarize_visual_paired_metrics(
             "identities and malformed metrics fail closed."
         ),
     }
+
+
+def verify_visual_worker_result_artifacts(
+    rows: Iterable[Mapping[str, Any]], *, results_root: str | "Path",
+) -> dict[str, object]:
+    """Re-read actual signed result.json files and fingerprint their exact bytes.
+
+    This proves the *summary agrees with locally supplied original worker
+    result artifacts*. It does not authenticate GitHub or constitute a
+    public-key signature: run_signature is the original runner's hash.
+    """
+    import hashlib
+    import json
+    import re
+    from pathlib import Path
+
+    root = Path(results_root).resolve(strict=True)
+    if not root.is_dir():
+        raise ValueError("worker results root must be an existing directory")
+    records = tuple(rows)
+    if not records:
+        raise ValueError("no worker result rows supplied for provenance verification")
+    fingerprints = []
+    seen: set[str] = set()
+    for row in records:
+        if not isinstance(row, Mapping):
+            raise ValueError("every source worker summary must be a mapping")
+        job = row.get("job_id")
+        if not isinstance(job, str) or not job or job in seen:
+            raise ValueError("missing or duplicated original signed worker job ID")
+        seen.add(job)
+        relative = Path(job)
+        if relative.is_absolute() or any(part in (".", "..") for part in relative.parts):
+            raise ValueError("signed job ID must not escape its worker results directory")
+        file = (root / relative / "result.json").resolve()
+        if not file.is_relative_to(root) or not file.is_file():
+            raise ValueError("original signed worker result is missing or escapes result root")
+        payload_bytes = file.read_bytes()
+        result = json.loads(payload_bytes)
+        if not isinstance(result, dict):
+            raise ValueError("worker result JSON must contain a single mapping")
+        signature = result.get("run_signature")
+        if not isinstance(signature, str) or not re.fullmatch(r"[0-9a-f]{64}", signature):
+            raise ValueError("original worker result has an invalid or missing run signature")
+        for key in (
+            "job_id", "status", "dataset_id", "split_sha256", "seed",
+            "architecture_id", "growth_site",
+            "validation_metrics", "test_metrics", "selected_architecture",
+        ):
+            if result.get(key) != row.get(key):
+                raise ValueError(f"signed worker result mismatches matrix field {key!r}")
+        if result.get("model_id") != row.get("method"):
+            raise ValueError("worker model ID does not match matrix controller method")
+        if result.get("training_budget") != row.get("training_budget"):
+            raise ValueError("signed native optimizer work differs from matrix summary")
+        fingerprints.append((job, hashlib.sha256(payload_bytes).hexdigest()))
+    digest = hashlib.sha256()
+    for job, checksum in sorted(fingerprints):
+        digest.update(job.encode("utf-8") + b"\\0" + checksum.encode("ascii") + b"\\n")
+    return {
+        "format": "simple-adp-visual-original-worker-result-artifact-audit-v1",
+        "verified_worker_results": len(records),
+        "unique_original_run_signatures_verified": True,
+        "original_worker_result_bundle_sha256": digest.hexdigest(),
+        "source_scope": (
+            "Matrix row agreement with original signed-worker result.json "
+            "content; not cryptographic authentication of the runner owner"
+        ),
+    }
