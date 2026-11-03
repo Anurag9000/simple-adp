@@ -95,3 +95,7 @@ def test_coordinated_visual_test_rows_remain_unread_until_fit(
     )
     expected_site = "head" if adapter_class is VisionModelAdapter else "adapter:block1"
     assert expected_site in accounting["eligible_growth_sites"]
+    compute = result["inference_compute"]
+    assert compute["batch_size"] == 1
+    assert compute["observed_linear_conv_macs_per_image"] > 0
+    assert compute["whole_model_flops"] is None
