@@ -74,6 +74,9 @@ class RunnerSettings:
     # Opt-in native V02-V11/source-V03/V04 logical tensor payload admission.
     # Absent value is omitted from plan signature and job specs for compatibility.
     visual_model_tensor_payload_cap_bytes: int | None = None
+    # Optional *actual training forward* partial operation counting for
+    # native visual models. Legacy V01 head work remains unknown.
+    visual_training_forward_macs: bool = False
     # Estimator/search controls are serialized with each run spec and passed
     # to the worker. Keep their defaults aligned with SearchSettings.
     ex_k_width: int = 1
@@ -190,6 +193,8 @@ class RunnerSettings:
             raise ValueError("post-launch sample delay cannot be negative")
         if min(self.max_width, self.max_depth, self.max_neurons) <= 0:
             raise ValueError("architecture capacity limits must be positive")
+        if type(self.visual_training_forward_macs) is not bool:
+            raise ValueError("visual_training_forward_macs must be boolean")
         cap = self.visual_model_tensor_payload_cap_bytes
         if cap is not None and (
             isinstance(cap, bool) or not isinstance(cap, int) or cap <= 0
@@ -266,6 +271,8 @@ class RunnerSettings:
         # A disabled visual cap must not change historical plan signatures.
         if result["visual_model_tensor_payload_cap_bytes"] is None:
             del result["visual_model_tensor_payload_cap_bytes"]
+        if result["visual_training_forward_macs"] is False:
+            del result["visual_training_forward_macs"]
         return result
 
     @property
