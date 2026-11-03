@@ -1,4 +1,4 @@
-"""Bounded official Fashion-MNIST CPU worker matrix for every visual control.
+"""Bounded official Fashion-MNIST/CIFAR CPU worker matrix for visual controls.
 
 This is a *real-image integration smoke*, not a multi-seed science benchmark.
 It selects only fixed and ADP-W-RR routes from the authoritative SuitePlan,
@@ -41,22 +41,33 @@ def _save(path: Path, payload: dict[str, object]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workdir", required=True)
+    parser.add_argument("--dataset", choices=("fashion_mnist", "cifar10", "cifar100"),
+                        default="fashion_mnist")
     parser.add_argument("--train-limit", type=int, default=40)
     parser.add_argument("--valid-limit", type=int, default=20)
     parser.add_argument("--test-limit", type=int, default=20)
     args = parser.parse_args(argv)
-    if min(args.train_limit, args.valid_limit, args.test_limit) < 10:
-        parser.error("official Fashion-MNIST 10-class balanced limits must be at least ten")
+    required_classes = 100 if args.dataset == "cifar100" else 10
+    if min(args.train_limit, args.valid_limit, args.test_limit) < required_classes:
+        parser.error(
+            f"{args.dataset} requires at least {required_classes} samples "
+            "in each train/validation/test partition to include all classes"
+        )
     root = Path(args.workdir).resolve()
     root.mkdir(parents=True, exist_ok=True)
     data_root = root / "dataset"
     torch.set_num_threads(2)
 
-    # Official torchvision source; this explicit download step is isolated
-    # from the default runner and never modifies a historical provider.
-    from torchvision.datasets import FashionMNIST
-    FashionMNIST(root=str(data_root), train=True, download=True)
-    FashionMNIST(root=str(data_root), train=False, download=True)
+    # Official torchvision source; explicit download is isolated from the
+    # default dataset provider, whose downloads remain disabled by design.
+    from torchvision import datasets as torchvision_datasets
+    dataset_type = {
+        "fashion_mnist": torchvision_datasets.FashionMNIST,
+        "cifar10": torchvision_datasets.CIFAR10,
+        "cifar100": torchvision_datasets.CIFAR100,
+    }[args.dataset]
+    dataset_type(root=str(data_root), train=True, download=True)
+    dataset_type(root=str(data_root), train=False, download=True)
     os.environ.update({
         "SIMPLE_ADP_ENABLE_VISION": "1",
         "SIMPLE_ADP_ENABLE_V03_SOURCE": "0",
@@ -86,7 +97,7 @@ def main(argv: list[str] | None = None) -> int:
         settings=settings,
         results_dir=root / "results", run_root=root / "runs",
         dataset_providers=tuple(datasets.providers.values()),
-        dataset_suites=(("vision", "fashion_mnist"),),
+        dataset_suites=(("vision", args.dataset),),
         model_adapters=tuple(models.adapters.values()),
     )
     selected = {}
@@ -112,10 +123,16 @@ def main(argv: list[str] | None = None) -> int:
     if set(selected) != expected:
         raise ValueError(f"official image matrix has missing/extra routes: {sorted(expected ^ set(selected))}")
 
-    summary_path = root / "official_fashion_vision_matrix.json"
+    matrix_basename = {
+        "fashion_mnist": "official_fashion_vision_matrix.json",
+        "cifar10": "official_cifar10_vision_matrix.json",
+        "cifar100": "official_cifar100_vision_matrix.json",
+    }[args.dataset]
+    summary_path = root / matrix_basename
     summary: dict[str, object] = {
-        "format": "simple-adp-official-fashion-visual-controls-v1",
-        "source": "torchvision.datasets.FashionMNIST official train/test",
+        "format": "simple-adp-official-visual-controls-v2",
+        "dataset": args.dataset,
+        "source": f"torchvision.datasets.{dataset_type.__name__} official train/test",
         "dataset_download": "explicit",
         "train_limit": args.train_limit,
         "validation_limit": args.valid_limit,
