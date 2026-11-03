@@ -191,6 +191,15 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError("V03 transformer self-attention MAC estimate was omitted")
                 if counts["total_parameters"] != counts["frozen_parameters"] + counts["trainable_parameters"]:
                     raise AssertionError("composite parameter counts do not close")
+                memory = value.get("model_memory_accounting")
+                if not memory or memory.get("total_model_tensor_payload_bytes", 0) <= 0:
+                    raise AssertionError("real composite tensor payload accounting missing")
+                if memory["total_model_tensor_payload_bytes"] != (
+                    memory["parameter_payload_bytes"] + memory["buffer_payload_bytes"]
+                ):
+                    raise AssertionError("model tensor payload partition does not close")
+                if memory.get("peak_training_memory_bytes") is not None:
+                    raise AssertionError("logical model bytes must not claim peak training RAM")
                 if method == "ADP-W-RR" and value["history_entries"] < 2:
                     raise AssertionError("no actual structural candidate stage was executed")
                 budget = value.get("training_budget")
@@ -209,6 +218,7 @@ def main(argv: list[str] | None = None) -> int:
                     "validation_metrics": value["validation_metrics"],
                     "test_metrics": value["test_metrics"],
                     "parameter_accounting": counts,
+                    "model_memory_accounting": memory,
                     "inference_compute": compute,
                 })
             except Exception as exc:
