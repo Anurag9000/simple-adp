@@ -22,6 +22,7 @@ from ..config import SearchSettings
 from ..registry import MODEL_REGISTRY
 from ..visual_search import VisualResidualSearch
 from ..visual_accounting import visual_parameter_accounting
+from ..visual_compute import visual_linear_conv_macs
 from ..visual_source_convnext import SourceConvNeXtSpec, file_sha256
 from ..visual_source_vit import SourceViTSpec
 from .artifacts import estimator_model_path
@@ -189,6 +190,11 @@ class VisionSourceConvNeXtModelAdapter:
             "frozen_sha256": search.model_.frozen_state_sha256(),
             "parameter_accounting": visual_parameter_accounting(
                 search.model_, search.model_.growth_targets,
+            ),
+            "inference_compute": visual_linear_conv_macs(
+                search.model_,
+                torch.as_tensor(valid_x[:1], dtype=torch.float32,
+                                device=real_settings.device),
             ),
             "expansion_criterion": real_settings.expansion_criterion,
             "source_ffn_exact_at_initialization": (
