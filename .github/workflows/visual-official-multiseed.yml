@@ -1,0 +1,49 @@
+name: Official Fashion-MNIST multi-seed controlled visual worker matrix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/visual_official_fashion_matrix.py'
+      - 'src/simple_adp/visual_budget_audit.py'
+      - '.github/workflows/visual-official-multiseed.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  two-independent-seeds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      PYTHONUNBUFFERED: '1'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original dataset and native runner dependencies
+        run: python -m pip install -e '.[vision,dev]'
+      - name: Execute 76 signed official Fashion-MNIST jobs in two separate derived seeds
+        run: |
+          python scripts/visual_official_fashion_matrix.py \
+            --dataset fashion_mnist --model-seeds 2 \
+            --workdir "${{ runner.temp }}/official-visual-multiseed" \
+            --train-limit 40 --valid-limit 20 --test-limit 20
+      - name: Retain signed per-seed worker and conservative budget audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fashion-mnist-two-seed-visual-worker-matrix
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/official-visual-multiseed/official_fashion_vision_matrix_2seeds.json
+            ${{ runner.temp }}/official-visual-multiseed/results/**/result.json
+            ${{ runner.temp }}/official-visual-multiseed/results/**/output.json
