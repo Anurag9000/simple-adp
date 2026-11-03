@@ -57,9 +57,15 @@ def test_v02_supported_methods_execute_real_composite_selection(method):
     assert all(row["candidate_total_parameters"] > 0 for row in search.history_)
     assert all(row["candidate_eligible_mlp_parameters"] > 0 for row in search.history_)
     budget = search.search_state_["training_budget"]
+    # Dedicated D1 grows a new layer progressively: the width-1 warmup
+    # stage trains and must count toward optimizer budget, but is not
+    # independently eligible for architecture selection.
+    warmups = 1 if method == "ADP-D-D1" else 0
     assert budget == {
-        "optimizer_steps": 8, "trained_epochs": 2,
-        "trained_stages": 2, "warmup_stages": 0,
+        "optimizer_steps": 4 * (2 + warmups),
+        "trained_epochs": 2 + warmups,
+        "trained_stages": 2 + warmups,
+        "warmup_stages": warmups,
         "complete": True,
     }
     if method == "MLP-Fixed":
