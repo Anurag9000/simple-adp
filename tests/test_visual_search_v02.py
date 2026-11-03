@@ -52,6 +52,16 @@ def test_v02_supported_methods_execute_real_composite_selection(method):
     assert search.predict_proba(validation[0]).shape == (8, 2)
     assert len(search.history_) == 2
     assert search.history_[0]["accepted"] is True
+    assert all(row["optimizer_steps"] == 4 for row in search.history_)
+    assert all(row["trained_epochs"] == 1 for row in search.history_)
+    assert all(row["candidate_total_parameters"] > 0 for row in search.history_)
+    assert all(row["candidate_eligible_mlp_parameters"] > 0 for row in search.history_)
+    budget = search.search_state_["training_budget"]
+    assert budget == {
+        "optimizer_steps": 8, "trained_epochs": 2,
+        "trained_stages": 2, "warmup_stages": 0,
+        "complete": True,
+    }
     if method == "MLP-Fixed":
         assert [r["architecture"] for r in search.history_] == [[2], [3]]
         assert all(r["stage"] == "fixed" for r in search.history_)
@@ -90,6 +100,7 @@ def test_v02_exact_batch_resume_and_completed_idempotence(tmp_path):
     resumed = VisualResidualSearch("ADP-W-RR", spec(), settings=settings(seed=23))
     resumed.fit(x, y, validation_data=valid, checkpoint_path=path)
     assert resumed.history_ == baseline.history_
+    assert resumed.search_state_["training_budget"] == baseline.search_state_["training_budget"]
     assert resumed.result_.score == baseline.result_.score
     assert np.array_equal(resumed.predict_proba(valid[0]), baseline.predict_proba(valid[0]))
     # An already completed search is safe to open without retraining.
@@ -137,6 +148,12 @@ def test_v02_progressive_d1_intermediates_and_exact_mid_warmup_resume(tmp_path):
     assert ("depth", (3, 3)) in {(phase, widths) for phase, widths, _ in baseline_progress}
     # Intermediate widths must not be mistaken for independent accepted depths.
     assert all(x["stage"] != "depth_warmup" for x in baseline.history_)
+    # D1 catch-up stages consume optimizer budget but never compete for selection.
+    budget = baseline.search_state_["training_budget"]
+    assert budget["warmup_stages"] == 2
+    assert budget["trained_stages"] == len(baseline.history_) + 2
+    assert budget["optimizer_steps"] == budget["trained_stages"] * 4
+    assert budget["complete"] is True
     path = tmp_path / "d1-progressive.pt"
 
     class Evicted(Exception):
@@ -155,6 +172,7 @@ def test_v02_progressive_d1_intermediates_and_exact_mid_warmup_resume(tmp_path):
     resumed = VisualResidualSearch("ADP-D-D1", spec(), settings=config)
     resumed.fit(x, y, validation_data=valid, checkpoint_path=path)
     assert resumed.history_ == baseline.history_
+    assert resumed.search_state_["training_budget"] == baseline.search_state_["training_budget"]
     assert resumed.result_.score == baseline.result_.score
     assert np.array_equal(resumed.predict_proba(valid[0]), baseline.predict_proba(valid[0]))
 
