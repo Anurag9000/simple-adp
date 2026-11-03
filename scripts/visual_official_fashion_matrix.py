@@ -143,6 +143,10 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError("worker did not report completion")
                 if value.get("task_family") != "vision":
                     raise AssertionError("worker did not use vision task contract")
+                if value["metric_directions"].get("top_label_ece_10") != "min":
+                    raise AssertionError("top-label ECE metric direction missing")
+                if value["metric_directions"].get("multiclass_brier") != "min":
+                    raise AssertionError("multiclass Brier metric direction missing")
                 for part in ("validation_metrics", "test_metrics"):
                     metrics = value[part]
                     if not (0 <= metrics.get("top_label_ece_10", -1) <= 1):
