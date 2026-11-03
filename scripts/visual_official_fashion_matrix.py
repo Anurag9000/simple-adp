@@ -146,6 +146,11 @@ def main(argv: list[str] | None = None) -> int:
                 if "parameter_accounting" not in value:
                     raise AssertionError("composite parameter accounting missing")
                 counts = value["parameter_accounting"]
+                compute = value.get("inference_compute")
+                if not compute or compute.get("observed_linear_conv_macs_per_image", 0) <= 0:
+                    raise AssertionError("observed whole-composite dense/conv inference probe missing")
+                if compute.get("whole_model_flops") is not None:
+                    raise AssertionError("partial operator MAC counts must not be reported as full FLOPs")
                 if counts["total_parameters"] != counts["frozen_parameters"] + counts["trainable_parameters"]:
                     raise AssertionError("composite parameter counts do not close")
                 if method == "ADP-W-RR" and value["history_entries"] < 2:
