@@ -85,6 +85,8 @@ def test_coordinated_visual_test_rows_remain_unread_until_fit(
     assert data.X.held_out_reads > 0
     assert data.y.held_out_reads > 0
     assert result["test_metrics"]["accuracy"] >= 0
+    assert result["metric_directions"]["top_label_ece_10"] == "min"
+    assert result["metric_directions"]["multiclass_brier"] == "min"
     for partition in ("validation_metrics", "test_metrics"):
         assert 0.0 <= result[partition]["top_label_ece_10"] <= 1.0
         assert 0.0 <= result[partition]["multiclass_brier"] <= 2.0
