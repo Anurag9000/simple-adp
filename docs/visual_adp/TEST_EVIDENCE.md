@@ -861,3 +861,26 @@ passed **19,346 tests and skipped 1 hardware-only CUDA test**,
 but does not include the added process-resource code.
 No actual CUDA machine was available in that full CPU
 regression.
+
+
+### Isolated signed visual workers for per-job process HWM
+
+An opt-in fresh-process official matrix has been added.
+`tests/test_runner_vision_isolated_process.py`
+builds a real native signed toy dataset job, launches
+`runner.worker` in its own Python subprocess,
+verifies the process PID differs from the caller,
+checks the signed `run_signature` and native RSS
+observation, and confirms the worker result and
+individual log file exist. Separate tests force
+child process failure and mismatched result signature
+to ensure the matrix refuses both.
+
+The official 38-worker Fashion-MNIST experiment
+uses the same original native `run_spec` path
+with `--step-balanced --isolated-workers`:
+`.github/workflows/visual-official-isolated-memory.yml`.
+The new CI outcomes are pending at this checkpoint;
+do not claim the 38 fresh-process smoke is passed
+until the corresponding workflow actually finishes.
+Physical CUDA memory measurement is still unverified.
