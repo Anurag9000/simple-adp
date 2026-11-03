@@ -88,6 +88,11 @@ def test_v04_real_source_width_depth_growth_and_exact_snapshots(source):
     )
     assert grown is not None
     assert grown.hidden_widths == [385]
+    from simple_adp.visual_memory import (
+        forecast_visual_growth_payload_bytes, visual_model_tensor_payload,
+    )
+    predicted = forecast_visual_growth_payload_bytes(model, (385,))
+    assert predicted == visual_model_tensor_payload(grown)["total_model_tensor_payload_bytes"]
     assert grown.source_ffn_exact_at_initialization
     assert grown.frozen_state_sha256() == frozen
     assert torch.equal(grown.local_mlp.output_layer.weight[:, :384], out_original)
