@@ -282,3 +282,30 @@ No forecast is assumed to measure optimizer moments, activations,
 CUDA graph/kernel workspaces or allocator fragmentation. Neither
 this cap nor the whole-model inference MAC sum is equivalent to
 matching the full training-memory or training-compute budget.
+
+
+## Multiple signed runner seeds and independent pair provenance
+
+The official image matrix can now execute more than one *actual*
+`SuitePlan` model seed. The selected job key is
+(`model_adapter`, `model_id`, `RunIdentity.seed`),
+rather than conflating separate seeds in one fixed/RR pair.
+For N seeds and all 19 controlled architecture/site adapters,
+the planned bounded worker matrix contains `38*N` jobs.
+
+The multi-seed summary reports every derived runner seed
+and a grouped `fixed_vs_growth_budget_audit`. For each
+seed, the existing auditor requires identical dataset ID,
+split checksum, seed and architecture/site identity before
+examining optimizer-step counts. A missing, duplicate or
+cross-seed worker produces an explicit error/unknown comparison,
+not a new benchmark datapoint. Per-seed budget comparisons
+are aggregated as **counts of known, unknown or unequal work**,
+not as pooled model accuracy or statistically significant gains.
+
+By default N=1, preserving the historical one-seed output schema
+and file path. The two-seed first-run workflow is
+`.github/workflows/visual-official-multiseed.yml`.
+It uses tiny official Fashion images and 1 epoch per stage:
+success proves execution and identity isolation only, not
+training-compute parity or scientific superiority.
