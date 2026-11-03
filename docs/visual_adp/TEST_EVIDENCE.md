@@ -776,3 +776,23 @@ source identity failure modes, while
 executes the two-seed official Fashion data. **The newest 76-job
 workflow is pending** at this evidence checkpoint; do not
 credit it with a successful execution until CI confirms it.
+
+
+### Optimizer-step-balanced controlled jobs (pending real-image verification)
+
+`scripts/visual_official_fashion_matrix.py --step-balanced`
+now reuses native `RunnerSettings.max_epochs_vanilla` and
+`max_epochs_adp` to request fixed two-epoch versus
+initial+grown one-epoch stages, with real mini-batches.
+`tests/test_runner_vision_step_balanced.py` runs
+genuine native fixed and RR toy-image signed workers,
+checks matching dataset/seed/split/source identity,
+confirms actual two training epochs and optimizer steps,
+and ensures the budget auditor still refuses full-FLOP
+or scientific-gain claims. The CLI rejects zero/negative
+batch sizes before any dataset download.
+
+A dedicated official-image CPU matrix is
+https://github.com/Anurag9000/simple-adp/actions/runs/41593647892.
+At this evidence checkpoint that CI had not completed,
+so this feature is not yet labeled real-image verified.
