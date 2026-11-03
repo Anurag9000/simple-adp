@@ -1023,3 +1023,33 @@ the exact training-interval peak, activation
 allocation, backward FLOPs, device-wide VRAM or
 an ADP benefit. One tiny official-image seed
 cannot support a performance-significance claim.
+
+
+### Verified true multi-seed *descriptive* paired metrics
+
+A new standalone, post-run, read-only descriptive effect auditor
+(`src/simple_adp/visual_paired_metrics.py`) and CLI
+(`scripts/visual_paired_metrics_analysis.py`) were added.
+The corrected official two-seed Fashion execution
+https://github.com/Anurag9000/simple-adp/actions/runs/41616572651
+**succeeded**, created an additional artifact
+`official_fashion_vision_matrix_2seeds_paired_metrics.json`
+inside GitHub artifact ID **13222170910**, and recorded:
+19 independently reported architecture/site variants,
+two actual derived seeds, 76 completed worker records, and
+zero claimed confidence intervals, p-values or model superiority.
+
+The first two-seed report is an illustrative held-out
+micro-sample, not a scientific benchmark. No changes were
+made to the source dataset loaders, fixed baseline training,
+ADP parameter growth, optimizer, architecture-selection
+validation objective or test access controls.
+
+The new unit tests enforce metric direction, seed pairing,
+distinct worker IDs, complete class-compatible metrics,
+finite/range-checked probabilities-derived scores,
+cross-seed architecture consistency and no malformed-input
+output. Latest focused CLI/paired-metrics and whole-repository
+test runs for those added tests are pending until a matching
+CI result completes; the previously successful 19,376-test
+full-suite revision predated these new analyzer tests.
