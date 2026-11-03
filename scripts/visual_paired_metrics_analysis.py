@@ -62,8 +62,14 @@ def main(argv: list[str] | None = None) -> int:
         args.output if args.output is not None else
         args.matrix.with_name(args.matrix.stem + "_paired_metrics.json")
     )
-    target.parent.mkdir(parents=True, exist_ok=True)
     tmp = target.with_name(target.name + ".tmp")
+    source_path = args.matrix.resolve()
+    if target.resolve() == source_path or tmp.resolve() == source_path:
+        raise ValueError(
+            "paired analysis output and staging file must not overwrite "
+            "the original signed worker matrix"
+        )
+    target.parent.mkdir(parents=True, exist_ok=True)
     try:
         tmp.write_text(json.dumps(analysis, sort_keys=True, indent=2) + "\n", encoding="utf-8")
         os.replace(tmp, target)
