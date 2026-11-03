@@ -26,6 +26,7 @@ class StageResult:
     last_snapshot: dict[str, object] | None = None
     variance_stagnated: bool = False
     posterior_contraction: float | None = None
+    training_forward_macs: dict[str, object] | None = None
 
 
 class StageTrainer:
@@ -39,7 +40,11 @@ class StageTrainer:
         optimizer_kind: str = "adam",
         use_penalties: bool = False,
         checkpoint_callback: Callable[[dict[str, object]], None] | None = None,
+        track_visual_training_forward_macs: bool = False,
     ) -> None:
+        if type(track_visual_training_forward_macs) is not bool:
+            raise ValueError("track_visual_training_forward_macs must be boolean")
+        self.track_visual_training_forward_macs = track_visual_training_forward_macs
         if optimizer_kind not in {"adam", "adamw"}:
             raise ValueError("optimizer_kind must be adam or adamw")
         self.task = task
@@ -202,6 +207,15 @@ class StageTrainer:
                     raise
                 raise ValueError(f"exact-resume failure: stage checkpoint restore failed: {exc}") from exc
 
+        if self.track_visual_training_forward_macs:
+            from .visual_train_compute import VisualTrainingForwardMACCounter
+            observed_forwards = VisualTrainingForwardMACCounter(
+                model,
+                resume=(resume_state.get("training_forward_macs") if resume_state is not None else None),
+                prior_batches=batches_done,
+            )
+        else:
+            observed_forwards = None
         total_batches = (len(x_train) + settings.batch_size - 1) // settings.batch_size
 
         def state_payload(active_epoch: int, active_batch: int, active_order: torch.Tensor | None) -> dict[str, object]:
@@ -228,6 +242,8 @@ class StageTrainer:
                     None if shadow is None else copy.deepcopy(best_shadow_state)
                 ),
                 "stage_status": "active",
+                **({"training_forward_macs": observed_forwards.snapshot()}
+                   if observed_forwards is not None else {}),
             }
 
         # Persist the new architecture/stage identity before its first batch.
@@ -256,7 +272,15 @@ class StageTrainer:
                 batch_context = ({key: value.index_select(0, indexes) for key, value in train_context_t.items()}
                                  if train_context_t is not None else None)
                 optimizer.zero_grad(set_to_none=True)
-                prediction = model(xb)
+                if observed_forwards is not None:
+                    # Hooks exist *only* around this actual main training
+                    # forward. Validation and shadow posterior extra passes
+                    # never enter the observed work ledger.
+                    with observed_forwards:
+                        with observed_forwards.record_batch(int(len(indexes))):
+                            prediction = model(xb)
+                else:
+                    prediction = model(xb)
                 if self.use_penalties:
                     loss = self.task.adp_search_loss(
                         prediction,
@@ -356,4 +380,7 @@ class StageTrainer:
                 and shadow.streak >= shadow.patience
             ),
             None if shadow is None else shadow.contraction,
+            training_forward_macs=(
+                observed_forwards.snapshot() if observed_forwards is not None else None
+            ),
         )
