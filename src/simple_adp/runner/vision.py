@@ -454,6 +454,7 @@ class VisionInnerModelAdapter:
         return {
             "fit_seconds": elapsed,
             "history_entries": len(search.history_),
+            "training_budget": dict(search.search_state_["training_budget"]),
             "selected_architecture": list(search.model_.hidden_widths),
             "validation_selection_score": float(valid_loss),
             "validation_metrics": task.evaluation_metrics(valid_y, valid_preds, valid_probs),
