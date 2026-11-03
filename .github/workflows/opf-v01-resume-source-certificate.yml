@@ -33,10 +33,18 @@ jobs:
         run: |
           test "$(git hash-object tests/opf_v01_resume_certificate/vision_adp/v01_resume.py)" = "cd323ad87a97b32b7d045f31a52af539c939af7e"
           test "$(git hash-object tests/opf_v01_resume_certificate/journal_certificate_contracts.py)" = "099f59f5d43644295679699ce72c137b953bc971"
+          test "$(git hash-object tests/opf_v01_resume_certificate/vision_adp/native_stage_snapshot.py)" = "3757275b4472a8f4f04c4a798b577be82428bf60"
+          test "$(git hash-object tests/opf_v01_resume_certificate/vision_adp/shadow_bgd_variance.py)" = "0cab481c9be1228d94c231a6abb14fb3bac7be4c"
       - name: Compile exact external OPF source snapshot
         run: |
           python -m py_compile tests/opf_v01_resume_certificate/vision_adp/v01_resume.py
           python -m py_compile tests/opf_v01_resume_certificate/journal_certificate_contracts.py
+          python -m py_compile tests/opf_v01_resume_certificate/vision_adp/native_stage_snapshot.py
+          python -m py_compile tests/opf_v01_resume_certificate/vision_adp/shadow_bgd_variance.py
+          python -m py_compile tests/opf_v01_resume_certificate/stage_certificate_contracts.py
       - name: Execute real crash rollback and scientific-source guards
         run: |
           python -m pytest -q -o addopts='' tests/opf_v01_resume_certificate/journal_certificate_contracts.py
+      - name: Verify native optimizer and shadow BGD exact state replay
+        run: |
+          python -m pytest -q -o addopts='' tests/opf_v01_resume_certificate/stage_certificate_contracts.py
