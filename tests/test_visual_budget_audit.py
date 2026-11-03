@@ -9,6 +9,7 @@ from simple_adp.visual_budget_audit import audit_visual_worker_pairs
 def pair(adapter="vision_inner", *, fixed_steps=4, grown_steps=8):
     common = {
         "adapter": adapter, "status": "completed",
+        "dataset_id": "the-same-dataset", "seed": 0,
         "split_sha256": "the-same-split", "architecture_id": "V02",
         "growth_site": "adapter:block1",
     }
@@ -96,3 +97,21 @@ def test_distinct_adapters_keep_deterministic_report_order():
     result = audit_visual_worker_pairs(second + first, expected_adapters=["a", "b"])
     assert [x["adapter"] for x in result["paired_budget_evidence"]] == ["a", "b"]
     assert result["expected_pairs"] == 2
+
+
+def test_cross_dataset_or_seed_work_must_not_be_compared():
+    records = pair(fixed_steps=8, grown_steps=8)
+    records[1]["dataset_id"] = "different-source"
+    out = audit_visual_worker_pairs(records, expected_adapters=["vision_inner"])
+    assert out["unknown_optimizer_step_pairs"] == 1
+    assert out["paired_budget_evidence"][0]["identity_status"] == "dataset-mismatch"
+    records = pair(fixed_steps=8, grown_steps=8)
+    records[1]["seed"] = 1
+    out = audit_visual_worker_pairs(records, expected_adapters=["vision_inner"])
+    assert out["unknown_optimizer_step_pairs"] == 1
+    assert out["paired_budget_evidence"][0]["identity_status"] == "seed-mismatch"
+    records = pair()
+    records[0].pop("dataset_id")
+    out = audit_visual_worker_pairs(records, expected_adapters=["vision_inner"])
+    assert out["unknown_optimizer_step_pairs"] == 1
+    assert out["paired_budget_evidence"][0]["identity_status"] == "dataset-mismatch"
