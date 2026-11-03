@@ -738,3 +738,43 @@ It does not compare scientific performance under matched budgets;
 full datasets, repeated seeds and source-faithful V05–V11 remain
 separate uncompleted work. Real CIFAR-10 workflow:
 `.github/workflows/visual-official-cifar-matrix.yml`.
+
+
+## Model tensor memory accounting and opt-in admission
+
+```python
+from simple_adp import visual_model_tensor_payload
+from simple_adp.visual_search import VisualResidualSearch
+
+memory = visual_model_tensor_payload(selected_image_model)
+print(memory["total_model_tensor_payload_bytes"])
+print(memory["logical_bytes_by_dtype"])
+assert memory["peak_training_memory_bytes"] is None
+
+# An explicitly signed guard, native local-growth models only.
+search = VisualResidualSearch(
+    "ADP-W-RR", native_spec, settings=search_settings,
+    max_model_tensor_payload_bytes=256 * 1024 * 1024,
+)
+search.fit(train_x, train_y, validation_data=(valid_x, valid_y))
+print(search.search_state_["memory_admission_rejections"])
+print(search.search_state_["trained_model_memory_trace"])
+```
+
+For coordinated jobs, supply
+`RunnerSettings(visual_model_tensor_payload_cap_bytes=...)`.
+The field is absent from legacy uncapped run identities and present
+in the job signature only when configured. Every normal native worker
+returns `model_memory_accounting`; capped jobs also report the
+limit, rejected candidate records and complete per-stage memory
+traces. The strict admission policy deliberately does **not**
+apply to V01's original tabular-head model: a capped V01 worker
+fails with a clear error instead of silently skipping the guard.
+
+Caveats: this cap limits only *logical tensor payload after candidate
+construction* and before model stage optimization. It does not
+prevent proposal construction OOM, autograd activation peaks, source
+checkpoint load peaks, GPU caching fragmentation or optimizer
+allocation peaks. Do not use this value as a GPU VRAM/whole-training
+RAM requirement; include additional headroom for all those
+unmeasured costs.
