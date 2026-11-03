@@ -155,6 +155,10 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError("composite parameter counts do not close")
                 if method == "ADP-W-RR" and value["history_entries"] < 2:
                     raise AssertionError("no actual structural candidate stage was executed")
+                budget = value.get("training_budget")
+                if adapter_name != "vision_adp":
+                    if not budget or not budget.get("complete") or budget.get("optimizer_steps", 0) < 1:
+                        raise AssertionError("native inner-MLP optimizer/search budget is missing")
                 row.update({
                     "status": "completed",
                     "architecture_id": value["architecture_id"],
