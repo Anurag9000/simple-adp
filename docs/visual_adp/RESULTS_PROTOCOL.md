@@ -474,3 +474,25 @@ unknown V01 pair. The results do **not** demonstrate
 matched optimizer memory, CUDA VRAM, backward FLOPs,
 statistically reliable performance gains or exact
 fit-stage CPU peaks.
+
+
+## Descriptive independent-process memory pair comparison
+
+For completed `--isolated-workers` matrices only,
+`paired_isolated_process_rss_audit` records the
+fixed and growth *child process* RSS before/after
+fit, their post-fit process-lifetime VmHWM, and
+growth-minus-fixed descriptive differences by site
+and source runner seed. It independently rejects
+mismatched dataset/split/seed/site identities before
+forming any pair. It **never** asserts equal backward
+FLOPs, exact fit peak, model-only RSS, GPU VRAM,
+or statistically significant superiority. In-process
+multiworker matrices do not receive this audit.
+
+Raw byte differences reflect differences in whole
+child processes and possible OS/shared-library
+effects, not an isolated causal ADP architecture
+memory effect. A multi-seed, full-source
+research comparison will require suitable hardware,
+data scale, and uncertainty characterization.
