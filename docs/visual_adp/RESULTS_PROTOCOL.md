@@ -46,3 +46,44 @@ forward compute and hardware peak memory in separately identified fields.
 For the frozen V01 head, a temporary composite ModuleDict includes both
 the original frozen encoder and the selected native ADP head **only for
 read-only accounting**, without changing either serialized model.
+
+
+## Observed image inference MACs and native candidate budgets (2026-11-03)
+
+The new `visual_linear_conv_macs(model, image)` executes the **selected
+whole image composite** with a single [1,C,H,W] validation image and
+counts calls through registered `nn.Linear` and `nn.Conv2d` modules:
+
+```text
+Linear MACs  = numel(actual_linear_output) * input_features
+Conv2d MACs  = numel(actual_conv_output) * (input_channels / groups)
+               * kernel_height * kernel_width
+```
+
+Thus a local channel FFN's weights are counted once in parameter
+accounting, but its actual repeated token/spatial invocations are counted
+in the inference MAC trace. The report is named
+`inference_compute.observed_linear_conv_macs_per_image`, with per-module
+counts and calls; `inference_compute.whole_model_flops` is explicitly null.
+Functional/fused attention projections, matrix attention products,
+complex FFT/IFFT, normalization, pooling, activation, residual arithmetic,
+interpolation, memory movement and training/backward are excluded. These
+results are **partial operator-instrumented inference MACs**, not total
+model FLOPs, and must not be mixed with training search cost.
+
+For V02–V11 and source V03/V04, each completed candidate history entry
+now adds `trained_epochs`, `optimizer_steps`,
+`candidate_total_parameters`, and
+`candidate_eligible_mlp_parameters`. A signed
+`training_budget` accumulates optimizer steps, epochs, trained
+stages and `depth_warmup` catch-up stages that are not eligible for
+architecture selection. `complete=false` means an old checkpoint
+was resumed without a history of all prior budget measurements.
+These are **observed counts from StageTrainer**, not extrapolated
+timings or hypothetical FLOPs.
+
+V01 uses the original tabular head controller, so the new native
+composite-stage `training_budget` field is not fabricated for it.
+The fixed and growth routes must still be compared using actual
+optimizer-step and image-example budgets, not just equal epochs per
+stage. No numerical claim of ADP gains follows from this accounting.
