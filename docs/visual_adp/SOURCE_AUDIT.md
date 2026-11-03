@@ -337,3 +337,22 @@ allocator isolation between unrelated GPU processes,
 or full model-training FLOP parity. Existing
 legacy one-seed one-process matrix CLI behavior
 remains unchanged.
+
+
+## Validated nested signed subprocess and archive path
+
+The bounded official independent-process workflow
+`41605486116` ran 38 original signed native worker
+specifications with distinct OS process identifiers,
+returning 38 successful worker results and all paired
+budget comparisons. The subprocess launcher uses
+`run_signature` checks before accepting a result,
+preserves original worker exceptions and attaches
+individual stdout/stderr logs. Signed run IDs contain
+slashes; therefore child logs are stored in nested
+`worker_logs` subdirectories and the GitHub Action
+must use `worker_logs/**/*.log` rather than only
+`worker_logs/*.log`. The first run verified job
+isolation but did not retain the nested log paths;
+the subsequent workflow revision corrects that
+artifact path (verification pending).
