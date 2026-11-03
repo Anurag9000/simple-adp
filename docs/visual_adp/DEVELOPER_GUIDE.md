@@ -894,3 +894,44 @@ Gradient cost per step differs by architecture and model
 size; no full-training FLOPs, wall-clock or peak memory
 parity is implied. The default one-epoch-per-candidate
 one-seed matrix is unchanged.
+
+
+## Non-invasive real fit process-resource observations
+
+```python
+from simple_adp import (
+    visual_process_resource_snapshot,
+    visual_fit_resource_window,
+)
+
+before = visual_process_resource_snapshot("cpu")
+# Run native training/architecture search here, without touching test labels.
+after = visual_process_resource_snapshot("cpu")
+window = visual_fit_resource_window(before, after)
+print(window["rss_current_before_bytes"])
+print(window["rss_current_after_bytes"])
+print(window["new_lifetime_peak_rss_during_fit_bytes"])
+assert window["exact_fit_window_peak_rss_bytes"] is None
+```
+
+A real CUDA job must pass the model's actual `cuda:N`
+device. The memory snapshot reports PyTorch's per-device
+`allocated/reserved` counters and the *process-lifetime*
+high-water marks, **without resetting them**. The all-CPU
+official smoke returns `cuda_pytorch_allocator=None`.
+On non-Linux platforms with no `/proc/self/status`,
+RSS fields are null. The implementation intentionally
+requires no new dependency and preserves checkpoint,
+stage-selection, and RNG behavior.
+
+All coordinated V01–V11 and explicit source V03/V04
+visual adapter results now include `fit_process_resources`.
+`run_spec` copies the report into its signed
+`result.json` record. The official image matrix validates
+its schema and stores it alongside `training_budget`,
+`trained_model_memory_trace` and
+`model_memory_accounting`.
+This is *fit-call* resource evidence, **not** a precisely
+sampled CPU/GPU peak-memory profile and not an OOM cap.
+Use short-lived, one-job-per-process runs for the most
+meaningful process-lifetime high-water comparisons.
