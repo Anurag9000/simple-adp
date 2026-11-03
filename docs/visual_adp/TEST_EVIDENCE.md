@@ -625,3 +625,42 @@ The calibration extension subsequently added valid metric directions
 (minimize ECE and Brier), checked both at the adapter and official
 matrix level. Its newest CI remains pending and has not been marked
 verified or credited with a new benchmark score.
+
+
+## 2026-11-03 follow-up: regression repair and attention accounting
+
+An earlier complete-repository run
+https://github.com/Anurag9000/simple-adp/actions/runs/41576843808
+ended with **19249 passing, 2 failing, 1 CUDA-skipped**.
+The first failure was the stale source function-map AST snapshot,
+which subsequently passed
+https://github.com/Anurag9000/simple-adp/actions/runs/41576882956.
+The remaining failure was an **incorrect new test assertion** in
+`test_v02_supported_methods_execute_real_composite_selection[ADP-D-D1]`
+that assumed every method trains exactly two stages. Genuine D1
+performs one additional width-1 depth-warmup stage for that case;
+the signed counter correctly reported 3 stages and 12 optimizer
+steps. The test now includes the source-faithful warmup cost;
+controller behavior was not altered.
+
+The compute tracer adds separately analytical dense
+`nn.MultiheadAttention` MAC estimates, with unit tests for
+self-attention, cross-attention with different key/value dimensions,
+sequence-first and repeated attention use, no output-projection
+double counting, RNG/mode preservation, and hook removal
+on failed inference. The instrumented official 38-route
+Fashion-MNIST run including V03 attention passed:
+https://github.com/Anurag9000/simple-adp/actions/runs/41582544787.
+The focused CPU compute/isolation contract also passed:
+https://github.com/Anurag9000/simple-adp/actions/runs/41582508146.
+These tests do not measure actual attention kernel FLOPs, FFT,
+GPU energy or backward compute. CUDA test remains hardware-conditional.
+
+`visual_budget_audit.audit_visual_worker_pairs` now audits the
+38-route matrix's fixed-versus-RR work balance without claiming
+that a one-seed, one-epoch-per-candidate micro-smoke is scientific.
+Missing or partial native budgets and inconsistent split/architecture
+identity fail closed as unknown. A separate pure test suite
+`tests/test_visual_budget_audit.py` covers all those conditions.
+The subsequent budget-audit CI is not claimed passed unless
+the matching workflow run actually completes.
