@@ -1010,3 +1010,24 @@ confidence intervals, treat process VmHWM as a
 model-specific peak or claim statistical significance.
 V01's unknown native optimizer work remains unknown
 even when its CPU RSS is measured.
+
+
+## Manual official CIFAR CPU process-memory runs
+
+The isolated-memory GitHub Actions workflow
+`.github/workflows/visual-official-isolated-memory.yml`
+also accepts a manual `workflow_dispatch` choice of
+`fashion_mnist`, `cifar10` or `cifar100`.
+A normal push continues to exercise Fashion-MNIST.
+The manual workflow adjusts class-complete subset
+limits for CIFAR-100 (200 train/100 validation/100
+official test); the other datasets use 40/20/20.
+All three use the original native 19-site fixed/RR
+matrix under `--step-balanced --isolated-workers`,
+retaining signed jobs, nested child logs, process
+RSS evidence and the descriptive paired resource audit.
+
+A workflow choice does **not** itself establish
+completed CIFAR isolated-memory execution. Cite
+dataset-specific results only after verifying its
+actual GitHub Actions run and saved artifact.
