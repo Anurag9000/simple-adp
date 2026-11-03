@@ -496,3 +496,22 @@ effects, not an isolated causal ADP architecture
 memory effect. A multi-seed, full-source
 research comparison will require suitable hardware,
 data scale, and uncertainty characterization.
+
+
+## Verified combined independent-process paired RSS evidence
+
+Official isolated Fashion-MNIST
+`--step-balanced` run **41607106789**
+(artifact `13216704019`) saved
+`paired_isolated_process_rss_audit` with
+**19 identity-matched per-site fixed/RR pairs**.
+All 38 workers were isolated into distinct
+Python processes; all 38 original worker logs,
+38 signed JSON results and the matrix JSON were
+archived. The audit reports paired
+`growth_minus_fixed_lifetime_highwater_bytes`
+and `growth_minus_fixed_fit_endpoint_delta_bytes`,
+not exact training peaks or model-local allocations.
+It retains the 18/18 native equal optimizer-step
+result and the unknown V01 budget, with null
+statistical/conclusion fields.
