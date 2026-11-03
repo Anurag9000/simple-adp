@@ -78,6 +78,7 @@ class VisualResidualSearch:
         fixed_grid: Sequence[Sequence[int]] | None = None,
         generic_profile: str = "faithful",
         max_model_tensor_payload_bytes: int | None = None,
+        track_training_forward_macs: bool = False,
     ) -> None:
         config = get_model_config(model_id)
         if config.id not in SUPPORTED_V02_METHODS:
@@ -95,6 +96,9 @@ class VisualResidualSearch:
         ):
             raise ValueError("max_model_tensor_payload_bytes must be a positive integer or None")
         self.max_model_tensor_payload_bytes = max_model_tensor_payload_bytes
+        if type(track_training_forward_macs) is not bool:
+            raise ValueError("track_training_forward_macs must be a boolean")
+        self.track_training_forward_macs = track_training_forward_macs
         self.config = config
         self.spec = spec
         self.settings = settings or SearchSettings()
@@ -130,6 +134,7 @@ class VisualResidualSearch:
             # admission policy must invalidate a different-cap checkpoint.
             **({"visual_tensor_payload_cap_bytes": self.max_model_tensor_payload_bytes}
                if self.max_model_tensor_payload_bytes is not None else {}),
+            **({"track_training_forward_macs": True} if self.track_training_forward_macs else {}),
         })
 
     def _search_kind(self) -> str:
@@ -176,6 +181,10 @@ class VisualResidualSearch:
             "memory_admission_rejections": [],
             "trained_model_memory_trace": [],
             "trained_model_memory_trace_complete": True,
+            **({
+                "trained_forward_mac_trace": [],
+                "trained_forward_mac_trace_complete": True,
+            } if self.track_training_forward_macs else {}),
             "training_budget": {
                 "optimizer_steps": 0, "trained_epochs": 0,
                 "trained_stages": 0, "warmup_stages": 0,
@@ -450,6 +459,36 @@ class VisualResidualSearch:
         budget["trained_stages"] += 1
         if kind == "depth_warmup":
             budget["warmup_stages"] += 1
+        if self.track_training_forward_macs:
+            from .visual_train_compute import summarize_visual_training_forward_trace
+            measured = stage.training_forward_macs
+            if not isinstance(measured, dict):
+                raise RuntimeError("trained visual stage has no observed forward MAC evidence")
+            if bool(measured.get("complete")) and (
+                measured.get("recorded_training_forward_batches") != int(stage.batches)
+            ):
+                raise RuntimeError("visual observed forward batch count differs from signed stage optimizer steps")
+            trace = state.setdefault("trained_forward_mac_trace", [])
+            if "trained_forward_mac_trace_complete" not in state:
+                state["trained_forward_mac_trace_complete"] = False
+            trace.append({
+                "stage": kind,
+                "architecture": list(current.hidden_widths),
+                "site": (
+                    "adapter:" + current._active
+                    if isinstance(self.spec, ScheduledMultistageSpec)
+                    else self.spec.site_id
+                ),
+                **measured,
+            })
+            state["trained_forward_mac_trace_complete"] = bool(
+                state["trained_forward_mac_trace_complete"] and measured.get("complete")
+            )
+            state["training_forward_compute"] = summarize_visual_training_forward_trace(
+                trace,
+                training_stages=int(budget["trained_stages"]),
+                complete=bool(state["trained_forward_mac_trace_complete"]),
+            )
         if kind == "depth_warmup":
             # Dedicated D1 intermediate stages optimize only. They must not
             # compete in architecture selection or reset failure patience.
@@ -579,6 +618,7 @@ class VisualResidualSearch:
                     optimizer_kind="adamw" if self.config.generic else "adam",
                     use_penalties=self.config.generic,
                     checkpoint_callback=persist_stage,
+                    track_visual_training_forward_macs=self.track_training_forward_macs,
                 )
                 stage = trainer.train_stage(
                     model, x_train, y_train, x_valid, y_valid,
