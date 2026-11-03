@@ -147,6 +147,15 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         or estimator_checkpoint_path(output_dir)
     )
     started = time.perf_counter()
+    failure_resource_before = None
+    if task_ref.provider == "vision":
+        # Failure-resource telemetry must never change successful execution or
+        # prevent the original model/OOM error from reaching the coordinator.
+        try:
+            from ..visual_resources import visual_process_resource_snapshot
+            failure_resource_before = visual_process_resource_snapshot(device)
+        except Exception:
+            failure_resource_before = None
     try:
         result = adapter.fit_predict(
             route,
@@ -186,6 +195,24 @@ def run_spec(path: str | Path) -> dict[str, Any]:
             "traceback": traceback.format_exc(),
             "timestamp": utc_now(),
         }
+        if failure_resource_before is not None:
+            try:
+                from ..visual_resources import (
+                    visual_fit_resource_window, visual_process_resource_snapshot,
+                )
+                memory_at_failure = visual_fit_resource_window(
+                    failure_resource_before,
+                    visual_process_resource_snapshot(device),
+                )
+                memory_at_failure["scope"] = (
+                    "adapter.fit_predict from entry to exception; may contain "
+                    "architecture search, checkpointing, validation or test"
+                )
+                record["failure_process_resources"] = memory_at_failure
+            except Exception as memory_error:
+                record["failure_resource_probe_error"] = (
+                    f"{type(memory_error).__name__}: {memory_error}"
+                )
         atomic_write_json(output_dir / "result.json", record)
         raise
     record = {
