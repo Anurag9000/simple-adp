@@ -309,3 +309,34 @@ and file path. The two-seed first-run workflow is
 It uses tiny official Fashion images and 1 epoch per stage:
 success proves execution and identity isolation only, not
 training-compute parity or scientific superiority.
+
+
+## Separate fixed and RR epochs with observed step parity
+
+The opt-in official-image driver `--step-balanced` bypasses
+the standard `smoke_test=True` full-training-batch,
+one-epoch override and uses the existing worker
+`max_epochs_vanilla=2`, `max_epochs_adp=1`,
+`max_epochs=None`, a bounded single ADP structural
+proposal and explicit `batch_size`. This typically
+offers fixed 2 epochs versus 2 RR stages x 1 epoch.
+No new training loop or ADP growth semantics are introduced.
+
+The signed output records
+`requested_step_balance.fixed_epoch_cap`,
+`requested_step_balance.adp_per_candidate_epoch_cap`,
+`requested_step_balance.batch_size` and the
+worker-reported **actual** steps. A fixed-vs-growth pair
+is not considered equal-step unless both complete
+native stage budgets agree, belong to the same
+dataset/split/seed/site and have positive counts.
+Even then `full_training_flops_matched=null`
+and `scientific_performance_conclusion=null`.
+Optional N independent seeds remain independently audited.
+
+The bounded official Fashion-MNIST workflow
+`.github/workflows/visual-official-stepbalanced.yml`
+exercises 38 native worker jobs and saves the
+resulting conditional comparison artifact. This is
+not a scientific benchmark until full data and
+actual matched compute/uncertainty reporting exist.
