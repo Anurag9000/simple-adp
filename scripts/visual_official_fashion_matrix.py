@@ -206,6 +206,10 @@ def main(argv: list[str] | None = None) -> int:
                 if adapter_name != "vision_adp":
                     if not budget or not budget.get("complete") or budget.get("optimizer_steps", 0) < 1:
                         raise AssertionError("native inner-MLP optimizer/search budget is missing")
+                    if not value.get("trained_model_memory_trace_complete"):
+                        raise AssertionError("native trained memory trace is incomplete")
+                    if len(value.get("trained_model_memory_trace", [])) != budget["trained_stages"]:
+                        raise AssertionError("native memory trace does not cover every stage")
                 row.update({
                     "status": "completed",
                     "dataset_id": value["dataset_id"],
