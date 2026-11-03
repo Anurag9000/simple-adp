@@ -457,3 +457,20 @@ The subsequent isolated-process workflow addresses
 that comparability gap, but its results need independent
 verification. No observed CPU RSS measure should be
 presented as a physical GPU/VRAM memory benchmark.
+
+
+## Verified independent per-job CPU RSS observations
+
+Official source evidence:
+https://github.com/Anurag9000/simple-adp/actions/runs/41605486116.
+All 38 fixed/growth controlled jobs completed through
+`runner.worker.main` in their **own** Python subprocess.
+All 38 reported distinct process IDs and valid CPU RSS
+snapshots, demonstrating that their **process-lifetime**
+high-water counters are not inherited from prior
+matrix jobs. The audit also retained 18 native pairs
+with matching actual optimizer steps and one honest
+unknown V01 pair. The results do **not** demonstrate
+matched optimizer memory, CUDA VRAM, backward FLOPs,
+statistically reliable performance gains or exact
+fit-stage CPU peaks.
