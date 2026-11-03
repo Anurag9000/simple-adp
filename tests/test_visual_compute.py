@@ -85,3 +85,19 @@ def test_repeated_linear_call_is_counted_each_time():
 def test_invalid_visual_probe_rejected(invalid):
     with pytest.raises(ValueError):
         visual_linear_conv_macs(nn.Identity(), invalid)
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="requires physical CUDA GPU")
+def test_cuda_inference_trace_matches_cpu_exact_mac_counts():
+    cpu = SpatialFFN(width=3).eval()
+    gpu = SpatialFFN(width=3).eval().to("cuda")
+    gpu.load_state_dict(cpu.state_dict())
+    image = torch.ones((1, 4, 5, 7))
+    reference = visual_linear_conv_macs(cpu, image)
+    before = torch.cuda.get_rng_state().clone()
+    observed = visual_linear_conv_macs(gpu, image.cuda())
+    assert observed["observed_linear_conv_macs_per_image"] == reference[
+        "observed_linear_conv_macs_per_image"
+    ]
+    assert observed["observed_modules"] == reference["observed_modules"]
+    assert torch.equal(torch.cuda.get_rng_state(), before)
