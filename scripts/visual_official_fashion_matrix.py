@@ -25,6 +25,7 @@ from simple_adp.runner.worker import run_spec
 from simple_adp.visual_budget_audit import (
     audit_visual_worker_pairs, audit_visual_multiseed_worker_pairs,
 )
+from simple_adp.visual_training_work_audit import audit_visual_training_forward_work_pairs
 from simple_adp.visual_resource_audit import summarize_isolated_visual_resource_pairs
 
 CONTROL_ADAPTERS = (
@@ -90,6 +91,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="execute each original worker spec in its own fresh process")
     parser.add_argument("--step-balanced", action="store_true",
                         help="request 2 fixed epochs vs two 1-epoch ADP stages; audit actual steps")
+    parser.add_argument("--observe-training-forwards", action="store_true",
+                        help="record actual native model(xb) partial forward MACs, never full training FLOPs")
     parser.add_argument("--batch-size", type=int, default=16,
                         help="used in step-balanced mode; standard smoke uses full train batch")
     args = parser.parse_args(argv)
@@ -145,6 +148,7 @@ def main(argv: list[str] | None = None) -> int:
         max_epochs_adp=1 if args.step_balanced else 0,
         batch_size=args.batch_size,
         smoke_test=not args.step_balanced, cpu_only=True,
+        visual_training_forward_macs=args.observe_training_forwards,
     )
     plan = SuitePlan.build(
         settings=settings,
@@ -193,6 +197,8 @@ def main(argv: list[str] | None = None) -> int:
         matrix_basename = matrix_basename.replace(".json", "_stepbalanced.json")
     if args.isolated_workers:
         matrix_basename = matrix_basename.replace(".json", "_isolated.json")
+    if args.observe_training_forwards:
+        matrix_basename = matrix_basename.replace(".json", "_observedtrain.json")
     summary_path = root / matrix_basename
     summary: dict[str, object] = {
         "format": (
@@ -207,6 +213,13 @@ def main(argv: list[str] | None = None) -> int:
         "dataset": args.dataset,
         "source": f"torchvision.datasets.{dataset_type.__name__} official train/test",
         "dataset_download": "explicit",
+        **({
+            "requested_training_forward_compute": (
+                "actually executed minibatch forwards: observed Linear/Conv2d "
+                "plus analytically estimated dense nn.MultiheadAttention; "
+                "backward/optimizer/full FLOPs unavailable"
+            ),
+        } if args.observe_training_forwards else {}),
         **({
             "worker_process_scope": "one-process-per-signed-run",
             "cpu_process_lifetime_rss_isolated_per_worker": True,
@@ -321,6 +334,18 @@ def main(argv: list[str] | None = None) -> int:
             if method == "ADP-W-RR" and value["history_entries"] < 2:
                 raise AssertionError("no actual structural candidate stage was executed")
             budget = value.get("training_budget")
+            if args.observe_training_forwards and adapter_name != "vision_adp":
+                work = value.get("training_forward_compute")
+                trace = value.get("trained_forward_mac_trace")
+                if not isinstance(work, dict) or work.get("complete") is not True:
+                    raise AssertionError("native observed training-forward work absent or incomplete")
+                if work.get("full_training_flops") is not None:
+                    raise AssertionError("partial forward MACs cannot imply full training FLOPs")
+                if (not isinstance(trace, list)
+                        or len(trace) != budget.get("trained_stages")):
+                    raise AssertionError("native signed training-forward stage trace is incomplete")
+                if work["recorded_training_forward_batches"] != budget["optimizer_steps"]:
+                    raise AssertionError("actual observed model forwards differ from optimizer steps")
             if adapter_name != "vision_adp":
                 if not budget or not budget.get("complete") or budget.get("optimizer_steps", 0) < 1:
                     raise AssertionError("native inner-MLP optimizer/search budget is missing")
@@ -338,6 +363,11 @@ def main(argv: list[str] | None = None) -> int:
                 "candidate_stages_executed": value["history_entries"],
                 "training_budget": value.get("training_budget"),
                 "trained_model_memory_trace": value.get("trained_model_memory_trace"),
+                **({
+                    "training_forward_compute": value.get("training_forward_compute"),
+                    "trained_forward_mac_trace": value.get("trained_forward_mac_trace"),
+                    "trained_forward_mac_trace_complete": value.get("trained_forward_mac_trace_complete"),
+                } if args.observe_training_forwards and adapter_name != "vision_adp" else {}),
                 "validation_metrics": value["validation_metrics"],
                 "test_metrics": value["test_metrics"],
                 "parameter_accounting": counts,
@@ -366,6 +396,10 @@ def main(argv: list[str] | None = None) -> int:
         summary["fixed_vs_growth_budget_audit"] = audit_visual_multiseed_worker_pairs(
             summary["rows"], expected_adapters=CONTROL_ADAPTERS,
             expected_seeds=run_seeds,
+        )
+    if args.observe_training_forwards and not failures:
+        summary["paired_training_forward_work_audit"] = audit_visual_training_forward_work_pairs(
+            summary["rows"], expected_adapters=CONTROL_ADAPTERS, expected_seeds=run_seeds,
         )
     if args.isolated_workers and not failures:
         summary["paired_isolated_process_rss_audit"] = summarize_isolated_visual_resource_pairs(
