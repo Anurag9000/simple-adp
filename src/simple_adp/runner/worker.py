@@ -239,6 +239,8 @@ def run_spec(path: str | Path) -> dict[str, Any]:
            if result.get("inference_compute") is not None else {}),
         **({"model_memory_accounting": result["model_memory_accounting"]}
            if result.get("model_memory_accounting") is not None else {}),
+        **({"fit_process_resources": result["fit_process_resources"]}
+           if result.get("fit_process_resources") is not None else {}),
         **({"memory_admission_rejections": result["memory_admission_rejections"],
             "model_tensor_payload_cap_bytes": result.get("model_tensor_payload_cap_bytes")}
            if result.get("memory_admission_rejections") is not None else {}),
