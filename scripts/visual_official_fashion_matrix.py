@@ -200,6 +200,12 @@ def main(argv: list[str] | None = None) -> int:
                     raise AssertionError("model tensor payload partition does not close")
                 if memory.get("peak_training_memory_bytes") is not None:
                     raise AssertionError("logical model bytes must not claim peak training RAM")
+                nominal = memory.get("nominal_dense_adam_or_adamw_model_grad_moments_bytes")
+                if nominal != (
+                    memory["total_model_tensor_payload_bytes"]
+                    + 3 * memory["trainable_parameter_bytes"]
+                ):
+                    raise AssertionError("nominal Adam/AdamW payload does not match model and active trainables")
                 if method == "ADP-W-RR" and value["history_entries"] < 2:
                     raise AssertionError("no actual structural candidate stage was executed")
                 budget = value.get("training_budget")
