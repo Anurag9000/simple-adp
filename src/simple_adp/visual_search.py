@@ -27,6 +27,7 @@ from .results import SearchResult
 from .tasks import ClassificationTask
 from .training import StageTrainer
 from .visual_accounting import visual_parameter_accounting
+from .visual_memory import visual_model_tensor_payload
 from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_composite, restore_visual_composite
 from .visual_mixer import MixerSpec
@@ -72,6 +73,7 @@ class VisualResidualSearch:
         settings: SearchSettings | None = None,
         fixed_grid: Sequence[Sequence[int]] | None = None,
         generic_profile: str = "faithful",
+        max_model_tensor_payload_bytes: int | None = None,
     ) -> None:
         config = get_model_config(model_id)
         if config.id not in SUPPORTED_V02_METHODS:
@@ -82,6 +84,13 @@ class VisualResidualSearch:
         if generic_profile not in {"faithful", "corrected"}:
             raise ValueError("generic_profile must be faithful or corrected")
         self.generic_profile = generic_profile
+        if max_model_tensor_payload_bytes is not None and (
+            isinstance(max_model_tensor_payload_bytes, bool)
+            or not isinstance(max_model_tensor_payload_bytes, int)
+            or max_model_tensor_payload_bytes <= 0
+        ):
+            raise ValueError("max_model_tensor_payload_bytes must be a positive integer or None")
+        self.max_model_tensor_payload_bytes = max_model_tensor_payload_bytes
         self.config = config
         self.spec = spec
         self.settings = settings or SearchSettings()
@@ -113,6 +122,10 @@ class VisualResidualSearch:
             **({"generic_profile": self.generic_profile} if self.config.generic else {}),
             "task": self.task.state_dict(),
             "raw_data_sha256": digest.hexdigest(),
+            # Keep pre-existing no-limit signatures unchanged. A configured
+            # admission policy must invalidate a different-cap checkpoint.
+            **({"visual_tensor_payload_cap_bytes": self.max_model_tensor_payload_bytes}
+               if self.max_model_tensor_payload_bytes is not None else {}),
         })
 
     def _search_kind(self) -> str:
@@ -144,6 +157,7 @@ class VisualResidualSearch:
         if isinstance(self.spec, SourceViTSpec) and tuple(first) != (3072,):
             raise ValueError("source V03 ViT inner FFN requires initial hidden width exactly 3072")
         model = build_visual_composite(self.spec, tuple(first)).to(self.settings.device)
+        self._check_model_payload(model, initial=True)
         return {
             "kind": self._search_kind(),
             "status": "running", "phase": "initial" if self.config.controller != "fixed" else "fixed",
@@ -155,12 +169,26 @@ class VisualResidualSearch:
             "previous_candidate_score": float("inf"),
             "phase_index": 0, "failure_counts": {},
             "stage_state": None, "rng_state": capture_rng_state(),
+            "memory_admission_rejections": [],
             "training_budget": {
                 "optimizer_steps": 0, "trained_epochs": 0,
                 "trained_stages": 0, "warmup_stages": 0,
                 "complete": True,
             },
         }
+
+    def _check_model_payload(
+        self, model: VisualResidualAdapter, *, initial: bool = False,
+    ) -> int:
+        used = int(visual_model_tensor_payload(model)["total_model_tensor_payload_bytes"])
+        cap = self.max_model_tensor_payload_bytes
+        if initial and cap is not None and used > cap:
+            raise ValueError(
+                f"initial visual model logical tensor payload {used} bytes "
+                f"exceeds max_model_tensor_payload_bytes={cap}; "
+                "the limit does not include activations, optimizer state or peak memory"
+            )
+        return used
 
     def _persist(self, store: CheckpointStore | None, signature: str, state: dict[str, Any],
                  progress_callback: Callable[[dict[str, object]], None] | None) -> None:
@@ -419,6 +447,7 @@ class VisualResidualSearch:
         while True:
             if state["in_stage"]:
                 model = _restore(state["current"], self.settings.device)
+                self._check_model_payload(model, initial=True)
                 if state["stage_state"] is None:
                     restore_rng_state(state["rng_state"])
                 def persist_stage(stage_state: dict[str, object]) -> None:
@@ -466,6 +495,22 @@ class VisualResidualSearch:
             if (candidate is not None and isinstance(self.spec, ScheduledMultistageSpec)
                     and candidate.total_local_neurons() > self.settings.max_neurons):
                 candidate = None
+            if candidate is not None and self.max_model_tensor_payload_bytes is not None:
+                used = self._check_model_payload(candidate)
+                if used > self.max_model_tensor_payload_bytes:
+                    state.setdefault("memory_admission_rejections", []).append({
+                        "phase": str(state["phase"]),
+                        "architecture": list(candidate.hidden_widths),
+                        "site": (
+                            "adapter:" + candidate._active
+                            if isinstance(self.spec, ScheduledMultistageSpec)
+                            else self.spec.site_id
+                        ),
+                        "logical_model_tensor_payload_bytes": used,
+                        "cap_bytes": self.max_model_tensor_payload_bytes,
+                        "reason": "model-parameter-buffer-payload-limit",
+                    })
+                    candidate = None
             if candidate is None:
                 if self._advance_phase(state):
                     self._persist(store, signature, state, progress_callback)
