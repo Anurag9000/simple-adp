@@ -24,6 +24,7 @@ from ..visual_search import VisualResidualSearch
 from ..visual_accounting import visual_parameter_accounting
 from ..visual_compute import visual_linear_conv_macs
 from ..visual_metrics import visual_calibration_metrics
+from ..visual_memory import visual_model_tensor_payload
 from ..visual_source_convnext import SourceConvNeXtSpec, file_sha256
 from ..visual_source_vit import SourceViTSpec
 from .artifacts import estimator_model_path
@@ -203,6 +204,10 @@ class VisionSourceConvNeXtModelAdapter:
             "parameter_accounting": visual_parameter_accounting(
                 search.model_, search.model_.growth_targets,
             ),
+            "model_memory_accounting": visual_model_tensor_payload(search.model_),
+            "memory_admission_rejections": list(
+                search.search_state_.get("memory_admission_rejections", [])),
+            "model_tensor_payload_cap_bytes": search.max_model_tensor_payload_bytes,
             "inference_compute": visual_linear_conv_macs(
                 search.model_,
                 torch.as_tensor(valid_x[:1], dtype=torch.float32,
