@@ -65,3 +65,129 @@ def visual_model_tensor_payload(model: nn.Module) -> dict[str, object]:
         "peak_training_memory_bytes": None,
         "unique_allocator_storage_bytes": None,
     }
+
+
+def projected_tabular_mlp_payload_bytes(
+    model: nn.Module, hidden_widths: tuple[int, ...],
+) -> int | None:
+    """Predict bytes for a plain TabularMLP rebuild *without constructing it*.
+
+    Returns None for unusual parameter layouts or an inconsistent default
+    dtype: those cases must use the existing postconstruction check. This
+    forecast covers nn.Linear weights/biases and optional BatchNorm1d
+    affine parameters, running mean/variance, and int64 counters. It
+    deliberately does not attempt to forecast custom/aliased modules.
+    """
+    from .models import TabularMLP
+    import torch
+
+    if not isinstance(model, TabularMLP):
+        raise TypeError("projected model must be a TabularMLP")
+    widths = tuple(int(w) for w in hidden_widths)
+    if not widths or min(widths) <= 0:
+        raise ValueError("projected hidden widths must be positive")
+    parameters = tuple(model.parameters())
+    if not parameters:
+        return None
+    dtype = torch.get_default_dtype()
+    if any(p.dtype != dtype for p in parameters):
+        return None
+    elt_bytes = int(parameters[0].element_size())
+
+    def count(target: tuple[int, ...]) -> int:
+        size = 0
+        previous = int(model.input_dim)
+        for width in target:
+            size += (previous + 1) * width * elt_bytes
+            if model.batch_norm:
+                # gamma/beta + running mean/var; each BN has int64 batches.
+                size += 4 * width * elt_bytes + 8
+            previous = width
+        size += (previous + 1) * int(model.output_dim) * elt_bytes
+        return size
+
+    current_bytes = visual_model_tensor_payload(model)["total_model_tensor_payload_bytes"]
+    if count(tuple(model.hidden_widths)) != current_bytes:
+        return None
+    return int(count(widths))
+
+
+def prospective_tabular_growth_widths(
+    model: nn.Module, *,
+    operator: str, increment: int = 1, max_width: int = 512,
+    max_depth: int = 5, seed_width: int = 1,
+) -> tuple[int, ...] | None:
+    """Mirror native width/depth *geometry*, never allocate growth weights.
+
+    The caller still performs the source growth admission rules, neuron
+    caps, source-specific structural validation and actual post-build
+    byte check. This is only a preallocation memory screen.
+    """
+    from .models import TabularMLP
+
+    if not isinstance(model, TabularMLP):
+        raise TypeError("prospective growth requires a TabularMLP")
+    if min(increment, max_width, max_depth, seed_width) <= 0:
+        raise ValueError("growth geometry limits must be positive")
+    widths = list(model.hidden_widths)
+    cursor = int(getattr(model, "_width_cursor", 0)) % len(widths)
+    if operator == "all_layers":
+        grown = [min(max_width, x + increment) for x in widths]
+        return tuple(grown) if grown != widths else None
+    if operator in {"round_robin", "den_round_robin"}:
+        target = min(widths) + increment
+        for offset in range(len(widths)):
+            index = (cursor + offset) % len(widths)
+            if operator == "den_round_robin":
+                if widths[index] >= target or widths[index] >= max_width:
+                    continue
+                if widths[index] + increment > max_width:
+                    return None
+                widths[index] += increment
+            else:
+                if widths[index] >= max_width:
+                    continue
+                widths[index] = min(max_width, widths[index] + increment)
+            return tuple(widths)
+        return None
+    if operator == "D1":
+        if len(widths) >= max_depth or len(set(widths)) > 1:
+            return None
+        return (*widths, seed_width)
+    if operator == "Dcur":
+        if len(widths) >= max_depth:
+            return None
+        return (*widths, widths[-1])
+    raise ValueError(f"unsupported source growth operator {operator!r}")
+
+
+def forecast_visual_growth_payload_bytes(
+    model: nn.Module, new_hidden_widths: tuple[int, ...],
+    *, other_hidden_widths: tuple[int, ...] | None = None,
+) -> int | None:
+    """Project candidate model payload by MLP deltas, before growth copies.
+
+    Applies to native single-site and synchronous V07 mixer-both growth.
+    The unknown result deliberately falls back to post-build admission.
+    """
+    if not isinstance(model, nn.Module) or not hasattr(model, "local_mlp"):
+        raise TypeError("forecast requires a built native visual composite")
+    local = model.local_mlp
+    new_local = projected_tabular_mlp_payload_bytes(local, new_hidden_widths)
+    if new_local is None:
+        return None
+    current_local = visual_model_tensor_payload(local)["total_model_tensor_payload_bytes"]
+    predicted = (
+        visual_model_tensor_payload(model)["total_model_tensor_payload_bytes"]
+        - current_local + new_local
+    )
+    if other_hidden_widths is not None:
+        if not hasattr(model, "other_mlp"):
+            raise ValueError("synchronous growth requires other_mlp")
+        other = model.other_mlp
+        new_other = projected_tabular_mlp_payload_bytes(other, other_hidden_widths)
+        if new_other is None:
+            return None
+        old_other = visual_model_tensor_payload(other)["total_model_tensor_payload_bytes"]
+        predicted += new_other - old_other
+    return int(predicted)
