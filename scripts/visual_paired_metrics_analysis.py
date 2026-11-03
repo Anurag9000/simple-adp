@@ -14,6 +14,7 @@ from simple_adp.visual_paired_metrics import (
     summarize_visual_paired_metrics,
     verify_visual_worker_result_artifacts,
 )
+from simple_adp.visual_training_work_audit import audit_visual_training_forward_work_pairs
 from visual_official_fashion_matrix import CONTROL_ADAPTERS
 
 
@@ -65,6 +66,13 @@ def main(argv: list[str] | None = None) -> int:
         ) if args.results_root is not None
         else {"status": "not-requested; matrix metadata only"}
     )
+    if any(
+        isinstance(row, dict) and row.get("training_forward_compute") is not None
+        for row in rows
+    ):
+        analysis["training_forward_work_audit"] = audit_visual_training_forward_work_pairs(
+            rows, expected_adapters=CONTROL_ADAPTERS, expected_seeds=run_seeds,
+        )
     analysis["dataset"] = matrix.get("dataset")
     analysis["source_matrix_format"] = matrix.get("format")
     analysis["source_scientific_scope"] = matrix["scientific_scope"]
