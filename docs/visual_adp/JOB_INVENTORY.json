@@ -397,7 +397,19 @@
     "pre_increment_verified_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41488650402",
     "new_accounting_and_isolation_changes_full_suite_status": "in_progress at this inventory snapshot; not yet verified",
     "focused_holdout_and_accounting_status": "verified success",
-    "focused_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41492546181"
+    "focused_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41492546181",
+    "post_d1_and_mha_verified_cpu_suite": {
+      "run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582508174",
+      "source_commit": "8294b08e898bbabb94722e2fcdcda5197886e85b",
+      "passed": 19255,
+      "skipped_no_physical_cuda": 1,
+      "failed": 0,
+      "status": "success"
+    },
+    "post_budget_pair_identity_and_cifar_cli_suite": {
+      "run": "https://github.com/Anurag9000/simple-adp/actions/runs/41583583237",
+      "status": "in_progress at update"
+    }
   },
   "official_fashion_control_matrix": {
     "source": "torchvision.datasets.FashionMNIST official train/test",
@@ -479,7 +491,7 @@
         "candidate_eligible_mlp_parameters"
       ],
       "legacy_checkpoint_missing_budget": "partial, complete=false",
-      "runtime_status": "bounded native CPU worker verified; extended D1 mid-warmup resume test CI still pending",
+      "runtime_status": "D1 warmup and exact resume tested; full pytest suite 41582508174 successful (19255 passed, 1 CUDA skipped)",
       "bounded_official_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575726025",
       "focused_worker_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575803153"
     },
@@ -514,7 +526,8 @@
       "full_training_flops_matched": null,
       "scientific_performance_conclusion": null,
       "status": "bounded Fashion-MNIST official 38-route run passed including audit; CIFAR execution pending",
-      "verified_fashion_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349"
+      "verified_fashion_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41582755349",
+      "dataset_seed_split_guard_verified": "https://github.com/Anurag9000/simple-adp/actions/runs/41583583170"
     }
   },
   "official_cifar_control_matrix": {
@@ -523,10 +536,11 @@
     "controller": "existing 19 controlled architecture/site adapters x fixed/RR = 38 signed worker jobs",
     "driver": "scripts/visual_official_fashion_matrix.py --dataset cifar10|cifar100",
     "workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-cifar-matrix.yml",
-    "cifar10_source_runtime_verification": "in progress; record run evidence after completion",
-    "cifar100_source_runtime_verification": "not yet executed",
+    "cifar10_source_runtime_verification": "in progress: https://github.com/Anurag9000/simple-adp/actions/runs/41583561156",
+    "cifar100_source_runtime_verification": "in progress: https://github.com/Anurag9000/simple-adp/actions/runs/41583684320",
     "classification_guard": "all three partition limits must cover 10 CIFAR10 / 100 CIFAR100 classes",
     "matched_training_compute": false,
-    "scientific_benchmark": false
+    "scientific_benchmark": false,
+    "cifar100_workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-cifar100-matrix.yml"
   }
 }
