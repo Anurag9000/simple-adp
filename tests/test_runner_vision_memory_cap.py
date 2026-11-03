@@ -115,3 +115,20 @@ def test_legacy_v01_head_route_refuses_unimplemented_memory_admission():
             route, data=data, split=split, seed=0, settings=SearchSettings(),
             max_model_tensor_payload_bytes=256,
         )
+
+
+def test_failure_probe_unavailable_never_masks_original_memory_cap_error(monkeypatch, tmp_path):
+    _, _, inner = _prepare_native_plan(monkeypatch, tmp_path, cap=1)
+    from simple_adp import visual_resources
+
+    def inaccessible(*args, **kwargs):
+        raise OSError("resource metrics deliberately unavailable")
+
+    monkeypatch.setattr(visual_resources, "visual_process_resource_snapshot", inaccessible)
+    with pytest.raises(ValueError, match="initial visual model logical tensor payload"):
+        run_spec(inner.command[-1])
+    saved = tmp_path / "results" / inner.identity.run_id / "result.json"
+    record = json.loads(saved.read_text())
+    assert record["status"] == "failed"
+    assert "initial visual model logical tensor payload" in record["error"]
+    assert "failure_process_resources" not in record
