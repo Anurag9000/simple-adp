@@ -25,3 +25,36 @@ The source should be refreshed only after verifying its
 blob SHA in the OPF repository. A green certificate validates
 this exact pinned snapshot, not future OPF changes or GPU
 numerical replay.
+
+## Exact training-stage source certificate
+
+The certificate now also pins exact byte slices of the native V01
+`evaluate()` and `train_stage()` functions from
+`Anurag9000/OPF_ADP/vision_adp/v01.py` (source blob
+`b33a51e22a50df24877ee894c8a85a7e1d8b84a1`),
+wrapped only with the imports required for independent execution.
+The two source functions are not algorithmically modified. The exact
+`Dyn_DNN4OPF/utils/shadow_bgd_variance.py` implementation is copied
+without modifications (both source and snapshot Git blobs
+`0cab481c9be1228d94c231a6abb14fb3bac7be4c`).
+
+`stage_certificate_contracts.py` exercises that training code
+against a small deterministic PyTorch model implementing only the
+`snapshot_arch_and_state`/`restore_arch_and_state` protocol. It
+checks uninterrupted-versus-interrupted matching for original AdamW
+and shadow-BGD criteria at both a mid-epoch optimizer step and an
+epoch boundary, plus fallback to the previous intact checkpoint after
+corrupting the newest optimizer step. It requires exact trained-head
+tensors and (where applicable) shadow-BGD sigma and independent
+MC generator state.
+
+**Boundary:** this is not a test of ADP_DEN's actual width/depth
+mutations, ResNet18/CIFAR inputs, V01's outer growth controller,
+or whole-repository OPF execution. Those remain gated by the native
+OPF workflow; the source-snapshot certificate proves only the
+unchanged native stage loop and its dependencies on synthetic
+CPU inputs. The [journal-only CI run
+41575834184](https://github.com/Anurag9000/simple-adp/actions/runs/41575834184)
+has executed with **six tests passed**. The expanded training-stage
+certificate requires its own completed CI result before it may
+be described as verified.
