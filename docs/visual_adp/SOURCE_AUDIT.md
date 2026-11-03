@@ -286,3 +286,33 @@ The observed `training_budget` must confirm equality
 for each pair; it is not inferred from epoch caps.
 No equivalence in backward FLOPs, model size, GPU peak
 or accuracy is asserted.
+
+
+## Fit-call OS RSS and CUDA allocator snapshots without search modification
+
+`src/simple_adp/visual_resources.py` reads
+Linux `VmRSS`/`VmHWM` and, only when a CUDA
+model device is selected, current-device PyTorch
+allocator allocated/reserved and lifetime maxima.
+It does not use process spawning, `psutil`,
+cross-process sampling, CUDA peak-stat resetting,
+model hooks, GPU allocation, or mutable global state.
+The three original adapter implementations
+`VisionModelAdapter.fit_predict`,
+`VisionInnerModelAdapter.fit_predict`, and
+`VisionSourceConvNeXtModelAdapter.fit_predict`
+(the last inherited by source ViT) sample immediately
+before and after their existing native `fit` calls.
+The official test partition is still not materialized
+until after the model finishes fitting.
+
+`runner.worker.run_spec` preserves the report for
+vision jobs only. The report is not inserted into
+the native `VisualResidualSearch` checkpoint,
+`SearchSettings` signature or optimization loop,
+so deterministic training semantics and exact stage
+resume remain unmodified. Process-lifetime HWM
+measurements are explicitly distinct from a per-job
+peak (especially when 38 worker calls share one
+Python process). CUDA hardware is required to
+validate the CUDA branch.
