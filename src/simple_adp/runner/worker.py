@@ -223,6 +223,8 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "growth_site": result.get("growth_site"),
         **({"parameter_accounting": result["parameter_accounting"]}
            if result.get("parameter_accounting") is not None else {}),
+        **({"inference_compute": result["inference_compute"]}
+           if result.get("inference_compute") is not None else {}),
         "frozen_sha256": result.get("frozen_sha256"),
         **({
             "source_weights_sha256": result["source_weights_sha256"],
