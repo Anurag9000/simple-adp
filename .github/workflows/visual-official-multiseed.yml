@@ -41,7 +41,7 @@ jobs:
       - name: Verify strict seed-paired descriptive metrics and calibration provenance
         run: |
           python scripts/visual_paired_metrics_analysis.py \
-            --matrix "${{ runner.temp }}/official-visual-multiseed/official_fashion_vision_matrix_2seeds.json" \\
+            --matrix "${{ runner.temp }}/official-visual-multiseed/official_fashion_vision_matrix_2seeds.json" \
             --results-root "${{ runner.temp }}/official-visual-multiseed/results"
       - name: Retain signed per-seed worker and conservative budget audit
         if: always()
