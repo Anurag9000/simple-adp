@@ -108,6 +108,11 @@ def test_coordinated_visual_test_rows_remain_unread_until_fit(
     assert payload["total_model_tensor_payload_bytes"] == (
         payload["parameter_payload_bytes"] + payload["buffer_payload_bytes"])
     assert payload["peak_training_memory_bytes"] is None
+    observed = result["fit_process_resources"]
+    assert observed["device"] == "cpu"
+    assert observed["format"] == "simple-adp-visual-fit-process-resources-v1"
+    assert observed["exact_fit_window_peak_rss_bytes"] is None
+    assert observed["cuda_pytorch_allocator"] is None
     if adapter_class is VisionInnerModelAdapter:
         assert result["training_budget"]["trained_stages"] >= 1
         assert result["training_budget"]["optimizer_steps"] >= 1
