@@ -379,3 +379,35 @@ unmeasured full training FLOPs and scientific conclusions.
 The existing model/controller and checkpoint implementations
 are untouched; the original official worker matrix format
 remains backward compatible.
+
+
+## Actual native training-forward arithmetic without source method mutation
+
+The optional `VisualTrainingForwardMACCounter` attaches module forward
+hooks only around the original StageTrainer `model(xb)` call. It
+does not execute another batch, alter gradients, change parameter
+trainability, move the model, reset RNG, or modify any of the
+14 controller decisions. Hooks are removed before loss backward
+and optimizer update. Validation forward calls and auxiliary
+variance-shadow probes are not attributed to the primary training
+forward. Existing checkpoint recovery saves the counter after
+the successful optimizer step.
+
+The accounting includes executed `nn.Linear`/`nn.Conv2d` shapes
+and analytical dense declared `nn.MultiheadAttention` projection
+plus score/value MACs. It is not a profiler of actual fused CUDA
+kernel instructions, convolutions invoked functionally, FFT, or
+the backward/optimizer graph. In particular `StageTrainer`
+remains unchanged in its scoring, actual optimizer setup and
+learning-rate schedule; only an opt-in counter is inserted.
+
+The signed `RunnerSettings.visual_training_forward_macs` boolean
+defaults to false and is omitted from legacy plan and source
+checkpoint signatures when off. When true, native V02–V11 and
+separately gated true-source V03/V04 paths receive the counter,
+while the unrelated V01 original tabular-head estimator remains
+unmeasured. No missing V01 history is filled with zero.
+A read-only paired auditor rejects forged complete arithmetic
+and cross-seed/dataset/split/site comparisons. It cannot establish
+total training FLOPs or model superiority without the
+full backward/autograd and optimizer workload.
