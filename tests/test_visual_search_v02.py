@@ -56,7 +56,12 @@ def test_v02_supported_methods_execute_real_composite_selection(method):
     assert all(row["trained_epochs"] == 1 for row in search.history_)
     assert all(row["candidate_total_parameters"] > 0 for row in search.history_)
     assert all(row["candidate_eligible_mlp_parameters"] > 0 for row in search.history_)
+    assert all(row["candidate_model_tensor_payload_bytes"] > 0 for row in search.history_)
     budget = search.search_state_["training_budget"]
+    memory_trace = search.search_state_["trained_model_memory_trace"]
+    assert len(memory_trace) == budget["trained_stages"]
+    assert search.search_state_["trained_model_memory_trace_complete"] is True
+    assert all(row["logical_model_tensor_payload_bytes"] > 0 for row in memory_trace)
     # Dedicated D1 grows a new layer progressively: the width-1 warmup
     # stage trains and must count toward optimizer budget, but is not
     # independently eligible for architecture selection.
@@ -107,6 +112,7 @@ def test_v02_exact_batch_resume_and_completed_idempotence(tmp_path):
     resumed.fit(x, y, validation_data=valid, checkpoint_path=path)
     assert resumed.history_ == baseline.history_
     assert resumed.search_state_["training_budget"] == baseline.search_state_["training_budget"]
+    assert resumed.search_state_["trained_model_memory_trace"] == baseline.search_state_["trained_model_memory_trace"]
     assert resumed.result_.score == baseline.result_.score
     assert np.array_equal(resumed.predict_proba(valid[0]), baseline.predict_proba(valid[0]))
     # An already completed search is safe to open without retraining.
@@ -157,6 +163,11 @@ def test_v02_progressive_d1_intermediates_and_exact_mid_warmup_resume(tmp_path):
     # D1 catch-up stages consume optimizer budget but never compete for selection.
     budget = baseline.search_state_["training_budget"]
     assert budget["warmup_stages"] == 2
+    assert len(baseline.search_state_["trained_model_memory_trace"]) == budget["trained_stages"]
+    assert sum(
+        row["stage"] == "depth_warmup"
+        for row in baseline.search_state_["trained_model_memory_trace"]
+    ) == 2
     assert budget["trained_stages"] == len(baseline.history_) + 2
     assert budget["optimizer_steps"] == budget["trained_stages"] * 4
     assert budget["complete"] is True
@@ -179,6 +190,7 @@ def test_v02_progressive_d1_intermediates_and_exact_mid_warmup_resume(tmp_path):
     resumed.fit(x, y, validation_data=valid, checkpoint_path=path)
     assert resumed.history_ == baseline.history_
     assert resumed.search_state_["training_budget"] == baseline.search_state_["training_budget"]
+    assert resumed.search_state_["trained_model_memory_trace"] == baseline.search_state_["trained_model_memory_trace"]
     assert resumed.result_.score == baseline.result_.score
     assert np.array_equal(resumed.predict_proba(valid[0]), baseline.predict_proba(valid[0]))
 
