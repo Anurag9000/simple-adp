@@ -170,6 +170,8 @@ class VisualResidualSearch:
             "phase_index": 0, "failure_counts": {},
             "stage_state": None, "rng_state": capture_rng_state(),
             "memory_admission_rejections": [],
+            "trained_model_memory_trace": [],
+            "trained_model_memory_trace_complete": True,
             "training_budget": {
                 "optimizer_steps": 0, "trained_epochs": 0,
                 "trained_stages": 0, "warmup_stages": 0,
@@ -318,6 +320,22 @@ class VisualResidualSearch:
         kind = state["phase"]
         current = _restore(stage.best_snapshot, self.settings.device)
         score = float(stage.best_score)
+        model_bytes = self._check_model_payload(current, initial=True)
+        memory_trace = state.setdefault("trained_model_memory_trace", [])
+        if "trained_model_memory_trace_complete" not in state:
+            # Resume from a legacy checkpoint: prior stage memory is unknown.
+            state["trained_model_memory_trace_complete"] = False
+        memory_trace.append({
+            "stage": kind,
+            "architecture": list(current.hidden_widths),
+            "site": (
+                "adapter:" + current._active
+                if isinstance(self.spec, ScheduledMultistageSpec)
+                else self.spec.site_id
+            ),
+            "logical_model_tensor_payload_bytes": model_bytes,
+            "optimizer_steps": int(stage.batches),
+        })
         budget = state.setdefault("training_budget", {
             # Old exact-resume payloads have no prior-stage budget fields.
             # Never incorrectly call their partially recovered totals complete.
@@ -383,6 +401,7 @@ class VisualResidualSearch:
             "optimizer_steps": int(stage.batches),
             "candidate_total_parameters": parameter_counts["total_parameters"],
             "candidate_eligible_mlp_parameters": parameter_counts["eligible_mlp_parameters"],
+            "candidate_model_tensor_payload_bytes": model_bytes,
             "site": ("adapter:" + current._active
                      if isinstance(self.spec, ScheduledMultistageSpec)
                      else self.spec.site_id),
