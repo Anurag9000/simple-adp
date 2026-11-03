@@ -92,6 +92,12 @@ def test_opt_in_cap_fails_closed_and_records_real_worker_failure(monkeypatch, tm
     record = json.loads(result_path.read_text())
     assert record["status"] == "failed"
     assert "max_model_tensor_payload_bytes" in record["error"]
+    resources = record["failure_process_resources"]
+    assert resources["device"] == "cpu"
+    assert resources["format"] == "simple-adp-visual-fit-process-resources-v1"
+    assert resources["exact_fit_window_peak_rss_bytes"] is None
+    assert resources["cuda_pytorch_allocator"] is None
+    assert "adapter.fit_predict" in resources["scope"]
 
 
 def test_legacy_v01_head_route_refuses_unimplemented_memory_admission():
