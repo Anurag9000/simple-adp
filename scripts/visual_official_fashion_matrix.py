@@ -25,6 +25,7 @@ from simple_adp.runner.worker import run_spec
 from simple_adp.visual_budget_audit import (
     audit_visual_worker_pairs, audit_visual_multiseed_worker_pairs,
 )
+from simple_adp.visual_resource_audit import summarize_isolated_visual_resource_pairs
 
 CONTROL_ADAPTERS = (
     "vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05",
@@ -365,6 +366,11 @@ def main(argv: list[str] | None = None) -> int:
         summary["fixed_vs_growth_budget_audit"] = audit_visual_multiseed_worker_pairs(
             summary["rows"], expected_adapters=CONTROL_ADAPTERS,
             expected_seeds=run_seeds,
+        )
+    if args.isolated_workers and not failures:
+        summary["paired_isolated_process_rss_audit"] = summarize_isolated_visual_resource_pairs(
+            summary["rows"], expected_adapters=CONTROL_ADAPTERS,
+            expected_seeds=run_seeds, worker_process_scope="one-process-per-signed-run",
         )
     _save(summary_path, summary)
     if failures:
