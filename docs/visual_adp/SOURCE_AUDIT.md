@@ -116,3 +116,45 @@ warmup, and generic faithful/corrected phase search. runner/vision.py registers
 tabular execution remain separate. Last validated V02-D1 CPU CI: 241 passed;
 generic all-method extension passed 259 selected CPU tests. No source-pretrained CNN, real CIFAR
 scientific run, or V03–V11 local FFN implementation has been verified.
+
+
+## Measured visual reporting path (2026-11-03)
+
+The opt-in scientific reporting extension follows existing identities,
+controllers and worker contracts:
+
+```text
+VisionModelAdapter (V01)
+  -> original VisualADPEstimator / TabularADP + frozen encoder
+  -> selected native head
+  -> visual_parameter_accounting
+  -> visual_linear_conv_macs on encoder -> head (one validation image)
+  -> ClassificationTask + post-selection visual_calibration_metrics
+  -> runner.worker.run_spec normal signed result.json
+
+VisionInnerModelAdapter (V02-V11) and VisionSource* (V03/V04)
+  -> native VisualResidualSearch
+  -> StageTrainer stage actual optimizer steps/epochs
+  -> per-completed-stage candidate costs + D1 warmup aggregate budget
+  -> selected composite full-image logits, with frozen downstream graph
+  -> visual_parameter_accounting + visual_linear_conv_macs
+  -> ClassificationTask + post-selection visual_calibration_metrics
+  -> runner.worker.run_spec normal signed result.json
+```
+
+New anchors: `visual_compute.visual_linear_conv_macs`,
+`visual_metrics.visual_calibration_metrics`,
+`visual_search.VisualResidualSearch._finish_stage`,
+`runner.vision.VisionModelAdapter.fit_predict`,
+`runner.vision.VisionInnerModelAdapter.fit_predict`,
+`runner.vision_source.VisionSourceConvNeXtModelAdapter.fit_predict`
+(shared V03/V04 runner), and `runner.worker.run_spec`.
+
+This addition does **not** alter `TabularMLP`,
+`rebuild_mlp`, source ADP growth semantics, the original
+`MODEL_REGISTRY`, `TabularADP.save/load`, or the original
+TaskAdapter cross-entropy candidate-scoring contract. It provides a
+partial measured Linear/Conv2d inference MAC count rather than
+whole-model FLOPs and does not claim genuine calibration with tiny
+test samples. Physical CUDA and source-faithful V05–V11 remain
+unvalidated/unfinished respectively.
