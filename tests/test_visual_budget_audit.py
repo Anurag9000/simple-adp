@@ -115,3 +115,61 @@ def test_cross_dataset_or_seed_work_must_not_be_compared():
     out = audit_visual_worker_pairs(records, expected_adapters=["vision_inner"])
     assert out["unknown_optimizer_step_pairs"] == 1
     assert out["paired_budget_evidence"][0]["identity_status"] == "dataset-mismatch"
+
+
+def test_multiseed_audits_are_independent_and_refuse_cross_seed_pairing():
+    from simple_adp.visual_budget_audit import audit_visual_multiseed_worker_pairs
+
+    first = pair("a", fixed_steps=4, grown_steps=8)
+    second = pair("a", fixed_steps=4, grown_steps=4)
+    for row in first:
+        row["seed"] = 401
+    for row in second:
+        row["seed"] = 991
+    combined = second + first  # Deliberately reverse source order.
+    audit = audit_visual_multiseed_worker_pairs(
+        combined, expected_adapters=["a"], expected_seeds=[401, 991],
+    )
+    assert audit["format"] == "simple-adp-visual-fixed-rr-multiseed-budget-audit-v1"
+    assert audit["seed_count"] == 2
+    assert audit["total_expected_pairs"] == 2
+    assert audit["same_optimizer_step_pairs"] == 1
+    assert audit["mismatched_optimizer_step_pairs"] == 1
+    assert audit["unknown_optimizer_step_pairs"] == 0
+    assert [x["run_seed"] for x in audit["per_seed_budget_audits"]] == [401, 991]
+    assert audit["full_training_flops_matched"] is None
+    assert audit["scientific_performance_conclusion"] is None
+
+
+@pytest.mark.parametrize("case", ["duplicate", "missing", "stray", "cross_seed"])
+def test_multiseed_incomplete_or_misidentified_pairs_are_rejected(case):
+    from simple_adp.visual_budget_audit import audit_visual_multiseed_worker_pairs
+
+    one, two = pair("a"), pair("a")
+    for row in one:
+        row["seed"] = 7
+    for row in two:
+        row["seed"] = 8
+    records = one + two
+    if case == "duplicate":
+        records.append(copy.deepcopy(records[0]))
+    elif case == "missing":
+        records.pop()
+    elif case == "stray":
+        records[-1]["seed"] = 9
+    else:
+        records[-1]["seed"] = 7
+    with pytest.raises(ValueError):
+        audit_visual_multiseed_worker_pairs(
+            records, expected_adapters=["a"], expected_seeds=[7, 8],
+        )
+
+
+@pytest.mark.parametrize("bad_seeds", [[1, 1], [], [True, 2]])
+def test_multiseed_nonunique_or_nonnumeric_seed_contract_rejected(bad_seeds):
+    from simple_adp.visual_budget_audit import audit_visual_multiseed_worker_pairs
+
+    with pytest.raises(ValueError):
+        audit_visual_multiseed_worker_pairs(
+            [], expected_adapters=["a"], expected_seeds=bad_seeds,
+        )
