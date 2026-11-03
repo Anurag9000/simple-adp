@@ -8,6 +8,16 @@ on:
       - 'src/simple_adp/visual_resource_audit.py'
       - '.github/workflows/visual-official-isolated-memory.yml'
   workflow_dispatch:
+    inputs:
+      dataset:
+        description: 'Official image dataset for isolated fixed/RR memory matrix'
+        required: true
+        default: fashion_mnist
+        type: choice
+        options:
+          - fashion_mnist
+          - cifar10
+          - cifar100
 
 permissions:
   contents: read
@@ -32,11 +42,17 @@ jobs:
         run: python -m pip install -e '.[vision,dev]'
       - name: Run 38 genuine native jobs in fresh processes with balanced-step request
         run: |
+          DATASET="${{ inputs.dataset || 'fashion_mnist' }}"
+          if [ "$DATASET" = cifar100 ]; then
+            LIMITS=(--train-limit 200 --valid-limit 100 --test-limit 100)
+          else
+            LIMITS=(--train-limit 40 --valid-limit 20 --test-limit 20)
+          fi
           python scripts/visual_official_fashion_matrix.py \
-            --dataset fashion_mnist \
+            --dataset "$DATASET" \
             --isolated-workers --step-balanced --batch-size 16 \
             --workdir "${{ runner.temp }}/isolated-visual" \
-            --train-limit 40 --valid-limit 20 --test-limit 20
+            "${LIMITS[@]}"
       - name: Preserve per-job OS memory observation, split provenance and logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,6 +61,6 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
           path: |
-            ${{ runner.temp }}/isolated-visual/official_fashion_vision_matrix_stepbalanced_isolated.json
+            ${{ runner.temp }}/isolated-visual/official_*_vision_matrix_stepbalanced_isolated.json
             ${{ runner.temp }}/isolated-visual/results/**/result.json
             ${{ runner.temp }}/isolated-visual/worker_logs/**/*.log
