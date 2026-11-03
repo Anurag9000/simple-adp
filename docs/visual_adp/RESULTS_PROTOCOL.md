@@ -366,3 +366,55 @@ Validation-chosen architectures, source class identities,
 budget completeness, and the fixed seed all remain part
 of the scientific provenance. A one-seed micro-smoke
 cannot justify claiming a general ADP improvement.
+
+
+## Observed process resources around native visual fit (2026-11-03)
+
+The signed visual adapter/worker result now includes
+`fit_process_resources`, independently of the existing
+`model_memory_accounting`. Three different kinds of memory
+information must **never** be conflated:
+
+1. **Logical model tensor payload** — exact dtype-aware sum of
+   registered model parameter and buffer *elements*; no activations,
+   optimizer allocations or independent backing-storage proof.
+2. **Nominal dense Adam/AdamW payload** — hypothetical model +
+   dense-gradient + two same-dtype moment tensors for every
+   trainable parameter. It is an analytical calculation, not a
+   peak training memory measurement.
+3. **Observed process-resource snapshots** — Linux
+   `/proc/self/status` `VmRSS` and `VmHWM` before/after
+   `fit()`; on actual CUDA jobs, PyTorch's *current-device*
+   `memory_allocated`, `memory_reserved`, and unreset
+   *process-lifetime* allocation/reservation maxima.
+
+The fit window covers `VisualADPEstimator.fit()` (V01)
+or `VisualResidualSearch.fit()` (V02–V11/source-V03/V04),
+including training, native growth, architectural validation,
+checkpoint construction and recovery. Test-set inference
+is conducted only after the end snapshot. The resource
+probes do not inspect held-out data, move models, alter RNG,
+reset CUDA peak counters or change selected architectures.
+
+The `rss_current_delta_bytes` is the difference of two
+*point measurements*, not the memory allocated by the
+algorithm. The `rss_window_peak_lower_bound_bytes` is a
+lower bound based on those endpoint samples. When the
+**process-lifetime** VmHWM increased, the new high-water
+mark was achieved during the fit interval; if VmHWM did
+not increase, this method cannot recover a distinct fit
+peak. Both `exact_fit_window_peak_rss_bytes` and
+`cuda_pytorch_allocator.exact_fit_window_peak_cuda_bytes`
+are **always null**. The PyTorch CUDA allocator counters
+do not cover other processes, driver allocations or all
+operator workspaces. In long-lived official matrix
+processes, peak counters include **previous workers**,
+so they must not be compared as per-job peaks.
+
+Unavailable Linux /proc or physical CUDA metrics remain
+null, never zero. The result's presence is a truthful
+observation, **not physical CUDA benchmark evidence**:
+CUDA hardware remains necessary to establish real
+CUDA allocator values. Full per-step GPU profiler traces,
+device-wide VRAM and actual training FLOP counts remain
+unimplemented.
