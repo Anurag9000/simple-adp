@@ -87,3 +87,35 @@ composite-stage `training_budget` field is not fabricated for it.
 The fixed and growth routes must still be compared using actual
 optimizer-step and image-example budgets, not just equal epochs per
 stage. No numerical claim of ADP gains follows from this accounting.
+
+
+## Post-selection calibration diagnostics
+
+The opt-in vision runner reports `top_label_ece_10` and
+`multiclass_brier` alongside existing source `ClassificationTask`
+accuracy, balanced accuracy, macro-F1 and log-loss. These are computed
+**only after** `fit()` has completed; no calibration metric enters
+the architecture-validation objective or any controller decision.
+
+For sample (i), predicted distribution (p_{ic}), encoded class
+(y_i), maximum confidence (q_i=\max_c p_{ic}), predicted class
+(\hat y_i=\arg\max_c p_{ic}), and (N) held-out samples:
+
+```text
+ECE(10) = sum_b [ count(bin_b) / N ] *
+          abs(mean_correct(bin_b) - mean_confidence(bin_b))
+
+Multiclass Brier = (1/N) * sum_i sum_c
+                   (p[i,c] - 1[c==y_i])**2
+```
+
+The first ten confidence intervals are half-open except the last
+interval, which includes confidence 1.0. Source class labels may be
+nonconsecutive; `ClassificationTask.encode_targets` preserves the
+original training label map. Probabilities must be finite, lie in
+[0,1], and sum to one. For a ten-class classifier the multiclass
+Brier score lies in [0,2]; lower is better. Small smoke partitions
+yield unstable calibration estimates: do not interpret a low ECE on
+20 images as scientific calibration evidence. Future multi-seed
+calibration comparisons must provide confidence intervals and matched
+training budgets.
