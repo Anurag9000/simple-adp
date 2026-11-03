@@ -140,3 +140,73 @@ def test_cli_refuses_staging_file_collision_with_signed_source(tmp_path):
     assert "must not overwrite" in completed.stderr
     assert not (tmp_path / "analysis.json").exists()
     assert json.loads(source.read_text(encoding="utf-8")) == payload
+
+
+def _write_signed_result_fixtures(tmp_path, rows, *, signature="a" * 64):
+    root = tmp_path / "results"
+    for row in rows:
+        dest = root / row["job_id"] / "result.json"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps({
+            **row,
+            "model_id": row["method"],
+            "run_signature": signature,
+        }), encoding="utf-8")
+    return root
+
+
+def _verified_cli(matrix_path, results_root):
+    return subprocess.run([
+        sys.executable, str(SCRIPT),
+        "--matrix", str(matrix_path),
+        "--results-root", str(results_root),
+    ], capture_output=True, text=True, timeout=45, check=False)
+
+
+def test_cli_crosschecks_all_original_results_and_one_shared_plan_signature(tmp_path):
+    obj = data_records()
+    source = tmp_path / "matrix.json"
+    source.write_text(json.dumps(obj), encoding="utf-8")
+    root = _write_signed_result_fixtures(tmp_path, obj["rows"])
+    result = _verified_cli(source, root)
+    assert result.returncode == 0, result.stderr
+    report = json.loads((tmp_path / "matrix_paired_metrics.json").read_text())
+    audit = report["original_worker_artifact_verification"]
+    assert audit["verified_worker_results"] == 38
+    assert audit["shared_suite_plan_run_signature"] == "a" * 64
+    assert audit["shared_plan_signature_consistency_verified"] is True
+    assert len(audit["original_worker_result_bundle_sha256"]) == 64
+
+
+@pytest.mark.parametrize("corruption", ["wrong-metric", "different-plan", "removed-result"])
+def test_cli_rejects_tampered_missing_or_cross_plan_worker_files_without_report(tmp_path, corruption):
+    obj = data_records()
+    source = tmp_path / "matrix.json"
+    source.write_text(json.dumps(obj), encoding="utf-8")
+    root = _write_signed_result_fixtures(tmp_path, obj["rows"])
+    file = root / obj["rows"][0]["job_id"] / "result.json"
+    if corruption == "removed-result":
+        file.unlink()
+    else:
+        payload = json.loads(file.read_text(encoding="utf-8"))
+        if corruption == "wrong-metric":
+            payload["test_metrics"]["accuracy"] = 0.0
+        else:
+            payload["run_signature"] = "b" * 64
+        file.write_text(json.dumps(payload), encoding="utf-8")
+    result = _verified_cli(source, root)
+    assert result.returncode != 0
+    assert not (tmp_path / "matrix_paired_metrics.json").exists()
+
+
+def test_artifact_verifier_rejects_job_path_escape(tmp_path):
+    from simple_adp.visual_paired_metrics import verify_visual_worker_result_artifacts
+
+    data = data_records()["rows"]
+    data[0]["job_id"] = "../escaped"
+    with pytest.raises(ValueError, match="escape"):
+        verify_visual_worker_result_artifacts(
+            data, results_root=_write_signed_result_fixtures(
+                tmp_path, [row for row in data if row["job_id"] != "../escaped"],
+            ),
+        )
