@@ -554,3 +554,66 @@ passed and retained both the original matrix and
 The report contains 19 adapters, 2 derived seeds, and
 76 source worker entries; all scientific conclusion fields
 remain explicitly unavailable.
+
+
+## Actual executed training-forward operator work (opt-in, 2026-11-03)
+
+The native visual search can now record *actual executed training
+minibatch forwards*, rather than estimating training effort from
+a post-selection inference probe or just counting optimizer steps.
+
+`VisualResidualSearch(track_training_forward_macs=True)` activates
+`VisualTrainingForwardMACCounter` only around the **original**
+`StageTrainer` `prediction = model(xb)` call. The counter observes
+each executed `nn.Linear` and `nn.Conv2d` call and analytically
+estimates dense QKV/output projections and QKᵀ/AV products for
+`nn.MultiheadAttention` from its *actual* observed Q/K/V
+shapes. The parent MHA's functionally executed out projection
+is never double-counted as an observed child Linear operation.
+
+Each original training minibatch contributes its **actual batch
+size**, including short final batches. Training-stage checkpoints
+persist cumulative work after every successful optimizer step.
+On exact same-batch restart, work completed before interruption
+is restored, not replayed into the total; unfinished forwards are
+discarded. D1 progressive-depth warmups are included in
+`trained_forward_mac_trace`, despite not being selectable
+candidate stages. Validation, held-out tests, source restoration,
+extra shadow BGD probes and optional post-selection inference
+probes are **excluded** from this training-only count.
+
+The signed selected-model reports expose:
+
+- `training_forward_compute`: aggregated actual-model forward
+  operator counts, completed minibatches and samples, and
+  `complete`. Aggregate stage counts are checked against the
+  existing optimizer-work budget.
+- `trained_forward_mac_trace`: every executed native training
+  stage's partial forward cost and original stage architecture,
+  including non-selection D1 warmups.
+- `trained_forward_mac_trace_complete`: false on unavailable
+  prior-stage provenance, never silently interpreted as zero.
+
+This is **partial forward arithmetic, not total training FLOPs**.
+The report keeps `backward_flops=null`,
+`optimizer_flops=null` and `full_training_flops=null`.
+It omits functional convolutions, masking/softmax,
+FFT and complex filtering, normalizations, pointwise operations,
+the full autograd backward graph and optimizer updates.
+MHA estimates assume a dense kernel and do not measure fused
+CUDA instruction count, elapsed time or energy.
+
+A separate paired-work auditor verifies original signed
+dataset/split/seed/architecture identity, stage-to-aggregate
+closure and exactly equal measured forward-batch counts to signed
+optimizer steps. It reports the ratio of growth to fixed
+**partial training-forward MACs** within each independent
+seed. V01's legacy head training is explicitly unmeasured
+rather than assigned zero. This must **never** be called
+full-model FLOP parity or scientifically demonstrated gains.
+
+The new official Fashion command
+`--step-balanced --observe-training-forwards`
+exercises 19 fixed/ADP pairs and retains their raw
+`result.json` artifacts. New workflow:
+`.github/workflows/visual-official-forward-work.yml`.
