@@ -50,6 +50,19 @@ def visual_model_tensor_payload(model: nn.Module) -> dict[str, object]:
         "total_model_tensor_payload_bytes": int(
             trainable_bytes + frozen_bytes + buffer_bytes
         ),
+        # Under the explicitly hypothetical case that every trainable
+        # parameter has a dense gradient and one Adam/AdamW first/second
+        # moment, count those payloads without claiming live-allocator peak.
+        "nominal_dense_gradient_payload_bytes": int(trainable_bytes),
+        "nominal_adam_or_adamw_two_moment_payload_bytes": int(2 * trainable_bytes),
+        "nominal_dense_adam_or_adamw_model_grad_moments_bytes": int(
+            frozen_bytes + buffer_bytes + 4 * trainable_bytes
+        ),
+        "nominal_optimizer_assumption": (
+            "Every requires_grad parameter participates with dense gradient "
+            "and two same-dtype Adam/AdamW moments; excludes optimizer "
+            "step scalars and implementation-specific fused workspaces"
+        ),
         "logical_bytes_by_dtype": dict(sorted(dtype_bytes.items())),
         "logical_bytes_by_device": dict(sorted(device_bytes.items())),
         "memory_scope": (
