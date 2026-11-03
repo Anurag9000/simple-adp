@@ -79,6 +79,8 @@ def test_opt_in_cap_in_signed_worker_spec_allows_valid_native_cpu_job(monkeypatc
         mem["trainable_parameter_bytes"] + mem["frozen_parameter_bytes"]
     )
     assert mem["peak_training_memory_bytes"] is None
+    assert result["fit_process_resources"]["exact_fit_window_peak_rss_bytes"] is None
+    assert result["fit_process_resources"]["device"] == "cpu"
 
 
 def test_opt_in_cap_fails_closed_and_records_real_worker_failure(monkeypatch, tmp_path):
