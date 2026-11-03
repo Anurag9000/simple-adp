@@ -1055,3 +1055,24 @@ The two-seed official Fashion CI now runs that CLI after
 the original 76 signed jobs and uploads both the original
 worker matrix and the paired report. It has been verified
 at GitHub run 41616572651, artifact 13222170910.
+
+
+### Strong posthoc original result-file agreement
+
+Use `--results-root /path/to/workdir/results` with
+`scripts/visual_paired_metrics_analysis.py` to re-read
+all original per-worker result JSON files before
+producing a paired accuracy/calibration report.
+All workers from one signed SuitePlan **share**
+a run signature; only worker job IDs are unique.
+The analyzer validates the plan signature format,
+cross-file uniformity, original data/split/seed/site,
+selected architecture, validation/test metrics and
+optimizer steps. A deterministic bundle SHA-256
+fingerprint is emitted.
+
+This is not an external public-key verification,
+and it is not an endorsement of tiny smoke-test
+accuracy. The original worker matrix and its
+temporary staging path are protected from being
+overwritten by the report.
