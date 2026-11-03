@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/visual_official_fashion_matrix.py'
+      - 'scripts/visual_paired_metrics_analysis.py'
+      - 'src/simple_adp/visual_paired_metrics.py'
       - '.github/workflows/visual-official-stepbalanced.yml'
   workflow_dispatch:
 
@@ -35,6 +37,10 @@ jobs:
             --dataset fashion_mnist --step-balanced --batch-size 16 \
             --workdir "${{ runner.temp }}/official-visual-stepbalanced" \
             --train-limit 40 --valid-limit 20 --test-limit 20
+      - name: Describe paired held-out step-balanced metrics without claiming FLOP parity
+        run: |
+          python scripts/visual_paired_metrics_analysis.py \
+            --matrix "${{ runner.temp }}/official-visual-stepbalanced/official_fashion_vision_matrix_stepbalanced.json"
       - name: Preserve step-budget evidence, real-image metrics and worker provenance
         if: always()
         uses: actions/upload-artifact@v4
@@ -44,5 +50,6 @@ jobs:
           retention-days: 30
           path: |
             ${{ runner.temp }}/official-visual-stepbalanced/official_fashion_vision_matrix_stepbalanced.json
+            ${{ runner.temp }}/official-visual-stepbalanced/official_fashion_vision_matrix_stepbalanced_paired_metrics.json
             ${{ runner.temp }}/official-visual-stepbalanced/results/**/result.json
             ${{ runner.temp }}/official-visual-stepbalanced/results/**/output.json
