@@ -564,7 +564,7 @@
     "old_checkpoint_cap_mismatch_rejected": true,
     "applies_to": "V02-V11 native composite and separately gated V03/V04 source models",
     "v01": "reject explicit native guard; legacy TabularADP head unchanged",
-    "admitted_model_byte_scope": "conservatively counted logical model parameter and buffer payload, after candidate model construction but before StageTrainer",
+    "admitted_model_byte_scope": "logical parameter+buffer payload forecast before candidate growth copies for standard TabularMLP; postconstruction fallback for unverifiable layout",
     "trace": "trained_model_memory_trace, includes D1 warmup and all trained stages",
     "rejection_field": "memory_admission_rejections",
     "scoped_exclusions": [
@@ -575,6 +575,49 @@
       "CUDA allocated/reserved peak"
     ],
     "runtime_status": "implementation and focused tests committed; new CI pending",
-    "cpu_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41590140083"
+    "cpu_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41590140083",
+    "preconstruction_projection": {
+      "module": "src/simple_adp/visual_memory.py",
+      "functions": [
+        "projected_tabular_mlp_payload_bytes",
+        "prospective_tabular_growth_widths",
+        "forecast_visual_growth_payload_bytes"
+      ],
+      "scope": "19 controlled visual architecture/site variants including V07 both, V08 scheduled, all native width/depth and D1 warmup",
+      "rejection_field": "memory_admission_rejections[].before_candidate_construction",
+      "fallback": "unverifiable dtype/layout uses postconstruction cap; initial model restoration still allocates",
+      "focused_cpu_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41592128312",
+      "focused_tests_passed": 127,
+      "focused_skipped_no_cuda": 1,
+      "source_faithful_v03_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41592646848",
+      "source_faithful_v04_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41592638223",
+      "status": "source and controlled CPU verification passed; newest full regression pending"
+    },
+    "nominal_adam_working_set": {
+      "fields": [
+        "nominal_dense_gradient_payload_bytes",
+        "nominal_adam_or_adamw_two_moment_payload_bytes",
+        "nominal_dense_adam_or_adamw_model_grad_moments_bytes"
+      ],
+      "assumption": "all trainable params have dense gradients; two same-dtype Adam/AdamW moments; excludes step scalars, activations, peak allocator",
+      "focused_cpu_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41592535617",
+      "status": "129 focused CPU tests passed, 1 CUDA-only skip"
+    }
+  },
+  "official_visual_multiseed": {
+    "entrypoint": "scripts/visual_official_fashion_matrix.py --model-seeds N",
+    "default_seeds": 1,
+    "default_artifact_unchanged": true,
+    "actual_identity": "SuitePlan RunIdentity.seed",
+    "native_worker_jobs_per_seed": 38,
+    "seed_groups": "19 controlled architecture/site variants x Fixed/RR with independent paired budgets",
+    "pure_auditor": "src/simple_adp/visual_budget_audit.py::audit_visual_multiseed_worker_pairs",
+    "first_real_image_matrix": "https://github.com/Anurag9000/simple-adp/actions/runs/41593036221",
+    "first_matrix_dataset": "official torchvision FashionMNIST",
+    "first_matrix_seed_count": 2,
+    "first_matrix_worker_count": 76,
+    "status": "first 76-worker real-image CI pending at inventory checkpoint",
+    "matches_training_flops": false,
+    "scientific_performance_conclusion": null
   }
 }
