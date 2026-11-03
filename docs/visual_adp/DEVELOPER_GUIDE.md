@@ -601,3 +601,32 @@ For each whole-image model, pass its actual `growth_targets`, or for a
 frozen V01 encoder include the encoder and native head together in a
 temporary `nn.ModuleDict`. The returned `linear_macs_per_mlp_invocation`
 is **not** whole-model FLOPs.
+
+
+## Inspect partial full-composite inference cost and native search budget
+
+```python
+from simple_adp import visual_linear_conv_macs
+
+# model: selected composite image model, never just its growth target
+# image: one float NCHW image already placed on the model's device
+probe = visual_linear_conv_macs(model, image[:1])
+print(probe["observed_linear_conv_macs_per_image"])
+print(probe["whole_model_flops"])  # None: intentionally NOT total FLOPs
+```
+
+This read-only diagnostic executes the actual model with hooks for
+`nn.Linear` and `nn.Conv2d`, restores all training flags, RNG and
+parameter trainability, and does not change model weights or buffers
+for the supported standard PyTorch operations. It is a **partial** MAC
+trace. For transformer attention, FFT and pooling models, the excluded
+operation list must be read alongside it; no claim that these operations
+were measured is justified.
+
+The coordinated visual worker results include
+`inference_compute`. Native V02–V11 and source V03/V04 results also
+include `training_budget`; candidate history records measured
+optimizer steps/epochs, candidate parameter counts and excludes D1
+warmup stages from acceptance decisions while counting their cost.
+V01's original tabular head controller remains untouched and does not
+claim a native composite search-budget field.
