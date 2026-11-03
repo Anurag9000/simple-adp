@@ -10,6 +10,8 @@ on:
       - 'src/simple_adp/visual_accounting.py'
       - 'tests/test_visual_accounting.py'
       - 'src/simple_adp/visual_compute.py'
+      - 'src/simple_adp/visual_train_compute.py'
+      - 'tests/test_visual_train_compute.py'
       - 'src/simple_adp/visual_metrics.py'
       - 'src/simple_adp/visual_budget_audit.py'
       - 'src/simple_adp/visual_paired_metrics.py'
@@ -58,4 +60,4 @@ jobs:
       - name: Install project, vision and test extras
         run: python -m pip install -e '.[dev,vision]'
       - name: Prove test images and labels inaccessible until visual search completion
-        run: python -m pytest -q tests/test_runner_vision_test_isolation.py tests/test_visual_accounting.py tests/test_visual_compute.py tests/test_visual_metrics.py tests/test_visual_budget_audit.py tests/test_visual_paired_metrics.py tests/test_visual_paired_metrics_cli.py tests/test_visual_official_matrix_cli.py tests/test_visual_memory.py tests/test_visual_resources.py tests/test_visual_resource_audit.py tests/test_runner_vision_isolated_process.py tests/test_runner_vision_memory_cap.py tests/test_runner_vision_multiseed_plan.py tests/test_runner_vision_step_balanced.py tests/test_visual_v01.py tests/test_core.py
+        run: python -m pytest -q tests/test_runner_vision_test_isolation.py tests/test_visual_accounting.py tests/test_visual_compute.py tests/test_visual_train_compute.py tests/test_visual_metrics.py tests/test_visual_budget_audit.py tests/test_visual_paired_metrics.py tests/test_visual_paired_metrics_cli.py tests/test_visual_official_matrix_cli.py tests/test_visual_memory.py tests/test_visual_resources.py tests/test_visual_resource_audit.py tests/test_runner_vision_isolated_process.py tests/test_runner_vision_memory_cap.py tests/test_runner_vision_multiseed_plan.py tests/test_runner_vision_step_balanced.py tests/test_visual_v01.py tests/test_core.py
