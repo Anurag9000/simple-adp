@@ -664,3 +664,24 @@ identity fail closed as unknown. A separate pure test suite
 `tests/test_visual_budget_audit.py` covers all those conditions.
 The subsequent budget-audit CI is not claimed passed unless
 the matching workflow run actually completes.
+
+
+### Extension to official RGB CIFAR-10 and class-complete CIFAR-100
+
+The coordinated image smoke driver now accepts
+`--dataset fashion_mnist|cifar10|cifar100`,
+explicitly downloads the matching **official torchvision** image
+dataset outside the default dataset provider, then executes the
+same 38 signed `SuitePlan` worker jobs. The Fashion-MNIST
+default artifact format and filename remain backward compatible.
+`tests/test_visual_official_matrix_cli.py` rejects nonexistent
+datasets and any Fashion/CIFAR-10 partition under ten items,
+or any CIFAR-100 partition under 100, *before download*.
+New `.github/workflows/visual-official-cifar-matrix.yml` tests
+genuine CIFAR-10 RGB source with 40/20/20 subsets, not
+synthetic grayscale stand-ins.
+
+CIFAR-10 successful run evidence is **pending** from the
+new workflow. CIFAR-100 has CLI + provider support but no
+completed official-source worker CI verified in this change.
+Neither is a full model-quality result.
