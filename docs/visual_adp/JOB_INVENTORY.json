@@ -707,6 +707,53 @@
     "current_status": "implementation on main, updated focused CI in progress; failed previous focused run 41604543571 due case-only test assertion, corrected",
     "latest_focused_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41605042362",
     "latest_full_suite_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41605041980",
-    "source_map_ci_verified": "https://github.com/Anurag9000/simple-adp/actions/runs/41604664674"
+    "source_map_ci_verified": "https://github.com/Anurag9000/simple-adp/actions/runs/41604664674",
+    "last_verified_focused_cpu_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41605042362",
+    "focused_results": {
+      "passed": 154,
+      "skipped_cuda": 2,
+      "failed": 0
+    },
+    "verified_official_shared_process_work": {
+      "url": "https://github.com/Anurag9000/simple-adp/actions/runs/41605309264",
+      "dataset": "torchvision Fashion-MNIST 40/20/20",
+      "completed_jobs": 38,
+      "failed_jobs": 0,
+      "worker_scope": "shared Python process, lifetime highwater crosses jobs",
+      "artifact_id": 13216666056
+    },
+    "verified_official_isolated_process_work": {
+      "url": "https://github.com/Anurag9000/simple-adp/actions/runs/41605486116",
+      "dataset": "torchvision Fashion-MNIST 40/20/20",
+      "completed_jobs": 38,
+      "failed_jobs": 0,
+      "distinct_fit_process_pids": 38,
+      "worker_scope": "fresh original signed run_spec worker per process",
+      "artifact_id": 13215889941,
+      "native_step_balanced_pairs": 18,
+      "v01_unknown_budget_pairs": 1,
+      "observed_rss_lifetime_peak_after_bytes_min": 1111314432,
+      "observed_rss_lifetime_peak_after_bytes_max": 1112145920,
+      "observed_fit_rss_delta_bytes_min": 44703744,
+      "observed_fit_rss_delta_bytes_max": 56217600,
+      "full_training_vram_or_flops_matched": null,
+      "note": "real CPU observations; first artifact omitted nested child logs, fixed log archive glob in subsequent workflow"
+    },
+    "verified_isolated_focused_ci": {
+      "url": "https://github.com/Anurag9000/simple-adp/actions/runs/41605534455",
+      "passed": 156,
+      "skipped_no_cuda": 2,
+      "failed": 0
+    },
+    "failed_visual_job_resource_capture": {
+      "path": "src/simple_adp/runner/worker.py",
+      "field": "failure_process_resources",
+      "behavior": "best-effort from adapter call entry to failure; original exception never masked",
+      "tests": [
+        "tests/test_runner_vision_memory_cap.py"
+      ],
+      "ci_status": "pending updated focused CI"
+    },
+    "latest_status": "shared and isolated official CPU memory telemetry verified; failure-path change and nested log archive rerun CI pending"
   }
 }
