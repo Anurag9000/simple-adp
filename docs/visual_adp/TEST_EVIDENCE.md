@@ -796,3 +796,39 @@ A dedicated official-image CPU matrix is
 https://github.com/Anurag9000/simple-adp/actions/runs/41593647892.
 At this evidence checkpoint that CI had not completed,
 so this feature is not yet labeled real-image verified.
+
+
+### Official fixed-vs-RR step-balanced Fashion run: **verified**
+
+`--step-balanced --batch-size 16` was executed on official
+Fashion-MNIST 40/20/20 subsets using the unmodified native
+source controllers and all 19 controlled architecture/sites:
+https://github.com/Anurag9000/simple-adp/actions/runs/41593647892.
+Its retained result artifact is
+`fashion-mnist-stepbalanced-visual-workers`, artifact ID
+`13211018409`. I read
+`official_fashion_vision_matrix_stepbalanced.json` from
+that exact artifact; its persisted audit reported:
+
+- **38 completed workers, zero failed.**
+- **18/18 native V02–V11 fixed/RR pairs with exactly equal
+  optimizer-step counts: 6 fixed and 6 growth.**
+- Zero native step-count mismatches.
+- **One unknown pair**, the original V01 legacy tabular-head
+  controller without native step accounting. V01 cannot be
+  credited with equal work or retroactively assigned zero work.
+- Dataset ID, split hash, derived seed and architecture/site
+  identity matched within each reported pair.
+- `full_training_flops_matched=null` and
+  `scientific_performance_conclusion=null`.
+
+The selected architecture varied independently by adapter.
+Some ADP candidates were rejected on validation and returned
+to the original widths; others were selected after growing.
+Partial observed/analytical inference MACs often differed
+even in the **equal-step-count** pairs, conclusively showing
+that equal optimizer steps do **not** entail equal per-step
+model arithmetic. One small-seed, tiny-split integration
+run does not establish classifier superiority or any
+statistically reliable accuracy gain. Full source models
+V05–V11 and real CUDA peaks remain unverified.
