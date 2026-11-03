@@ -556,3 +556,52 @@ evidence of accuracy or reproducible real-data science. CI pending.
 - Two preceding failed CI invocations are preserved in the prior
   evidence sections with their exact causes and fixes. They are not
   counted as completed scientific experiments.
+
+
+## 2026-11-03 continuation: measured inference, optimizer budget, calibration
+
+**Last verified baseline prior to this continuation:**
+whole-repository CPU suite
+https://github.com/Anurag9000/simple-adp/actions/runs/41493761060
+was successful. The original real-image 38-route matrix also passed:
+https://github.com/Anurag9000/simple-adp/actions/runs/41493795442.
+
+**Observed inference MACs** were then integrated into V01–V11,
+source V03/V04 and the signed central worker. The separate
+`visual_compute.py` uses forward hooks to count real
+`nn.Linear`/`nn.Conv2d` invocations (including repeated
+per-token/per-position operations), safely restores module modes and
+RNG, and returns `whole_model_flops=null`.
+`tests/test_visual_compute.py` covers exact Conv2d/Linear arithmetic,
+width-growth differences across spatial positions, repeated calls,
+invalid shapes, frozen state invariance and a conditional CUDA check.
+The focused CPU suite
+https://github.com/Anurag9000/simple-adp/actions/runs/41575556560
+**passed**. The 38-route official Fashion-MNIST matrix
+https://github.com/Anurag9000/simple-adp/actions/runs/41575563341
+**passed** with new compute fields.
+
+**Native candidate budget** now accumulates actual StageTrainer optimizer
+steps, epochs and D1 depth warmup/catch-up stages in signed
+`VisualResidualSearch.search_state_.training_budget`, while per-candidate
+history records observed optimizer steps and parameter counts.
+`tests/test_visual_search_v02.py` now checks both batch-exact restart
+budget equality and progressive D1 warmup cost. The V01 native
+tabular-head controller is not rewritten, so its analogous budget
+is not invented. Old checkpoints lacking prior budget provenance are
+marked partial (`complete=false`).
+
+**Calibration** adds post-selection, source-label-mapped top-label
+10-bin ECE and multiclass Brier metrics to vision validation/test
+results. `tests/test_visual_metrics.py` checks boundary confidences,
+known numeric examples, noncontiguous class labels, invalid probability
+schemas and the difference between ECE and Brier. Native
+`ClassificationTask` training, validation selection and metric
+definitions are unchanged.
+
+**Verification boundary:** the latter budget and calibration
+changes are committed on `main` but their latest whole-repository
+and official-image follow-up CI runs were still queued/running
+at documentation time. They are not marked runtime-tested here.
+No physical CUDA runtime, multi-seed improvement experiment or full
+model FLOP accounting has been verified in this continuation.
