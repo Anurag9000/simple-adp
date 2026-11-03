@@ -256,6 +256,13 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError("model tensor payload partition does not close")
             if memory.get("peak_training_memory_bytes") is not None:
                 raise AssertionError("logical model bytes must not claim peak training RAM")
+            measured = value.get("fit_process_resources")
+            if not measured or measured.get("format") != "simple-adp-visual-fit-process-resources-v1":
+                raise AssertionError("measured fit process resource window is missing")
+            if measured.get("exact_fit_window_peak_rss_bytes") is not None:
+                raise AssertionError("two RSS snapshots cannot establish a fit interval peak")
+            if measured.get("device") != "cpu":
+                raise AssertionError("official bounded CPU matrix must report CPU fit resources")
             nominal = memory.get("nominal_dense_adam_or_adamw_model_grad_moments_bytes")
             if nominal != (
                 memory["total_model_tensor_payload_bytes"]
