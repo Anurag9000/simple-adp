@@ -200,3 +200,28 @@ The script's one-seed, 40/20/20 smoke configuration is
 V05–V11. CIFAR100 requires at least 100 class-balanced examples
 in every partition; its full official-source worker CI has
 not been run as part of this incremental code addition.
+
+
+## Native parameter/buffer footprint and safe candidate admission
+
+The memory audit reads the *actual* native/source model's parameter
+objects and registered buffers without moving tensor data, changing
+grad flags or running another forward pass. Dtype-based logical
+payload accounts for complex GFNet filters and source-model buffers.
+The opt-in guard checks the constructed initial model before native
+training and each grown candidate before StageTrainer begins; it
+does not alter `TabularMLP` growth, source copy semantics, backbones,
+class heads, checkpoint structure of pre-existing uncapped jobs, or
+the accepted-model validation rule.
+
+`RunnerSettings` serializes a positive byte cap only when
+explicitly set. `VisualResidualSearch._signature` likewise
+includes it only when active, preserving uncapped checkpoints and
+preventing capped resumes from switching policies. The V01 route
+continues its original tabular head estimator and fails closed
+if a per-candidate *native* byte cap is requested. Rejection records,
+and logical model memory for all trained stages including D1 warmup,
+are kept in the native search's signed state and serialized into
+coordinated worker results. The cap is not a complete OOM guard
+because training activations, optimizer allocations and temporary
+proposal copies are unmeasured.
