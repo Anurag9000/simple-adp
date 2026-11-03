@@ -155,6 +155,12 @@ def run_spec(path: str | Path) -> dict[str, Any]:
             seed=identity.seed,
             settings=search_settings,
             checkpoint_path=str(checkpoint_path),
+            **({
+                "max_model_tensor_payload_bytes":
+                    settings_value["visual_model_tensor_payload_cap_bytes"],
+            } if (task_ref.provider == "vision"
+                  and settings_value.get("visual_model_tensor_payload_cap_bytes") is not None)
+               else {}),
             progress_callback=telemetry_callback(
                 output_dir,
                 job_id=identity.run_id,
