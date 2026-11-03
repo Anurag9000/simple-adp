@@ -807,3 +807,46 @@ width/depth geometry operators, all 19 controlled visual
 architecture/site variants, and monkeypatches growth constructors
 to make sure over-cap operations are never called. CI evidence
 must be consulted separately; adding tests alone is not a pass.
+
+
+## Independent official-image model seeds without new controllers
+
+The original `scripts/visual_official_fashion_matrix.py` supports
+`--model-seeds N` (positive integer). The default **remains 1** and
+keeps the original Fashion/CIFAR summary filename/format. An explicit
+larger N passes `model_seeds=(0,...,N-1)` to the existing
+`RunnerSettings` and `SuitePlan.build`, which derives
+independent signed `RunIdentity.seed` values for the official
+partition. Each seed is applied consistently to the fixed and growth
+member of every controlled architecture/site pair.
+
+```bash
+# 2 seeds x (19 adapter/site variants x 2 controllers) = 76 jobs
+python scripts/visual_official_fashion_matrix.py \
+  --dataset fashion_mnist --model-seeds 2 \
+  --workdir /tmp/visual-multiseed \
+  --train-limit 40 --valid-limit 20 --test-limit 20
+
+# 3 seeds x 38 = 114 jobs; still not a full benchmark
+python scripts/visual_official_fashion_matrix.py \
+  --dataset cifar10 --model-seeds 3 \
+  --workdir /tmp/visual-cifar-multiseed \
+  --train-limit 100 --valid-limit 50 --test-limit 50
+```
+
+The second command is a **usage example**, not a verified completed
+run. The two-seed Fashion output is
+`official_fashion_vision_matrix_2seeds.json`, leaving the historical
+one-seed artifact untouched. Each row includes the actual derived
+source runner seed; the summary records the requested seed count,
+derived seed IDs, the status of every signed job and a grouped
+`fixed_vs_growth_budget_audit`. Rejected/missing workers, duplicate
+identities and cross-seed mismatches fail closed.
+
+`audit_visual_multiseed_worker_pairs` independently audits each
+run seed before adding budget-evidence counts. Matching optimizer
+step numbers within a seed do not guarantee matched training FLOPs,
+and two or three tiny smoke runs do not justify confidence intervals
+or scientific performance claims. A genuine benchmark requires
+the complete official source partition, matched compute and multiple
+seeds with separate held-out evaluation.
