@@ -266,7 +266,11 @@ class VisionModelAdapter:
             "task_family": "vision", "task_variant": data.task_variant,
             "split_protocol": data.split_protocol,
             "primary_metric": task.primary_metric,
-            "metric_directions": task.metric_directions,
+            "metric_directions": {
+                **task.metric_directions,
+                "top_label_ece_10": "min",
+                "multiclass_brier": "min",
+            },
             "artifact_path": artifact,
             "encoder_sha256": estimator.encoder_sha256,
             "parameter_accounting": visual_parameter_accounting(
@@ -475,7 +479,11 @@ class VisionInnerModelAdapter:
             "task_family": "vision", "task_variant": data.task_variant,
             "split_protocol": data.split_protocol,
             "primary_metric": task.primary_metric,
-            "metric_directions": task.metric_directions,
+            "metric_directions": {
+                **task.metric_directions,
+                "top_label_ece_10": "min",
+                "multiclass_brier": "min",
+            },
             "artifact_path": artifact,
             "growth_site": spec.site_id,
             "architecture_id": architecture_label,
