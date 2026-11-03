@@ -418,3 +418,27 @@ CUDA hardware remains necessary to establish real
 CUDA allocator values. Full per-step GPU profiler traces,
 device-wide VRAM and actual training FLOP counts remain
 unimplemented.
+
+
+## Independent job process scope for memory comparison
+
+The official smoke driver can add
+`--isolated-workers` to run each **original** signed
+worker specification in a fresh subprocess, verifying
+the saved `run_signature` on return. The independent
+worker's `VmHWM` is process-local and not contaminated
+by previous matrix jobs. Child logs and signed results
+are retained as evidence. Normal in-process execution
+remains the default for compatibility.
+
+The combined opt-in
+`--step-balanced --isolated-workers` uses the same
+fixed two-epoch and ADP one-epoch-per-stage contracts
+and the same 19 source-site fixed/RR pairs; it adds
+actual current RSS and lifetime process highwater to
+the comparison. No per-stage exact peak is reported,
+and CPU RSS does not measure VRAM or full training FLOPs.
+A job may still allocate memory before the first fit
+snapshot. This setup is a *better controlled measured
+memory baseline*, not a scientific comparison by
+itself.
