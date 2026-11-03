@@ -225,3 +225,26 @@ are kept in the native search's signed state and serialized into
 coordinated worker results. The cap is not a complete OOM guard
 because training activations, optimizer allocations and temporary
 proposal copies are unmeasured.
+
+
+## Pre-construction local-MLP memory admission and source preservation
+
+The new `visual_memory` projectors independently derive
+source `TabularMLP` width/depth shapes, exact unaliased
+parameter and optional BatchNorm buffer byte counts,
+then replace the affected local-site footprint in the full
+composite's logical payload. This calculation occurs before
+native `grow_width`, `grow_depth`, fixed-candidate construction
+or D1 warmup deep-copy; it never widens convolutions, patches,
+attention, frozen residual modules or classifier dimensions.
+The existing exact source can/grow functions still make final
+admissibility decisions and remain unchanged.
+
+The synchronous V07-both scope predicts both MLP expansions;
+V08 scheduled growth predicts only the chosen active site.
+The forecast returns unknown for nonstandard dtype/layout
+and then retains the signed postconstruction cap. Initial
+source backbone restoration/allocation remains necessary to
+know model payload; optimizer/activation VRAM peaks are not
+forecast. New optional cap semantics are separate from
+the original uncapped 14 native model configurations.
