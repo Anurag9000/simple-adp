@@ -163,3 +163,24 @@ budgets are known and complete. The V01 legacy head budget is
 matching optimizer step counts do not prove matching full training
 FLOPs or scientific validity. Matched compute, full dataset, more
 seeds and confidence intervals remain future requirements.
+
+
+## Additional official-image dataset coverage
+
+The original `scripts/visual_official_fashion_matrix.py` optionally
+selects `--dataset cifar10` or `--dataset cifar100`, preserving
+the historical Fashion-MNIST default, artifact filename and format.
+This uses the **existing** opt-in `VisionDatasetProvider`,
+`SuitePlan.build`, fixed/ADP native controller and
+`runner.worker.run_spec`; it is not a parallel CIFAR training path.
+
+The script requires the class-balanced train, architecture-validation
+and official-test subset limits each contain at least 10 items for
+Fashion-MNIST/CIFAR-10 or 100 items for CIFAR-100.
+All splits retain the source image and source-index hashes, and the
+official test remains isolated throughout architecture selection.
+Summary files have dataset-specific names and include the
+fixed-versus-growth optimizer-step audit.
+
+Completion of 38 tiny jobs for a dataset is strictly an integration
+smoke, **not** a matched-budget, multi-seed full CIFAR benchmark.
