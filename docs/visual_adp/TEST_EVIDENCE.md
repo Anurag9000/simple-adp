@@ -1053,3 +1053,37 @@ output. Latest focused CLI/paired-metrics and whole-repository
 test runs for those added tests are pending until a matching
 CI result completes; the previously successful 19,376-test
 full-suite revision predated these new analyzer tests.
+
+
+### Original worker artifact SHA-256 binding and suite-signature contract
+
+After the initial 76-job paired metric artifact succeeded
+(41616572651, artifact 13222170910), inspection of the
+actual archived original `result.json` files verified that
+all 76 jobs share **one** 64-hex `run_signature` for
+their suite plan but retain 76 distinct job IDs. The
+new `verify_visual_worker_result_artifacts` therefore
+checks that common plan signature, rejects cross-plan
+files, compares original worker metrics and dataset/
+split/site/seed provenance against the matrix, and
+records a deterministic SHA-256 digest of all original
+result-file bytes. This audit is enabled on the
+six official image worker workflows via
+`--results-root`.
+
+Unit tests additionally reject missing/tampered worker
+files, path traversal, output source overwrite and
+staging-file collisions. Latest focused and official
+CI for this **post-artifact-verification addition**
+remain separate from the earlier 201-test pass and
+must be verified from their own run results.
+
+The previous whole-repository run 41616499845 ended
+with 19,393 passing, 2 skipped and **two PyTorch
+checkpoint write I/O errors** during full-source ViT
+and a later small V01 save. The logs show
+`basic_ios::clear` and an invalid zip position
+but do not explicitly prove ENOSPC. The complete
+full-suite workflow now frees unrelated hosted-runner
+SDKs before execution and captures disk diagnostics
+on failure, without skipping any original tests.
