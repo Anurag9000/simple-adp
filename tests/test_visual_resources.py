@@ -110,7 +110,7 @@ def test_explicit_cuda_allocator_samples_preserve_distinction_from_actual_gpu_vr
     assert gpu["allocated_bytes_after"] == 120
     assert gpu["new_lifetime_max_allocated_bytes_during_fit"] == 180
     assert gpu["exact_fit_window_peak_cuda_bytes"] is None
-    assert "not total GPU VRAM" in out["limitations"]
+    assert "not total gpu vram" in out["limitations"].lower()
 
 
 def test_cuda_unavailable_or_mismatched_allocator_rejected():
