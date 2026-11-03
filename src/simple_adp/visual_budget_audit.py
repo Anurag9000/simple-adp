@@ -116,3 +116,65 @@ def audit_visual_worker_pairs(
         "scientific_performance_conclusion": None,
         "paired_budget_evidence": comparisons,
     }
+
+
+def audit_visual_multiseed_worker_pairs(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    expected_adapters: Iterable[str],
+    expected_seeds: Iterable[int],
+) -> dict[str, object]:
+    """Audit independent signed fixed/RR jobs within each actual run seed.
+
+    A seed here is the *derived* SuitePlan RunIdentity.seed, not a raw
+    ordinal. We never aggregate accuracy or declare performance superiority
+    across a smoke sample. Fail-closed partitioning ensures every group has
+    the same controlled family and two method routes.
+    """
+    expected = tuple(expected_seeds)
+    if not expected or len(set(expected)) != len(expected) or any(
+        not isinstance(seed, int) or isinstance(seed, bool)
+        for seed in expected
+    ):
+        raise ValueError("expected_seeds must be nonempty distinct integer run seeds")
+    names = tuple(expected_adapters)
+    if not names or len(set(names)) != len(names):
+        raise ValueError("expected_adapters must be nonempty and distinct")
+
+    groups: dict[int, list[Mapping[str, Any]]] = {seed: [] for seed in expected}
+    for row in rows:
+        seed = row.get("seed")
+        if not isinstance(seed, int) or isinstance(seed, bool) or seed not in groups:
+            raise ValueError("worker row has an unrecognized or missing run seed")
+        groups[seed].append(row)
+
+    audits = []
+    for seed in expected:
+        audit = audit_visual_worker_pairs(
+            groups[seed], expected_adapters=names,
+        )
+        audits.append({"run_seed": seed, **audit})
+
+    return {
+        "format": "simple-adp-visual-fixed-rr-multiseed-budget-audit-v1",
+        "run_seeds": list(expected),
+        "seed_count": len(expected),
+        "expected_pairs_per_seed": len(names),
+        "total_expected_pairs": len(expected) * len(names),
+        "same_optimizer_step_pairs": sum(
+            item["same_optimizer_step_pairs"] for item in audits
+        ),
+        "mismatched_optimizer_step_pairs": sum(
+            item["mismatched_optimizer_step_pairs"] for item in audits
+        ),
+        "unknown_optimizer_step_pairs": sum(
+            item["unknown_optimizer_step_pairs"] for item in audits
+        ),
+        "per_seed_budget_audits": audits,
+        "full_training_flops_matched": None,
+        "scientific_performance_conclusion": None,
+        "note": (
+            "Paired work provenance across independent plan seeds; no "
+            "compute-matched or statistically validated performance claim."
+        ),
+    }
