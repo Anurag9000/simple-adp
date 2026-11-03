@@ -184,3 +184,55 @@ fixed-versus-growth optimizer-step audit.
 
 Completion of 38 tiny jobs for a dataset is strictly an integration
 smoke, **not** a matched-budget, multi-seed full CIFAR benchmark.
+
+
+## Logical model memory and opt-in candidate admission (2026-11-03)
+
+The CPU/CUDA-independent `visual_model_tensor_payload(model)`
+reports *logical*, dtype-aware parameter and registered-buffer payload
+bytes. It partitions frozen parameter, trainable parameter and buffer
+bytes, with per-device and per-dtype totals. Complex64 GFNet filter
+weights are **8 bytes per element**, not an assumed float32 4.
+Distinct tensor views with shared underlying storage may be
+overcounted; repeated references to the **same Parameter object**
+are counted once. The returned
+`peak_training_memory_bytes` and
+`unique_allocator_storage_bytes` are explicitly null.
+
+`VisualResidualSearch(max_model_tensor_payload_bytes=N)` optionally
+refuses an initial model whose parameter+buffer payload exceeds N and
+refuses over-budget growth candidates *after building the proposed
+model but before StageTrainer allocates optimizer state or begins
+training*. Rejections are signed, include proposed architecture and
+site, and do not consume a successfully admitted proposal slot.
+The limit is a **pre-training payload gate**, not a guarantee against
+OOM: it does not bound temporary cloning at proposal construction,
+input batches, activations, gradients, optimizer moments, checkpoint
+copies, attention workspaces or the CUDA caching allocator.
+
+Every native stage, including progressive D1 width-1 catch-up,
+is recorded in `trained_model_memory_trace` with its logical
+payload and optimizer steps. Only selection-eligible stages appear
+in the ordinary architecture-selection history. The completeness
+flag is false when resuming from an older checkpoint that never
+saved prior-stage memory records; no nonexistent historical values
+are fabricated. Results expose both the selected-model
+`model_memory_accounting` and the signed native history.
+
+The coordinated suite exposes
+`RunnerSettings(visual_model_tensor_payload_cap_bytes=N)`.
+It is omitted from the default plan signature and worker specs
+when None, preserving pre-existing uncapped plan identities.
+With a positive integer, it becomes a signed control-plane
+setting and is forwarded to native V02–V11 and source-faithful
+V03/V04 search. Changing it invalidates a checkpoint signature.
+V01 uses a different legacy tabular-head estimator and **rejects
+the optional cap** instead of falsely claiming per-candidate memory
+admission. The user must disable the cap or select native routes
+for capped experiments.
+
+The verified official-image Fashion/CIFAR10/CIFAR100 matrices
+are unbounded-by-byte-cap smoke tests; their new memory reporting
+must not be described as actual GPU memory measurements. Physical
+CUDA OOM testing and full activation/optimizer accounting remain
+outstanding.
