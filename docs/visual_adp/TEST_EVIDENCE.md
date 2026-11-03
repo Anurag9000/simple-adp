@@ -724,3 +724,25 @@ initialization/proposal rejection, legacy V01 fail-closed behavior
 and the coordinated worker wiring. The newer native memory timeline,
 D1 trace and three official-dataset matrix extensions have separate
 queued CI jobs and must not be credited with this earlier pass.
+
+
+### Candidate preallocation prevention — newest revision
+
+`src/simple_adp/visual_memory.py` now forecasts standard local
+FFN memory after width and depth mutations, including
+BatchNorm1d registered buffers, before allocating the proposed
+candidate. `src/simple_adp/visual_search.py` applies this
+forecast to generic/dedicated ADP, fixed grids, V07 synchronous
+sites, V08 schedules and D1 catch-up stages. Failure is signed
+as `before_candidate_construction=true`; uncertain layouts
+continue through the existing postconstruction cap.
+
+New tests compare exact logical byte forecasts against actual
+`rebuild_mlp` and native growth across all 19 controlled
+adapter variants. Tests also patch growth/fixed constructors
+to throw if an over-limit candidate is allocated, verifying
+that preflight instead declines the proposal. **Latest
+preflight CI is pending** as of this evidence update and is
+not included in the prior successful 90-test focused run.
+The physical CUDA device and real source V03/V04 preflight
+memory peaks remain untested.
