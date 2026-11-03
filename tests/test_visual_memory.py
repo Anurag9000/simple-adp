@@ -48,6 +48,9 @@ def test_logical_model_payload_exact_dtypes_shared_parameter_and_buffers():
     assert accounted["buffer_payload_bytes"] == 5 * 4 + 8
     assert accounted["parameter_payload_bytes"] == 72
     assert accounted["total_model_tensor_payload_bytes"] == 100
+    assert accounted["nominal_dense_gradient_payload_bytes"] == 48
+    assert accounted["nominal_adam_or_adamw_two_moment_payload_bytes"] == 96
+    assert accounted["nominal_dense_adam_or_adamw_model_grad_moments_bytes"] == 244
     assert accounted["logical_bytes_by_dtype"] == {
         "torch.complex64": 24, "torch.float32": 20,
         "torch.float64": 48, "torch.int64": 8,
@@ -350,3 +353,28 @@ def test_remaining_visual_growth_sites_forecast_matches_real_bytes(variant):
     assert predicted == visual_model_tensor_payload(candidate)[
         "total_model_tensor_payload_bytes"
     ]
+
+
+@pytest.mark.parametrize("kind", ["adam", "adamw"])
+def test_nominal_gradient_and_adam_moment_bytes_match_actual_dense_optimizer_state(kind):
+    module = nn.Sequential(nn.Linear(3, 4), nn.ReLU(), nn.Linear(4, 2))
+    module[0].requires_grad_(False)
+    before = visual_model_tensor_payload(module)
+    optimizer_class = torch.optim.Adam if kind == "adam" else torch.optim.AdamW
+    optimizer = optimizer_class(p for p in module.parameters() if p.requires_grad)
+    prediction = module(torch.ones((5, 3)))
+    prediction.square().sum().backward()
+    optimizer.step()
+    observed_gradient_bytes = sum(
+        p.grad.numel() * p.grad.element_size()
+        for p in module.parameters() if p.grad is not None
+    )
+    observed_moments_bytes = sum(
+        state[name].numel() * state[name].element_size()
+        for state in optimizer.state.values()
+        for name in ("exp_avg", "exp_avg_sq")
+    )
+    assert before["nominal_dense_gradient_payload_bytes"] == observed_gradient_bytes
+    assert before["nominal_adam_or_adamw_two_moment_payload_bytes"] == observed_moments_bytes
+    assert before["peak_training_memory_bytes"] is None
+    assert "step scalars" in before["nominal_optimizer_assumption"]
