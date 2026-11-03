@@ -605,3 +605,23 @@ and official-image follow-up CI runs were still queued/running
 at documentation time. They are not marked runtime-tested here.
 No physical CUDA runtime, multi-seed improvement experiment or full
 model FLOP accounting has been verified in this continuation.
+
+
+### Native budget runtime evidence refinement
+
+The native `training_budget` implementation was present in
+commit `1be0929932c6e957aa6b52b85970c313874fd875`.
+The full 38/38 controlled official-image fixed/RR worker matrix
+https://github.com/Anurag9000/simple-adp/actions/runs/41575726025
+**passed** with the native worker budget fields.
+The focused V01/V02 isolation and budget result check
+https://github.com/Anurag9000/simple-adp/actions/runs/41575803153
+also **passed**. These demonstrate bounded CPU operation and
+serialization; the newer D1 interrupted-resume assertions
+(`tests/test_visual_search_v02.py`) require their separate
+full-suite verification.
+
+The calibration extension subsequently added valid metric directions
+(minimize ECE and Brier), checked both at the adapter and official
+matrix level. Its newest CI remains pending and has not been marked
+verified or credited with a new benchmark score.
