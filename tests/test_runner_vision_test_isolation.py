@@ -99,3 +99,6 @@ def test_coordinated_visual_test_rows_remain_unread_until_fit(
     assert compute["batch_size"] == 1
     assert compute["observed_linear_conv_macs_per_image"] > 0
     assert compute["whole_model_flops"] is None
+    if adapter_class is VisionInnerModelAdapter:
+        assert result["training_budget"]["trained_stages"] >= 1
+        assert result["training_budget"]["optimizer_steps"] >= 1
