@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/visual_official_fashion_matrix.py'
+      - 'src/simple_adp/visual_resource_audit.py'
       - '.github/workflows/visual-official-isolated-memory.yml'
   workflow_dispatch:
 
