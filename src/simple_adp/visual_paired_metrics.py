@@ -9,6 +9,7 @@ from __future__ import annotations
 import math
 import statistics
 from collections.abc import Iterable, Mapping
+from pathlib import Path
 from typing import Any
 
 from .visual_budget_audit import audit_visual_multiseed_worker_pairs
@@ -180,7 +181,7 @@ def summarize_visual_paired_metrics(
 
 
 def verify_visual_worker_result_artifacts(
-    rows: Iterable[Mapping[str, Any]], *, results_root: str | "Path",
+    rows: Iterable[Mapping[str, Any]], *, results_root: str | Path,
 ) -> dict[str, object]:
     """Re-read actual signed result.json files and fingerprint their exact bytes.
 
@@ -191,8 +192,6 @@ def verify_visual_worker_result_artifacts(
     import hashlib
     import json
     import re
-    from pathlib import Path
-
     root = Path(results_root).resolve(strict=True)
     if not root.is_dir():
         raise ValueError("worker results root must be an existing directory")
@@ -201,6 +200,7 @@ def verify_visual_worker_result_artifacts(
         raise ValueError("no worker result rows supplied for provenance verification")
     fingerprints = []
     seen: set[str] = set()
+    signatures: set[str] = set()
     for row in records:
         if not isinstance(row, Mapping):
             raise ValueError("every source worker summary must be a mapping")
@@ -221,6 +221,9 @@ def verify_visual_worker_result_artifacts(
         signature = result.get("run_signature")
         if not isinstance(signature, str) or not re.fullmatch(r"[0-9a-f]{64}", signature):
             raise ValueError("original worker result has an invalid or missing run signature")
+        if signature in signatures:
+            raise ValueError("original worker results contain a duplicated run signature")
+        signatures.add(signature)
         for key in (
             "job_id", "status", "dataset_id", "split_sha256", "seed",
             "architecture_id", "growth_site",
@@ -235,11 +238,11 @@ def verify_visual_worker_result_artifacts(
         fingerprints.append((job, hashlib.sha256(payload_bytes).hexdigest()))
     digest = hashlib.sha256()
     for job, checksum in sorted(fingerprints):
-        digest.update(job.encode("utf-8") + b"\\0" + checksum.encode("ascii") + b"\\n")
+        digest.update(job.encode("utf-8") + bytes([0]) + checksum.encode("ascii") + bytes([10]))
     return {
         "format": "simple-adp-visual-original-worker-result-artifact-audit-v1",
         "verified_worker_results": len(records),
-        "unique_original_run_signatures_verified": True,
+        "unique_original_run_signature_formats_verified": True,
         "original_worker_result_bundle_sha256": digest.hexdigest(),
         "source_scope": (
             "Matrix row agreement with original signed-worker result.json "
