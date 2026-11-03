@@ -22,6 +22,7 @@ from ..vision_data import make_image_partitions, load_torchvision_partitions
 from ..visual import VisualADPEstimator
 from ..visual_accounting import visual_parameter_accounting
 from ..visual_compute import visual_linear_conv_macs
+from ..visual_metrics import visual_calibration_metrics
 from ..visual_inner import ResidualAdapterSpec
 from ..visual_native_ffn import NativeFFNSpec
 from ..visual_mixer import MixerSpec
@@ -254,8 +255,14 @@ class VisionModelAdapter:
             "fit_seconds": duration, "history_entries": len(estimator.head.history_),
             "selected_architecture": list(estimator.head.model_.hidden_widths),
             "validation_selection_score": float(valid_loss),
-            "validation_metrics": task.evaluation_metrics(valid_y, valid_pred, valid_prob),
-            "test_metrics": task.evaluation_metrics(test_y, test_pred, test_prob),
+            "validation_metrics": {
+                **task.evaluation_metrics(valid_y, valid_pred, valid_prob),
+                **visual_calibration_metrics(task, valid_y, valid_prob),
+            },
+            "test_metrics": {
+                **task.evaluation_metrics(test_y, test_pred, test_prob),
+                **visual_calibration_metrics(task, test_y, test_prob),
+            },
             "task_family": "vision", "task_variant": data.task_variant,
             "split_protocol": data.split_protocol,
             "primary_metric": task.primary_metric,
@@ -457,8 +464,14 @@ class VisionInnerModelAdapter:
             "training_budget": dict(search.search_state_["training_budget"]),
             "selected_architecture": list(search.model_.hidden_widths),
             "validation_selection_score": float(valid_loss),
-            "validation_metrics": task.evaluation_metrics(valid_y, valid_preds, valid_probs),
-            "test_metrics": task.evaluation_metrics(test_y, test_preds, test_probs),
+            "validation_metrics": {
+                **task.evaluation_metrics(valid_y, valid_preds, valid_probs),
+                **visual_calibration_metrics(task, valid_y, valid_probs),
+            },
+            "test_metrics": {
+                **task.evaluation_metrics(test_y, test_preds, test_probs),
+                **visual_calibration_metrics(task, test_y, test_probs),
+            },
             "task_family": "vision", "task_variant": data.task_variant,
             "split_protocol": data.split_protocol,
             "primary_metric": task.primary_metric,
