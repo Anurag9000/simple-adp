@@ -409,6 +409,14 @@
     "post_budget_pair_identity_and_cifar_cli_suite": {
       "run": "https://github.com/Anurag9000/simple-adp/actions/runs/41583583237",
       "status": "in_progress at update"
+    },
+    "post_dataset_identity_and_cli_verified_cpu_suite": {
+      "source_revision": "e7017b3227b09662adf7546f290c7b8497271834",
+      "url": "https://github.com/Anurag9000/simple-adp/actions/runs/41583583237",
+      "passed": 19272,
+      "skipped_physical_cuda": 1,
+      "failed": 0,
+      "status": "success"
     }
   },
   "official_fashion_control_matrix": {
@@ -536,11 +544,37 @@
     "controller": "existing 19 controlled architecture/site adapters x fixed/RR = 38 signed worker jobs",
     "driver": "scripts/visual_official_fashion_matrix.py --dataset cifar10|cifar100",
     "workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-cifar-matrix.yml",
-    "cifar10_source_runtime_verification": "in progress: https://github.com/Anurag9000/simple-adp/actions/runs/41583561156",
-    "cifar100_source_runtime_verification": "in progress: https://github.com/Anurag9000/simple-adp/actions/runs/41583684320",
+    "cifar10_source_runtime_verification": "38/38 official CIFAR-10 controlled jobs passed; https://github.com/Anurag9000/simple-adp/actions/runs/41583545865",
+    "cifar100_source_runtime_verification": "38/38 official CIFAR-100 controlled jobs passed; https://github.com/Anurag9000/simple-adp/actions/runs/41583684320",
     "classification_guard": "all three partition limits must cover 10 CIFAR10 / 100 CIFAR100 classes",
     "matched_training_compute": false,
     "scientific_benchmark": false,
-    "cifar100_workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-cifar100-matrix.yml"
+    "cifar100_workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-cifar100-matrix.yml",
+    "cifar10_completed_jobs": 38,
+    "cifar100_completed_jobs": 38
+  },
+  "visual_memory_admission": {
+    "module": "src/simple_adp/visual_memory.py",
+    "public_api": "simple_adp.visual_model_tensor_payload",
+    "native_controller": "src/simple_adp/visual_search.py",
+    "native_guard_constructor": "VisualResidualSearch(max_model_tensor_payload_bytes=int)",
+    "coordinated_runner_option": "RunnerSettings(visual_model_tensor_payload_cap_bytes=int)",
+    "default_plan_signature_unchanged": true,
+    "cap_opt_in_signed": true,
+    "old_checkpoint_cap_mismatch_rejected": true,
+    "applies_to": "V02-V11 native composite and separately gated V03/V04 source models",
+    "v01": "reject explicit native guard; legacy TabularADP head unchanged",
+    "admitted_model_byte_scope": "conservatively counted logical model parameter and buffer payload, after candidate model construction but before StageTrainer",
+    "trace": "trained_model_memory_trace, includes D1 warmup and all trained stages",
+    "rejection_field": "memory_admission_rejections",
+    "scoped_exclusions": [
+      "temporary growth clones",
+      "training input data and activations",
+      "optimizer/gradient state",
+      "full GPU OOM prevention",
+      "CUDA allocated/reserved peak"
+    ],
+    "runtime_status": "implementation and focused tests committed; new CI pending",
+    "cpu_ci_url": "https://github.com/Anurag9000/simple-adp/actions/runs/41590140083"
   }
 }
