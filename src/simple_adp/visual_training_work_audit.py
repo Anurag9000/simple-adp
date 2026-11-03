@@ -104,6 +104,12 @@ def audit_visual_training_forward_work_pairs(
         ):
             raise ValueError("training forward work comparison requires matching signed input identity")
 
+    datasets = {r.get("dataset_id") for r in records}
+    splits = {r.get("split_sha256") for r in records}
+    if len(datasets) != 1 or len(splits) != 1:
+        raise ValueError("paired training MAC work requires the same signed dataset and split across seeds")
+    if not all(isinstance(value, str) and value for value in (*datasets, *splits)):
+        raise ValueError("missing signed visual dataset/split identity")
     jobs = {(r["adapter"], r["method"], r["seed"]): r for r in records}
     comparisons: list[dict[str, object]] = []
     measured = 0
