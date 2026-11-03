@@ -491,6 +491,10 @@ class SuitePlan:
                                     "max_width": settings.max_width,
                                     "max_depth": settings.max_depth,
                                     "max_neurons": settings.max_neurons,
+                                    **({
+                                        "visual_model_tensor_payload_cap_bytes":
+                                            settings.visual_model_tensor_payload_cap_bytes,
+                                    } if settings.visual_model_tensor_payload_cap_bytes is not None else {}),
                                     "ex_k_width": settings.ex_k_width,
                                     "ex_k_depth": settings.ex_k_depth,
                                     "patience_es": settings.patience_es,
