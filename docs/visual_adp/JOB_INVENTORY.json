@@ -878,5 +878,45 @@
       ],
       "ci_status": "new signed original-worker artifact verification CI queued; do not claim passed"
     }
+  },
+  "actual_training_forward_mac_program": {
+    "feature_module": "src/simple_adp/visual_train_compute.py",
+    "pairwise_auditor": "src/simple_adp/visual_training_work_audit.py",
+    "native_stage_integration": "src/simple_adp/training.py::StageTrainer.train_stage",
+    "native_search_integration": "src/simple_adp/visual_search.py::VisualResidualSearch",
+    "opt_in_coordinator_setting": "RunnerSettings(visual_training_forward_macs=True)",
+    "opt_in_local_setting": "VisualResidualSearch(track_training_forward_macs=True)",
+    "default_off_and_old_signatures_unchanged": true,
+    "recording_scope": "executed main training model(xb) per actual minibatch, including short tail batches, fixed/backbone + eligible source FFNs",
+    "directly_observed": [
+      "nn.Linear MACs",
+      "nn.Conv2d MACs"
+    ],
+    "shape_analytical_not_kernel_observed": [
+      "nn.MultiheadAttention dense QKV/output projections",
+      "nn.MultiheadAttention QK^T/AV products"
+    ],
+    "counts_validation": false,
+    "counts_heldout": false,
+    "counts_shadow_variance_extra_passes": false,
+    "counts_ungated_functional_ops": false,
+    "counts_backward_flops": false,
+    "counts_optimizer_flops": false,
+    "full_training_flops": null,
+    "native_stage_checkpoint_field": "training_forward_macs",
+    "native_search_stage_trace": "trained_forward_mac_trace",
+    "native_search_aggregate": "training_forward_compute",
+    "per_stage_includes_D1_warmups": true,
+    "unsupported_legacy_v01_head": "unmeasured, never zero",
+    "native_real_image_workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-forward-work.yml",
+    "focused_unit_tests": [
+      "tests/test_visual_train_compute.py",
+      "tests/test_visual_training_forward_stage.py",
+      "tests/test_runner_vision_training_forward_macs.py",
+      "tests/test_visual_training_work_audit.py"
+    ],
+    "source_model_coverage": "source ViT/ConvNeXt native instrumentation contract wired, separate physical hardware test pending",
+    "scientific_gain_conclusion": null,
+    "status": "implemented and committed; new focused, official-image and full-repository CI pending"
   }
 }
