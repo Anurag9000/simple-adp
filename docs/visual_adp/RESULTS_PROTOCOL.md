@@ -340,3 +340,29 @@ exercises 38 native worker jobs and saves the
 resulting conditional comparison artifact. This is
 not a scientific benchmark until full data and
 actual matched compute/uncertainty reporting exist.
+
+
+## Verified step-count balance without equal FLOPs
+
+The first explicit native optimizer-step balancing experiment
+(official Fashion-MNIST 40 train/20 validation/20 test,
+one derived seed, 19 controlled architecture/sites × two
+controllers) completed 38/38 workers:
+https://github.com/Anurag9000/simple-adp/actions/runs/41593647892.
+The signed audit recorded **18 native pairs with exactly
+six optimizer steps for each fixed/growth job**, zero
+native step mismatches, and one V01 pair with unknown
+legacy optimizer count. It explicitly preserved
+`full_training_flops_matched=null`.
+
+For example, one native V02 selected model's observed
+partial inference arithmetic was 178,792 MACs per image
+on the fixed side versus 185,064 on the growth side,
+despite equal six-step training counts. These are
+partial Linear/Conv2d + analytical declared
+MultiheadAttention MACs, not all-model FLOPs.
+The **training** operation counts remain unknown.
+Validation-chosen architectures, source class identities,
+budget completeness, and the fixed seed all remain part
+of the scientific provenance. A one-seed micro-smoke
+cannot justify claiming a general ADP improvement.
