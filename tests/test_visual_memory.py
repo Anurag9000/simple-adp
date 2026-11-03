@@ -271,3 +271,82 @@ def test_memory_preflight_rejects_fixed_grid_before_new_model_construction(monke
     assert search.search_state_["memory_admission_rejections"][0][
         "before_candidate_construction"
     ] is True
+
+
+@pytest.mark.parametrize("family,site", [
+    ("V03", "ffn:block0"),
+    ("V04", "channel:stage0.block0"),
+    ("V05", "channel:poolformer.block0"),
+    ("V06a", "channel:s2.block0"),
+    ("V06b", "channel:axial.block0"),
+    ("V10", "channel:resmlp.block0"),
+    ("V11", "channel:gfnet.block0"),
+])
+def test_native_ffn_family_forecast_matches_actually_constructed_width(family, site):
+    from simple_adp.visual_native_ffn import NativeFFNSpec
+    family_spec = NativeFFNSpec(
+        architecture_id=family, input_channels=3, local_dim=4,
+        classes=2, image_height=8, image_width=8,
+        patch_size=2, attention_heads=2, site_id=site,
+    )
+    original = build_visual_composite(family_spec, (2,))
+    candidate = original.grow_width(
+        site_id=site, operator="den_round_robin",
+        increment=1, max_width=4,
+    )
+    assert candidate is not None
+    forecast = forecast_visual_growth_payload_bytes(original, (3,))
+    assert forecast == visual_model_tensor_payload(candidate)[
+        "total_model_tensor_payload_bytes"
+    ]
+
+
+@pytest.mark.parametrize("variant", [
+    "V02", "V07-token", "V07-channel", "V07-both",
+    "V08-early", "V08-middle", "V08-late", "V08-schedule",
+    "V09-bank0", "V09-bank1", "V09-bank2",
+])
+def test_remaining_visual_growth_sites_forecast_matches_real_bytes(variant):
+    from simple_adp.visual_multistage import MultistageSpec
+    from simple_adp.visual_adapter_bank import BankSpec
+    from simple_adp.visual_multistage_schedule import ScheduledMultistageSpec
+
+    if variant == "V02":
+        candidate_spec = spec()
+    elif variant.startswith("V07"):
+        candidate_spec = MixerSpec(
+            input_channels=3, local_dim=4, classes=2,
+            image_height=8, image_width=8, patch_size=2,
+            site_id=variant.split("-", 1)[1] + ":block0",
+        )
+    elif variant == "V08-schedule":
+        candidate_spec = ScheduledMultistageSpec(
+            input_channels=3, backbone_channels=4,
+            classes=2, image_height=8, image_width=8,
+        )
+    elif variant.startswith("V08"):
+        candidate_spec = MultistageSpec(
+            input_channels=3, backbone_channels=4,
+            classes=2, image_height=8, image_width=8,
+            site_id="adapter:" + variant.split("-", 1)[1],
+        )
+    else:
+        member = int(variant[-1])
+        candidate_spec = BankSpec(
+            input_channels=3, backbone_channels=4, local_dim=4,
+            classes=2, image_height=8, image_width=8,
+            site_id=f"bank:{member}",
+        )
+    original = build_visual_composite(candidate_spec, (2,))
+    candidate = original.grow_width(
+        site_id=candidate_spec.site_id, operator="den_round_robin",
+        increment=1, max_width=4,
+    )
+    assert candidate is not None
+    predicted = forecast_visual_growth_payload_bytes(
+        original, (3,),
+        other_hidden_widths=(3,) if variant == "V07-both" else None,
+    )
+    assert predicted == visual_model_tensor_payload(candidate)[
+        "total_model_tensor_payload_bytes"
+    ]
