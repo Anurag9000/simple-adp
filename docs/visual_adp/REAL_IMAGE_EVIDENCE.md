@@ -243,3 +243,23 @@ established ImageNet-architecture source parity for V05-V11,
 search-compute parity with controls, meaningful multi-seed accuracy
 advantages, full-CIFAR coverage or GPU performance. Do not cite it as
 benchmark-quality evidence.
+
+
+## 2026-11-03 observed compute extension
+
+A repeated 38-route official Fashion-MNIST smoke using the same
+native signed worker paths passed with the new
+`inference_compute` field:
+https://github.com/Anurag9000/simple-adp/actions/runs/41575563341.
+Every controlled architecture/site pair included a selected-model
+single-image forward probe recording actually observed
+`nn.Linear`/`nn.Conv2d` MACs with repeated spatial/token calls.
+These are deliberately **not whole-model FLOPs**. The focused
+unit/integration validation of these counts also passed:
+https://github.com/Anurag9000/simple-adp/actions/runs/41575556560.
+
+Subsequent versions add native per-stage optimizer/search budgets and
+post-selection visual ECE/Brier metrics. The above earlier successful
+runs do not prove those later changes; follow-up complete suite and
+real-image jobs remain separate pending evidence. Source pretrained
+ViT/ConvNeXt and controlled toy models must not be conflated.
