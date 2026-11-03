@@ -25,6 +25,7 @@ from ..visual_accounting import visual_parameter_accounting
 from ..visual_compute import visual_linear_conv_macs
 from ..visual_metrics import visual_calibration_metrics
 from ..visual_memory import visual_model_tensor_payload
+from ..visual_resources import visual_process_resource_snapshot, visual_fit_resource_window
 from ..visual_source_convnext import SourceConvNeXtSpec, file_sha256
 from ..visual_source_vit import SourceViTSpec
 from .artifacts import estimator_model_path
@@ -135,11 +136,14 @@ class VisionSourceConvNeXtModelAdapter:
             max_model_tensor_payload_bytes=max_model_tensor_payload_bytes,
         )
         started = time.perf_counter()
+        fit_resources_before = visual_process_resource_snapshot(real_settings.device)
         search.fit(
             fit_x, fit_y, validation_data=(valid_x, valid_y),
             checkpoint_path=checkpoint_path,
             progress_callback=progress_callback,
         )
+        fit_resources = visual_fit_resource_window(
+            fit_resources_before, visual_process_resource_snapshot(real_settings.device))
         fit_elapsed = time.perf_counter() - started
         search.model_.verify_frozen()
         task = search.task
@@ -176,6 +180,7 @@ class VisionSourceConvNeXtModelAdapter:
             ))
         return {
             "fit_seconds": fit_elapsed,
+            "fit_process_resources": fit_resources,
             "history_entries": len(search.history_),
             "training_budget": dict(search.search_state_["training_budget"]),
             "trained_model_memory_trace": list(
