@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/visual_official_fashion_matrix.py'
+      - 'scripts/visual_paired_metrics_analysis.py'
+      - 'src/simple_adp/visual_paired_metrics.py'
       - 'src/simple_adp/visual_resource_audit.py'
       - '.github/workflows/visual-official-isolated-memory.yml'
   workflow_dispatch:
@@ -53,6 +55,12 @@ jobs:
             --isolated-workers --step-balanced --batch-size 16 \
             --workdir "${{ runner.temp }}/isolated-visual" \
             "${LIMITS[@]}"
+      - name: Describe strictly paired held-out effects for fresh-process workers
+        run: |
+          for matrix in "${{ runner.temp }}/isolated-visual"/official_*_vision_matrix_stepbalanced_isolated.json; do
+            test -f "$matrix" || exit 1
+            python scripts/visual_paired_metrics_analysis.py --matrix "$matrix"
+          done
       - name: Preserve per-job OS memory observation, split provenance and logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -62,5 +70,6 @@ jobs:
           retention-days: 30
           path: |
             ${{ runner.temp }}/isolated-visual/official_*_vision_matrix_stepbalanced_isolated.json
+            ${{ runner.temp }}/isolated-visual/official_*_vision_matrix_stepbalanced_isolated_paired_metrics.json
             ${{ runner.temp }}/isolated-visual/results/**/result.json
             ${{ runner.temp }}/isolated-visual/worker_logs/**/*.log
