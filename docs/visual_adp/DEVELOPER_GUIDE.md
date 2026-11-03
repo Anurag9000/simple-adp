@@ -850,3 +850,47 @@ and two or three tiny smoke runs do not justify confidence intervals
 or scientific performance claims. A genuine benchmark requires
 the complete official source partition, matched compute and multiple
 seeds with separate held-out evaluation.
+
+
+## Bounded optimizer-step-balancing attempt (fixed vs adaptive)
+
+A new opt-in `--step-balanced` mode uses **existing** native
+runner per-route epoch caps without changing an ADP controller:
+
+```bash
+python scripts/visual_official_fashion_matrix.py \
+  --dataset fashion_mnist --step-balanced --batch-size 16 \
+  --workdir /tmp/fashion-stepbalanced \
+  --train-limit 40 --valid-limit 20 --test-limit 20
+
+# Independent seeds and optimizer-step attempt may be combined:
+python scripts/visual_official_fashion_matrix.py \
+  --dataset cifar10 --model-seeds 3 --step-balanced --batch-size 32 \
+  --workdir /tmp/cifar-multiseed-stepbalanced \
+  --train-limit 300 --valid-limit 100 --test-limit 100
+```
+
+The second command is **illustrative only**, not a recorded
+completed execution. The mode configures
+`RunnerSettings(max_epochs=None, max_epochs_vanilla=2,
+max_epochs_adp=1, max_candidates=1, smoke_test=False)`.
+Fixed controls train their initial model for at most two epochs.
+Native RR trains one initial stage plus a single growth
+candidate for at most one epoch each. `--batch-size` is
+effective because this mode disables the worker's default
+one-batch smoke override. The native `training_budget`
+records **actual optimizer steps**, not intended steps, and
+the fixed/RR auditor reports any difference.
+
+The single-seed output gets the suffix
+`_stepbalanced.json`; combining this with N seeds produces
+`_Nseeds_stepbalanced.json`. Both remain separate from
+the historical one-seed one-epoch artifacts. V01's original
+tabular head has no comparable native stage-budget record
+and must still report optimizer work as unknown.
+
+This is only an **attempt to equalize optimizer-step counts**.
+Gradient cost per step differs by architecture and model
+size; no full-training FLOPs, wall-clock or peak memory
+parity is implied. The default one-epoch-per-candidate
+one-seed matrix is unchanged.
