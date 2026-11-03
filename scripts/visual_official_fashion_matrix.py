@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -40,6 +42,39 @@ def _save(path: Path, payload: dict[str, object]) -> None:
     os.replace(temporary, path)
 
 
+def _run_worker_isolated(spec_file: str | Path, log_file: Path) -> dict[str, object]:
+    """Run the original signed CLI worker in a fresh Python process.
+
+    This is the same runner.worker.run_spec implementation, not a second
+    training pipeline. Fresh processes make lifetime VmHWM and CUDA
+    allocator peaks attributable to one signed job rather than previous
+    matrix jobs. Child errors and stdout remain as an individual artifact.
+    """
+    spec_path = Path(spec_file)
+    payload = json.loads(spec_path.read_text(encoding="utf-8"))
+    result_dir = Path(payload["result_dir"])
+    log_file.parent.mkdir(parents=True, exist_ok=True)
+    with log_file.open("w", encoding="utf-8") as sink:
+        completed = subprocess.run(
+            [sys.executable, "-m", "simple_adp.runner.worker",
+             "--spec", str(spec_path)],
+            stdout=sink, stderr=subprocess.STDOUT, check=False,
+        )
+    result_path = result_dir / "result.json"
+    if completed.returncode != 0:
+        lines = log_file.read_text(encoding="utf-8", errors="replace").splitlines()
+        raise RuntimeError(
+            f"isolated signed worker failed exit={completed.returncode}; "
+            f"log={log_file}; tail={lines[-8:]}"
+        )
+    result = json.loads(result_path.read_text(encoding="utf-8"))
+    if result.get("status") != "completed" or result.get("run_signature") != (
+        payload["identity"]["run_signature"]
+    ):
+        raise ValueError("isolated worker result does not match signed run specification")
+    return result
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workdir", required=True)
@@ -50,6 +85,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--test-limit", type=int, default=20)
     parser.add_argument("--model-seeds", type=int, default=1,
                         help="number of independently derived native runner seeds")
+    parser.add_argument("--isolated-workers", action="store_true",
+                        help="execute each original worker spec in its own fresh process")
     parser.add_argument("--step-balanced", action="store_true",
                         help="request 2 fixed epochs vs two 1-epoch ADP stages; audit actual steps")
     parser.add_argument("--batch-size", type=int, default=16,
@@ -153,6 +190,8 @@ def main(argv: list[str] | None = None) -> int:
         )
     if args.step_balanced:
         matrix_basename = matrix_basename.replace(".json", "_stepbalanced.json")
+    if args.isolated_workers:
+        matrix_basename = matrix_basename.replace(".json", "_isolated.json")
     summary_path = root / matrix_basename
     summary: dict[str, object] = {
         "format": (
@@ -167,6 +206,10 @@ def main(argv: list[str] | None = None) -> int:
         "dataset": args.dataset,
         "source": f"torchvision.datasets.{dataset_type.__name__} official train/test",
         "dataset_download": "explicit",
+        **({
+            "worker_process_scope": "one-process-per-signed-run",
+            "cpu_process_lifetime_rss_isolated_per_worker": True,
+        } if args.isolated_workers else {}),
         "train_limit": args.train_limit,
         "validation_limit": args.valid_limit,
         "test_limit": args.test_limit,
@@ -216,7 +259,12 @@ def main(argv: list[str] | None = None) -> int:
             "worker_spec": str(job.command[-1]),
         }
         try:
-            value = run_spec(job.command[-1])
+            value = (
+                _run_worker_isolated(
+                    job.command[-1],
+                    root / "worker_logs" / (job.identity.run_id + ".log"),
+                ) if args.isolated_workers else run_spec(job.command[-1])
+            )
             if value["status"] != "completed":
                 raise AssertionError("worker did not report completion")
             if value.get("task_family") != "vision":
