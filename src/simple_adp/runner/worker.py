@@ -227,6 +227,11 @@ def run_spec(path: str | Path) -> dict[str, Any]:
            if result.get("parameter_accounting") is not None else {}),
         **({"inference_compute": result["inference_compute"]}
            if result.get("inference_compute") is not None else {}),
+        **({"model_memory_accounting": result["model_memory_accounting"]}
+           if result.get("model_memory_accounting") is not None else {}),
+        **({"memory_admission_rejections": result["memory_admission_rejections"],
+            "model_tensor_payload_cap_bytes": result.get("model_tensor_payload_cap_bytes")}
+           if result.get("memory_admission_rejections") is not None else {}),
         "frozen_sha256": result.get("frozen_sha256"),
         **({
             "source_weights_sha256": result["source_weights_sha256"],
