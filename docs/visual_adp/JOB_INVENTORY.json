@@ -445,6 +445,20 @@
       "skipped_hardware_cuda": 2,
       "failed": 0,
       "note": "does not include later failure-path and descriptive per-process pair audit changes"
+    },
+    "post_metric_analyzer_first_fail": {
+      "run": "https://github.com/Anurag9000/simple-adp/actions/runs/41616499845",
+      "passed": 19393,
+      "failed": 2,
+      "skipped": 2,
+      "failure": "torch.save archive I/O errors during full-source ViT checkpoint and subsequent V01 save; cause likely ephemeral runner disk pressure, not definitively ENOSPC"
+    },
+    "hosted_runner_disk_recovery": {
+      "workflow": ".github/workflows/full-repository-cpu-regression.yml",
+      "action": "free unrelated Android, .NET, GHC, PowerShell hosted-runner SDK caches before complete unfiltered suite; df/du diagnostics on failure",
+      "no_test_exclusions": true,
+      "ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41617726688",
+      "status": "in progress; no successful post-recovery full-suite claim"
     }
   },
   "official_fashion_control_matrix": {
@@ -829,6 +843,40 @@
     "official_fashion_seed_count": 2,
     "official_fashion_adapter_count": 19,
     "official_fashion_result": "success; post-run paired report verified with 19 adapters and no statistical claims",
-    "other_dataset_ci_status": "new Fashion/CIFAR10/CIFAR100/stepbalanced/isolated workflows launched; verification pending"
+    "other_dataset_ci_status": "new Fashion/CIFAR10/CIFAR100/stepbalanced/isolated workflows launched; verification pending",
+    "original_worker_result_artifact_verification": {
+      "module": "src/simple_adp/visual_paired_metrics.py::verify_visual_worker_result_artifacts",
+      "cli_argument": "--results-root",
+      "scope": "original per-job result.json agreement with summary; not public-key signature verification",
+      "shared_suite_plan_signature": "64-character hex run_signature shared by all jobs of one suite; confirmed from 76 archived Fashion results",
+      "distinct_job_identity": "job_id must be unique, full relative paths resolved beneath result root",
+      "checks": [
+        "worker job_id",
+        "status",
+        "dataset ID and split SHA256",
+        "seed",
+        "architecture ID and growth site",
+        "selected widths",
+        "controller method",
+        "validation/test metrics",
+        "native optimizer budget",
+        "shared suite-plan run signature format",
+        "result file path confinement"
+      ],
+      "bundle_sha256": "deterministic ordered job-id + SHA256(exact source result.json bytes), excludes aggregate report file",
+      "source_matrix_immutable": true,
+      "report_or_staging_source_collision_rejected": true,
+      "tests": "tests/test_visual_paired_metrics_cli.py, tests/test_visual_paired_metrics.py",
+      "actual_archived_source_check": "76 original result.json files from GitHub artifact 13222170910 checked; 76 distinct job IDs, one consistent run_signature, complete fields",
+      "automatic_workflows": [
+        "visual-official-multiseed",
+        "visual-official-family-matrix",
+        "visual-official-cifar-matrix",
+        "visual-official-cifar100-matrix",
+        "visual-official-stepbalanced",
+        "visual-official-isolated-memory"
+      ],
+      "ci_status": "new signed original-worker artifact verification CI queued; do not claim passed"
+    }
   }
 }
