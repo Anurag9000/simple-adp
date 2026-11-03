@@ -293,6 +293,7 @@ def main(argv: list[str] | None = None) -> int:
                 "test_metrics": value["test_metrics"],
                 "parameter_accounting": counts,
                 "model_memory_accounting": memory,
+                "fit_process_resources": measured,
                 "inference_compute": compute,
             })
         except Exception as exc:
