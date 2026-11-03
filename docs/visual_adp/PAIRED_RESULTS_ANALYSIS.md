@@ -118,3 +118,50 @@ against a synthetic complete 19-site matrix and confirms that
 malformed or partial inputs produce **no report file**.
 
 A passing test or micro-smoke is not a scientific model ranking.
+
+
+## Re-check original worker result artifacts
+
+When the original `results/<job_id>/result.json` files are still
+available, use the stronger optional verification path:
+
+```bash
+python scripts/visual_paired_metrics_analysis.py \
+  --matrix /workdir/official_fashion_vision_matrix_2seeds.json \
+  --results-root /workdir/results
+```
+
+The verifier resolves every `job_id` beneath the supplied
+result root, refuses path traversal/symlink escapes and missing
+files, parses the original signed worker record, and checks the
+source dataset ID, split checksum, seed, architecture, growth
+site, selected widths, controller, validation/test metrics
+and recorded optimizer training budget against the matrix.
+Every result must contain a well-formed 64-hex-digit
+`run_signature` and **all jobs within one suite plan share
+the same** run signature. The *job IDs*, rather than suite
+signatures, must be unique. This was confirmed directly on
+76 archived official Fashion-MNIST workers.
+
+The output adds
+`original_worker_artifact_verification` with the shared
+suite-plan hash and a SHA-256 digest of the ordered
+`(job_id, SHA-256(original result.json bytes))` set.
+If no `--results-root` is provided, the report explicitly
+states `not-requested; matrix metadata only`. The verifier
+does **not** cryptographically authenticate GitHub or prove
+the identity of a remote signer; it checks local artifact
+integrity and cross-file provenance.
+
+Both the output path and its temporary staging path are
+explicitly forbidden from pointing to the original matrix,
+including via symlinks. The analyzer never overwrites
+source evidence.
+
+The official Fashion-MNIST, CIFAR-10, CIFAR-100,
+step-balanced, independent-seed and isolated-process
+workflows now request this stronger verification while
+both the original signed result files and the matrix
+are present in the job workspace. A verifier failure
+fails the workflow instead of emitting a misleading
+posthoc performance summary.
