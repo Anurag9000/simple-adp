@@ -27,7 +27,11 @@ from .results import SearchResult
 from .tasks import ClassificationTask
 from .training import StageTrainer
 from .visual_accounting import visual_parameter_accounting
-from .visual_memory import visual_model_tensor_payload
+from .visual_memory import (
+    visual_model_tensor_payload,
+    prospective_tabular_growth_widths,
+    forecast_visual_growth_payload_bytes,
+)
 from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_composite, restore_visual_composite
 from .visual_mixer import MixerSpec
@@ -192,6 +196,63 @@ class VisualResidualSearch:
             )
         return used
 
+    def _preflight_growth_payload(
+        self, current: VisualResidualAdapter, state: dict[str, Any], *,
+        proposed_widths: tuple[int, ...] | None,
+        other_widths: tuple[int, ...] | None = None,
+    ) -> bool:
+        """Reject predictable over-cap MLP growth *before deep-copying* it.
+
+        The local-MLP shape calculation is exact for native TabularMLPs
+        with supported dtype and buffer layouts. Unsupported layouts
+        defer to the existing postconstruction guard. Frozen source
+        models must still be materialized to know their tensor payload.
+        """
+        if self.max_model_tensor_payload_bytes is None or proposed_widths is None:
+            return True
+        predicted = forecast_visual_growth_payload_bytes(
+            current, proposed_widths, other_hidden_widths=other_widths,
+        )
+        if predicted is None or predicted <= self.max_model_tensor_payload_bytes:
+            return True
+        state.setdefault("memory_admission_rejections", []).append({
+            "phase": str(state["phase"]),
+            "architecture": list(proposed_widths),
+            "site": (
+                "adapter:" + current._active
+                if isinstance(self.spec, ScheduledMultistageSpec)
+                else self.spec.site_id
+            ),
+            "logical_model_tensor_payload_bytes": int(predicted),
+            "cap_bytes": self.max_model_tensor_payload_bytes,
+            "reason": "model-parameter-buffer-payload-limit",
+            "before_candidate_construction": True,
+            "prediction_kind": "native-TabularMLP-geometry-v1",
+        })
+        return False
+
+    def _preflight_operator(
+        self, current: VisualResidualAdapter, state: dict[str, Any], *,
+        operator: str, increment: int = 1, seed_width: int = 1,
+    ) -> bool:
+        if self.max_model_tensor_payload_bytes is None:
+            return True
+        kwargs = {
+            "operator": operator, "increment": increment,
+            "max_width": self.settings.max_width,
+            "max_depth": self.settings.max_depth,
+            "seed_width": seed_width,
+        }
+        proposed = prospective_tabular_growth_widths(current.local_mlp, **kwargs)
+        other = None
+        if isinstance(self.spec, MixerSpec) and self.spec.site_id == "both:block0":
+            other = prospective_tabular_growth_widths(current.other_mlp, **kwargs)
+            if proposed is None or other is None:
+                return True  # Source operation will reject; do not create a fake memory denial.
+        return self._preflight_growth_payload(
+            current, state, proposed_widths=proposed, other_widths=other,
+        )
+
     def _persist(self, store: CheckpointStore | None, signature: str, state: dict[str, Any],
                  progress_callback: Callable[[dict[str, object]], None] | None) -> None:
         if store is not None:
@@ -225,14 +286,26 @@ class VisualResidualSearch:
             if state["phase"] == "width":
                 operator = ("all_layers" if self.config.width_strategy == "all_layers"
                             else "round_robin")
+                if not self._preflight_operator(
+                    current, state, operator=operator, increment=s.ex_k_width,
+                ):
+                    return None
                 candidate = current.grow_width(
                     site_id=site, operator=operator,
                     increment=s.ex_k_width, max_width=s.max_width,
                 )
             elif state["phase"] == "depth":
+                depth_operator = (
+                    "Dcur" if self.config.depth_seed == "current" else "D1"
+                )
+                if not self._preflight_operator(
+                    current, state, operator=depth_operator,
+                    seed_width=s.min_new_layer_width,
+                ):
+                    return None
                 candidate = current.grow_depth(
                     site_id=site,
-                    operator="Dcur" if self.config.depth_seed == "current" else "D1",
+                    operator=depth_operator,
                     max_depth=s.max_depth, seed_width=s.min_new_layer_width,
                 )
             else:
@@ -250,6 +323,10 @@ class VisualResidualSearch:
                 operation = "den_round_robin"
             if not eligible:
                 return None
+            if not self._preflight_operator(
+                current, state, operator=operation, increment=s.ex_k_width,
+            ):
+                return None
             return current.grow_width(site_id=site, operator=operation,
                                       increment=s.ex_k_width, max_width=s.max_width)
         if state["phase"] == "depth":
@@ -260,6 +337,12 @@ class VisualResidualSearch:
             if isinstance(current.spec, MixerSpec) and current.spec.site_id == "both:block0":
                 if total_neurons(local) + total_neurons(current.other_mlp) + 2 * seed > s.max_neurons:
                     return None
+            if not self._preflight_operator(
+                current, state,
+                operator="D1" if self.config.progressive_depth else "Dcur",
+                seed_width=1 if self.config.progressive_depth else width,
+            ):
+                return None
             if self.config.progressive_depth:
                 candidate = current.grow_depth(site_id=site, operator="D1",
                                                max_depth=s.max_depth, seed_width=1)
@@ -275,6 +358,16 @@ class VisualResidualSearch:
             target = int(state["depth_target"])
             new_width = current.hidden_widths[-1] + 1
             if new_width > target or new_width > s.max_width or total_neurons(local) + 1 > s.max_neurons:
+                return None
+            projected_widths = (*current.hidden_widths[:-1], new_width)
+            if not self._preflight_growth_payload(
+                current, state, proposed_widths=projected_widths,
+                other_widths=(
+                    (*current.other_mlp.hidden_widths[:-1], new_width)
+                    if isinstance(self.spec, MixerSpec)
+                    and self.spec.site_id == "both:block0" else None
+                ),
+            ):
                 return None
             candidate = copy.deepcopy(current)
             replacement = rebuild_mlp(
@@ -306,6 +399,15 @@ class VisualResidualSearch:
         if state["phase"] == "fixed":
             index = state["fixed_index"]
             if index >= len(self.fixed_grid):
+                return None
+            proposed = tuple(self.fixed_grid[index])
+            if not self._preflight_growth_payload(
+                current, state, proposed_widths=proposed,
+                other_widths=(
+                    proposed if isinstance(self.spec, MixerSpec)
+                    and self.spec.site_id == "both:block0" else None
+                ),
+            ):
                 return None
             return build_visual_composite(self.spec, self.fixed_grid[index]).to(s.device)
         raise ValueError(f"unknown V02 dedicated phase {state['phase']!r}")
