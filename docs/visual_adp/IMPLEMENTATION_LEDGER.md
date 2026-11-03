@@ -739,5 +739,8 @@ corrected generic methods. Evidence remains pending CI.
 | Observed OS RSS and CUDA allocator fit-call resource window | 154 focused tests, 38/38 real Fashion worker reports verified; CUDA hardware pending | visual_resources.py samples Linux current RSS/process-lifetime VmHWM and optional current CUDA PyTorch allocation/reservation counters before/after V01–V11 and source V03/V04 fit; never resets CUDA highwater or claims interval peak; signed worker and three official-image matrices; tests/test_visual_resources.py |
 
 
-| Fresh-process signed visual memory experiment | 38/38 official Fashion jobs passed, 38 independent PIDs | run 41605486116 artifact 13215889941; original runner.worker CLI and true per-process VmRSS/VmHWM, native 18/18 same-step pairs; child log artifact glob fix has separate pending rerun |
+| Fresh-process signed visual memory experiment | 38/38 Fashion jobs passed, all 38 PIDs distinct, all 38 nested worker logs archived | corrected workflow 41606221098 artifact 13217047019; native 18/18 same-step pairs, V01 unknown; VmRSS/VmHWM are whole-process, not exact training peak |
 | Failure-path process-resource diagnostic | implemented, focused and full-suite CI pending | visual worker catches original failure, records best-effort RSS/CUDA resource window without overriding original cap/model exception; missing metrics never treated as zero or block the original failure |
+
+
+| Paired descriptive process RSS evidence | implemented, official isolated CI pending | visual_resource_audit.py refuses shared-process/mismatched dataset split/seed/site and unknown/fabricated RSS, reports signed fixed/growth whole-child highwater and fit-endpoint differences without causal/statistical/VRAM claims |
