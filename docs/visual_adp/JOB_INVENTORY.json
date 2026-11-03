@@ -363,7 +363,9 @@
         "candidate_eligible_mlp_parameters"
       ],
       "legacy_checkpoint_missing_budget": "partial, complete=false",
-      "runtime_status": "CI pending as recorded; implementation committed"
+      "runtime_status": "bounded native CPU worker verified; extended D1 mid-warmup resume test CI still pending",
+      "bounded_official_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575726025",
+      "focused_worker_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575803153"
     },
     "post_selection_calibration": {
       "module": "src/simple_adp/visual_metrics.py",
@@ -374,7 +376,11 @@
         "test_metrics.multiclass_brier"
       ],
       "selection_criterion_changed": false,
-      "runtime_status": "CI pending as recorded; implementation committed"
+      "runtime_status": "CI pending; source TaskAdapter validation objective unchanged",
+      "metric_directions": {
+        "top_label_ece_10": "min",
+        "multiclass_brier": "min"
+      }
     },
     "scientific_benchmark_completed": false,
     "physical_cuda_verified": false
