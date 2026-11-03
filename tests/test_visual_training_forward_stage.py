@@ -171,3 +171,36 @@ def test_progressive_d1_training_forward_cost_includes_nonselectable_warmups():
     assert search.search_state_["training_forward_compute"]["recorded_training_samples"] == 64
     assert search.search_state_["training_forward_compute"]["complete"] is True
     assert all(row["partial_training_forward_macs"] > 0 for row in trace)
+
+
+@pytest.mark.parametrize(
+    ("family", "site", "expected_mha"),
+    [
+        ("V03", "ffn:block0", True),
+        ("V11", "channel:gfnet.block0", False),
+    ],
+)
+def test_actual_native_vit_attention_and_gfnet_fft_exclusion_are_explicit(
+    family, site, expected_mha,
+):
+    from simple_adp.visual_native_ffn import NativeFFNSpec
+
+    x, y, valid = _toy()
+    spec = NativeFFNSpec(
+        architecture_id=family, input_channels=3, local_dim=4,
+        classes=2, image_height=8, image_width=8,
+        patch_size=2, attention_heads=2, site_id=site,
+    )
+    search = VisualResidualSearch(
+        "MLP-Fixed", spec, settings=_settings(), fixed_grid=((2,),),
+        track_training_forward_macs=True,
+    ).fit(x, y, validation_data=valid)
+    forward = search.search_state_["training_forward_compute"]
+    assert forward["complete"] is True
+    assert forward["recorded_training_forward_batches"] == 4
+    assert forward["recorded_training_samples"] == 16
+    assert forward["observed_linear_conv_training_forward_macs"] > 0
+    assert (forward["analytical_mha_training_forward_macs"] > 0) is expected_mha
+    assert forward["full_training_flops"] is None
+    # V11's FFT is *not* silently converted to dense MACs; its report
+    # is therefore only a lower-coverage partial operator count.
