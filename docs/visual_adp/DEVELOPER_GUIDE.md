@@ -1031,3 +1031,27 @@ A workflow choice does **not** itself establish
 completed CIFAR isolated-memory execution. Cite
 dataset-specific results only after verifying its
 actual GitHub Actions run and saved artifact.
+
+
+## Read-only paired accuracy and calibration analysis
+
+Once a complete official worker matrix exists, use:
+
+```bash
+python scripts/visual_paired_metrics_analysis.py \
+  --matrix /path/to/official_fashion_vision_matrix_2seeds.json
+```
+
+The generated sibling `*_paired_metrics.json` contains a
+separate descriptive paired report for **each of the 19**
+controlled visual sites; it does not pool them. Source artifacts
+are never modified and no model trains during analysis.
+See `docs/visual_adp/PAIRED_RESULTS_ANALYSIS.md` for the
+full metric-direction conventions, exact provenance
+validation and why no statistical-significance/accuracy
+gain claim is permitted.
+
+The two-seed official Fashion CI now runs that CLI after
+the original 76 signed jobs and uploads both the original
+worker matrix and the paired report. It has been verified
+at GitHub run 41616572651, artifact 13222170910.
