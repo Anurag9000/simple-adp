@@ -107,3 +107,36 @@ def test_cli_rejects_partial_or_unsigned_19_adapter_input_without_writing_output
     completed = invoke(source)
     assert completed.returncode != 0
     assert not (tmp_path / "matrix_paired_metrics.json").exists()
+
+
+def test_cli_refuses_output_pointing_at_signed_source_matrix(tmp_path):
+    source = tmp_path / "matrix.json"
+    payload = data_records()
+    source.write_text(json.dumps(payload), encoding="utf-8")
+    command = [
+        sys.executable, str(SCRIPT), "--matrix", str(source),
+        "--output", str(source),
+    ]
+    completed = subprocess.run(
+        command, capture_output=True, text=True, timeout=45, check=False,
+    )
+    assert completed.returncode != 0
+    assert "must not overwrite" in completed.stderr
+    assert json.loads(source.read_text(encoding="utf-8")) == payload
+
+
+def test_cli_refuses_staging_file_collision_with_signed_source(tmp_path):
+    source = tmp_path / "analysis.json.tmp"
+    payload = data_records()
+    source.write_text(json.dumps(payload), encoding="utf-8")
+    completed = subprocess.run(
+        [
+            sys.executable, str(SCRIPT), "--matrix", str(source),
+            "--output", str(tmp_path / "analysis.json"),
+        ],
+        capture_output=True, text=True, timeout=45, check=False,
+    )
+    assert completed.returncode != 0
+    assert "must not overwrite" in completed.stderr
+    assert not (tmp_path / "analysis.json").exists()
+    assert json.loads(source.read_text(encoding="utf-8")) == payload
