@@ -63,3 +63,42 @@ def test_native_worker_in_fresh_process_has_own_os_pid_and_signed_result(monkeyp
     )
     assert log.exists()
     assert (tmp_path / "results" / job.identity.run_id / "result.json").exists()
+
+
+def test_isolated_worker_fails_closed_on_child_failure_and_bad_signature(monkeypatch, tmp_path):
+    import json
+    from types import SimpleNamespace
+
+    import pytest
+
+    module = isolated_driver()
+    result_dir = tmp_path / "results"
+    result_dir.mkdir()
+    spec = tmp_path / "signed.json"
+    spec.write_text(json.dumps({
+        "result_dir": str(result_dir),
+        "identity": {"run_signature": "expected-immutable-signature"},
+    }))
+    log_path = tmp_path / "logs" / "worker.log"
+
+    def fake_failure(args, stdout, stderr, check):
+        assert args[-2] == "--spec"
+        assert args[-1] == str(spec)
+        assert check is False
+        stdout.write("worker failure\n")
+        return SimpleNamespace(returncode=7)
+
+    monkeypatch.setattr(module.subprocess, "run", fake_failure)
+    with pytest.raises(RuntimeError, match="exit=7"):
+        module._run_worker_isolated(spec, log_path)
+    assert log_path.read_text() == "worker failure\n"
+
+    def fake_success(args, stdout, stderr, check):
+        (result_dir / "result.json").write_text(json.dumps({
+            "status": "completed", "run_signature": "wrong-signature",
+        }))
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(module.subprocess, "run", fake_success)
+    with pytest.raises(ValueError, match="does not match signed run"):
+        module._run_worker_isolated(spec, log_path)
