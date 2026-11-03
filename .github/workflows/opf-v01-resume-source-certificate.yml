@@ -29,6 +29,10 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check --index-url https://download.pytorch.org/whl/cpu 'torch==2.6.0'
           python -m pip install --disable-pip-version-check numpy pytest
+      - name: Reject modified source or test snapshots
+        run: |
+          test "$(git hash-object tests/opf_v01_resume_certificate/vision_adp/v01_resume.py)" = "cd323ad87a97b32b7d045f31a52af539c939af7e"
+          test "$(git hash-object tests/opf_v01_resume_certificate/journal_certificate_contracts.py)" = "099f59f5d43644295679699ce72c137b953bc971"
       - name: Compile exact external OPF source snapshot
         run: |
           python -m py_compile tests/opf_v01_resume_certificate/vision_adp/v01_resume.py
