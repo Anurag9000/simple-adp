@@ -711,3 +711,16 @@ guard behavior. The focused and whole-suite workflows covering
 the **new code** must complete separately before reporting their
 pass counts. No physical CUDA memory peak or OOM guarantee was
 established.
+
+
+### First visual memory focused pass
+
+The initial native model-memory admission integration (before the
+subsequent per-stage memory trace extension) passed **69 CPU tests
+with 1 hardware-conditional CUDA test skipped**:
+https://github.com/Anurag9000/simple-adp/actions/runs/41589705134.
+This covered the dtype-aware logical payload API, signed byte-cap
+initialization/proposal rejection, legacy V01 fail-closed behavior
+and the coordinated worker wiring. The newer native memory timeline,
+D1 trace and three official-dataset matrix extensions have separate
+queued CI jobs and must not be credited with this earlier pass.
