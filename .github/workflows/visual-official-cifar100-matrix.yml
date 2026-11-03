@@ -41,7 +41,8 @@ jobs:
       - name: Produce descriptive paired CIFAR-100 accuracy and calibration report
         run: |
           python scripts/visual_paired_metrics_analysis.py \
-            --matrix "${{ runner.temp }}/official-cifar100-matrix/official_cifar100_vision_matrix.json"
+            --matrix "${{ runner.temp }}/official-cifar100-matrix/official_cifar100_vision_matrix.json" \\
+            --results-root "${{ runner.temp }}/official-cifar100-matrix/results"
       - name: Retain every official CIFAR-100 signed worker and matched-work audit
         if: always()
         uses: actions/upload-artifact@v4
