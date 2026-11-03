@@ -180,3 +180,48 @@ class VisualTrainingForwardMACCounter:
             "full_training_flops": None,
             "attention_kind": "shape-based dense MHA, not observed fused CUDA kernel cost",
         }
+
+
+def summarize_visual_training_forward_trace(
+    records: list[Mapping[str, object]], *, training_stages: int,
+    complete: bool,
+) -> dict[str, object]:
+    """Aggregate only observed stage forwards, with no invented prior work."""
+    if type(training_stages) is not int or training_stages < 0 or type(complete) is not bool:
+        raise ValueError("invalid signed visual training stage-count provenance")
+    if len(records) > training_stages or (complete and len(records) != training_stages):
+        raise ValueError("observed forward trace does not match signed training stage count")
+    total = {key: 0 for key in _KEYS}
+    for row in records:
+        if row.get("format") != _FORMAT or type(row.get("complete")) is not bool:
+            raise ValueError("visual training forward trace contains invalid format")
+        if complete and not row["complete"]:
+            raise ValueError("incomplete stage cannot establish complete training work")
+        for key in _KEYS:
+            x = row.get(key)
+            if type(x) is not int or x < 0:
+                raise ValueError(f"invalid observed training forward trace field {key}")
+            total[key] += x
+        if row.get("partial_training_forward_macs") != (
+            row["observed_linear_conv_training_forward_macs"]
+            + row["analytical_mha_training_forward_macs"]
+        ):
+            raise ValueError("visual forward MAC components do not close")
+    return {
+        "format": "simple-adp-native-actual-training-forward-mac-sum-v1",
+        **total,
+        "partial_training_forward_macs": (
+            total["observed_linear_conv_training_forward_macs"]
+            + total["analytical_mha_training_forward_macs"]
+        ),
+        "observed_training_stages": len(records),
+        "expected_training_stages": training_stages,
+        "complete": complete,
+        "full_training_flops": None,
+        "backward_flops": None,
+        "optimizer_flops": None,
+        "training_compute_scope": (
+            "actual main model(xb) forward calls only; nn.Linear/Conv2d "
+            "plus analytically estimated dense nn.MultiheadAttention"
+        ),
+    }
