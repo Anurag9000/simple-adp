@@ -329,5 +329,54 @@
     "focused_status": "success",
     "whole_model_flops": false,
     "notes": "Read-only unique-parameter counts and per-local-MLP invocation Linear MACs; inactive V08 sites distinguished"
+  },
+  "scientific_accounting_continuation_2026_11_03": {
+    "observed_inference_compute": {
+      "module": "src/simple_adp/visual_compute.py",
+      "field": "inference_compute.observed_linear_conv_macs_per_image",
+      "scope": "V01-V11 controlled composite and source V03/V04 selected models",
+      "covered_ops": [
+        "nn.Linear",
+        "nn.Conv2d"
+      ],
+      "excluded": "functional attention projections/attention kernels; Fourier FFT; normalization; pooling; activation; interpolation; training/backward",
+      "whole_model_flops": null,
+      "focused_cpu_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575556560",
+      "official_image_matrix_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41575563341",
+      "focused_status": "success",
+      "official_image_matrix_status": "success"
+    },
+    "native_training_budget": {
+      "module": "src/simple_adp/visual_search.py",
+      "field": "training_budget",
+      "scope": "V02-V11 and source V03/V04 via VisualResidualSearch; not V01 original tabular head",
+      "units": [
+        "optimizer_steps",
+        "trained_epochs",
+        "trained_stages",
+        "warmup_stages"
+      ],
+      "candidate_history": [
+        "trained_epochs",
+        "optimizer_steps",
+        "candidate_total_parameters",
+        "candidate_eligible_mlp_parameters"
+      ],
+      "legacy_checkpoint_missing_budget": "partial, complete=false",
+      "runtime_status": "CI pending as recorded; implementation committed"
+    },
+    "post_selection_calibration": {
+      "module": "src/simple_adp/visual_metrics.py",
+      "fields": [
+        "validation_metrics.top_label_ece_10",
+        "validation_metrics.multiclass_brier",
+        "test_metrics.top_label_ece_10",
+        "test_metrics.multiclass_brier"
+      ],
+      "selection_criterion_changed": false,
+      "runtime_status": "CI pending as recorded; implementation committed"
+    },
+    "scientific_benchmark_completed": false,
+    "physical_cuda_verified": false
   }
 }
