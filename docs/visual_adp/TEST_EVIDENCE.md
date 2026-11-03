@@ -958,3 +958,29 @@ the nested child logs**. A subsequent workflow-only
 commit replaced the log glob with `**/*.log` and
 triggered a separate official rerun; log archival is
 not marked verified until the rerun completes.
+
+
+### Paired isolated-process RSS audit added
+
+`src/simple_adp/visual_resource_audit.py`
+provides a **strictly descriptive** paired comparison
+of actual independently executed worker resource
+reports, gated by the original fixed/RR identity
+and run-seed auditor. Dedicated pure
+`tests/test_visual_resource_audit.py` covers
+valid two-seed comparisons, V01 missing native
+optimizer records, shared-process rejection,
+duplicate or incomplete workers, cross-dataset/
+seed/split/site leakage, missing RSS, claimed exact
+interval peak and CUDA metrics miscast as CPU RSS.
+The official isolated Fashion-MNIST workflow now
+persists `paired_isolated_process_rss_audit` when
+all 38 workers complete.
+
+This new paired-audit code has not yet received
+completed focused CI at this note. The earlier
+separately verified isolated matrix
+41606221098 retained 38 signed results, 38 nested
+child logs and the old conservative budget audit.
+The *new* paired RSS summary requires its own
+CI verification.
