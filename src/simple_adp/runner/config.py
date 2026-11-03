@@ -71,6 +71,9 @@ class RunnerSettings:
     max_width: int = 512
     max_depth: int = 5
     max_neurons: int = 1_000_000_000
+    # Opt-in native V02-V11/source-V03/V04 logical tensor payload admission.
+    # Absent value is omitted from plan signature and job specs for compatibility.
+    visual_model_tensor_payload_cap_bytes: int | None = None
     # Estimator/search controls are serialized with each run spec and passed
     # to the worker. Keep their defaults aligned with SearchSettings.
     ex_k_width: int = 1
@@ -187,6 +190,11 @@ class RunnerSettings:
             raise ValueError("post-launch sample delay cannot be negative")
         if min(self.max_width, self.max_depth, self.max_neurons) <= 0:
             raise ValueError("architecture capacity limits must be positive")
+        cap = self.visual_model_tensor_payload_cap_bytes
+        if cap is not None and (
+            isinstance(cap, bool) or not isinstance(cap, int) or cap <= 0
+        ):
+            raise ValueError("visual_model_tensor_payload_cap_bytes must be a positive integer or None")
         if min(self.ex_k_width, self.ex_k_depth, self.patience_es,
                self.scheduler_t0, self.scheduler_t_mult, self.min_new_layer_width) <= 0:
             raise ValueError("estimator increments, epoch patience, scheduler values, and depth seed must be positive")
@@ -254,7 +262,11 @@ class RunnerSettings:
         # and job slicing values are deliberately not checked here.
 
     def as_dict(self) -> dict[str, object]:
-        return asdict(self)
+        result = asdict(self)
+        # A disabled visual cap must not change historical plan signatures.
+        if result["visual_model_tensor_payload_cap_bytes"] is None:
+            del result["visual_model_tensor_payload_cap_bytes"]
+        return result
 
     @property
     def effective_concurrency(self) -> int:
