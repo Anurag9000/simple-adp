@@ -46,6 +46,15 @@ def audit_visual_worker_pairs(
         fixed, grown = (index[(adapter, method)] for method in methods)
         if fixed.get("status") != "completed" or grown.get("status") != "completed":
             status = "worker-failed"
+        elif not fixed.get("dataset_id") or (
+            fixed.get("dataset_id") != grown.get("dataset_id")
+        ):
+            status = "dataset-mismatch"
+        elif not isinstance(fixed.get("seed"), int) or (
+            isinstance(fixed.get("seed"), bool)
+            or fixed.get("seed") != grown.get("seed")
+        ):
+            status = "seed-mismatch"
         elif not fixed.get("split_sha256") or (
             fixed.get("split_sha256") != grown.get("split_sha256")
         ):
