@@ -832,3 +832,32 @@ model arithmetic. One small-seed, tiny-split integration
 run does not establish classifier superiority or any
 statistically reliable accuracy gain. Full source models
 V05–V11 and real CUDA peaks remain unverified.
+
+
+### Observed process resource-window implementation checkpoint
+
+The new `visual_resources` helper captures current
+Linux process RSS, lifetime process VmHWM and optional
+on-device PyTorch CUDA allocator readings *without*
+resetting peak stats, perturbing model RNG, or accessing
+test data. The fit interval is explicitly bounded by
+the V01, native inner-FFN, or genuine source-`fit`
+calls, not inferred from per-stage logical model
+bytes. The resulting signed `fit_process_resources`
+is persisted in `runner.worker` records and each
+official-image matrix row. Tests in
+`tests/test_visual_resources.py` check actual CPU
+RSS/RNG invariance, missing /proc, negative deltas,
+nondecreasing lifetime high-water, invalid process or
+device mixing, mocked CUDA counters and optional
+physical CUDA execution. Held-out-isolation and
+worker tests assert both the new report and unchanged
+test materialization order.
+
+**The new resource instrumentation CI is pending
+at this checkpoint.** The prior full suite
+https://github.com/Anurag9000/simple-adp/actions/runs/41593730866
+passed **19,346 tests and skipped 1 hardware-only CUDA test**,
+but does not include the added process-resource code.
+No actual CUDA machine was available in that full CPU
+regression.
