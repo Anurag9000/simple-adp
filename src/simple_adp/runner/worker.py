@@ -219,6 +219,8 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "selected_architecture": result.get("selected_architecture"),
         "fit_seconds": result.get("fit_seconds"),
         "history_entries": result.get("history_entries"),
+        **({"training_budget": result["training_budget"]}
+           if result.get("training_budget") is not None else {}),
         "architecture_id": result.get("architecture_id"),
         "growth_site": result.get("growth_site"),
         **({"parameter_accounting": result["parameter_accounting"]}
