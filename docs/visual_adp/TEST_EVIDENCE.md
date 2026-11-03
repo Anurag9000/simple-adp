@@ -984,3 +984,42 @@ separately verified isolated matrix
 child logs and the old conservative budget audit.
 The *new* paired RSS summary requires its own
 CI verification.
+
+
+### Verified signed paired CPU resource audit
+
+The first source run containing the new
+`paired_isolated_process_rss_audit` completed
+**38 of 38 original official Fashion-MNIST workers**:
+https://github.com/Anurag9000/simple-adp/actions/runs/41607106789.
+Its retained artifact
+`official-visual-isolated-memory-budget-matrix`
+(ID `13216704019`) was downloaded, and the
+`official_fashion_vision_matrix_stepbalanced_isolated.json`
+parsed and independently checked.
+
+The saved archive contains **77 files**:
+one matrix JSON, **38 signed worker result JSONs** and
+**38 nested individual subprocess log files**.
+All worker jobs succeeded, all **38 actual process IDs
+were distinct**, and the descriptive resource audit
+contained **19 fixed/RR pairs**. The native budget
+audit retained **18 same-optimizer-step pairs**,
+zero unequal native pairs and **one unknown V01
+head-controller pair**. The resource audit's
+`scientific_performance_conclusion` and
+`full_training_flops_matched` remain null.
+
+As an example of *descriptive rather than causal*
+memory differences, the V02 pair in that artifact
+observed a fixed process lifetime HWM of
+**1,112,113,152 bytes** and a growth HWM of
+**1,112,059,904 bytes**, so
+`growth_minus_fixed_lifetime_highwater_bytes`
+was **−53,248 bytes**. The difference between
+the two fit-endpoint RSS changes was
+**+159,744 bytes**. Neither metric measures
+the exact training-interval peak, activation
+allocation, backward FLOPs, device-wide VRAM or
+an ADP benefit. One tiny official-image seed
+cannot support a performance-significance claim.
