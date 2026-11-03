@@ -91,6 +91,12 @@ def test_optional_memory_cap_blocks_growth_but_preserves_initial_model_and_histo
     search.fit(x, y, validation_data=valid, checkpoint_path=checkpoint)
     assert [row["architecture"] for row in search.history_] == [[2]]
     assert search.search_state_["training_budget"]["trained_stages"] == 1
+    trace = search.search_state_["trained_model_memory_trace"]
+    assert len(trace) == 1
+    assert trace[0]["architecture"] == [2]
+    assert trace[0]["logical_model_tensor_payload_bytes"] == base
+    assert trace[0]["optimizer_steps"] == 4
+    assert search.search_state_["trained_model_memory_trace_complete"] is True
     rejected = search.search_state_["memory_admission_rejections"]
     assert len(rejected) == 1
     assert rejected[0]["phase"] == "width"
@@ -108,6 +114,7 @@ def test_optional_memory_cap_blocks_growth_but_preserves_initial_model_and_histo
     same.fit(x, y, validation_data=valid, checkpoint_path=checkpoint)
     assert same.history_ == search.history_
     assert same.search_state_["memory_admission_rejections"] == rejected
+    assert same.search_state_["trained_model_memory_trace"] == trace
 
     with pytest.raises(ValueError, match="signature"):
         VisualResidualSearch(
