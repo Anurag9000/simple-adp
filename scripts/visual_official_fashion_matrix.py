@@ -199,6 +199,8 @@ def main(argv: list[str] | None = None) -> int:
                         raise AssertionError("native inner-MLP optimizer/search budget is missing")
                 row.update({
                     "status": "completed",
+                    "dataset_id": value["dataset_id"],
+                    "seed": value["seed"],
                     "architecture_id": value["architecture_id"],
                     "growth_site": value["growth_site"],
                     "selected_architecture": value["selected_architecture"],
