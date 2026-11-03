@@ -173,6 +173,7 @@ class VisionSourceConvNeXtModelAdapter:
         return {
             "fit_seconds": fit_elapsed,
             "history_entries": len(search.history_),
+            "training_budget": dict(search.search_state_["training_budget"]),
             "selected_architecture": list(search.model_.hidden_widths),
             "validation_selection_score": float(validation_loss),
             "validation_metrics": task.evaluation_metrics(
