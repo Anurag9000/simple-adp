@@ -438,6 +438,13 @@
       "passed": 19346,
       "skipped_no_cuda": 1,
       "failed": 0
+    },
+    "latest_resource_fit_probe_verification": {
+      "url": "https://github.com/Anurag9000/simple-adp/actions/runs/41605534813",
+      "passed": 19359,
+      "skipped_hardware_cuda": 2,
+      "failed": 0,
+      "note": "does not include later failure-path and descriptive per-process pair audit changes"
     }
   },
   "official_fashion_control_matrix": {
@@ -737,7 +744,10 @@
       "observed_fit_rss_delta_bytes_min": 44703744,
       "observed_fit_rss_delta_bytes_max": 56217600,
       "full_training_vram_or_flops_matched": null,
-      "note": "real CPU observations; first artifact omitted nested child logs, fixed log archive glob in subsequent workflow"
+      "note": "real CPU observations; first artifact omitted nested child logs, fixed log archive glob in subsequent workflow",
+      "archived_child_logs": 38,
+      "corrected_log_archive_run": "https://github.com/Anurag9000/simple-adp/actions/runs/41606221098",
+      "corrected_artifact_id": 13217047019
     },
     "verified_isolated_focused_ci": {
       "url": "https://github.com/Anurag9000/simple-adp/actions/runs/41605534455",
@@ -752,8 +762,26 @@
       "tests": [
         "tests/test_runner_vision_memory_cap.py"
       ],
-      "ci_status": "pending updated focused CI"
+      "ci_status": "157 focused CPU tests passed, 2 hardware-conditional skips",
+      "focused_cpu_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41606378760"
     },
-    "latest_status": "shared and isolated official CPU memory telemetry verified; failure-path change and nested log archive rerun CI pending"
+    "latest_status": "shared and isolated official CPU memory telemetry verified; failure-path change and nested log archive rerun CI pending",
+    "paired_descriptive_rss": {
+      "module": "src/simple_adp/visual_resource_audit.py",
+      "api": "summarize_isolated_visual_resource_pairs",
+      "output_field": "paired_isolated_process_rss_audit",
+      "requires": "one-process-per-signed-run; full dataset/split/seed/site identity; numeric actual Linux RSS",
+      "reports": [
+        "fixed/growth child lifetime RSS highwater",
+        "fit endpoint RSS before/after and delta",
+        "growth-minus-fixed descriptive differences"
+      ],
+      "invalid_if": "shared process, missing RSS, mismatched source, invented exact fit peak or CUDA interpreted as CPU",
+      "statistical_significance_claim": false,
+      "exact_fit_peak": null,
+      "measured_vram_claim": false,
+      "official_workflow": "https://github.com/Anurag9000/simple-adp/actions/workflows/visual-official-isolated-memory.yml",
+      "status": "implementation and tests committed; new isolated worker run pending"
+    }
   }
 }
