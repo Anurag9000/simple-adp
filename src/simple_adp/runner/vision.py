@@ -194,7 +194,14 @@ class VisionModelAdapter:
         settings: SearchSettings,
         checkpoint_path: str | None = None,
         progress_callback: Callable[[dict[str, object]], None] | None = None,
+        max_model_tensor_payload_bytes: int | None = None,
     ) -> dict[str, Any]:
+        if max_model_tensor_payload_bytes is not None:
+            raise ValueError(
+                "V01 original tabular-head search does not implement a "
+                "per-candidate visual memory admission cap; disable the cap "
+                "or use a native inner-FFN V02-V11 route"
+            )
         if data.task_family != "vision" or route.suite_group != "vision":
             raise ValueError("vision adapter requires a vision-only route and dataset")
         if route.model_id not in MODEL_REGISTRY:
@@ -332,6 +339,7 @@ class VisionInnerModelAdapter:
         seed: int, settings: SearchSettings,
         checkpoint_path: str | None = None,
         progress_callback: Callable[[dict[str, object]], None] | None = None,
+        max_model_tensor_payload_bytes: int | None = None,
     ) -> dict[str, Any]:
         if data.task_family != "vision" or route.suite_group != "vision":
             raise ValueError("V02 adapter requires a vision-only dataset and route")
@@ -435,6 +443,7 @@ class VisionInnerModelAdapter:
         search = VisualResidualSearch(
             route.model_id, spec, settings=actual, fixed_grid=route.fixed_grid,
             generic_profile=route.generic_profile or "faithful",
+            max_model_tensor_payload_bytes=max_model_tensor_payload_bytes,
         )
         started = time.perf_counter()
         search.fit(train_x, train_y, validation_data=(valid_x, valid_y),
