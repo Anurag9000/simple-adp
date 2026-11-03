@@ -87,6 +87,11 @@ def test_true_vit_growth_and_snapshot_preserve_source_identity(source):
         increment=1, max_width=3073,
     )
     assert wider is not None and wider.hidden_widths == [3073]
+    from simple_adp.visual_memory import (
+        forecast_visual_growth_payload_bytes, visual_model_tensor_payload,
+    )
+    predicted = forecast_visual_growth_payload_bytes(model, (3073,))
+    assert predicted == visual_model_tensor_payload(wider)["total_model_tensor_payload_bytes"]
     assert torch.equal(wider.local_mlp.output_layer.weight[:, :3072], original_weights)
     assert isinstance(wider.local_mlp.hidden_layers[1], nn.GELU)
     assert wider.frozen_state_sha256() == frozen
