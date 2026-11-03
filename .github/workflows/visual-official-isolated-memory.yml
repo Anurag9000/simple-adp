@@ -1,0 +1,49 @@
+name: Official visual isolated-process memory and step-balanced worker matrix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/visual_official_fashion_matrix.py'
+      - '.github/workflows/visual-official-isolated-memory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official-fresh-process-memory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      PYTHONUNBUFFERED: '1'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original visual runner and official image dependencies
+        run: python -m pip install -e '.[vision,dev]'
+      - name: Run 38 genuine native jobs in fresh processes with balanced-step request
+        run: |
+          python scripts/visual_official_fashion_matrix.py \
+            --dataset fashion_mnist \
+            --isolated-workers --step-balanced --batch-size 16 \
+            --workdir "${{ runner.temp }}/isolated-visual" \
+            --train-limit 40 --valid-limit 20 --test-limit 20
+      - name: Preserve per-job OS memory observation, split provenance and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-visual-isolated-memory-budget-matrix
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/isolated-visual/official_fashion_vision_matrix_stepbalanced_isolated.json
+            ${{ runner.temp }}/isolated-visual/results/**/result.json
+            ${{ runner.temp }}/isolated-visual/worker_logs/*.log
