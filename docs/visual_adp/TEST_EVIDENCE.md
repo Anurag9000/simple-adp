@@ -685,3 +685,29 @@ CIFAR-10 successful run evidence is **pending** from the
 new workflow. CIFAR-100 has CLI + provider support but no
 completed official-source worker CI verified in this change.
 Neither is a full model-quality result.
+
+
+## 2026-11-03 logical memory guard implementation checkpoint
+
+Latest **pre-memory-change** official RGB execution:
+- CIFAR-10 https://github.com/Anurag9000/simple-adp/actions/runs/41583545865
+  **38/38** controlled native signed worker routes passed.
+- CIFAR-100 https://github.com/Anurag9000/simple-adp/actions/runs/41583684320
+  **38/38** controlled native signed worker routes passed,
+  all 100 classes represented in each bounded partition.
+- Full test suite https://github.com/Anurag9000/simple-adp/actions/runs/41583583237
+  **19,272 passed, 1 CUDA-only skipped** (confirmed runner logs).
+
+The subsequent `src/simple_adp/visual_memory.py` and
+`VisualResidualSearch` memory admission implementation adds:
+dtype-aware trainable/frozen/registered-buffer logical bytes,
+per-device and per-dtype audits, signed optional initial/candidate
+payload limit, fail-closed over-cap proposal handling, D1 warmup
+memory trace, and native coordinated worker propagation of cap
+and memory artifacts. New tests cover shared Parameter-object
+aliasing, complex dtypes and buffers, exact signed replay, cap
+mismatch, rejected growth, failure record, and V01 unsupported
+guard behavior. The focused and whole-suite workflows covering
+the **new code** must complete separately before reporting their
+pass counts. No physical CUDA memory peak or OOM guarantee was
+established.
