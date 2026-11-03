@@ -479,6 +479,10 @@ class VisionInnerModelAdapter:
             "fit_seconds": elapsed,
             "history_entries": len(search.history_),
             "training_budget": dict(search.search_state_["training_budget"]),
+            "trained_model_memory_trace": list(
+                search.search_state_.get("trained_model_memory_trace", [])),
+            "trained_model_memory_trace_complete": bool(
+                search.search_state_.get("trained_model_memory_trace_complete", False)),
             "selected_architecture": list(search.model_.hidden_widths),
             "validation_selection_score": float(valid_loss),
             "validation_metrics": {
