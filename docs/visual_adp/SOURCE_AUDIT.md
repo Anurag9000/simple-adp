@@ -269,3 +269,20 @@ Complete provenance-based multi-seed *execution* is
 not a scientific evaluation unless the official full
 training dataset, matched resources, multiple seeds
 and confidence intervals are also available.
+
+
+## Matching optimization steps without changing the original 14 policies
+
+The new opt-in official-image `--step-balanced` flag
+changes only the number of native StageTrainer epochs
+allowed by `max_epochs_vanilla` (two) and
+`max_epochs_adp` (one per candidate), while setting
+`max_epochs=None`, `smoke_test=False` and a
+fixed batch size. The same `SuitePlan` identities,
+native source growth functions, frozen-backbone
+trainability, signed checkpoints and held-out official
+test boundaries remain authoritative.
+The observed `training_budget` must confirm equality
+for each pair; it is not inferred from epoch caps.
+No equivalence in backward FLOPs, model size, GPU peak
+or accuracy is asserted.
