@@ -884,3 +884,39 @@ The new CI outcomes are pending at this checkpoint;
 do not claim the 38 fresh-process smoke is passed
 until the corresponding workflow actually finishes.
 Physical CUDA memory measurement is still unverified.
+
+
+### Measured real-image RSS evidence and isolated worker focused pass
+
+The resource telemetry's initial focused run
+https://github.com/Anurag9000/simple-adp/actions/runs/41604543571
+ended **153 passed, 2 skipped, 1 failing** because a unit
+test used case-sensitive wording to compare an accurate
+limitations string; no native training assertion failed.
+The assertion was corrected on main. The next focused
+run https://github.com/Anurag9000/simple-adp/actions/runs/41605042362
+passed **154 tests, 2 CUDA-only skips**.
+
+The unchanged in-process source matrix on official Fashion
+now verifies actual `fit_process_resources` in 38/38 jobs:
+https://github.com/Anurag9000/simple-adp/actions/runs/41605309264.
+Its artifact `fashion-mnist-stepbalanced-visual-workers`
+(ID `13216666056`) contains the signed
+`official_fashion_vision_matrix_stepbalanced.json`
+plus 38 worker records. Verified sample fields include
+`rss_current_before_bytes`, `rss_current_after_bytes`,
+`rss_current_delta_bytes`, `lifetime_peak_rss_before_bytes`,
+`lifetime_peak_rss_after_bytes`, `device=cpu`,
+`cuda_pytorch_allocator=null`, and
+`exact_fit_window_peak_rss_bytes=null`. All 38 workers
+completed, the real fixed/RR budget audit remained
+consistent, and no full-resource peak was fabricated.
+
+After introducing fresh-process signed worker isolation
+and tampered-identity failure tests, the focused contract
+passed **156 tests, 2 CUDA-only skips**:
+https://github.com/Anurag9000/simple-adp/actions/runs/41605534455.
+The 38-worker *official* process-isolated matrix
+https://github.com/Anurag9000/simple-adp/actions/runs/41605486116
+was still running when this note was entered, and must
+be confirmed separately before citing as completed.
