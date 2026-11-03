@@ -164,6 +164,7 @@ def main(argv: list[str] | None = None) -> int:
                     "validation_metrics": value["validation_metrics"],
                     "test_metrics": value["test_metrics"],
                     "parameter_accounting": counts,
+                    "inference_compute": compute,
                 })
             except Exception as exc:
                 failures += 1
