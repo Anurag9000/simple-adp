@@ -186,8 +186,9 @@ def verify_visual_worker_result_artifacts(
     """Re-read actual signed result.json files and fingerprint their exact bytes.
 
     This proves the *summary agrees with locally supplied original worker
-    result artifacts*. It does not authenticate GitHub or constitute a
-    public-key signature: run_signature is the original runner's hash.
+    result artifacts*, and all workers share one suite plan signature.
+    It does not authenticate GitHub or constitute a public-key
+    signature: run_signature is the original runner's plan hash.
     """
     import hashlib
     import json
@@ -221,8 +222,6 @@ def verify_visual_worker_result_artifacts(
         signature = result.get("run_signature")
         if not isinstance(signature, str) or not re.fullmatch(r"[0-9a-f]{64}", signature):
             raise ValueError("original worker result has an invalid or missing run signature")
-        if signature in signatures:
-            raise ValueError("original worker results contain a duplicated run signature")
         signatures.add(signature)
         for key in (
             "job_id", "status", "dataset_id", "split_sha256", "seed",
@@ -236,13 +235,16 @@ def verify_visual_worker_result_artifacts(
         if result.get("training_budget") != row.get("training_budget"):
             raise ValueError("signed native optimizer work differs from matrix summary")
         fingerprints.append((job, hashlib.sha256(payload_bytes).hexdigest()))
+    if len(signatures) != 1:
+        raise ValueError("original worker result files belong to different signed suite plans")
     digest = hashlib.sha256()
     for job, checksum in sorted(fingerprints):
         digest.update(job.encode("utf-8") + bytes([0]) + checksum.encode("ascii") + bytes([10]))
     return {
         "format": "simple-adp-visual-original-worker-result-artifact-audit-v1",
         "verified_worker_results": len(records),
-        "unique_original_run_signature_formats_verified": True,
+        "shared_suite_plan_run_signature": next(iter(signatures)),
+        "shared_plan_signature_consistency_verified": True,
         "original_worker_result_bundle_sha256": digest.hexdigest(),
         "source_scope": (
             "Matrix row agreement with original signed-worker result.json "
