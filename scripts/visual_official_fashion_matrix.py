@@ -219,6 +219,7 @@ def main(argv: list[str] | None = None) -> int:
                     "selected_architecture": value["selected_architecture"],
                     "candidate_stages_executed": value["history_entries"],
                     "training_budget": value.get("training_budget"),
+                    "trained_model_memory_trace": value.get("trained_model_memory_trace"),
                     "validation_metrics": value["validation_metrics"],
                     "test_metrics": value["test_metrics"],
                     "parameter_accounting": counts,
