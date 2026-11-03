@@ -26,6 +26,7 @@ from .registry import MODEL_REGISTRY, get_model_config
 from .results import SearchResult
 from .tasks import ClassificationTask
 from .training import StageTrainer
+from .visual_accounting import visual_parameter_accounting
 from .visual_inner import ResidualAdapterSpec, VisualResidualAdapter
 from .visual_native_ffn import NativeFFNSpec, VisualNativeFFN, build_visual_composite, restore_visual_composite
 from .visual_mixer import MixerSpec
@@ -154,6 +155,11 @@ class VisualResidualSearch:
             "previous_candidate_score": float("inf"),
             "phase_index": 0, "failure_counts": {},
             "stage_state": None, "rng_state": capture_rng_state(),
+            "training_budget": {
+                "optimizer_steps": 0, "trained_epochs": 0,
+                "trained_stages": 0, "warmup_stages": 0,
+                "complete": True,
+            },
         }
 
     def _persist(self, store: CheckpointStore | None, signature: str, state: dict[str, Any],
@@ -284,6 +290,18 @@ class VisualResidualSearch:
         kind = state["phase"]
         current = _restore(stage.best_snapshot, self.settings.device)
         score = float(stage.best_score)
+        budget = state.setdefault("training_budget", {
+            # Old exact-resume payloads have no prior-stage budget fields.
+            # Never incorrectly call their partially recovered totals complete.
+            "optimizer_steps": 0, "trained_epochs": 0,
+            "trained_stages": 0, "warmup_stages": 0,
+            "complete": False,
+        })
+        budget["optimizer_steps"] += int(stage.batches)
+        budget["trained_epochs"] += int(stage.epochs)
+        budget["trained_stages"] += 1
+        if kind == "depth_warmup":
+            budget["warmup_stages"] += 1
         if kind == "depth_warmup":
             # Dedicated D1 intermediate stages optimize only. They must not
             # compete in architecture selection or reset failure patience.
@@ -326,10 +344,17 @@ class VisualResidualSearch:
                 state["failed"] = 0
             else:
                 state["failed"] = int(state["failed"]) + 1
+        parameter_counts = visual_parameter_accounting(
+            current, current.growth_targets,
+        )
         state["history"].append({
             "stage": kind,
             "architecture": list(current.hidden_widths),
             "score": score, "accepted": bool(accepted),
+            "trained_epochs": int(stage.epochs),
+            "optimizer_steps": int(stage.batches),
+            "candidate_total_parameters": parameter_counts["total_parameters"],
+            "candidate_eligible_mlp_parameters": parameter_counts["eligible_mlp_parameters"],
             "site": ("adapter:" + current._active
                      if isinstance(self.spec, ScheduledMultistageSpec)
                      else self.spec.site_id),
