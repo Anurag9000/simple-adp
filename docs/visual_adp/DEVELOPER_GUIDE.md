@@ -984,3 +984,29 @@ Python/torch for every job. The existing historical
 one-process-per-matrix fast mode is unchanged.
 See CI:
 `.github/workflows/visual-official-isolated-memory.yml`.
+
+
+## Paired descriptive CPU RSS audit for isolated jobs
+
+When `--isolated-workers` completes all signed worker
+jobs, the matrix now adds
+`paired_isolated_process_rss_audit` alongside
+`fixed_vs_growth_budget_audit`. It uses the existing
+source-identity gate to check that each fixed/growth
+pair shares the dataset, official raw split, derived
+seed and growth site. For each independently executed
+*child process* it then reports endpoint RSS before
+and after fit, child lifetime highwater after fit,
+and descriptive growth-minus-fixed differences.
+
+Use `visual_resource_audit.summarize_isolated_visual_resource_pairs`
+to recalculate the report on an externally stored
+matrix. The API **rejects** data not explicitly
+recorded with `worker_process_scope=
+"one-process-per-signed-run"`, mismatched identities,
+unavailable RSS, fake exact fit peaks, or CUDA data
+incorrectly treated as CPU RSS. It does not compute
+confidence intervals, treat process VmHWM as a
+model-specific peak or claim statistical significance.
+V01's unknown native optimizer work remains unknown
+even when its CPU RSS is measured.
