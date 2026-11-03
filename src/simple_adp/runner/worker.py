@@ -170,6 +170,10 @@ def run_spec(path: str | Path) -> dict[str, Any]:
             } if (task_ref.provider == "vision"
                   and settings_value.get("visual_model_tensor_payload_cap_bytes") is not None)
                else {}),
+            **({"track_training_forward_macs": True}
+               if task_ref.provider == "vision"
+               and settings_value.get("visual_training_forward_macs") is True
+               and getattr(adapter, "name", "") != "vision_adp" else {}),
             progress_callback=telemetry_callback(
                 output_dir,
                 job_id=identity.run_id,
@@ -254,6 +258,11 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         "history_entries": result.get("history_entries"),
         **({"training_budget": result["training_budget"]}
            if result.get("training_budget") is not None else {}),
+        **({
+            "training_forward_compute": result["training_forward_compute"],
+            "trained_forward_mac_trace": result["trained_forward_mac_trace"],
+            "trained_forward_mac_trace_complete": result["trained_forward_mac_trace_complete"],
+        } if result.get("training_forward_compute") is not None else {}),
         **({
             "trained_model_memory_trace": result["trained_model_memory_trace"],
             "trained_model_memory_trace_complete": result["trained_model_memory_trace_complete"],
