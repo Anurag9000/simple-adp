@@ -935,3 +935,52 @@ This is *fit-call* resource evidence, **not** a precisely
 sampled CPU/GPU peak-memory profile and not an OOM cap.
 Use short-lived, one-job-per-process runs for the most
 meaningful process-lifetime high-water comparisons.
+
+
+## Fresh-process official visual resource evidence
+
+For a true **per-job process lifetime** RSS high-water comparison,
+enable the original signed worker CLI in a new subprocess for
+each matrix route:
+
+```bash
+python scripts/visual_official_fashion_matrix.py \
+  --dataset fashion_mnist \
+  --isolated-workers --step-balanced --batch-size 16 \
+  --workdir /tmp/visual-process-memory \
+  --train-limit 40 --valid-limit 20 --test-limit 20
+```
+
+This still uses `SuitePlan.build`, original
+`runner.worker.main`/`run_spec`, original signed
+per-job JSON specifications, the official dataset
+provider, and the native ADP controllers. It does not
+replace any optimizer or create a second training
+backend. Every route runs
+`python -m simple_adp.runner.worker --spec ...`
+in a fresh Python process. The parent reads each
+`result_dir/result.json` only after the child exits
+successfully, verifies the result's signed run identity,
+and retains a separate child stdout/stderr log.
+Failed child exit or tampered/mismatched identity
+fails the matrix job explicitly.
+
+The independent output
+`official_fashion_vision_matrix_stepbalanced_isolated.json`
+retains the same fixed/RR budget audit but additionally
+labels `worker_process_scope=one-process-per-signed-run`.
+The per-job `fit_process_resources.pid` is unique for
+fresh-process workers. A process VmHWM then pertains to
+that child worker rather than earlier matrix jobs. It
+still includes interpreter startup, model construction
+and data reading in the **same** child, so it is not
+an exact fit-stage peak or a model-specific allocation.
+The parent may hold official dataset objects; OS
+memory of the parent is **not included** in the
+child worker's RSS.
+
+This opt-in mode is heavier because it initializes
+Python/torch for every job. The existing historical
+one-process-per-matrix fast mode is unchanged.
+See CI:
+`.github/workflows/visual-official-isolated-memory.yml`.
