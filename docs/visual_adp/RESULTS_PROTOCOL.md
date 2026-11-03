@@ -119,3 +119,47 @@ yield unstable calibration estimates: do not interpret a low ECE on
 20 images as scientific calibration evidence. Future multi-seed
 calibration comparisons must provide confidence intervals and matched
 training budgets.
+
+
+## Dense self-attention cost and budget-pair audit (2026-11-03, second pass)
+
+`visual_linear_conv_macs` now returns two **separately labeled** MAC
+accounting streams for the selected full visual image model:
+
+- `observed_linear_conv_macs_per_image`: directly counted
+  `nn.Linear` and `nn.Conv2d` forward calls, including repeated
+  spatial/token use. The PyTorch `nn.MultiheadAttention.out_proj`
+  child is explicitly excluded here to avoid double counting.
+- `analytical_multihead_attention_macs_per_image`: **shape-based
+  dense MAC estimate** for each executed `nn.MultiheadAttention`
+  invocation, including Q/K/V/output projections and the QKᵀ
+  and attention-value dense products. It uses the actual query,
+  key, and value lengths, distinct key/value dimensions, batch
+  dimensions and supported batch-first/sequence-first/unbatched
+  layouts; repeated invocation is counted repeatedly.
+- `partial_dense_attention_inclusive_macs_per_image` is the
+  sum of these two streams. It is **not** a whole-model FLOP
+  count. Attention softmax, masks and sparse implementation
+  savings, normalization, complex FFT, pooling and backward
+  computation remain unmeasured. Different sources/kernels
+  may fuse operations; analytical MHA is not a profiler of
+  actual hardware instructions.
+
+For a batch of one, transformer embedding size D, query length Q,
+key/value length K, key dimension Dk and value dimension Dv,
+the standard dense attention accounting is:
+
+```text
+QKV/out projections: Q*D*D + K*Dk*D + K*Dv*D + Q*D*D
+QK^T plus attention-value: 2*Q*K*D
+```
+
+The official Fashion-MNIST smoke matrix now also records a conservative
+`fixed_vs_growth_budget_audit` with 19 fixed/RR pairs. It rejects
+duplicate/missing method identities, separates split/site mismatches,
+and shows the **observed optimizer-step ratio** only when both native
+budgets are known and complete. The V01 legacy head budget is
+`unknown`; its step count is never silently set to zero. Even
+matching optimizer step counts do not prove matching full training
+FLOPs or scientific validity. Matched compute, full dataset, more
+seeds and confidence intervals remain future requirements.
