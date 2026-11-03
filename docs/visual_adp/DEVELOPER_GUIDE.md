@@ -778,3 +778,32 @@ checkpoint load peaks, GPU caching fragmentation or optimizer
 allocation peaks. Do not use this value as a GPU VRAM/whole-training
 RAM requirement; include additional headroom for all those
 unmeasured costs.
+
+
+## Zero-candidate-allocation proposal preflight
+
+`visual_memory.projected_tabular_mlp_payload_bytes`,
+`visual_memory.prospective_tabular_growth_widths` and
+`visual_memory.forecast_visual_growth_payload_bytes` provide
+pure structural projections. These calculate standard MLP
+parameter and buffer bytes without allocating proposed model
+parameters or constructing another full visual backbone.
+
+The opt-in native `VisualResidualSearch` cap now calls these
+before `grow_width`, `grow_depth`, the D1 warmup
+`rebuild_mlp` or a new fixed-grid model is built.
+`memory_admission_rejections` records
+`before_candidate_construction=true` only if the structural
+formula was sufficient to prove an over-budget proposal.
+Unsupported/non-default dtype or unusual shared memory may
+fall back to the postconstruction check. Source growth
+controllers and their neuron/patience rules remain authoritative;
+the forecast is an additional memory gate, not an architecture
+search policy.
+
+`tests/test_visual_memory.py` compares projected MLP bytes to
+actual rebuilt models (with and without batch norm), covers source
+width/depth geometry operators, all 19 controlled visual
+architecture/site variants, and monkeypatches growth constructors
+to make sure over-cap operations are never called. CI evidence
+must be consulted separately; adding tests alone is not a pass.
