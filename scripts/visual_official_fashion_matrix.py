@@ -20,7 +20,9 @@ from simple_adp.runner.config import RunnerSettings
 from simple_adp.runner.plan import SuitePlan
 from simple_adp.runner.plugins import load_registries
 from simple_adp.runner.worker import run_spec
-from simple_adp.visual_budget_audit import audit_visual_worker_pairs
+from simple_adp.visual_budget_audit import (
+    audit_visual_worker_pairs, audit_visual_multiseed_worker_pairs,
+)
 
 CONTROL_ADAPTERS = (
     "vision_adp", "vision_inner", "vision_v03", "vision_v04", "vision_v05",
@@ -46,7 +48,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--train-limit", type=int, default=40)
     parser.add_argument("--valid-limit", type=int, default=20)
     parser.add_argument("--test-limit", type=int, default=20)
+    parser.add_argument("--model-seeds", type=int, default=1,
+                        help="number of independently derived native runner seeds")
     args = parser.parse_args(argv)
+    if args.model_seeds < 1:
+        parser.error("--model-seeds must be a positive integer")
     required_classes = 100 if args.dataset == "cifar100" else 10
     if min(args.train_limit, args.valid_limit, args.test_limit) < required_classes:
         parser.error(
@@ -84,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
     datasets, models = load_registries()
     settings = RunnerSettings(
         tasks=("vision",), run_hardness_screen=False, repeat_count=1,
-        missing_present_task_repeats=1, model_seeds=(0,),
+        missing_present_task_repeats=1, model_seeds=tuple(range(args.model_seeds)),
         width_to_depth_width=2, width_to_depth_depth=1,
         # Keep the runner's global baseline width grids valid. The selected
         # one-step RR jobs are independently bounded by init width, candidate
@@ -110,13 +116,17 @@ def main(argv: list[str] | None = None) -> int:
             continue
         if job.worker_settings.get("counterpart_of") is not None:
             continue
-        key = (job.model_adapter, job.route.model_id)
+        key = (job.model_adapter, job.route.model_id, job.identity.seed)
         if key in selected:
             raise ValueError(f"duplicate official matrix job: {key}")
         selected[key] = job
 
+    run_seeds = sorted({key[2] for key in selected})
+    if len(run_seeds) != args.model_seeds:
+        raise ValueError("actual derived visual model seeds do not match the requested seed count")
     expected = {
-        (name, method)
+        (name, method, run_seed)
+        for run_seed in run_seeds
         for name in CONTROL_ADAPTERS
         for method in ("MLP-Fixed", "ADP-W-RR")
     }
@@ -128,9 +138,15 @@ def main(argv: list[str] | None = None) -> int:
         "cifar10": "official_cifar10_vision_matrix.json",
         "cifar100": "official_cifar100_vision_matrix.json",
     }[args.dataset]
+    if args.model_seeds > 1:
+        matrix_basename = matrix_basename.replace(
+            ".json", f"_{args.model_seeds}seeds.json",
+        )
     summary_path = root / matrix_basename
     summary: dict[str, object] = {
         "format": (
+            "simple-adp-official-visual-multiseed-controls-v1"
+            if args.model_seeds > 1 else
             "simple-adp-official-fashion-visual-controls-v1"
             if args.dataset == "fashion_mnist"
             else "simple-adp-official-cifar-visual-controls-v1"
@@ -144,110 +160,130 @@ def main(argv: list[str] | None = None) -> int:
         "fixed_vs_growth_methods": ["MLP-Fixed", "ADP-W-RR"],
         "planned_full_vision_jobs": len(plan.runs),
         "selected_worker_jobs": len(selected),
-        "scientific_scope": "small one-seed, one-epoch official-image smoke; not a benchmark",
+        "scientific_scope": (
+            "small multiple-seed, one-epoch-per-candidate official-image smoke; "
+            "not a matched-compute benchmark"
+            if args.model_seeds > 1 else
+            "small one-seed, one-epoch official-image smoke; not a benchmark"
+        ),
+        **({
+            "model_seed_count": args.model_seeds,
+            "derived_run_seeds": run_seeds,
+        } if args.model_seeds > 1 else {}),
         "rows": [],
     }
     _save(summary_path, summary)
     failures = 0
-    for adapter_name in CONTROL_ADAPTERS:
-        for method in ("MLP-Fixed", "ADP-W-RR"):
-            job = selected[(adapter_name, method)]
-            started = time.perf_counter()
-            row: dict[str, object] = {
-                "adapter": adapter_name, "method": method,
-                "job_id": job.identity.run_id,
-                "split_sha256": job.identity.split_sha256,
-                "worker_spec": str(job.command[-1]),
-            }
-            try:
-                value = run_spec(job.command[-1])
-                if value["status"] != "completed":
-                    raise AssertionError("worker did not report completion")
-                if value.get("task_family") != "vision":
-                    raise AssertionError("worker did not use vision task contract")
-                if value["metric_directions"].get("top_label_ece_10") != "min":
-                    raise AssertionError("top-label ECE metric direction missing")
-                if value["metric_directions"].get("multiclass_brier") != "min":
-                    raise AssertionError("multiclass Brier metric direction missing")
-                for part in ("validation_metrics", "test_metrics"):
-                    metrics = value[part]
-                    if not (0 <= metrics.get("top_label_ece_10", -1) <= 1):
-                        raise AssertionError(f"{part}: missing valid top-label ECE")
-                    if not (0 <= metrics.get("multiclass_brier", -1) <= 2):
-                        raise AssertionError(f"{part}: missing valid multiclass Brier")
-                if "parameter_accounting" not in value:
-                    raise AssertionError("composite parameter accounting missing")
-                counts = value["parameter_accounting"]
-                compute = value.get("inference_compute")
-                if not compute or compute.get("observed_linear_conv_macs_per_image", 0) <= 0:
-                    raise AssertionError("observed whole-composite dense/conv inference probe missing")
-                if compute.get("whole_model_flops") is not None:
-                    raise AssertionError("partial operator MAC counts must not be reported as full FLOPs")
-                dense = compute.get("observed_linear_conv_macs_per_image", 0)
-                analytical = compute.get("analytical_multihead_attention_macs_per_image", 0)
-                if compute.get("partial_dense_attention_inclusive_macs_per_image") != dense + analytical:
-                    raise AssertionError("total partial MAC components are inconsistent")
-                if adapter_name == "vision_v03" and analytical <= 0:
-                    raise AssertionError("V03 transformer self-attention MAC estimate was omitted")
-                if counts["total_parameters"] != counts["frozen_parameters"] + counts["trainable_parameters"]:
-                    raise AssertionError("composite parameter counts do not close")
-                memory = value.get("model_memory_accounting")
-                if not memory or memory.get("total_model_tensor_payload_bytes", 0) <= 0:
-                    raise AssertionError("real composite tensor payload accounting missing")
-                if memory["total_model_tensor_payload_bytes"] != (
-                    memory["parameter_payload_bytes"] + memory["buffer_payload_bytes"]
-                ):
-                    raise AssertionError("model tensor payload partition does not close")
-                if memory.get("peak_training_memory_bytes") is not None:
-                    raise AssertionError("logical model bytes must not claim peak training RAM")
-                nominal = memory.get("nominal_dense_adam_or_adamw_model_grad_moments_bytes")
-                if nominal != (
-                    memory["total_model_tensor_payload_bytes"]
-                    + 3 * memory["trainable_parameter_bytes"]
-                ):
-                    raise AssertionError("nominal Adam/AdamW payload does not match model and active trainables")
-                if method == "ADP-W-RR" and value["history_entries"] < 2:
-                    raise AssertionError("no actual structural candidate stage was executed")
-                budget = value.get("training_budget")
-                if adapter_name != "vision_adp":
-                    if not budget or not budget.get("complete") or budget.get("optimizer_steps", 0) < 1:
-                        raise AssertionError("native inner-MLP optimizer/search budget is missing")
-                    if not value.get("trained_model_memory_trace_complete"):
-                        raise AssertionError("native trained memory trace is incomplete")
-                    if len(value.get("trained_model_memory_trace", [])) != budget["trained_stages"]:
-                        raise AssertionError("native memory trace does not cover every stage")
-                row.update({
-                    "status": "completed",
-                    "dataset_id": value["dataset_id"],
-                    "seed": value["seed"],
-                    "architecture_id": value["architecture_id"],
-                    "growth_site": value["growth_site"],
-                    "selected_architecture": value["selected_architecture"],
-                    "candidate_stages_executed": value["history_entries"],
-                    "training_budget": value.get("training_budget"),
-                    "trained_model_memory_trace": value.get("trained_model_memory_trace"),
-                    "validation_metrics": value["validation_metrics"],
-                    "test_metrics": value["test_metrics"],
-                    "parameter_accounting": counts,
-                    "model_memory_accounting": memory,
-                    "inference_compute": compute,
-                })
-            except Exception as exc:
-                failures += 1
-                row.update({"status": "failed", "error": repr(exc)})
-            row["elapsed_seconds"] = round(time.perf_counter() - started, 6)
-            summary["rows"].append(row)
-            _save(summary_path, summary)
-            print(json.dumps({k: row.get(k) for k in ("adapter", "method", "status", "error")}, sort_keys=True), flush=True)
+    for adapter_name, method, run_seed in (
+        (adapter, policy, seed)
+        for seed in run_seeds
+        for adapter in CONTROL_ADAPTERS
+        for policy in ("MLP-Fixed", "ADP-W-RR")
+    ):
+        job = selected[(adapter_name, method, run_seed)]
+        started = time.perf_counter()
+        row: dict[str, object] = {
+            "adapter": adapter_name, "method": method,
+            "seed": run_seed,
+            "job_id": job.identity.run_id,
+            "split_sha256": job.identity.split_sha256,
+            "worker_spec": str(job.command[-1]),
+        }
+        try:
+            value = run_spec(job.command[-1])
+            if value["status"] != "completed":
+                raise AssertionError("worker did not report completion")
+            if value.get("task_family") != "vision":
+                raise AssertionError("worker did not use vision task contract")
+            if value["metric_directions"].get("top_label_ece_10") != "min":
+                raise AssertionError("top-label ECE metric direction missing")
+            if value["metric_directions"].get("multiclass_brier") != "min":
+                raise AssertionError("multiclass Brier metric direction missing")
+            for part in ("validation_metrics", "test_metrics"):
+                metrics = value[part]
+                if not (0 <= metrics.get("top_label_ece_10", -1) <= 1):
+                    raise AssertionError(f"{part}: missing valid top-label ECE")
+                if not (0 <= metrics.get("multiclass_brier", -1) <= 2):
+                    raise AssertionError(f"{part}: missing valid multiclass Brier")
+            if "parameter_accounting" not in value:
+                raise AssertionError("composite parameter accounting missing")
+            counts = value["parameter_accounting"]
+            compute = value.get("inference_compute")
+            if not compute or compute.get("observed_linear_conv_macs_per_image", 0) <= 0:
+                raise AssertionError("observed whole-composite dense/conv inference probe missing")
+            if compute.get("whole_model_flops") is not None:
+                raise AssertionError("partial operator MAC counts must not be reported as full FLOPs")
+            dense = compute.get("observed_linear_conv_macs_per_image", 0)
+            analytical = compute.get("analytical_multihead_attention_macs_per_image", 0)
+            if compute.get("partial_dense_attention_inclusive_macs_per_image") != dense + analytical:
+                raise AssertionError("total partial MAC components are inconsistent")
+            if adapter_name == "vision_v03" and analytical <= 0:
+                raise AssertionError("V03 transformer self-attention MAC estimate was omitted")
+            if counts["total_parameters"] != counts["frozen_parameters"] + counts["trainable_parameters"]:
+                raise AssertionError("composite parameter counts do not close")
+            memory = value.get("model_memory_accounting")
+            if not memory or memory.get("total_model_tensor_payload_bytes", 0) <= 0:
+                raise AssertionError("real composite tensor payload accounting missing")
+            if memory["total_model_tensor_payload_bytes"] != (
+                memory["parameter_payload_bytes"] + memory["buffer_payload_bytes"]
+            ):
+                raise AssertionError("model tensor payload partition does not close")
+            if memory.get("peak_training_memory_bytes") is not None:
+                raise AssertionError("logical model bytes must not claim peak training RAM")
+            nominal = memory.get("nominal_dense_adam_or_adamw_model_grad_moments_bytes")
+            if nominal != (
+                memory["total_model_tensor_payload_bytes"]
+                + 3 * memory["trainable_parameter_bytes"]
+            ):
+                raise AssertionError("nominal Adam/AdamW payload does not match model and active trainables")
+            if method == "ADP-W-RR" and value["history_entries"] < 2:
+                raise AssertionError("no actual structural candidate stage was executed")
+            budget = value.get("training_budget")
+            if adapter_name != "vision_adp":
+                if not budget or not budget.get("complete") or budget.get("optimizer_steps", 0) < 1:
+                    raise AssertionError("native inner-MLP optimizer/search budget is missing")
+                if not value.get("trained_model_memory_trace_complete"):
+                    raise AssertionError("native trained memory trace is incomplete")
+                if len(value.get("trained_model_memory_trace", [])) != budget["trained_stages"]:
+                    raise AssertionError("native memory trace does not cover every stage")
+            row.update({
+                "status": "completed",
+                "dataset_id": value["dataset_id"],
+                "seed": value["seed"],
+                "architecture_id": value["architecture_id"],
+                "growth_site": value["growth_site"],
+                "selected_architecture": value["selected_architecture"],
+                "candidate_stages_executed": value["history_entries"],
+                "training_budget": value.get("training_budget"),
+                "trained_model_memory_trace": value.get("trained_model_memory_trace"),
+                "validation_metrics": value["validation_metrics"],
+                "test_metrics": value["test_metrics"],
+                "parameter_accounting": counts,
+                "model_memory_accounting": memory,
+                "inference_compute": compute,
+            })
+        except Exception as exc:
+            failures += 1
+            row.update({"status": "failed", "error": repr(exc)})
+        row["elapsed_seconds"] = round(time.perf_counter() - started, 6)
+        summary["rows"].append(row)
+        _save(summary_path, summary)
+        print(json.dumps({k: row.get(k) for k in ("adapter", "method", "status", "error")}, sort_keys=True), flush=True)
     summary["completed_jobs"] = len(selected) - failures
     summary["failed_jobs"] = failures
     summary["status"] = "completed" if failures == 0 else "incomplete"
     # A one-epoch-per-candidate smoke is not a compute-matched comparison.
     # In particular, native ADP typically trains more than one candidate;
     # V01's legacy tabular head does not expose the native-stage budget.
-    summary["fixed_vs_growth_budget_audit"] = audit_visual_worker_pairs(
-        summary["rows"], expected_adapters=CONTROL_ADAPTERS,
-    )
+    if args.model_seeds == 1:
+        summary["fixed_vs_growth_budget_audit"] = audit_visual_worker_pairs(
+            summary["rows"], expected_adapters=CONTROL_ADAPTERS,
+        )
+    else:
+        summary["fixed_vs_growth_budget_audit"] = audit_visual_multiseed_worker_pairs(
+            summary["rows"], expected_adapters=CONTROL_ADAPTERS,
+            expected_seeds=run_seeds,
+        )
     _save(summary_path, summary)
     if failures:
         raise RuntimeError(f"{failures} official-image workers failed; consult {summary_path}")
