@@ -424,6 +424,14 @@
       "skipped": 1,
       "failed": 0,
       "note": "pre-multi-seed script revisions; do not extrapolate to latest commits"
+    },
+    "latest_prior_to_stepbalanced": {
+      "run": "https://github.com/Anurag9000/simple-adp/actions/runs/41592646855",
+      "passed": 19332,
+      "skipped": 1,
+      "failed": 0,
+      "status": "success",
+      "note": "does not include latest step-balanced script and associated regression tests"
     }
   },
   "official_fashion_control_matrix": {
@@ -623,7 +631,7 @@
     "first_matrix_dataset": "official torchvision FashionMNIST",
     "first_matrix_seed_count": 2,
     "first_matrix_worker_count": 76,
-    "status": "verified success: 76 of 76 genuine official Fashion-MNIST worker jobs; zero failures",
+    "status": "verified success 76/76 genuine official Fashion signed workers (two seeds), source test tiny/not science",
     "matches_training_flops": false,
     "scientific_performance_conclusion": null,
     "evidence_artifact_id": 13210649696,
@@ -646,9 +654,22 @@
     "v01_native_training_budget": "unknown; original TabularADP unchanged",
     "artifact_suffix": "_stepbalanced.json",
     "real_image_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41593647892",
-    "real_image_status": "in progress; no outcome claimed",
+    "real_image_status": "verified success: 38/38 official Fashion workers passed, zero failures",
     "toy_integration_test": "tests/test_runner_vision_step_balanced.py",
     "toy_ci": "https://github.com/Anurag9000/simple-adp/actions/runs/41593617878",
-    "status": "code and tests committed, newest CI pending"
+    "status": "actual official image worker execution completed; 18/18 native pairs equal observed optimizer steps",
+    "evidence_artifact_id": 13211018409,
+    "actual_native_pairs": 18,
+    "actual_native_same_step_pairs": 18,
+    "actual_native_unequal_step_pairs": 0,
+    "native_steps_fixed": 6,
+    "native_steps_growth": 6,
+    "v01_unknown_pairs": 1,
+    "native_example_partial_inference_macs": {
+      "adapter": "vision_inner",
+      "fixed": 178792,
+      "growth": 185064,
+      "note": "partial inference MACs differ despite matching training optimizer steps"
+    }
   }
 }
