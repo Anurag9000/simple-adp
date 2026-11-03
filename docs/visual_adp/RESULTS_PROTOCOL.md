@@ -515,3 +515,42 @@ not exact training peaks or model-local allocations.
 It retains the 18/18 native equal optimizer-step
 result and the unknown V01 budget, with null
 statistical/conclusion fields.
+
+
+## Within-seed paired held-out visual metric analysis (2026-11-03)
+
+The separate `src/simple_adp/visual_paired_metrics.py` and
+`scripts/visual_paired_metrics_analysis.py` operate **only on
+completed signed worker result summaries**, never on images or
+training loops. Every one of the existing 19 controlled
+architecture/site variants remains a distinct comparison, with
+fixed and ADP paired by the **actual derived runner seed**.
+All seeds must share the same dataset identifier and split
+checksum, and every source worker/job identity must be present,
+completed and unique.
+
+Each validation/test metric is interpreted in its proper direction:
+accuracy, balanced accuracy and macro-F1 higher is better; log-loss,
+multiclass Brier and ten-bin top-label ECE lower is better.
+A positive `improvement_positive_is_better` means ADP is better
+for that particular paired observation. For each adapter, split
+and metric the report preserves fixed/growth values per seed,
+mean, median, sample standard deviation (at least two seeds),
+and counts of wins, ties, losses. **No architecture is chosen
+again based on test metrics** and no improvement is pooled
+across different architecture families.
+
+The analyzer deliberately publishes `confidence_interval=null`,
+`p_value=null`, `full_training_flops_matched=null`,
+`scientific_performance_conclusion=null` and
+`multiple_comparisons_adjusted=false`. Two tiny Fashion-MNIST
+seeds do not justify performance superiority. Even equal optimizer
+steps are not equal full training compute.
+
+A new official 76-job Fashion CI
+https://github.com/Anurag9000/simple-adp/actions/runs/41616572651
+passed and retained both the original matrix and
+`official_fashion_vision_matrix_2seeds_paired_metrics.json`.
+The report contains 19 adapters, 2 derived seeds, and
+76 source worker entries; all scientific conclusion fields
+remain explicitly unavailable.
