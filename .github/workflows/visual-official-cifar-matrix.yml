@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/visual_official_fashion_matrix.py'
+      - 'scripts/visual_paired_metrics_analysis.py'
+      - 'src/simple_adp/visual_paired_metrics.py'
       - 'src/simple_adp/visual_budget_audit.py'
       - '.github/workflows/visual-official-cifar-matrix.yml'
   workflow_dispatch:
@@ -36,6 +38,10 @@ jobs:
             --dataset cifar10 \
             --workdir "${{ runner.temp }}/official-cifar10-matrix" \
             --train-limit 40 --valid-limit 20 --test-limit 20
+      - name: Produce descriptive paired CIFAR-10 accuracy and calibration report
+        run: |
+          python scripts/visual_paired_metrics_analysis.py \
+            --matrix "${{ runner.temp }}/official-cifar10-matrix/official_cifar10_vision_matrix.json"
       - name: Retain official CIFAR-10 worker results and budget audit
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,6 +51,7 @@ jobs:
           retention-days: 30
           path: |
             ${{ runner.temp }}/official-cifar10-matrix/official_cifar10_vision_matrix.json
+            ${{ runner.temp }}/official-cifar10-matrix/official_cifar10_vision_matrix_paired_metrics.json
             ${{ runner.temp }}/official-cifar10-matrix/results/**/result.json
             ${{ runner.temp }}/official-cifar10-matrix/results/**/output.json
             ${{ runner.temp }}/official-cifar10-matrix/results/**/search_history.json
