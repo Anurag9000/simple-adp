@@ -130,7 +130,11 @@ def main(argv: list[str] | None = None) -> int:
     }[args.dataset]
     summary_path = root / matrix_basename
     summary: dict[str, object] = {
-        "format": "simple-adp-official-visual-controls-v2",
+        "format": (
+            "simple-adp-official-fashion-visual-controls-v1"
+            if args.dataset == "fashion_mnist"
+            else "simple-adp-official-cifar-visual-controls-v1"
+        ),
         "dataset": args.dataset,
         "source": f"torchvision.datasets.{dataset_type.__name__} official train/test",
         "dataset_download": "explicit",
