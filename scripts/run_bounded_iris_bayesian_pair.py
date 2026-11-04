@@ -18,6 +18,7 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
 from simple_adp.config import SearchSettings
+from simple_adp.registry import MODEL_REGISTRY
 from simple_adp.runner.backend import seed_everything
 from simple_adp.runner.datasets import PreparedTaskData
 from simple_adp.runner.models import SimpleADPModelAdapter
@@ -114,7 +115,15 @@ def _settings(criterion, seed):
     )
 
 
-def run(output, *, seed=73):
+GROWTH_FAMILY_PROOFS = {
+    "ADP-W-All": "width_only",
+    "ADP-D-Dcur": "depth_only",
+    "ADP-WD-All-Dcur": "width_to_depth",
+    "ADP-DW-Dcur-All": "depth_to_width",
+}
+
+
+def run(output, *, seed=73, model_id="ADP-W-All"):
     root = Path(output).resolve()
     if root.exists() and any(root.iterdir()):
         raise ValueError("bounded proof requires a fresh empty output directory")
@@ -124,8 +133,11 @@ def run(output, *, seed=73):
     split.save(split_path)
     if SplitSpec.load(split_path, repeat=0, fold=0, sample=0) != split:
         raise RuntimeError("split reread differs from original")
+    if model_id not in GROWTH_FAMILY_PROOFS:
+        raise ValueError(f"unsupported bounded Iris mechanism route: {model_id!r}")
     route = ModelRoute(
-        "ADP-W-All", suite_group="width_only",
+        model_id, suite_group=GROWTH_FAMILY_PROOFS[model_id],
+        generic_profile="corrected" if MODEL_REGISTRY[model_id].generic else None,
         init_width=3, init_depth=1,
     )
     common = _settings("loss", seed).as_dict()
@@ -153,6 +165,11 @@ def run(output, *, seed=73):
             raise RuntimeError(f"{name} has no finite held-out classification accuracy")
         result["model_artifact_sha256"] = _sha256_file(artifact)
         result["model_artifact_size_bytes"] = Path(artifact).stat().st_size
+        checkpoint = out / "checkpoint.pt"
+        if not checkpoint.is_file():
+            raise RuntimeError(f"{name} has no persisted search checkpoint")
+        result["checkpoint_sha256"] = _sha256_file(checkpoint)
+        result["checkpoint_size_bytes"] = checkpoint.stat().st_size
         result["growth_trigger"] = criterion
         arms[name] = result
     compared = {
@@ -174,6 +191,7 @@ def run(output, *, seed=73):
             "test": len(split.test_indices),
         },
         "route": route.as_dict(),
+        "growth_family": GROWTH_FAMILY_PROOFS[model_id],
         "seed": int(seed),
         "shared_settings_digest": hashlib.sha256(_canonical({
             key: value for key, value in common.items()
@@ -186,7 +204,7 @@ def run(output, *, seed=73):
             - float(arms["original"]["test_metrics"]["accuracy"])
         ),
         "science_gaps": [
-            "single seed, single real dataset and one width-growth adapter",
+            "one real dataset/one split; further growth controllers and task families not necessarily covered",
             "uncertainty calibration, multi-seed confidence intervals and compute matched controls absent",
             "separate shadow Monte Carlo gradient-pass costs not measured in adapter result",
             "full visual and nonclassification provider matrix not run",
@@ -206,8 +224,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=73)
+    parser.add_argument("--model-id", choices=tuple(GROWTH_FAMILY_PROOFS),
+                        default="ADP-W-All")
     arguments = parser.parse_args()
-    path = run(arguments.output, seed=arguments.seed)
+    path = run(arguments.output, seed=arguments.seed, model_id=arguments.model_id)
     print(f"real-data paired receipt: {path}")
     print(path.read_text(encoding="utf-8"))
     return 0

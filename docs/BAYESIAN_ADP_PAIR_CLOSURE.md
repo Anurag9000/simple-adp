@@ -299,3 +299,21 @@ original) +0.424389, exploratory 95% model-seed bootstrap interval
 dataset/split and four-epoch training**; resulting R² is severely
 negative. See [BAYESIAN_ADP_DIABETES_MULTI_SEED_REPORT.md](BAYESIAN_ADP_DIABETES_MULTI_SEED_REPORT.md).
 Do not label it multi-dataset scientific closure.
+
+
+## Bounded real Iris four-architecture mechanism proof
+
+`scripts/run_bounded_iris_bayesian_pair.py` now also accepts a
+`--model-id` from four representative native routes, using the
+same genuine Iris dataset, one split and original/variance settings.
+The `bounded-iris-growth-families.yml` workflow runs
+width-only, depth-only, width-then-depth and depth-then-width pairs
+independently and exports original and variance checkpoints.
+
+A downstream validator `scripts/audit_bounded_iris_growth_families.py`
+requires exactly four distinct supported native methods and verifies
+the same source/split/seed, criterion-only difference and per-arm model
+bundle SHA-256 before certifying four bounded family examples. Its
+status remains NOT_EXECUTED until full job and receipt evidence exists.
+No result here represents all 13 growing model configurations, real
+visual architecture pairs, multi-seed significance or full science.

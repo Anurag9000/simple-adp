@@ -1,0 +1,81 @@
+name: Bounded real Iris native growth-family original versus Bayesian pairs
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/**'
+      - 'scripts/run_bounded_iris_bayesian_pair.py'
+      - 'scripts/audit_bounded_iris_growth_families.py'
+      - '.github/workflows/bounded-iris-growth-families.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  paired-growth-family:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        model_id:
+          - ADP-W-All
+          - ADP-D-Dcur
+          - ADP-WD-All-Dcur
+          - ADP-DW-Dcur-All
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU Torch and real sklearn Iris dataset package
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.6.0
+          python -m pip install -e '.[dev]' --no-deps
+          python -m pip install numpy pandas psutil 'scikit-learn>=1.5'
+      - name: Execute actual paired architecture-growth family
+        run: |
+          python scripts/run_bounded_iris_bayesian_pair.py \
+            --seed 73 --model-id ${{ matrix.model_id }} \
+            --output benchmark-results/iris-family-${{ matrix.model_id }}
+      - name: Preserve all model artifacts and receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iris-growth-family-${{ matrix.model_id }}-${{ github.sha }}
+          path: benchmark-results/iris-family-${{ matrix.model_id }}/
+          retention-days: 30
+          if-no-files-found: warn
+
+  verify-family-matrix:
+    needs: paired-growth-family
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install numeric validators
+        run: python -m pip install 'numpy>=1.26'
+      - name: Download four original/variance artifact pairs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: iris-growth-family-*-${{ github.sha }}
+          path: benchmark-results/iris-family-artifacts
+      - name: Verify train/test source identity and model hashes for four growth policies
+        run: |
+          python -m scripts.audit_bounded_iris_growth_families \
+            benchmark-results/iris-family-artifacts/*/pair_receipt.json \
+            --output benchmark-results/iris-four-family-audit.json
+      - name: Export verified native growth-family audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: iris-four-growth-families-audit-${{ github.sha }}
+          path: benchmark-results/iris-four-family-audit.json
+          retention-days: 30
+          if-no-files-found: error
