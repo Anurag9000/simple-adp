@@ -49,6 +49,10 @@ def test_real_plan_generates_two_true_bayesian_pairs_with_equal_sources(tmp_path
         include_depth_only=False, run_hardness_screen=False,
         width_only_depths=(1,), width_only_width=3,
         width_to_depth_depth=1, width_to_depth_width=3,
+        width_to_depth_widths=(3,), depth_only_widths=(3,),
+        vanilla_depths=(1,), vanilla_widths=(3,),
+        screen_depths=(1,), screen_widths=(3,),
+        deeper_screen_widths=(3,),
         max_width=6, max_depth=2, max_neurons=30,
         post_launch_sample_delay_seconds=0,
     )

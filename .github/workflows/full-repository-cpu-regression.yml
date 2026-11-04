@@ -22,10 +22,6 @@ jobs:
       SIMPLE_ADP_ENABLE_V04_SOURCE: '0'
       SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
       TRAINING_CONTROL_CPU_ONLY: '1'
-      # GitHub /tmp is often a small tmpfs; exact ViT checkpoints need disk-backed space.
-      TMPDIR: ${{ runner.temp }}
-      TMP: ${{ runner.temp }}
-      TEMP: ${{ runner.temp }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -42,6 +38,10 @@ jobs:
       - name: Install all project testing extras
         run: python -m pip install -e '.[dev,vision,benchmark,physionet,odds]'
       - name: Run every repository pytest test, without filtering source modules
+        env:
+          TMPDIR: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+          TEMP: ${{ runner.temp }}
         run: |
           df -h "$RUNNER_TEMP" /tmp
           python -m pytest -q --basetemp="$RUNNER_TEMP/simple-adp-full-pytest" tests
