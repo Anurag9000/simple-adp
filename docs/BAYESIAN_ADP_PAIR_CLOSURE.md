@@ -133,3 +133,17 @@ silently replace another split.
 only, and should not be presented as cryptographically bound to its exact
 partition boundaries. This is a backward-compatible integrity improvement,
 not evidence of real dataset campaign execution.
+
+
+## Shared native/visual adapter capability registry (2026-11-04)
+
+`src/simple_adp/runner/adapter_capabilities.py` is the single source of
+builtin modality and shadow-BGD pairing capability for the suite planner
+and static pair auditor. The registry covers one native adapter and 21
+explicit opt-in vision adapters; V03/V04 published-source variants retain
+their external weight/checksum gates. External third-party plugins are
+not automatically classified as eligible. A capability entry asserts a
+registered code route, **not** verified source data, training execution,
+real architecture mutation in every concrete job, or scientific completion.
+Tests assert shared object identity and preserve the distinct V06a/V06b,
+V07 token/channel/both, V08 insertion, and V09 bank routes.

@@ -8,6 +8,7 @@ on:
       - 'tests/test_shadow_variance_resume_integrity.py'
       - 'tests/test_run_spec_immutable_integrity.py'
       - 'tests/test_bayesian_pair_audit.py'
+      - 'tests/test_adapter_growth_capabilities.py'
       - 'tests/test_runner_split_archive_integrity.py'
       - 'tests/test_runner_openml_provider_plan.py'
       - 'tests/test_runner_models.py'
@@ -44,4 +45,5 @@ jobs:
             tests/test_shadow_variance_resume_integrity.py \
             tests/test_run_spec_immutable_integrity.py \
             tests/test_bayesian_pair_audit.py \
+            tests/test_adapter_growth_capabilities.py \
             tests/test_runner_split_archive_integrity.py

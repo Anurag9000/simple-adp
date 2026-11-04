@@ -19,14 +19,7 @@ ALLOWED_SHADOW_SETTINGS = frozenset({
 })
 # The built-in plan.py pairing capability set at the audited source commit.
 # Maintain this in lockstep until plan.py adopts a shared capability registry.
-KNOWN_GROWTH_ADAPTERS = frozenset({
-    "simple_adp", "vision_adp", "vision_inner", "vision_v03", "vision_v04",
-    "vision_v05", "vision_v06a", "vision_v06b", "vision_v10", "vision_v11",
-    "vision_v07_token", "vision_v07_channel", "vision_v07_both",
-    "vision_v08_early", "vision_v08_middle", "vision_v08_late",
-    "vision_v08_schedule", "vision_v09_bank0", "vision_v09_bank1",
-    "vision_v09_bank2", "vision_v04_source", "vision_v03_source",
-})
+from .adapter_capabilities import SHADOW_VARIANCE_ADAPTERS as KNOWN_GROWTH_ADAPTERS
 
 
 def _canonical(value: Any) -> str:
