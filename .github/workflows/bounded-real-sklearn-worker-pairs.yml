@@ -8,6 +8,7 @@ on:
       - 'src/simple_adp/runner/plan.py'
       - 'src/simple_adp/runner/worker.py'
       - 'scripts/run_bounded_sklearn_real_worker_pairs.py'
+      - 'scripts/audit_bounded_worker_shadow_evidence.py'
       - 'tests/test_runner_sklearn_real_provider.py'
       - '.github/workflows/bounded-real-sklearn-worker-pairs.yml'
   workflow_dispatch:
@@ -40,6 +41,11 @@ jobs:
         run: |
           python scripts/run_bounded_sklearn_real_worker_pairs.py \
             --output benchmark-results/real-sklearn-worker-pairs
+      - name: Verify best-epoch Bayesian posterior growth evidence from actual checkpoints
+        run: |
+          python scripts/audit_bounded_worker_shadow_evidence.py \
+            --root benchmark-results/real-sklearn-worker-pairs \
+            --output benchmark-results/real-sklearn-worker-pairs/best_stage_posterior_audit.json
       - name: Upload source manifest, worker specs, receipts and both checkpoints
         if: always()
         uses: actions/upload-artifact@v4

@@ -464,3 +464,29 @@ The compared encoders are **tiny frozen random architectures**, not actual
 published pretrained checkpoints, and neither all 21 vision adapters nor
 all 13 controllers are covered by this small proof. No matched-compute
 or general superiority inference is warranted.
+
+
+## Best-stage posterior gate evidence, actual real worker checkpoints
+
+The real worker checkpoint artifact at `444856cf535009b66d75d0e132e0614b2f0e19ed`
+contains inspectable, checkpointed posterior evidence. Direct read of its
+`torch.load(..., weights_only=True)` stage payloads found:
+
+| Real task | BGD observations (best stage) | MC samples per observation | Final contraction | Stagnation streak | Required streak | Gate met? |
+|---|---:|---:|---:|---:|---:|---|
+| Iris classification | 24 | 2 | +0.0152425 | 0 | 3 | **No** |
+| Diabetes regression | 68 | 2 | −0.0264586 | 1 | 3 | **No** |
+
+Both used recorded tolerance `0.0001` and initial sigma standard deviation
+`0.5`. The best-stage signed search histories have only the initial
+architecture, so no additional Bayesian structural candidate was evaluated
+in either bounded worker job. This explains the absence of growth **at those
+recorded best-stage decisions**; it is not a complete per-minibatch trace.
+
+`scripts/audit_bounded_worker_shadow_evidence.py` verifies original and
+Bayesian checkpoint SHA-256, requires original arms to be free of shadow
+posterior state, validates positive finite sigma coordinates and observer
+configuration, then produces `best_stage_posterior_audit.json` during
+future real-worker CI. Its MC-forward counts are declared **lower bounds**,
+not full training FLOPs, runtime or energy. Posterior calibration and
+a complete decision time series are still outstanding.
