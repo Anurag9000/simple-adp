@@ -1,0 +1,92 @@
+{
+  "schema": "simple-adp-bayesian-pair-evidence-ledger-v1",
+  "ledger_date": "2026-11-04",
+  "scope": "Anurag9000/simple-adp",
+  "commit_of_latest_science_implementation": "50937db2f2874efc67b0eae0d96d7a03786cec2b",
+  "statuses": {
+    "source_pair_planning": "SOURCE_IMPLEMENTED_UNVERIFIED",
+    "native_posterior_numerical": "CPU_TEST_PASSED",
+    "full_repository_cpu": "CPU_TEST_PASSED_AT_EARLIER_SHA",
+    "bounded_real_pairs": "BOUNDED_REAL_DATA_PASSED",
+    "full_suite_science": "NOT_EXECUTED",
+    "multiseed_cross_dataset_science": "NOT_EXECUTED",
+    "gpu_parity": "NOT_EXECUTED"
+  },
+  "successful_cpu_full_test": {
+    "source_commit": "ef3396a814c11d185ae783753560ada481e21fe8",
+    "github_run_id": 41837779832,
+    "passed": 19504,
+    "skipped_cuda_only": 2,
+    "failed": 0
+  },
+  "latest_focused_bayesian_test": {
+    "source_commit": "50937db2f2874efc67b0eae0d96d7a03786cec2b",
+    "github_run_id": 41840790181,
+    "status": "success"
+  },
+  "bounded_executed": {
+    "unique_dataset_seed_pair_count": 10,
+    "original_arms": 10,
+    "variance_arms": 10,
+    "independent_real_dataset_count": 2,
+    "dataset_split_protocols": 2,
+    "distinct_architecture_growth_methods_in_real_pairs": 1,
+    "coordinator_worker_paired_real_jobs_certified": 0,
+    "classifcation": {
+      "dataset": "sklearn Iris",
+      "model_seeds": [
+        73,
+        74,
+        75,
+        76,
+        77
+      ],
+      "github_run_id": 41839475995,
+      "source_commit": "05e1eae49f0282f043b08f71a0560bf07b121b27",
+      "status": "BOUNDED_REAL_DATA_MULTI_SEED",
+      "metric": "accuracy",
+      "mean_difference_bayesian_minus_original": -0.11333333333333333,
+      "paired_bootstrap_95_conditional_on_one_split": [
+        -0.24,
+        -0.006666666666666666
+      ],
+      "report": "docs/BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md"
+    },
+    "regression": {
+      "dataset": "sklearn Diabetes",
+      "model_seeds": [
+        73,
+        74,
+        75,
+        76,
+        77
+      ],
+      "github_run_id": 41840790207,
+      "source_commit": "50937db2f2874efc67b0eae0d96d7a03786cec2b",
+      "status": "BOUNDED_REAL_DATA_MULTI_SEED",
+      "metric": "rmse",
+      "mean_difference_bayesian_minus_original": 0.4243890920802585,
+      "paired_bootstrap_95_conditional_on_one_split": [
+        0.3522319088722384,
+        0.4801307954401864
+      ],
+      "report": "docs/BAYESIAN_ADP_DIABETES_MULTI_SEED_REPORT.md"
+    }
+  },
+  "not_equivalent_to_full_mission": {
+    "complete_unsliced_all_provider_original_jobs": null,
+    "complete_unsliced_all_provider_bayesian_pairs": null,
+    "full_scale_multi_seed_jobs": 0,
+    "verified_gpu_real_pairs": 0,
+    "complete_controller_adapter_growth_family_real_pairs": false,
+    "other_training_and_budgets": "unmeasured shadow MC resource cost, GPU VRAM, energy, matched compute/capacity",
+    "data_access": "actual OpenML, official visual, forecasting and recommendation sources not wholly materialized",
+    "statistical_scope": "fixed-split five-seed bootstrap per dataset only"
+  },
+  "notes": [
+    "Latest HEAD may include newer documentation commits; test outcomes are always tied to source SHA.",
+    "Do not count the original single-seed pilot Iris/Diabetes runs again; their seeds were rerun in the five-seed cohorts.",
+    "Original vs variance arms differ by intended trigger, but all future model trajectories may legitimately diverge after a growth decision.",
+    "Two real datasets and one width growth strategy cannot support exhaustive real-source scientific conclusions."
+  ]
+}

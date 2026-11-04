@@ -285,3 +285,17 @@ cross-dataset science. Source availability, incomplete optimization at
 four epochs, and unmeasured shadow MC compute remain explicit limits.
 The five-seed cohort is NOT_EXECUTED until new GitHub Actions evidence
 is inspected and the artifacts verified.
+
+
+## CI-verified five-seed real Diabetes regression (2026-11-04)
+
+Successful workflow `41840790207` at source
+`50937db2f2874efc67b0eae0d96d7a03786cec2b`: five native
+original/variance regression pairs (seeds 73–77), independently
+downloaded model/checkpoint receipts, and a successful hash-validated
+seed-bootstrap analyzer. Mean paired RMSE difference (Bayesian minus
+original) +0.424389, exploratory 95% model-seed bootstrap interval
+[+0.352232, +0.480131]. This is **conditional on one fixed Diabetes
+dataset/split and four-epoch training**; resulting R² is severely
+negative. See [BAYESIAN_ADP_DIABETES_MULTI_SEED_REPORT.md](BAYESIAN_ADP_DIABETES_MULTI_SEED_REPORT.md).
+Do not label it multi-dataset scientific closure.
