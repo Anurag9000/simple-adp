@@ -11,6 +11,8 @@ on:
       - 'tests/test_adapter_growth_capabilities.py'
       - 'tests/test_bounded_iris_paired_analysis.py'
       - 'tests/test_bounded_iris_growth_family_pairs.py'
+      - 'tests/test_bounded_iris_all_native_pairs.py'
+      - 'scripts/audit_bounded_iris_all_native.py'
       - 'scripts/audit_bounded_iris_growth_families.py'
       - 'tests/test_bounded_diabetes_paired_analysis.py'
       - 'scripts/analyze_bounded_diabetes_pair_results.py'
@@ -54,5 +56,6 @@ jobs:
             tests/test_adapter_growth_capabilities.py \
             tests/test_bounded_iris_paired_analysis.py \
             tests/test_bounded_iris_growth_family_pairs.py \
+            tests/test_bounded_iris_all_native_pairs.py \
             tests/test_bounded_diabetes_paired_analysis.py \
             tests/test_runner_split_archive_integrity.py
