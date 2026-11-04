@@ -378,3 +378,16 @@ provider and executes the real workers, retaining run specs, manifest,
 worker logs, checkpoint and inference bundles. This is **not** synthetic
 plugin data and does not claim full GPU, visual or full-suite closure.
 It is `NOT_EXECUTED` until the source-pinned workflow actually succeeds.
+
+
+## Independently observed real Iris 13-method complete native taxonomy proof
+
+The all-native CPU workflow at source `10a69c2615427d4fcd6ffe9566deee955944cee3`
+completed **13/13 original and 13/13 variance child executions**, with a
+successful downstream model/checkpoint-hash audit and source/split/seed parity.
+The actual method-level final architectures and accuracy metrics are recorded
+in [BAYESIAN_ADP_13_NATIVE_REAL_DATA_RECEIPT.md](BAYESIAN_ADP_13_NATIVE_REAL_DATA_RECEIPT.md).
+`MLP-Fixed` is excluded as a fixed-network control. This closes bounded
+**method execution coverage only**, not independent data/seed breadth,
+accepted structural mutation for every family, runtime compute, visual
+adaptation, official provider datasets or entire scientific campaign.
