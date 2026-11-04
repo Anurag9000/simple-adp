@@ -201,3 +201,16 @@ committing the workflow is **not** evidence that its execution succeeded.
 Until a successful run and verified log/artifact is observed, its status is
 `NOT_EXECUTED`. Even once passed, it remains one dataset/one seed, not the
 full native/visual/provider multi-seed study.
+
+
+## Executed bounded real-data result (GitHub Actions, 2026-11-04)
+
+The Iris CPU pair `41838348200` **completed successfully** at source
+`2452f9e951d9d40a3bd1f245b1a142dc683e4f39`.
+Original held-out accuracy was 0.6667 with final width 6; shadow-BGD
+accuracy was 0.3333 with final width 3, for the same 90/30/30 split and
+seed 73. The exact receipt, model/checkpoint SHA-256 hashes and limits
+are recorded in [BAYESIAN_ADP_IRIS_REAL_DATA_RECEIPT.md](BAYESIAN_ADP_IRIS_REAL_DATA_RECEIPT.md).
+This advances **one bounded real supervised pair** to
+`BOUNDED_REAL_DATA_PASSED`; it does not certify the full planned matrix
+or statistical superiority.
