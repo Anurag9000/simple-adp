@@ -317,3 +317,24 @@ bundle SHA-256 before certifying four bounded family examples. Its
 status remains NOT_EXECUTED until full job and receipt evidence exists.
 No result here represents all 13 growing model configurations, real
 visual architecture pairs, multi-seed significance or full science.
+
+
+## Four representative native growth-family real-source receipts (2026-11-04)
+
+The actual paired Iris matrix in GitHub Actions run `41841932711`
+successfully trained loss/variance arms under `ADP-W-All`,
+`ADP-D-Dcur`, `ADP-WD-All-Dcur`, and `ADP-DW-Dcur-All`,
+with all eight checkpoints and inference bundles independently validated.
+Source `01323511dea54075ed06f46f36d3c076c21c7961`.
+
+The depth-only and depth→width **original** controllers proposed new
+depth and rejected it; no accepted depth expansion, and no variance-arm
+expansion, was proved by these short jobs. Thus this is **four executed
+policy families**, not four proved successful growth mutations.
+Precise model histories and hashes:
+[BAYESIAN_ADP_IRIS_FOUR_GROWTH_FAMILIES_REPORT.md](BAYESIAN_ADP_IRIS_FOUR_GROWTH_FAMILIES_REPORT.md).
+
+There are now 13 distinct (dataset, seed, native method) bounded
+loss/variance configurations across the verified Iris and Diabetes
+cohorts, but only **two datasets**, and only direct native adapter
+training, not a completed coordinated-worker/all-provider campaign.

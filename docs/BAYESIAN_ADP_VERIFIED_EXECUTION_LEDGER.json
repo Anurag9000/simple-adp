@@ -30,7 +30,7 @@
     "variance_arms": 10,
     "independent_real_dataset_count": 2,
     "dataset_split_protocols": 2,
-    "distinct_architecture_growth_methods_in_real_pairs": 1,
+    "distinct_architecture_growth_methods_in_real_pairs": 4,
     "coordinator_worker_paired_real_jobs_certified": 0,
     "regression": {
       "dataset": "sklearn Diabetes",
@@ -71,6 +71,44 @@
         -0.006666666666666666
       ],
       "report": "docs/BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md"
+    },
+    "unique_dataset_seed_model_pair_count": 13,
+    "original_arms_at_distinct_dataset_seed_model_level": 13,
+    "variance_arms_at_distinct_dataset_seed_model_level": 13,
+    "four_family_iris": {
+      "source_commit": "01323511dea54075ed06f46f36d3c076c21c7961",
+      "github_run_id": 41841932711,
+      "seed": 73,
+      "original_vs_variance_pairs": 4,
+      "unique_growth_families": 4,
+      "growth_methods": [
+        "ADP-W-All",
+        "ADP-D-Dcur",
+        "ADP-WD-All-Dcur",
+        "ADP-DW-Dcur-All"
+      ],
+      "classification_iris_source_overlap_with_existing_seed73_width_pair": true,
+      "verified_family_audit_artifact_id": 13330051450,
+      "verified_family_audit_sha256": "21f791b8558a69da86fb5818f73e574d6563aadf231494e2d254b759c8cb4be5",
+      "status": "BOUNDED_REAL_DATA_FAMILY_PASSED",
+      "accepted_structural_growth_in_original": {
+        "ADP-W-All": true,
+        "ADP-WD-All-Dcur": true,
+        "ADP-D-Dcur": false,
+        "ADP-DW-Dcur-All": false
+      },
+      "accepted_structural_growth_in_variance": {
+        "ADP-W-All": false,
+        "ADP-WD-All-Dcur": false,
+        "ADP-D-Dcur": false,
+        "ADP-DW-Dcur-All": false
+      },
+      "actual_depth_proposal_rejection_in_original": [
+        "ADP-D-Dcur",
+        "ADP-DW-Dcur-All"
+      ],
+      "route_execution_does_not_imply_accepted_mutation": true,
+      "report": "docs/BAYESIAN_ADP_IRIS_FOUR_GROWTH_FAMILIES_REPORT.md"
     }
   },
   "not_equivalent_to_full_mission": {
@@ -87,6 +125,8 @@
     "Latest HEAD may include newer documentation commits; test outcomes are always tied to source SHA.",
     "Do not count the original single-seed pilot Iris/Diabetes runs again; their seeds were rerun in the five-seed cohorts.",
     "Original vs variance arms differ by intended trigger, but all future model trajectories may legitimately diverge after a growth decision.",
-    "Two real datasets and one width growth strategy cannot support exhaustive real-source scientific conclusions."
+    "Two real datasets and one width growth strategy cannot support exhaustive real-source scientific conclusions.",
+    "Distinct dataset/seed/method pair count is 13: five Iris width, five Diabetes width, plus three additional Iris growth-method pairs at seed 73. Four-family width/seed73 repeats the existing Iris width/seed73 configuration and is not independently counted.",
+    "Four-family checkpoints showed original depth proposals rejected, and no accepted Bayesian variance growth; do not describe route execution as accepted depth expansion."
   ]
 }
