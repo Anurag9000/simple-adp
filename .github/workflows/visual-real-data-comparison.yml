@@ -4,13 +4,16 @@ on:
   push:
     paths:
       - 'scripts/vision_official_comparison.py'
+      - 'src/simple_adp/vision_comparison.py'
+      - 'src/simple_adp/shadow_bgd_variance.py'
+      - 'src/simple_adp/visual.py'
       - '.github/workflows/visual-real-data-comparison.yml'
   workflow_dispatch:
 
 jobs:
   pretrained-resnet18-paired:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     env:
       OMP_NUM_THREADS: '2'
       MKL_NUM_THREADS: '2'
