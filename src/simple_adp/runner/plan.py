@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import sys
+import tempfile
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterable
@@ -72,30 +73,56 @@ class SplitSpec:
     split_sha256: str
 
     def save(self, path: Path) -> None:
-        actual_hash = _sha_indices(self.train_indices, self.validation_indices, self.test_indices)
-        if actual_hash != self.split_sha256:
-            raise ValueError(
-                "split signature does not match its train/validation/test indices"
-            )
+        path = Path(path)
+        partitions = (self.train_indices, self.validation_indices, self.test_indices)
+        if _sha_indices(*partitions) != self.split_sha256:
+            raise ValueError("split signature does not match its train/validation/test indices")
+        if len(set().union(*map(set, partitions))) != sum(map(len, partitions)):
+            raise ValueError("split partitions must be disjoint and contain unique row indices")
         path.parent.mkdir(parents=True, exist_ok=True)
-        if path.exists():
-            existing = np.load(path, allow_pickle=False)
-            current_hash = str(existing["split_sha256"].item())
-            if current_hash != self.split_sha256:
-                raise ValueError(f"existing split archive has a different signature: {path}")
+
+        def verify_existing() -> bool:
+            if path.is_symlink():
+                raise ValueError(f"split archive must not be a symlink: {path}")
+            if not path.exists():
+                return False
+            if not path.is_file():
+                raise ValueError(f"split archive is not a regular file: {path}")
+            try:
+                existing = type(self).load(path, repeat=self.repeat, fold=self.fold, sample=self.sample)
+            except (OSError, ValueError, KeyError, EOFError) as exc:
+                raise ValueError(f"existing split archive failed integrity validation: {path}") from exc
+            if existing != self:
+                raise ValueError(f"existing split archive has different partition indices or signature: {path}")
+            return True
+
+        if verify_existing():
             return
-        temporary = path.with_suffix(path.suffix + ".tmp")
-        with temporary.open("wb") as stream:
-            np.savez_compressed(
-                stream,
-                train=np.asarray(self.train_indices, dtype=np.int64),
-                validation=np.asarray(self.validation_indices, dtype=np.int64),
-                test=np.asarray(self.test_indices, dtype=np.int64),
-                split_sha256=np.asarray(self.split_sha256),
-            )
-            stream.flush()
-            os.fsync(stream.fileno())
-        temporary.replace(path)
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="wb", dir=path.parent, prefix=".split-", suffix=".tmp", delete=False,
+            ) as stream:
+                temporary = Path(stream.name)
+                np.savez_compressed(
+                    stream,
+                    train=np.asarray(self.train_indices, dtype=np.int64),
+                    validation=np.asarray(self.validation_indices, dtype=np.int64),
+                    test=np.asarray(self.test_indices, dtype=np.int64),
+                    split_sha256=np.asarray(self.split_sha256),
+                    split_partition_sha256_v2=np.asarray(_sha_indices_v2(*partitions)),
+                )
+                stream.flush()
+                os.fsync(stream.fileno())
+            try:
+                os.link(temporary, path)
+            except FileExistsError:
+                pass
+            if not verify_existing():
+                raise RuntimeError(f"split archive publication did not succeed: {path}")
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
 
     @classmethod
     def load(cls, path: Path, *, repeat: int, fold: int, sample: int) -> "SplitSpec":
@@ -104,10 +131,16 @@ class SplitSpec:
             validation = tuple(int(value) for value in archive["validation"])
             test = tuple(int(value) for value in archive["test"])
             signature = str(archive["split_sha256"].item())
-        actual = _sha_indices(train, validation, test)
-        if actual != signature:
+            partition_digest = (
+                str(archive["split_partition_sha256_v2"].item())
+                if "split_partition_sha256_v2" in archive.files else None
+            )
+        partitions = (train, validation, test)
+        if _sha_indices(*partitions) != signature:
             raise ValueError(f"split archive checksum mismatch: {path}")
-        if set(train) & set(validation) or set(train) & set(test) or set(validation) & set(test):
+        if partition_digest is not None and partition_digest != _sha_indices_v2(*partitions):
+            raise ValueError(f"split archive partition-boundary checksum mismatch: {path}")
+        if len(set().union(*map(set, partitions))) != sum(map(len, partitions)):
             raise ValueError(f"split archive contains overlapping partitions: {path}")
         return cls(repeat, fold, sample, train, validation, test, signature)
 
@@ -116,6 +149,17 @@ def _sha_indices(*arrays: Iterable[int]) -> str:
     digest = hashlib.sha256()
     for array in arrays:
         digest.update(np.ascontiguousarray(tuple(array), dtype=np.int64).tobytes())
+    return digest.hexdigest()
+
+
+def _sha_indices_v2(*arrays: Iterable[int]) -> str:
+    """Boundary-aware verification only; legacy scientific IDs remain stable."""
+    digest = hashlib.sha256(b"simple-adp/split-partitions/v2\x00")
+    digest.update(len(arrays).to_bytes(4, "little"))
+    for array in arrays:
+        values = np.ascontiguousarray(tuple(array), dtype="<i8")
+        digest.update(int(len(values)).to_bytes(8, "little"))
+        digest.update(values.tobytes())
     return digest.hexdigest()
 
 

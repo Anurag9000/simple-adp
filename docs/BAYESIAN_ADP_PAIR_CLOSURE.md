@@ -111,3 +111,25 @@ execution and scientific evidence gates.
 A current source commit, executed job receipts, validated dataset count,
 completed multi-seed cohort size and final main-branch CI certification
 **remain unverified** and must never be inferred from this document.
+
+
+## 2026-11-04 — Legacy split-hash partition ambiguity and new archive verification
+
+The historical `split_sha256` intentionally remains byte-compatible for
+existing job IDs, manifests and cached source experiments. Its original
+construction concatenates the train/validation/test int64 arrays without
+recording their lengths; partition-boundary shifts can produce the same
+legacy digest even with distinct learner-visible training rows.
+
+Newly published split archives now include a separate
+`split_partition_sha256_v2` using explicit partition lengths. The loader
+verifies that digest when present; older archived splits remain readable.
+Existing split files are compared against all planned train/validation/test
+indices, not just the legacy hash. Publication uses unique temporary files,
+fsync and non-overwriting atomic hard links so concurrent planners cannot
+silently replace another split.
+
+**Limit:** A historical archive without the v2 field remains legacy-verifiable
+only, and should not be presented as cryptographically bound to its exact
+partition boundaries. This is a backward-compatible integrity improvement,
+not evidence of real dataset campaign execution.
