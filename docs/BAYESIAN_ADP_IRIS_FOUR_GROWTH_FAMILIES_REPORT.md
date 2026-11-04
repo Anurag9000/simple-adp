@@ -42,7 +42,7 @@ and these runs do not prove a variance-triggered depth proposal.
 
 ## Unexecuted research requirements
 
-- Eleven other adaptive architecture/source configurations in the original
+- Nine other adaptive configurations in the original
   13-method taxonomy are not individually exercised in this four-method
   experiment (although other source tests exist).
 - No variance-triggered growth was observed in these four bounded jobs;
