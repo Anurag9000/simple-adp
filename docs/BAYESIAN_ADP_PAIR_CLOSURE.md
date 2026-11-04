@@ -425,3 +425,21 @@ The standalone Bayesian regression suite at
 also passed **305 focused tests** after scikit-learn was added to the
 test workflow. No physical GPU or external pretrained source checkpoint
 execution is inferred from either run.
+
+
+## 2026-11-04 — Worker and manifest canonical identity binding
+
+Persisted `RunSpec` serialization now rejects internally inconsistent
+canonical `run_id`, reconstructed `route_label`, model route/suffix,
+original-vs-shadow criterion, Bayesian posterior marker, source counterpart
+and model seed before execution. `SuitePlan.from_manifest` applies
+the same validation when resuming from a serialized plan. After the dataset
+loads, `runner.worker.run_spec` checks the separately loaded split archive
+SHA-256 against the `RunIdentity.split_sha256` and refuses negative or
+out-of-source row indices. A validly checksummed but *wrong* split archive
+cannot silently execute against a different planned split.
+
+These are local internal-consistency/provenance checks, not cryptographic
+proof of authorized source publication. They do not change Adam/AdamW,
+growth gates, sampling, model initialization or held-out evaluation.
+Focused corruption tests and CI coverage accompany the implementation.

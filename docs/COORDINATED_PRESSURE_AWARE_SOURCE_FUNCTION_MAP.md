@@ -220,10 +220,10 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/plan.py` | `RunIdentity.run_id.<locals>.safe` | 183-185 |
 | `src/simple_adp/runner/plan.py` | `RunIdentity.as_dict` | 203-206 |
 | `src/simple_adp/runner/plan.py` | `RunSpec.as_dict` | 221-232 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.from_manifest` | 242-273 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.build` | 276-698 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.build.<locals>.route_group` | 322-342 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.write_manifest` | 700-726 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.from_manifest` | 242-275 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.build` | 278-700 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.build.<locals>.route_group` | 324-344 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.write_manifest` | 702-728 |
 | `src/simple_adp/runner/plugins.py` | `_instantiate` | 20-21 |
 | `src/simple_adp/runner/plugins.py` | `load_registries` | 24-76 |
 | `src/simple_adp/runner/pressure_wrapper.py` | `PressureSample.external_host_mib` | 31-32 |
@@ -359,6 +359,8 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/spec_integrity.py` | `publish_immutable_run_spec` | 16-74 |
 | `src/simple_adp/runner/spec_integrity.py` | `publish_immutable_run_spec.<locals>.canonical` | 32-33 |
 | `src/simple_adp/runner/spec_integrity.py` | `publish_immutable_run_spec.<locals>.check_published` | 35-48 |
+| `src/simple_adp/runner/spec_validation.py` | `validate_rebuilt_spec` | 15-48 |
+| `src/simple_adp/runner/spec_validation.py` | `validate_loaded_split` | 51-60 |
 | `src/simple_adp/runner/state.py` | `utc_now` | 30-31 |
 | `src/simple_adp/runner/state.py` | `atomic_write_text` | 34-38 |
 | `src/simple_adp/runner/state.py` | `atomic_write_json` | 41-42 |
@@ -455,8 +457,8 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/watchdog.py` | `master_alive` | 15-23 |
 | `src/simple_adp/runner/watchdog.py` | `monitor` | 26-92 |
 | `src/simple_adp/runner/watchdog.py` | `main` | 95-101 |
-| `src/simple_adp/runner/worker.py` | `_rebuild_spec` | 26-36 |
-| `src/simple_adp/runner/worker.py` | `_validate_task_data_matches_plan` | 39-70 |
-| `src/simple_adp/runner/worker.py` | `load_registries` | 73-77 |
-| `src/simple_adp/runner/worker.py` | `run_spec` | 80-304 |
-| `src/simple_adp/runner/worker.py` | `main` | 307-312 |
+| `src/simple_adp/runner/worker.py` | `_rebuild_spec` | 27-38 |
+| `src/simple_adp/runner/worker.py` | `_validate_task_data_matches_plan` | 41-72 |
+| `src/simple_adp/runner/worker.py` | `load_registries` | 75-79 |
+| `src/simple_adp/runner/worker.py` | `run_spec` | 82-307 |
+| `src/simple_adp/runner/worker.py` | `main` | 310-315 |

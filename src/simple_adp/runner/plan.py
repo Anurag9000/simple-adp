@@ -241,6 +241,7 @@ class SuitePlan:
     @classmethod
     def from_manifest(cls, path: str | Path) -> "SuitePlan":
         from .route import ModelRoute
+        from .spec_validation import validate_rebuilt_spec
 
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
         signature = str(payload["run_signature"])
@@ -259,6 +260,7 @@ class SuitePlan:
             if fixed is not None:
                 route_value["fixed_grid"] = tuple(tuple(int(width) for width in vector) for vector in fixed)
             route = ModelRoute(**route_value)
+            validate_rebuilt_spec(raw, identity, route)
             runs.append(RunSpec(
                 identity=identity,
                 task_ref=task_ref,

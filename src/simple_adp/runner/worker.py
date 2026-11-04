@@ -18,6 +18,7 @@ from .datasets import DatasetTaskRef
 from .backend import enable_optional_gpu_accelerators, resolve_torch_device, seed_everything
 from .route import ModelRoute
 from .plan import RunIdentity, SplitSpec, canonical_json
+from .spec_validation import validate_rebuilt_spec, validate_loaded_split
 from .runtime_tuning import bootstrap_runtime
 from .state import atomic_write_json, utc_now
 from .telemetry import telemetry_callback
@@ -33,6 +34,7 @@ def _rebuild_spec(value: dict[str, Any]) -> tuple[RunIdentity, DatasetTaskRef, M
     if route_value.get("fixed_grid") is not None:
         route_value["fixed_grid"] = tuple(tuple(int(item) for item in widths) for widths in route_value["fixed_grid"])
     route = ModelRoute(**route_value)
+    validate_rebuilt_spec(value, identity, route)
     return identity, ref, route
 
 
@@ -97,6 +99,7 @@ def run_spec(path: str | Path) -> dict[str, Any]:
         fold=identity.fold,
         sample=identity.sample,
     )
+    validate_loaded_split(split, identity, row_count=len(data.X))
     settings_value = dict(spec["worker_settings"])
     smoke = bool(settings_value.get("smoke_test", False))
     device = resolve_torch_device()

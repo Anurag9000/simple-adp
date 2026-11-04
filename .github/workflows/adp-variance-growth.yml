@@ -18,6 +18,7 @@ on:
       - 'scripts/analyze_bounded_diabetes_pair_results.py'
       - 'scripts/analyze_bounded_iris_pair_results.py'
       - 'tests/test_runner_split_archive_integrity.py'
+      - 'tests/test_runner_worker_spec_identity.py'
       - 'tests/test_runner_openml_provider_plan.py'
       - 'tests/test_runner_models.py'
       - 'tests/test_stage_variance_best_epoch_alignment.py'
@@ -58,4 +59,5 @@ jobs:
             tests/test_bounded_iris_growth_family_pairs.py \
             tests/test_bounded_iris_all_native_pairs.py \
             tests/test_bounded_diabetes_paired_analysis.py \
-            tests/test_runner_split_archive_integrity.py
+            tests/test_runner_split_archive_integrity.py \
+            tests/test_runner_worker_spec_identity.py
