@@ -47,3 +47,22 @@ def test_v06a_v06b_and_v07_variants_remain_distinct():
         {"vision_v09_bank0", "vision_v09_bank1", "vision_v09_bank2"},
     ):
         assert group <= VISION_ADAPTERS
+
+
+def test_registered_optional_vision_and_source_adapters_match_shared_capabilities(monkeypatch):
+    """Instantiate actual built-ins; do not mistake a hard-coded list for registration."""
+    from simple_adp.runner import plugins
+
+    class _NoThirdPartyEntryPoints:
+        def select(self, *, group):
+            assert group in {"simple_adp.dataset_providers", "simple_adp.model_adapters"}
+            return []
+
+    monkeypatch.setattr(plugins, "entry_points", lambda: _NoThirdPartyEntryPoints())
+    monkeypatch.setenv("SIMPLE_ADP_ENABLE_VISION", "1")
+    monkeypatch.setenv("SIMPLE_ADP_ENABLE_V03_SOURCE", "1")
+    monkeypatch.setenv("SIMPLE_ADP_ENABLE_V04_SOURCE", "1")
+    datasets, models = plugins.load_registries()
+    assert "vision" in datasets.providers
+    assert set(models.adapters) == set(ADAPTER_CAPABILITIES)
+    assert {name for name in models.adapters if name != "simple_adp"} == set(VISION_ADAPTERS)
