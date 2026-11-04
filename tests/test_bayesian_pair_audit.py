@@ -3,42 +3,56 @@ import copy
 import pytest
 
 from simple_adp.runner.pair_audit import audit_manifest, _manifest_digest
+from simple_adp.runner.plan import RunIdentity
+
+
+def _canonical_id(identity):
+    return RunIdentity(**{key: value for key, value in identity.items()
+                          if key != "run_id"}).run_id
 
 
 def _jobs():
+    base_identity = {
+        "provider": "openml", "suite": "tabzilla", "task_id": "7",
+        "split_repeat": 0, "fold": 0, "sample": 0, "suite_repeat": 1,
+        "model_route": "ADP-W-All", "seed": 12,
+        "split_sha256": "sha-split", "run_signature": "runsig",
+    }
+    base_identity["run_id"] = _canonical_id(base_identity)
+    source_id = base_identity["run_id"]
     base = {
-        "identity": {
-            "run_id": "original", "provider": "openml", "suite": "tabzilla",
-            "task_id": "7", "seed": 12, "split_sha256": "sha-split",
-            "run_signature": "runsig", "model_route": "ADP-W-All",
-        },
+        "identity": base_identity,
         "task_ref": {"provider": "openml", "suite": "tabzilla", "task_id": "7",
                      "metadata": {"content_sha256": "sha-data"}},
         "model_adapter": "simple_adp",
-        "route": {"model_id": "ADP-W-All", "suite_group": "width_only"},
+        "route": {"model_id": "ADP-W-All", "suite_group": "width_only",
+                  "route_label": "ADP-W-All"},
         "split_file": "/splits/id.npz",
-        "result_dir": "/results/original",
+        "result_dir": f"/results/{source_id}",
         "worker_settings": {"seed": 12, "learning_rate": 0.001, "max_width": 10},
-        "command": ["python", "-m", "simple_adp.runner.worker", "--spec", "/jobs/original/run_spec.json"],
+        "command": ["python", "-m", "simple_adp.runner.worker", "--spec",
+                    f"/jobs/{source_id}/run_spec.json"],
         "device_capable": True,
     }
     alt = copy.deepcopy(base)
-    alt["identity"]["run_id"] = "bayesian"
     alt["identity"]["model_route"] += "__bgd_variance_stagnation"
-    alt["result_dir"] = "/results/bayesian"
+    alt["identity"]["run_id"] = _canonical_id(alt["identity"])
+    alt_id = alt["identity"]["run_id"]
+    alt["result_dir"] = f"/results/{alt_id}"
     alt["worker_settings"].update({
-        "counterpart_of": "original", "expansion_criterion": "variance_stagnation",
+        "counterpart_of": source_id, "expansion_criterion": "variance_stagnation",
         "variance_posterior": "shadow_bgd_sigma_not_exact_bayes",
     })
-    alt["command"][-1] = "/jobs/bayesian/run_spec.json"
+    alt["command"][-1] = f"/jobs/{alt_id}/run_spec.json"
     fixed = copy.deepcopy(base)
-    fixed["identity"]["run_id"] = "fixed"
     fixed["identity"]["model_route"] = "MLP-Fixed"
-    fixed["route"] = {"model_id": "MLP-Fixed", "suite_group": "vanilla"}
-    fixed["result_dir"] = "/results/fixed"
-    fixed["command"][-1] = "/jobs/fixed/run_spec.json"
+    fixed["identity"]["run_id"] = _canonical_id(fixed["identity"])
+    fixed_id = fixed["identity"]["run_id"]
+    fixed["route"] = {"model_id": "MLP-Fixed", "suite_group": "vanilla",
+                      "route_label": "MLP-Fixed"}
+    fixed["result_dir"] = f"/results/{fixed_id}"
+    fixed["command"][-1] = f"/jobs/{fixed_id}/run_spec.json"
     return base, alt, fixed
-
 
 def _manifest(jobs, claimed=1):
     value = {
@@ -81,9 +95,10 @@ def test_scientific_or_execution_mismatch_is_rejected(change):
 def test_duplicate_child_and_orphan_rejected():
     original, alt, _ = _jobs()
     second = copy.deepcopy(alt)
-    second["identity"]["run_id"] = "other-bayesian"
-    second["result_dir"] = "/results/other-bayesian"
-    second["command"][-1] = "/jobs/other-bayesian/run_spec.json"
+    second["identity"]["seed"] += 1
+    second["identity"]["run_id"] = _canonical_id(second["identity"])
+    second["result_dir"] = "/results/" + second["identity"]["run_id"]
+    second["command"][-1] = "/jobs/" + second["identity"]["run_id"] + "/run_spec.json"
     with pytest.raises(ValueError, match="multiple Bayesian counterparts"):
         audit_manifest(_manifest([original, alt, second]))
     orphan = copy.deepcopy(alt)
@@ -167,3 +182,19 @@ def test_auditor_cli_outputs_inspectable_receipt(tmp_path, monkeypatch):
     data = json.loads(receipt.read_text())
     assert data["summary"]["matched_pairs_selected"] == 1
     assert data["source_commit"] == "a" * 40
+
+
+@pytest.mark.parametrize("field", ["run_id", "model_route", "suite_repeat", "unexpected"])
+def test_forged_or_incomplete_run_identity_fails_even_if_manifest_digest_is_recomputed(field):
+    source, alt, _ = _jobs()
+    if field == "run_id":
+        source["identity"]["run_id"] = "forged"
+    elif field == "model_route":
+        source["identity"]["model_route"] = "ADP-W-RR"
+        source["identity"]["run_id"] = _canonical_id(source["identity"])
+    elif field == "suite_repeat":
+        del source["identity"]["suite_repeat"]
+    else:
+        source["identity"]["unexpected"] = "hidden"
+    with pytest.raises(ValueError, match="run_id|route label|identity"):
+        audit_manifest(_manifest([source, alt]))

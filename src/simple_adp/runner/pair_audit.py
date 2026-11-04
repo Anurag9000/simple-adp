@@ -10,7 +10,10 @@ import hashlib
 import json
 import os
 from collections import Counter
+from dataclasses import fields
 from typing import Any
+
+from .plan import RunIdentity
 
 
 VARIANCE_SUFFIX = "__bgd_variance_stagnation"
@@ -42,9 +45,26 @@ def _manifest_digest(manifest: dict[str, Any]) -> str:
 
 
 def _identity(job: dict[str, Any]) -> dict[str, Any]:
+    """Verify the persisted label against the authoritative RunIdentity codec."""
     value = job.get("identity")
     if not isinstance(value, dict) or not isinstance(value.get("run_id"), str) or not value["run_id"]:
         raise ValueError("job lacks a complete run identity")
+    required = {field.name for field in fields(RunIdentity)}
+    if set(value) != required | {"run_id"}:
+        raise ValueError("job run identity has missing or unexpected fields")
+    try:
+        regenerated = RunIdentity(**{key: value[key] for key in required}).run_id
+    except (TypeError, ValueError) as exc:
+        raise ValueError("job run identity cannot be reconstructed") from exc
+    if regenerated != value["run_id"]:
+        raise ValueError("job run_id does not match canonical RunIdentity fields")
+    route = job.get("route")
+    if not isinstance(route, dict) or not isinstance(route.get("route_label"), str):
+        raise ValueError("job route lacks its original route_label")
+    criterion = (job.get("worker_settings") or {}).get("counterpart_of")
+    expected_route = route["route_label"] + (VARIANCE_SUFFIX if criterion is not None else "")
+    if value["model_route"] != expected_route:
+        raise ValueError("job identity model_route differs from executed route label")
     return value
 
 

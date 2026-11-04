@@ -147,3 +147,15 @@ registered code route, **not** verified source data, training execution,
 real architecture mutation in every concrete job, or scientific completion.
 Tests assert shared object identity and preserve the distinct V06a/V06b,
 V07 token/channel/both, V08 insertion, and V09 bank routes.
+
+
+## 2026-11-04 — Canonical run identity verification
+
+The static manifest auditor now reconstructs every planned `RunIdentity.run_id`
+using the same source codec as the suite planner, requires exactly the declared
+identity fields, and checks the identity's model route against its actual
+registered `route_label` (appending the variance suffix only for a paired arm).
+A manually changed or copied job ID is therefore rejected even when someone
+recomputes the ordinary JSON manifest digest. The digest alone is not a
+cryptographic signature or authorization mechanism. This safeguard does not
+substitute for checking real task data, source checksums or training receipts.
