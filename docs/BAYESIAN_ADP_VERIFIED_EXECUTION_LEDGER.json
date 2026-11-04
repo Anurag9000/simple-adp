@@ -32,26 +32,6 @@
     "dataset_split_protocols": 2,
     "distinct_architecture_growth_methods_in_real_pairs": 1,
     "coordinator_worker_paired_real_jobs_certified": 0,
-    "classifcation": {
-      "dataset": "sklearn Iris",
-      "model_seeds": [
-        73,
-        74,
-        75,
-        76,
-        77
-      ],
-      "github_run_id": 41839475995,
-      "source_commit": "05e1eae49f0282f043b08f71a0560bf07b121b27",
-      "status": "BOUNDED_REAL_DATA_MULTI_SEED",
-      "metric": "accuracy",
-      "mean_difference_bayesian_minus_original": -0.11333333333333333,
-      "paired_bootstrap_95_conditional_on_one_split": [
-        -0.24,
-        -0.006666666666666666
-      ],
-      "report": "docs/BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md"
-    },
     "regression": {
       "dataset": "sklearn Diabetes",
       "model_seeds": [
@@ -71,6 +51,26 @@
         0.4801307954401864
       ],
       "report": "docs/BAYESIAN_ADP_DIABETES_MULTI_SEED_REPORT.md"
+    },
+    "classification": {
+      "dataset": "sklearn Iris",
+      "model_seeds": [
+        73,
+        74,
+        75,
+        76,
+        77
+      ],
+      "github_run_id": 41839475995,
+      "source_commit": "05e1eae49f0282f043b08f71a0560bf07b121b27",
+      "status": "BOUNDED_REAL_DATA_MULTI_SEED",
+      "metric": "accuracy",
+      "mean_difference_bayesian_minus_original": -0.11333333333333333,
+      "paired_bootstrap_95_conditional_on_one_split": [
+        -0.24,
+        -0.006666666666666666
+      ],
+      "report": "docs/BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md"
     }
   },
   "not_equivalent_to_full_mission": {
