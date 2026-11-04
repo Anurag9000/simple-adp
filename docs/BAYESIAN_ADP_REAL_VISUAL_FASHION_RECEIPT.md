@@ -70,3 +70,31 @@ and model and checkpoint SHA-256 hashes for each of the eight jobs.
 
 This is a bounded *real-data source-to-worker reproducibility proof*,
 not a completed visual Bayesian ADP scientific benchmark.
+
+
+## Complete best-stage posterior gate trace, verified source `186f0054`
+
+The follow-up real Fashion-MNIST four-architecture workflow
+[41853011680](https://github.com/Anurag9000/simple-adp/actions/runs/41853011680)
+completed with a **fully checkpointed posterior-gate trace** for all
+four Bayesian stages, after the search-stage temporary posterior
+objects were cleared. Each Bayesian variant had **one successful
+posterior observation**, sampled with two Monte Carlo passes; every
+required stagnation streak of three was unmet. The verified
+best-epoch contraction/streak receipts are:
+
+| Architecture | Contraction | Tolerance | Streak | Required | Gate ready |
+|---|---:|---:|---:|---:|---|
+| V02 residual | +0.00024274 | 0.0001 | 0 | 3 | No |
+| V03 tiny ViT | +0.00179098 | 0.0001 | 0 | 3 | No |
+| V04 tiny ConvNeXt | +0.00004313 | 0.0001 | 1 | 3 | No |
+| V07 token Mixer | −0.00003505 | 0.0001 | 1 | 3 | No |
+
+Thus **the bounded original runs tried one added-width candidate
+(stage count two), while all four Bayesian runs remained at the initial
+width**. This is grounded in actual checkpoint decision state,
+not an inference from final test accuracy. The one-batch training
+budget is insufficient to determine whether the shadow gate would
+work at realistic convergence or a different patience threshold.
+The trace is limited to stage-selected best-epoch evidence, not
+the full stochastic posterior time series.

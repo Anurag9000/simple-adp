@@ -543,3 +543,20 @@ fails closed. A separate checkpoint-override worker test now uses
 a real minimal split and array-backed task with valid source indices,
 rather than a mock missing the fields verified by the new worker.
 These changes do not relax training-provenance validation.
+
+
+## Verified published-pretrained original-vs-shadow comparison
+
+The three-seed real official Fashion-MNIST matched-source ResNet18
+workflow `41853189052` completed at
+`dd3b1f84318cd32681756fbb5eb461e314dfef19`.
+All nine fixed/original/shadow results and all nine JSON file hashes
+were verified independently; published pretrained complete source
+state-dict SHA and frozen encoder weights agree across the treatments.
+Held-out mean accuracies were fixed **33.67%**, loss-growth **56.00%**,
+and shadow-BGD **34.00%**, over 300/100/100 per-seed rows.
+The fully qualified provenance, individual seed results and limitations
+are preserved in
+[BAYESIAN_ADP_PRETRAINED_RESNET18_THREE_SEED_RECEIPT.md](BAYESIAN_ADP_PRETRAINED_RESNET18_THREE_SEED_RECEIPT.md).
+This does not close pretrained V03/V04 matched execution or larger
+multi-dataset scientific comparisons.
