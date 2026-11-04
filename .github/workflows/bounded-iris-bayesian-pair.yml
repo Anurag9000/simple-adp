@@ -13,6 +13,10 @@ jobs:
   iris-real-pair:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [73, 74, 75, 76, 77]
     env:
       OMP_NUM_THREADS: '2'
       MKL_NUM_THREADS: '2'
@@ -30,12 +34,12 @@ jobs:
           python -m pip install numpy pandas psutil 'scikit-learn>=1.5'
       - name: Execute matched real Iris supervised architecture searches
         run: |
-          python scripts/run_bounded_iris_bayesian_pair.py --seed 73 --output benchmark-results/bounded-iris-paired
+          python scripts/run_bounded_iris_bayesian_pair.py --seed ${{ matrix.seed }} --output benchmark-results/bounded-iris-paired-seed-${{ matrix.seed }}
       - name: Retain model checkpoints and source-hashed scientific receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: bounded-iris-bayesian-pair-${{ github.sha }}
-          path: benchmark-results/bounded-iris-paired/
+          name: bounded-iris-bayesian-pair-seed-${{ matrix.seed }}-${{ github.sha }}
+          path: benchmark-results/bounded-iris-paired-seed-${{ matrix.seed }}/
           retention-days: 30
           if-no-files-found: warn
