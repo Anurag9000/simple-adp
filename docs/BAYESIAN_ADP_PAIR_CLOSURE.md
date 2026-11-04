@@ -391,3 +391,17 @@ in [BAYESIAN_ADP_13_NATIVE_REAL_DATA_RECEIPT.md](BAYESIAN_ADP_13_NATIVE_REAL_DAT
 **method execution coverage only**, not independent data/seed breadth,
 accepted structural mutation for every family, runtime compute, visual
 adaptation, official provider datasets or entire scientific campaign.
+
+
+## Verified real-source planner → actual subprocess worker proof
+
+The GitHub run `41844517144` completed at
+`ea2c1af3ac3913afd770a0dd592f34b108d5e77a`. It exercised the
+actual unsliced source planner, emitted two original/two Bayesian worker
+specifications for real packaged Iris classification and Diabetes
+regression, executed the four production child workers and independently
+SHA-verified the persisted result and inference files. Details,
+held-out metrics, derived pair seeds and exact stage-checkpoint hashes
+are preserved in [BAYESIAN_ADP_REAL_WORKER_RECEIPT.md](BAYESIAN_ADP_REAL_WORKER_RECEIPT.md).
+This closes a bounded **worker-path execution proof** only, not the entire
+data/visual/multi-seed/science campaign.

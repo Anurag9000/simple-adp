@@ -14,6 +14,7 @@ import os
 import subprocess
 from pathlib import Path
 
+from simple_adp.runner.artifacts import estimator_checkpoint_path
 from simple_adp.runner.config import RunnerSettings
 from simple_adp.runner.models import SimpleADPModelAdapter
 from simple_adp.runner.pair_audit import audit_manifest
@@ -122,6 +123,9 @@ def run(root: Path):
         artifact = result.get("artifact_path")
         if not isinstance(artifact, str) or not Path(artifact).is_file():
             raise RuntimeError("worker has no trained inference bundle")
+        checkpoint = estimator_checkpoint_path(spec.result_dir)
+        if not checkpoint.is_file():
+            raise RuntimeError("worker has no persisted stage/optimizer checkpoint")
         receipts[spec.identity.run_id] = {
             "task": spec.task_ref.suite,
             "arm": "bayesian" if "counterpart_of" in spec.worker_settings else "original",
@@ -130,6 +134,9 @@ def run(root: Path):
             "seed": spec.identity.seed,
             "result_json_sha256": _hash(result_path),
             "model_sha256": _hash(Path(artifact)),
+            "model_size_bytes": Path(artifact).stat().st_size,
+            "checkpoint_sha256": _hash(checkpoint),
+            "checkpoint_size_bytes": checkpoint.stat().st_size,
             "metric": required,
             "metric_value": float(metrics[required]),
             "selected_architecture": result.get("selected_architecture"),
