@@ -338,3 +338,21 @@ There are now 13 distinct (dataset, seed, native method) bounded
 loss/variance configurations across the verified Iris and Diabetes
 cohorts, but only **two datasets**, and only direct native adapter
 training, not a completed coordinated-worker/all-provider campaign.
+
+
+## 2026-11-04 — Complete canonical 13 adaptive-method bounded real-data experiment
+
+The canonical `MODEL_REGISTRY` includes 14 source configurations; 13 are
+adaptive and `MLP-Fixed` remains explicitly unpaired. The real Iris
+runner now permits every adaptive ID while retaining the original four
+representative-method group unchanged. The new workflow
+`.github/workflows/bounded-iris-all-native.yml` schedules 13 independent
+source/variance pairs at model seed 73, one real dataset/fixed split, all
+with the same four-epoch/optimizer/capacity budgets and pair-specific
+inference/checkpoint artifact namespaces. Its downstream auditor checks
+exactly 13 unique methods (26 run records), complete membership,
+growth-family/route identity, original-vs-variance trigger parity,
+shared data/split/settings/source and SHA-256 integrity of **both**
+inference bundles and stage checkpoints. This is a bounded CI proof,
+not a claim of multi-seed or cross-dataset scientific closure. Until the
+workflow and its downstream audit succeed, its status is `NOT_EXECUTED`.

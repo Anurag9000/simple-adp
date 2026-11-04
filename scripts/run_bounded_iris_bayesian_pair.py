@@ -121,6 +121,25 @@ GROWTH_FAMILY_PROOFS = {
     "ADP-WD-All-Dcur": "width_to_depth",
     "ADP-DW-Dcur-All": "depth_to_width",
 }
+# Every canonical growing method, not just the four original family proofs.
+# Derive the route family from the authoritative source taxonomy. The
+# MLP-Fixed baseline remains a deliberately unpaired no-growth control.
+_ORDER_TO_FAMILY = {
+    "width": "width_only",
+    "depth": "depth_only",
+    "width_then_depth": "width_to_depth",
+    "depth_then_width": "depth_to_width",
+}
+ALL_NATIVE_METHOD_FAMILIES = {
+    model_id: _ORDER_TO_FAMILY[config.order]
+    for model_id, config in MODEL_REGISTRY.items()
+    if config.controller != "fixed"
+}
+if len(ALL_NATIVE_METHOD_FAMILIES) != 13 or any(
+    ALL_NATIVE_METHOD_FAMILIES.get(model_id) != family
+    for model_id, family in GROWTH_FAMILY_PROOFS.items()
+):
+    raise RuntimeError("canonical ADP taxonomy changed; re-audit bounded method eligibility")
 
 
 def run(output, *, seed=73, model_id="ADP-W-All"):
@@ -133,10 +152,10 @@ def run(output, *, seed=73, model_id="ADP-W-All"):
     split.save(split_path)
     if SplitSpec.load(split_path, repeat=0, fold=0, sample=0) != split:
         raise RuntimeError("split reread differs from original")
-    if model_id not in GROWTH_FAMILY_PROOFS:
-        raise ValueError(f"unsupported bounded Iris mechanism route: {model_id!r}")
+    if model_id not in ALL_NATIVE_METHOD_FAMILIES:
+        raise ValueError(f"unsupported bounded Iris growing method: {model_id!r}")
     route = ModelRoute(
-        model_id, suite_group=GROWTH_FAMILY_PROOFS[model_id],
+        model_id, suite_group=ALL_NATIVE_METHOD_FAMILIES[model_id],
         generic_profile="corrected" if MODEL_REGISTRY[model_id].generic else None,
         init_width=3, init_depth=1,
     )
@@ -191,7 +210,7 @@ def run(output, *, seed=73, model_id="ADP-W-All"):
             "test": len(split.test_indices),
         },
         "route": route.as_dict(),
-        "growth_family": GROWTH_FAMILY_PROOFS[model_id],
+        "growth_family": ALL_NATIVE_METHOD_FAMILIES[model_id],
         "seed": int(seed),
         "shared_settings_digest": hashlib.sha256(_canonical({
             key: value for key, value in common.items()
@@ -224,7 +243,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=73)
-    parser.add_argument("--model-id", choices=tuple(GROWTH_FAMILY_PROOFS),
+    parser.add_argument("--model-id", choices=tuple(ALL_NATIVE_METHOD_FAMILIES),
                         default="ADP-W-All")
     arguments = parser.parse_args()
     path = run(arguments.output, seed=arguments.seed, model_id=arguments.model_id)
