@@ -356,3 +356,25 @@ shared data/split/settings/source and SHA-256 integrity of **both**
 inference bundles and stage checkpoints. This is a bounded CI proof,
 not a claim of multi-seed or cross-dataset scientific closure. Until the
 workflow and its downstream audit succeed, its status is `NOT_EXECUTED`.
+
+
+## Opt-in real sklearn provider and actual persisted child-worker execution
+
+`src/simple_adp/runner/sklearn_real.py` provides downloaded-free genuine
+Fisher Iris classification and Diabetes regression sources behind
+`SIMPLE_ADP_ENABLE_SKLEARN_REAL=1`; the default provider inventory is
+unchanged. The provider regenerates the same fixed 731/732 source split,
+content hash and metadata in planner and separate worker processes.
+
+`scripts/run_bounded_sklearn_real_worker_pairs.py` builds an **unsliced**
+`SuitePlan` with one selected canonical ADP-W-All route, then uses the
+actual production `simple_adp.runner.worker --spec` subprocess for each
+of two original and two shadow-variance jobs. It audits plan identity,
+original/alternative source and seed parity, result.json status and run
+signature, and SHA-256 of the persisted worker result and inference model.
+
+`.github/workflows/bounded-real-sklearn-worker-pairs.yml` tests the
+provider and executes the real workers, retaining run specs, manifest,
+worker logs, checkpoint and inference bundles. This is **not** synthetic
+plugin data and does not claim full GPU, visual or full-suite closure.
+It is `NOT_EXECUTED` until the source-pinned workflow actually succeeds.

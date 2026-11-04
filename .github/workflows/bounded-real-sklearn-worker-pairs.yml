@@ -1,0 +1,50 @@
+name: Bounded real sklearn source-to-persisted-worker Bayesian ADP proof
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/runner/sklearn_real.py'
+      - 'src/simple_adp/runner/plugins.py'
+      - 'src/simple_adp/runner/plan.py'
+      - 'src/simple_adp/runner/worker.py'
+      - 'scripts/run_bounded_sklearn_real_worker_pairs.py'
+      - 'tests/test_runner_sklearn_real_provider.py'
+      - '.github/workflows/bounded-real-sklearn-worker-pairs.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-worker-pairs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+      TABULAR_SKIP_SYSTEMD_SCOPE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU Torch and real packaged sklearn datasets
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.6.0
+          python -m pip install -e '.[dev]' --no-deps
+          python -m pip install numpy pandas psutil 'scikit-learn>=1.5'
+      - name: Test real provider and exact paired-plan contract
+        run: python -m pytest -q -o addopts='' tests/test_runner_sklearn_real_provider.py
+      - name: Execute unsliced real Iris and Diabetes source and variance workers
+        run: |
+          python scripts/run_bounded_sklearn_real_worker_pairs.py \
+            --output benchmark-results/real-sklearn-worker-pairs
+      - name: Upload source manifest, worker specs, receipts and both checkpoints
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-sklearn-worker-pairs-${{ github.sha }}
+          path: benchmark-results/real-sklearn-worker-pairs/
+          retention-days: 30
+          if-no-files-found: warn

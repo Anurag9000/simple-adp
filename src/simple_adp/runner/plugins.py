@@ -33,6 +33,10 @@ def load_registries() -> tuple[DatasetRegistry, ModelRegistry]:
     datasets.register(PhysioNetECGProvider())
     datasets.register(ODDSProvider())
     models.register(SimpleADPModelAdapter())
+    # Opt-in only. No change to legacy OpenML/visual registration or suite sizes.
+    if os.environ.get("SIMPLE_ADP_ENABLE_SKLEARN_REAL") == "1":
+        from .sklearn_real import SklearnRealDatasetProvider
+        datasets.register(SklearnRealDatasetProvider())
     # Explicit opt-in retains byte-for-byte legacy model/provider inventories.
     if os.environ.get("SIMPLE_ADP_ENABLE_VISION") == "1":
         from .vision import VisionDatasetProvider, VisionModelAdapter, VisionInnerModelAdapter, VisionNativeFFNModelAdapter, VisionMixerModelAdapter, VisionMultistageModelAdapter, VisionAdapterBankModelAdapter, VisionMultistageScheduleAdapter

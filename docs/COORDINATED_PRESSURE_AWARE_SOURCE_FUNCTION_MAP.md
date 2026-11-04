@@ -225,7 +225,7 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/plan.py` | `SuitePlan.build.<locals>.route_group` | 322-342 |
 | `src/simple_adp/runner/plan.py` | `SuitePlan.write_manifest` | 700-726 |
 | `src/simple_adp/runner/plugins.py` | `_instantiate` | 20-21 |
-| `src/simple_adp/runner/plugins.py` | `load_registries` | 24-72 |
+| `src/simple_adp/runner/plugins.py` | `load_registries` | 24-76 |
 | `src/simple_adp/runner/pressure_wrapper.py` | `PressureSample.external_host_mib` | 31-32 |
 | `src/simple_adp/runner/pressure_wrapper.py` | `PressureSample.external_gpu_mib` | 35-36 |
 | `src/simple_adp/runner/pressure_wrapper.py` | `_gpu_pressure_sample` | 39-57 |
@@ -353,6 +353,9 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/sequence_datasets.py` | `UCIHAPTProvider._read_vector` | 60-65 |
 | `src/simple_adp/runner/sequence_datasets.py` | `UCIHAPTProvider.load_task` | 67-159 |
 | `src/simple_adp/runner/sequence_datasets.py` | `UCIHAPTProvider.list_splits` | 161-176 |
+| `src/simple_adp/runner/sklearn_real.py` | `SklearnRealDatasetProvider.list_tasks` | 22-25 |
+| `src/simple_adp/runner/sklearn_real.py` | `SklearnRealDatasetProvider.load_task` | 27-67 |
+| `src/simple_adp/runner/sklearn_real.py` | `SklearnRealDatasetProvider.list_splits` | 69-91 |
 | `src/simple_adp/runner/spec_integrity.py` | `publish_immutable_run_spec` | 16-74 |
 | `src/simple_adp/runner/spec_integrity.py` | `publish_immutable_run_spec.<locals>.canonical` | 32-33 |
 | `src/simple_adp/runner/spec_integrity.py` | `publish_immutable_run_spec.<locals>.check_published` | 35-48 |
