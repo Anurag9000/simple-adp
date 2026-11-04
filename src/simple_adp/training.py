@@ -186,7 +186,7 @@ class StageTrainer:
                     saved_shadow = resume_state.get("shadow_bgd_variance")
                     if saved_shadow is None:
                         raise ValueError("variance-stagnation stage checkpoint has no BGD shadow state")
-                    shadow.load_state_dict(saved_shadow)
+                    shadow.load_state_dict(saved_shadow, model=model)
                     if "best_shadow_bgd_variance" not in resume_state:
                         raise ValueError(
                             "variance-stagnation stage checkpoint lacks "
@@ -358,7 +358,7 @@ class StageTrainer:
         if shadow is not None:
             if best_shadow_state is None:
                 raise RuntimeError("best candidate lacks matching shadow variance state")
-            shadow.load_state_dict(best_shadow_state)
+            shadow.load_state_dict(best_shadow_state, model=model)
         final = state_payload(epoch, 0, None)
         final["stage_status"] = "completed"
         final["model_state"] = copy.deepcopy(model.state_dict())

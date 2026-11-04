@@ -16,6 +16,7 @@ import numpy as np
 from .config import RunnerSettings
 from .datasets import DatasetProvider, DatasetTaskRef
 from .route import ModelRoute
+from .spec_integrity import publish_immutable_run_spec
 from ..registry import MODEL_REGISTRY
 
 if TYPE_CHECKING:
@@ -522,11 +523,11 @@ class SuitePlan:
                                 },
                                 command=command,
                             )
-                            spec_path.parent.mkdir(parents=True, exist_ok=True)
-                            if not spec_path.exists():
-                                tmp = spec_path.with_suffix(".tmp")
-                                tmp.write_text(json.dumps(spec.as_dict(), indent=2, sort_keys=True, default=_json_default) + "\n", encoding="utf-8")
-                                tmp.replace(spec_path)
+                            publish_immutable_run_spec(
+                                spec_path,
+                                json.dumps(spec.as_dict(), indent=2, sort_keys=True,
+                                           default=_json_default) + "\n",
+                            )
                             run_specs.append(spec)
         # Scientific one-to-one matched counterparts for every materialized
         # adaptive route. Screening and fixed-model controls are not growth jobs.
@@ -562,15 +563,11 @@ class SuitePlan:
                          "--spec", str(alternate_spec_path)),
             )
             alternatives.append(alternative)
-            alternate_spec_path.parent.mkdir(parents=True, exist_ok=True)
-            if not alternate_spec_path.exists():
-                temp = alternate_spec_path.with_suffix(".tmp")
-                temp.write_text(
-                    json.dumps(alternative.as_dict(), indent=2, sort_keys=True,
-                               default=_json_default) + "\n",
-                    encoding="utf-8",
-                )
-                temp.replace(alternate_spec_path)
+            publish_immutable_run_spec(
+                alternate_spec_path,
+                json.dumps(alternative.as_dict(), indent=2, sort_keys=True,
+                           default=_json_default) + "\n",
+            )
         # Audit the *unsliced* concrete source jobs. A selected scheduler
         # subset can legitimately contain only one member of a matched pair.
         originals = {

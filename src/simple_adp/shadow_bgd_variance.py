@@ -140,17 +140,71 @@ class ShadowBGDVariance:
             "contraction": self.contraction,
         }
 
-    def load_state_dict(self, state):
+    def load_state_dict(self, state, *, model=None):
+        """Restore an intact posterior, checking model geometry on exact resume.
+
+        Growth can migrate overlapping sigma via ``_synchronize``; checkpoint
+        restoration must never silently substitute priors for missing neurons.
+        """
         expected = [self.initial_std, self.mc_samples, self.tolerance,
                     self.patience, self.seed]
-        if state.get("schema") != 1 or state.get("config") != expected:
+        if not isinstance(state, dict) or state.get("schema") != 1 or state.get("config") != expected:
             raise ValueError("incompatible BGD shadow state")
-        self.sigma = {n: t.detach().clone() for n, t in state["sigma"].items()}
-        self.generators = {}
-        for device, rng in state["rng"].items():
-            gen = torch.Generator(device=device)
-            gen.set_state(rng)
-            self.generators[device] = gen
-        self.streak = int(state["streak"])
-        self.observations = int(state["observations"])
-        self.contraction = state["contraction"]
+        raw_sigma = state.get("sigma")
+        raw_rng = state.get("rng")
+        if not isinstance(raw_sigma, dict) or not isinstance(raw_rng, dict):
+            raise ValueError("invalid BGD shadow posterior or sampler state")
+        sigma = {}
+        for name, tensor in raw_sigma.items():
+            if (not isinstance(name, str) or not name
+                    or not torch.is_tensor(tensor)
+                    or not tensor.is_floating_point()
+                    or not bool(torch.isfinite(tensor).all().item())
+                    or not bool((tensor > 0).all().item())):
+                raise ValueError("invalid BGD shadow sigma coordinates")
+            sigma[name] = tensor.detach().clone()
+        try:
+            observations = state["observations"]
+            streak = state["streak"]
+            contraction = state["contraction"]
+        except KeyError as exc:
+            raise ValueError("incomplete BGD shadow observation state") from exc
+        if (type(observations) is not int or type(streak) is not int
+                or observations < 0 or streak < 0 or streak > observations):
+            raise ValueError("invalid BGD shadow observation counts")
+        if (contraction is not None
+                and (type(contraction) not in (float, int)
+                     or not math.isfinite(contraction))):
+            raise ValueError("invalid BGD shadow contraction evidence")
+        if observations > 0 and (not sigma or contraction is None or not raw_rng):
+            raise ValueError("incomplete BGD shadow posterior evidence")
+        if model is not None and sigma:
+            required = {
+                name: param for name, param in model.named_parameters()
+                if param.requires_grad and param.is_floating_point()
+            }
+            if sigma.keys() != required.keys():
+                raise ValueError("BGD shadow posterior geometry differs from resumed model")
+            for name, param in required.items():
+                if sigma[name].shape != param.shape or sigma[name].dtype != param.dtype:
+                    raise ValueError("BGD shadow posterior geometry differs from resumed model")
+            if observations > 0 and set(raw_rng) != {str(p.device) for p in required.values()}:
+                raise ValueError("BGD shadow sampler RNG devices differ from resumed model")
+        generators = {}
+        for device, rng in raw_rng.items():
+            if (not isinstance(device, str) or not device
+                    or not torch.is_tensor(rng) or rng.dtype != torch.uint8
+                    or rng.ndim != 1):
+                raise ValueError("invalid BGD shadow sampler RNG state")
+            try:
+                gen = torch.Generator(device=device)
+                gen.set_state(rng)
+            except (RuntimeError, ValueError, TypeError) as exc:
+                raise ValueError("invalid BGD shadow sampler RNG state") from exc
+            generators[device] = gen
+        # Commit only after all validation: failures cannot partially restore.
+        self.sigma = sigma
+        self.generators = generators
+        self.streak = streak
+        self.observations = observations
+        self.contraction = contraction

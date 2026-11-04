@@ -1,0 +1,113 @@
+# Supervised ADP: loss-growth versus auxiliary Bayesian-variance growth
+
+## Status and scope
+
+This work is a **software-hardening increment**, not a completed scientific
+comparison. It targets the existing supervised `simple-adp` experiments; it
+does not add continual learning, task heads, reinforcement learning or a new
+Bayesian optimizer. Original Adam/AdamW weight updates remain unchanged.
+
+The inspected repository source baseline is
+`c81a426fd760df2f40d006527bf166523508390d` (2026-11-03). The source
+file tests for the changes described here have **not** been run against a
+full local checkout or final GitHub HEAD. Isolated module/fixture tests passed
+(`36 passed` locally, CPU) after applying the accompanying patch.
+
+## Changes in the paired implementation patch
+
+1. Exact posterior resume: `ShadowBGDVariance.load_state_dict(..., model=...)`
+   rejects nonfinite/nonpositive sigma, missing or mismatched model geometry,
+   corrupt generator state and invalid observation evidence. It restores only
+   after full validation. Actual growth-time `_synchronize` overlap migration
+   is left intact. `StageTrainer` passes its model during active and best-epoch
+   observer restoration. Posterior-state serialization schema remains 1.
+2. Immutable run specification publication: the original and alternative
+   branches of `SuitePlan.build` call the same checked publisher. Identical
+   preexisting specs are reused; a changed criterion, seed, optimizer,
+   architecture or arbitrary worker field is an error. Publish is through an
+   fsynced temporary payload and atomic hard link (no replace), so competing
+   writers cannot silently overwrite one another. A filesystem without
+   hard-link support fails closed instead of silently reverting to replace.
+3. An explicit static auditor reads the complete `SuitePlan` manifest,
+   checks its digest, duplicate IDs/artifacts, original/counterpart mapping,
+   effective scientific settings, output isolation, split identifiers,
+   training command parity, and finite full-plan counts. It emits
+   `pair_inventory.json` with per-pair identities, fingerprints, provenance,
+   fixed/control exclusions and **`NOT_EXECUTED`** experiment statuses.
+   A sliced manifest is rejected by default rather than misreported as a
+   complete population.
+
+## Usage on a real checkout (after patch is applied)
+
+```bash
+python -m compileall -q src/simple_adp
+python -m pytest -q tests/test_shadow_variance_resume_integrity.py \
+  tests/test_run_spec_immutable_integrity.py \
+  tests/test_bayesian_pair_audit.py
+python -m pytest -q tests/test_shadow_variance_growth_counterparts.py \
+  tests/test_stage_variance_best_epoch_alignment.py \
+  tests/test_stage_variance_interrupt_resume.py \
+  tests/test_runner_openml_provider_plan.py \
+  tests/test_runner_end_to_end.py
+python -m pytest -q
+# Produce an UNSLICED actual provider-backed dry-run manifest using
+# the installed runner and available/licensed source datasets.
+python -m simple_adp.runner.launcher --dataset-suites tabzilla,ctr23 \
+  --dry-run --output benchmark-results/coordinated-suite
+# Replace the path with the actual run-root manifest from the dry run:
+python scripts/audit_bayesian_pairs.py RUN_ROOT/manifest.json \
+  --source-commit CURRENT_GIT_SHA \
+  --output artifacts/bayesian_adp/pair_inventory.json
+```
+
+For an intentionally scheduled slice, use `--permit-slice`; its report status
+must remain `PARTIAL_SELECTED_SLICE`. A static plan, empty ledger, passing
+unit test or successful simulator run cannot be elevated to
+`PAIR_EXECUTED_VALID` without separately validated training receipts.
+
+## Science definitions and boundaries
+
+The alternative changes the *outer growth authorization* to the existing
+auxiliary observer's posterior-variance contraction; it does not replace
+Adam/AdamW, the candidate proposal objective, validation-based candidate
+acceptance or best-epoch rollback. The shadow observer is a train-only,
+diagonal BGD-inspired estimator, **not** a full calibrated Bayesian posterior.
+The default gate is the code's persistent low contraction heuristic. Loss
+is still valid for choosing among architectures after a proposed expansion.
+
+Each valid pair must share training source content, train/validation/test
+partition, model initialization, seed, optimizer and schedule, proposal and
+capacity budget, task and metrics. The auditor checks these via the reported
+plan fields; it **cannot** independently rehash missing raw datasets, load
+weights, measure actual compute or verify training metrics. Those are separate
+execution and scientific evidence gates.
+
+## Outstanding work (not certified by this patch)
+
+- Source-route inventory: verify every native, visual V01–V11 (including
+  V06a/V06b), standalone, and external worker route by tracing executed
+  proposal and structural mutation, not names. The auditor's built-in
+  adapter set mirrors the then-current planner allowlist; move both to a
+  shared capability registry before claiming future adapter coverage.
+- End-to-end correctness: run actual runner/launcher processes and verify
+  original/alternative execution, restart, interrupted checkpoint recovery,
+  split checksums, source asset provenance and no evaluator/test leakage.
+- Posterior fidelity: trace actual classification, regression, ranking and
+  forecast objectives and verify the shadow probe matches each native
+  training loss or is marked incompatible. Test partial plasticity and all
+  model-specific geometry transformations.
+- Accurate hardware cost: measure observer Monte Carlo work, model FLOPs,
+  optimizer steps, peak RAM/VRAM and wall time on the actual execution paths.
+- Full finite datasets: materialize eligible suites and export the complete
+  original-to-Bayesian ledger with exact unknown/blocked reasons, using only
+  permitted data with verified split files.
+- Scientific validation: run bounded real-source pairs, then full multi-seed
+  studies and matched-parameter/compute supplementary controls. Report
+  task-appropriate metrics, calibration limitations and paired uncertainty.
+- CI and publication: run current-HEAD CPU full suite and GPU smoke where
+  hardware exists. Retain CI/logs/receipts with SHA, then commit/push coherent
+  source, tests and documentation to `main` after verified completion.
+
+A current source commit, executed job receipts, validated dataset count,
+completed multi-seed cohort size and final main-branch CI certification
+**remain unverified** and must never be inferred from this document.
