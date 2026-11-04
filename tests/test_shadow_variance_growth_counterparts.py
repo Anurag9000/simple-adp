@@ -142,3 +142,66 @@ def test_variance_streak_restarts_on_architecture_shape_growth():
     assert observer.contraction is None
     assert not observer.observe(grown, inputs, labels)
     assert observer.observations == 1
+
+
+def test_disconnected_trainable_coordinates_do_not_bias_posterior_contraction():
+    class PartiallyConnected(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.used = torch.nn.Linear(3, 2)
+            self.unused = torch.nn.Linear(3, 2)
+
+        def forward(self, x):
+            return self.used(x)
+
+    model = PartiallyConnected()
+    x = torch.randn(9, 3)
+    y = torch.randint(0, 2, (9,))
+    observer = ShadowBGDVariance(mc_samples=3, seed=42, patience=3)
+    assert not observer.observe(model, x, y)
+    assert observer.observations == 1
+    assert observer.contraction is not None
+    assert torch.all(observer.sigma["unused.weight"] == observer.initial_std)
+    assert torch.all(observer.sigma["unused.bias"] == observer.initial_std)
+
+
+def test_all_disconnected_trainable_coordinates_fail_closed():
+    class Disconnected(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.unused = torch.nn.Linear(3, 2)
+
+        def forward(self, x):
+            values = x.sum(dim=1)
+            return torch.stack((values, -values), dim=1)
+
+    model = Disconnected()
+    x = torch.randn(8, 3, requires_grad=True)
+    y = torch.randint(0, 2, (8,))
+    observer = ShadowBGDVariance(mc_samples=2, seed=3, patience=3,
+                                 tolerance=1e9)
+    for _ in range(5):
+        assert observer.observe(model, x, y) is False
+        assert observer.contraction is None
+        assert observer.streak == 0
+        assert observer.observations == 0
+
+
+def test_constant_output_without_gradient_graph_fails_closed():
+    class ConstantOutput(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.unused = torch.nn.Parameter(torch.ones(3))
+
+        def forward(self, x):
+            return torch.zeros(x.shape[0], 2, device=x.device)
+
+    observer = ShadowBGDVariance(mc_samples=2, seed=3, patience=1,
+                                 tolerance=1e9)
+    for _ in range(3):
+        assert observer.observe(
+            ConstantOutput(), torch.randn(4, 3),
+            torch.tensor([0, 1, 0, 1]),
+        ) is False
+        assert observer.contraction is None
+        assert observer.observations == 0

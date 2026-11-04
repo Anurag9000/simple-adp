@@ -159,3 +159,16 @@ A manually changed or copied job ID is therefore rejected even when someone
 recomputes the ordinary JSON manifest digest. The digest alone is not a
 cryptographic signature or authorization mechanism. This safeguard does not
 substitute for checking real task data, source checksums or training receipts.
+
+
+## 2026-11-04 — Gradient-connected posterior coordinate guards
+
+Shadow-BGD variance contraction now excludes nominally trainable but
+gradient-disconnected parameters from the contraction mean. Their sigma
+remains unchanged, but they cannot manufacture posterior stagnation votes.
+A loss with no parameter gradient graph or a model with zero observed
+gradient-connected coordinates fails closed (no architecture proposal).
+These guards apply only to the Bayesian observer; original Adam/AdamW
+training and loss-based growth decisions are untouched. Focused tests
+exercise partially connected, fully disconnected and constant-output
+models. Full scientific calibration remains unverified.

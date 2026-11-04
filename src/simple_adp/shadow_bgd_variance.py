@@ -71,6 +71,7 @@ class ShadowBGDVariance:
             return False
         before = {n: t.clone() for n, t in self.sigma.items()}
         cross = {n: torch.zeros_like(t) for n, t in before.items()}
+        active = {n: False for n in before}
         module_modes = {module: module.training for module in model.modules()}
         buffer_state = {n: b.detach().clone() for n, b in model.named_buffers()}
         try:
@@ -94,11 +95,20 @@ class ShadowBGDVariance:
                         self.contraction = None
                         self.streak = 0
                         return False
+                    # A trainable but disconnected tensor is not an observed
+                    # writable posterior coordinate. In particular, a constant
+                    # output has no gradient graph at all; fail closed rather
+                    # than interpreting unchanged sigma as capacity pressure.
+                    if not loss.requires_grad:
+                        self.contraction = None
+                        self.streak = 0
+                        return False
                     gradients = torch.autograd.grad(
                         loss, tuple(sampled.values()), allow_unused=True
                     )
                     for (n, _), grad in zip(sampled.items(), gradients):
                         if grad is not None:
+                            active[n] = True
                             cross[n] += grad.detach() * eps[n] / self.mc_samples
         finally:
             # Restore every child independently: calling model.train(mode)
@@ -109,6 +119,10 @@ class ShadowBGDVariance:
         total = 0
         new_sigma = {}
         for n, old in before.items():
+            if not active[n]:
+                # Preserve, but never vote with, disconnected coordinates.
+                new_sigma[n] = old
+                continue
             z = old * cross[n] / 2
             updated = old * torch.exp(-torch.asinh(z))
             if not bool(torch.isfinite(updated).all()):
@@ -122,6 +136,12 @@ class ShadowBGDVariance:
                 (updated.detach().double().square()+1e-12)
             ).sum().item())
             total += old.numel()
+        if total == 0:
+            # No gradient-connected trainable coordinates were observed.
+            # This is not a valid posterior-update observation.
+            self.contraction = None
+            self.streak = 0
+            return False
         self.sigma = new_sigma
         self.observations += 1
         self.contraction = contraction_sum / total
