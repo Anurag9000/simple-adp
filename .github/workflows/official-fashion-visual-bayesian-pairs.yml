@@ -1,0 +1,56 @@
+name: Official Fashion-MNIST four real visual shadow-BGD worker pairs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/runner/vision.py'
+      - 'src/simple_adp/runner/worker.py'
+      - 'src/simple_adp/shadow_bgd_variance.py'
+      - 'scripts/run_official_fashion_visual_variance_pairs.py'
+      - 'tests/test_official_visual_variance_pairs.py'
+      - '.github/workflows/official-fashion-visual-bayesian-pairs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  four-real-visual-pairs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+      TRAINING_CONTROL_CPU_ONLY: '1'
+      TABULAR_SKIP_SYSTEMD_SCOPE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install real official image and worker dependencies
+        run: python -m pip install -e '.[vision,dev]'
+      - name: Test one-to-one visual pairing contracts
+        run: |
+          python -m pytest -q -o addopts='' tests/test_official_visual_variance_pairs.py
+      - name: Execute eight real official Fashion-MNIST production workers
+        run: |
+          python scripts/run_official_fashion_visual_variance_pairs.py \
+            --output benchmark-results/official-fashion-four-bayesian-pairs
+      - name: Upload signed source, workers, full checkpoints and paired evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-fashion-four-bayesian-worker-pairs-${{ github.sha }}
+          retention-days: 30
+          if-no-files-found: warn
+          path: |
+            benchmark-results/official-fashion-four-bayesian-pairs/four_visual_pair_receipt.json
+            benchmark-results/official-fashion-four-bayesian-pairs/runtime/manifest.json
+            benchmark-results/official-fashion-four-bayesian-pairs/results/**/result.json
+            benchmark-results/official-fashion-four-bayesian-pairs/results/**/estimator.model.pt
+            benchmark-results/official-fashion-four-bayesian-pairs/results/**/estimator.checkpoint.pt
+            benchmark-results/official-fashion-four-bayesian-pairs/logs/**/*.log

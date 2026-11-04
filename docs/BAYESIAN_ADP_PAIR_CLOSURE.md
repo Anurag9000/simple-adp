@@ -443,3 +443,24 @@ These are local internal-consistency/provenance checks, not cryptographic
 proof of authorized source publication. They do not change Adam/AdamW,
 growth gates, sampling, model initialization or held-out evaluation.
 Focused corruption tests and CI coverage accompany the implementation.
+
+
+## 2026-11-04 — Official real-image four-family original/variance worker proof
+
+`scripts/run_official_fashion_visual_variance_pairs.py` uses genuine
+official `torchvision.datasets.FashionMNIST` train/test images, one
+fixed held-out partition (40 train/20 validation/20 official test)
+and the production unsliced suite planner. It executes eight separately
+signed `runner.worker` child jobs: original-loss and shadow-BGD variance
+growth for `vision_inner` (V02), `vision_v03` (tiny ViT),
+`vision_v04` (tiny ConvNeXt) and `vision_v07_token` (Mixer token site).
+
+The strict receipt requires data/split/derived seed parity, identical frozen
+source weight SHA within each pair, exact job IDs/criterion, finite held-out
+metrics and both model/checkpoint hashes. The test workflow is
+`.github/workflows/official-fashion-visual-bayesian-pairs.yml`.
+**Status remains NOT_EXECUTED until the actual workflow and artifact pass.**
+The compared encoders are **tiny frozen random architectures**, not actual
+published pretrained checkpoints, and neither all 21 vision adapters nor
+all 13 controllers are covered by this small proof. No matched-compute
+or general superiority inference is warranted.
