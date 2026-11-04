@@ -405,3 +405,23 @@ held-out metrics, derived pair seeds and exact stage-checkpoint hashes
 are preserved in [BAYESIAN_ADP_REAL_WORKER_RECEIPT.md](BAYESIAN_ADP_REAL_WORKER_RECEIPT.md).
 This closes a bounded **worker-path execution proof** only, not the entire
 data/visual/multi-seed/science campaign.
+
+
+## Whole-repository CPU suite evidence: complete native-method source baseline
+
+GitHub Actions run
+[41842958104](https://github.com/Anurag9000/simple-adp/actions/runs/41842958104)
+successfully executed **all 19,528 CPU-enabled pytest tests** at source
+`10a69c2615427d4fcd6ffe9566deee955944cee3`, with exactly two
+physical-CUDA-only skips, in 678.37 seconds. This source revision includes
+all 13 bounded real Iris adaptive method paired jobs. No failure filtering
+was applied. The run demonstrates repository-wide CPU regression for that
+**exact revision** and does not certify subsequent commits; the real-data
+worker provider and later integrity/CI changes require their own
+source-pinned full suite status.
+
+The standalone Bayesian regression suite at
+[41843801780](https://github.com/Anurag9000/simple-adp/actions/runs/41843801780)
+also passed **305 focused tests** after scikit-learn was added to the
+test workflow. No physical GPU or external pretrained source checkpoint
+execution is inferred from either run.
