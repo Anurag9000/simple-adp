@@ -242,3 +242,15 @@ runs it without downloading an external dataset.
 Status remains **NOT_EXECUTED** until the workflow completes and its actual
 result logs and artifacts are verified. This bounded regression run does not
 claim forecasting/recommendation, multi-seed or full benchmark closure.
+
+
+## CI-verified five-seed Iris results (2026-11-04)
+
+Five real-data Iris pairs at seeds 73–77 passed GitHub Actions
+`41839475995`, including the independent downstream receipt-hash
+verification and paired-bootstrap analysis. The observed mean held-out
+accuracy difference (Bayesian minus original) was −0.113333; exploratory
+seed-bootstrap 95% interval [−0.240000, −0.006667], **conditional on one
+fixed split**. Full original/variance, all-dataset scientific closure is
+still outstanding. Source, metrics, artifacts and limits:
+[BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md](BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md).
