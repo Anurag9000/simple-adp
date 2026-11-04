@@ -428,10 +428,6 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/temporal_datasets.py` | `UCIElectricityProvider._data_member` | 70-74 |
 | `src/simple_adp/runner/temporal_datasets.py` | `UCIElectricityProvider.load_task` | 76-110 |
 | `src/simple_adp/runner/temporal_datasets.py` | `UCIElectricityProvider.list_splits` | 112-118 |
-| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter._source` | 48-61 |
-| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter.enumerate_routes` | 63-85 |
-| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter.fit_predict` | 87-238 |
-| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter.fit_predict.<locals>.take` | 113-114 |
 | `src/simple_adp/runner/vision.py` | `VisionDatasetProvider.list_tasks` | 47-50 |
 | `src/simple_adp/runner/vision.py` | `VisionDatasetProvider._limit` | 53-60 |
 | `src/simple_adp/runner/vision.py` | `VisionDatasetProvider._toy` | 63-74 |
@@ -448,6 +444,10 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/vision.py` | `VisionMixerModelAdapter.__init__` | 580-584 |
 | `src/simple_adp/runner/vision.py` | `VisionMultistageModelAdapter.__init__` | 595-599 |
 | `src/simple_adp/runner/vision.py` | `VisionAdapterBankModelAdapter.__init__` | 610-614 |
+| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter._source` | 48-61 |
+| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter.enumerate_routes` | 63-85 |
+| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter.fit_predict` | 87-238 |
+| `src/simple_adp/runner/vision_source.py` | `VisionSourceConvNeXtModelAdapter.fit_predict.<locals>.take` | 113-114 |
 | `src/simple_adp/runner/watchdog.py` | `master_alive` | 15-23 |
 | `src/simple_adp/runner/watchdog.py` | `monitor` | 26-92 |
 | `src/simple_adp/runner/watchdog.py` | `main` | 95-101 |
