@@ -43,3 +43,32 @@ jobs:
           path: benchmark-results/bounded-iris-paired-seed-${{ matrix.seed }}/
           retention-days: 30
           if-no-files-found: warn
+
+  analyze-iris-seeds:
+    needs: iris-real-pair
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install numeric analysis dependency
+        run: python -m pip install 'numpy>=1.26'
+      - name: Download all five completed paired-model receipts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bounded-iris-bayesian-pair-seed-*-${{ github.sha }}
+          path: benchmark-results/bounded-iris-multiseed-inputs
+      - name: Verify every source/model hash and calculate paired seed-bootstrap intervals
+        run: |
+          python scripts/analyze_bounded_iris_pair_results.py \
+            benchmark-results/bounded-iris-multiseed-inputs/*/pair_receipt.json \
+            --output benchmark-results/bounded-iris-multiseed-comparison.json
+      - name: Export verified multi-seed analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounded-iris-multiseed-analysis-${{ github.sha }}
+          path: benchmark-results/bounded-iris-multiseed-comparison.json
+          retention-days: 30
+          if-no-files-found: error
