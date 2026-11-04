@@ -49,7 +49,15 @@ def test_missing_legacy_stage_is_marked_incomplete():
     assert evidence == {"status": "UNAVAILABLE", "gate_ready": False}
 
 
-@pytest.mark.parametrize("bad", [-2, float("nan"), float("inf")])
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf")])
 def test_invalid_posterior_contraction_is_rejected(bad):
     with pytest.raises(ValueError, match="nonfinite"):
         _shadow_best_stage_evidence(_stage(contraction=bad))
+
+
+def test_negative_finite_contraction_is_legitimate_evidence():
+    # Shadow sigma can expand rather than contract on an observation;
+    # rejecting all negative log contractions would corrupt actual runs.
+    evidence = _shadow_best_stage_evidence(_stage(contraction=-2.0))
+    assert evidence["contraction"] == -2.0
+    assert not evidence["gate_ready"]
