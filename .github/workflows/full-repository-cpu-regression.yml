@@ -22,6 +22,10 @@ jobs:
       SIMPLE_ADP_ENABLE_V04_SOURCE: '0'
       SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
       TRAINING_CONTROL_CPU_ONLY: '1'
+      # GitHub /tmp is often a small tmpfs; exact ViT checkpoints need disk-backed space.
+      TMPDIR: ${{ runner.temp }}
+      TMP: ${{ runner.temp }}
+      TEMP: ${{ runner.temp }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -38,10 +42,12 @@ jobs:
       - name: Install all project testing extras
         run: python -m pip install -e '.[dev,vision,benchmark,physionet,odds]'
       - name: Run every repository pytest test, without filtering source modules
-        run: python -m pytest -q tests
+        run: |
+          df -h "$RUNNER_TEMP" /tmp
+          python -m pytest -q --basetemp="$RUNNER_TEMP/simple-adp-full-pytest" tests
       - name: Inspect ephemeral workspace if source-model checkpoint IO fails
         if: failure()
         run: |
-          df -h . /tmp
+          df -h . /tmp "$RUNNER_TEMP"
+          du -sh "$RUNNER_TEMP/simple-adp-full-pytest" 2>/dev/null || true
           du -sh /tmp/pytest-of-runner 2>/dev/null || true
-          du -sh "${{ runner.temp }}" 2>/dev/null || true
