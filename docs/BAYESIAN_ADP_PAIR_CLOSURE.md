@@ -490,3 +490,18 @@ configuration, then produces `best_stage_posterior_audit.json` during
 future real-worker CI. Its MC-forward counts are declared **lower bounds**,
 not full training FLOPs, runtime or energy. Posterior calibration and
 a complete decision time series are still outstanding.
+
+
+## Completed official Fashion-MNIST visual shadow-BGD source-worker proof
+
+Actual GitHub run `41850723919` **passed** at source `9c240c6ded31e8a12a4093647789159098dddbd5`.
+All eight V02/V03/V04/V07-token original/shadow jobs completed, and an
+independent read of the artifact ZIP verified model, checkpoint and
+result SHA-256 for every arm. Original selected width 3, shadow-BGD
+selected width 2 in all four families; both scored chance-level
+10% held-out accuracy with 40/20/20 real Fashion-MNIST rows. The
+full source/seed/provenance and scientific limitations are recorded in
+[BAYESIAN_ADP_REAL_VISUAL_FASHION_RECEIPT.md](BAYESIAN_ADP_REAL_VISUAL_FASHION_RECEIPT.md).
+The original `NOT_EXECUTED` planning note is superseded by this
+source-pinned real execution record, but all pretrained-source and
+full-scale generalization gates remain outstanding.
