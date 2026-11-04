@@ -254,3 +254,16 @@ seed-bootstrap 95% interval [−0.240000, −0.006667], **conditional on one
 fixed split**. Full original/variance, all-dataset scientific closure is
 still outstanding. Source, metrics, artifacts and limits:
 [BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md](BAYESIAN_ADP_IRIS_MULTI_SEED_REPORT.md).
+
+
+## Verified bounded real Diabetes regression (2026-11-04)
+
+The source-matched Diabetes regression CPU pair succeeded in GitHub Actions
+`41839748050` at commit `d385153130d0a0d51c441f4cbfa0ed20653f2b30`.
+Independent ZIP verification confirmed the model/best-checkpoint hashes,
+split archive, finite held-out RMSE/MAE/R² and safe checkpoint loading.
+Original RMSE 164.9989 (width 6), Bayesian RMSE 165.2817 (width 3),
+one seed, four-epoch bounded training. Exact reproducibility evidence:
+[BAYESIAN_ADP_DIABETES_REAL_DATA_RECEIPT.md](BAYESIAN_ADP_DIABETES_REAL_DATA_RECEIPT.md).
+This proves one bounded real supervised **regression** pair, not full
+statistical or task-family closure.
