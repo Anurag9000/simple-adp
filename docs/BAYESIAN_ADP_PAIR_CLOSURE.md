@@ -527,3 +527,19 @@ These are **diagnostic-only** changes: model weights, optimizer, growth
 criterion, candidate acceptance and RNG state are untouched. The
 independently verified source revision for this new trace is pending
 its new full visual CI result.
+
+
+## 2026-11-04 — Signed versus legacy manifest replay compatibility
+
+The full CPU regression surfaced an intentional legacy test fixture
+whose `RunIdentity.model_route` is not executable as its recorded
+`ModelRoute`. Preserve the original `SuitePlan.from_manifest`
+**read-only metadata** compatibility when `manifest_digest` is absent,
+but require canonical IDs and route binding when it is present. The
+actual worker entry point remains **unconditionally strict** and
+rejects noncanonical identities and split archives regardless of
+manifest vintage. New regression coverage asserts the signed case
+fails closed. A separate checkpoint-override worker test now uses
+a real minimal split and array-backed task with valid source indices,
+rather than a mock missing the fields verified by the new worker.
+These changes do not relax training-provenance validation.

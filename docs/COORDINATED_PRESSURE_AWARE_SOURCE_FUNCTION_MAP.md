@@ -220,10 +220,10 @@ Regenerate or verify it with `python scripts/generate_runner_function_map.py` or
 | `src/simple_adp/runner/plan.py` | `RunIdentity.run_id.<locals>.safe` | 183-185 |
 | `src/simple_adp/runner/plan.py` | `RunIdentity.as_dict` | 203-206 |
 | `src/simple_adp/runner/plan.py` | `RunSpec.as_dict` | 221-232 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.from_manifest` | 242-275 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.build` | 278-700 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.build.<locals>.route_group` | 324-344 |
-| `src/simple_adp/runner/plan.py` | `SuitePlan.write_manifest` | 702-728 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.from_manifest` | 242-279 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.build` | 282-704 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.build.<locals>.route_group` | 328-348 |
+| `src/simple_adp/runner/plan.py` | `SuitePlan.write_manifest` | 706-732 |
 | `src/simple_adp/runner/plugins.py` | `_instantiate` | 20-21 |
 | `src/simple_adp/runner/plugins.py` | `load_registries` | 24-76 |
 | `src/simple_adp/runner/pressure_wrapper.py` | `PressureSample.external_host_mib` | 31-32 |

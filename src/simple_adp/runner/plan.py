@@ -260,7 +260,11 @@ class SuitePlan:
             if fixed is not None:
                 route_value["fixed_grid"] = tuple(tuple(int(width) for width in vector) for vector in fixed)
             route = ModelRoute(**route_value)
-            validate_rebuilt_spec(raw, identity, route)
+            # Historical unsigned manifests remain readable for metadata
+            # inspection. Their jobs still undergo unconditional canonical
+            # validation when actually launched by runner.worker.
+            if expected_digest is not None:
+                validate_rebuilt_spec(raw, identity, route)
             runs.append(RunSpec(
                 identity=identity,
                 task_ref=task_ref,

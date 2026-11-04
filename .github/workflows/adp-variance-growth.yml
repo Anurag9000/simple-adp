@@ -19,6 +19,8 @@ on:
       - 'scripts/analyze_bounded_iris_pair_results.py'
       - 'tests/test_runner_split_archive_integrity.py'
       - 'tests/test_runner_worker_spec_identity.py'
+      - 'tests/test_runner_worker.py'
+      - 'tests/test_runner_contracts.py'
       - 'tests/test_official_visual_variance_pairs.py'
       - 'tests/test_bounded_worker_shadow_evidence.py'
       - 'scripts/audit_bounded_worker_shadow_evidence.py'
@@ -64,5 +66,7 @@ jobs:
             tests/test_bounded_diabetes_paired_analysis.py \
             tests/test_runner_split_archive_integrity.py \
             tests/test_runner_worker_spec_identity.py \
+            tests/test_runner_worker.py \
+            tests/test_runner_contracts.py \
             tests/test_official_visual_variance_pairs.py \
             tests/test_bounded_worker_shadow_evidence.py

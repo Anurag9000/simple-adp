@@ -688,6 +688,15 @@ def test_device_capable_job_metadata_round_trips_and_defaults_true(tmp_path):
     manifest_path.write_text(json.dumps({"run_signature": "signature", "jobs": [legacy_job]}))
     assert SuitePlan.from_manifest(manifest_path).runs[0].device_capable is True
 
+    # A checksum-bound modern manifest must not preserve this intentionally
+    # mismatched, metadata-only legacy route identity.
+    from simple_adp.runner.plan import manifest_compatibility_digest
+    signed = {"run_signature": "signature", "jobs": [disabled.as_dict()]}
+    signed["manifest_digest"] = manifest_compatibility_digest(signed)
+    manifest_path.write_text(json.dumps(signed))
+    with pytest.raises(ValueError, match="canonical worker model_route"):
+        SuitePlan.from_manifest(manifest_path)
+
 
 def test_pressure_pause_updates_total_and_reason_specific_counters(tmp_path, monkeypatch):
     import simple_adp.runner.scheduler as scheduler_module

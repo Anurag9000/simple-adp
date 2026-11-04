@@ -88,7 +88,13 @@ def test_worker_uses_coordinator_checkpoint_path_for_estimator_resume(tmp_path, 
     monkeypatch.setattr(worker, "enable_optional_gpu_accelerators", lambda: startup_order.append("backend"))
     monkeypatch.setattr(worker, "seed_everything", lambda _seed: startup_order.append("seed"))
     monkeypatch.setattr(worker, "resolve_torch_device", lambda: "cpu")
-    monkeypatch.setattr(worker.SplitSpec, "load", lambda *_args, **_kwargs: SimpleNamespace(train_indices=(0, 1)))
+    monkeypatch.setattr(
+        worker.SplitSpec, "load",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            train_indices=(0, 1), validation_indices=(2,),
+            test_indices=(3,), split_sha256=identity.split_sha256,
+        ),
+    )
 
     class ModelAdapter:
         def fit_predict(self, _route, **kwargs):
@@ -118,7 +124,7 @@ def test_worker_uses_coordinator_checkpoint_path_for_estimator_resume(tmp_path, 
 
     datasets = SimpleNamespace(get=lambda _name: SimpleNamespace(
         load_task=lambda _ref: SimpleNamespace(
-            X=SimpleNamespace(), y=SimpleNamespace(), task_kind="custom",
+            X=np.zeros((4, 2), dtype=np.float32), y=SimpleNamespace(), task_kind="custom",
             task_adapter=SimpleNamespace(), feature_schema=None,
         ),
     ))
