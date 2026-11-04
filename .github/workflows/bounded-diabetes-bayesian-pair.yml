@@ -1,0 +1,41 @@
+name: Bounded real Diabetes regression Bayesian ADP pair
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/**'
+      - 'scripts/run_bounded_diabetes_bayesian_pair.py'
+      - '.github/workflows/bounded-diabetes-bayesian-pair.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diabetes-real-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU-only regression dependencies
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.6.0
+          python -m pip install -e '.[dev]' --no-deps
+          python -m pip install numpy pandas psutil 'scikit-learn>=1.5'
+      - name: Execute matched real Diabetes regression growth pair
+        run: |
+          python scripts/run_bounded_diabetes_bayesian_pair.py --seed 73 --output benchmark-results/bounded-diabetes-pair
+      - name: Retain model bundles, checkpoints and actual regression metric receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounded-diabetes-bayesian-pair-${{ github.sha }}
+          path: benchmark-results/bounded-diabetes-pair/
+          retention-days: 30
+          if-no-files-found: warn

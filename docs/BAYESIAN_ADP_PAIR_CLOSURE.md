@@ -228,3 +228,17 @@ This is exploratory uncertainty conditional on the **one fixed Iris split**,
 not cross-dataset confidence or a substitute for compute-/capacity-matched
 controls. The five-seed CI run must finish before it can be counted as
 empirical evidence.
+
+
+## Bounded real diabetes regression pair
+
+`scripts/run_bounded_diabetes_bayesian_pair.py` defines a single-seed paired
+supervised regression study on the 442-row real scikit-learn Diabetes dataset.
+It uses a shared fixed split, identical native ADP-W-All capacity/optimizer/
+epoch limits, the actual Adam/AdamW-compatible regression loss, and separate
+model/checkpoint hashes. `.github/workflows/bounded-diabetes-bayesian-pair.yml`
+runs it without downloading an external dataset.
+
+Status remains **NOT_EXECUTED** until the workflow completes and its actual
+result logs and artifacts are verified. This bounded regression run does not
+claim forecasting/recommendation, multi-seed or full benchmark closure.
