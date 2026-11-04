@@ -45,6 +45,52 @@ from .visual_source_vit import SourceViTSpec, VisualSourceViTFFN
 SUPPORTED_V02_METHODS = frozenset(MODEL_REGISTRY)
 
 
+def _shadow_best_stage_evidence(stage: Any) -> dict[str, object]:
+    """Serializable best-epoch gate evidence, never a replacement for posterior state.
+
+    A legacy stage without the observer is visibly INCOMPLETE, not silently
+    represented as a zero-contraction event. Actual growth still uses the
+    untouched StageResult.variance_stagnated decision.
+    """
+    state = getattr(stage, "checkpoint_state", None)
+    observer = state.get("shadow_bgd_variance") if isinstance(state, dict) else None
+    if not isinstance(observer, dict):
+        return {"status": "UNAVAILABLE", "gate_ready": bool(stage.variance_stagnated)}
+    config = observer.get("config")
+    if not isinstance(config, (tuple, list)) or len(config) != 5:
+        raise ValueError("visual shadow diagnostic lacks observer hyperparameters")
+    _, mc_samples, tolerance, patience, seed = config
+    observations = observer.get("observations")
+    streak = observer.get("streak")
+    contraction = observer.get("contraction")
+    if (type(observations) is not int or type(streak) is not int
+            or not 0 <= streak <= observations
+            or type(mc_samples) is not int or mc_samples < 1
+            or type(patience) is not int or patience < 1):
+        raise ValueError("visual shadow diagnostic has invalid counters")
+    if (contraction is not None and (
+        type(contraction) not in {int, float}
+        or not np.isfinite(contraction)
+    )):
+        raise ValueError("visual shadow diagnostic has nonfinite contraction")
+    gate = bool(observations >= patience and streak >= patience)
+    if gate != bool(stage.variance_stagnated):
+        raise ValueError("visual shadow diagnostic disagrees with actual stage growth gate")
+    return {
+        "status": "BEST_STAGE_OBSERVED",
+        "observation_count": observations,
+        "mc_samples_per_observation": mc_samples,
+        "lower_bound_shadow_forward_passes": observations * mc_samples,
+        "contraction": contraction,
+        "tolerance": float(tolerance),
+        "streak": streak,
+        "required_streak": patience,
+        "observer_seed": seed,
+        "gate_ready": gate,
+        "scope": "selected best-epoch stage only, not a full minibatch trace",
+    }
+
+
 def _hash_array(digest: Any, item: Any) -> None:
     array = np.ascontiguousarray(item.detach().cpu().numpy() if torch.is_tensor(item) else np.asarray(item))
     if array.dtype.hasobject:
@@ -457,6 +503,19 @@ class VisualResidualSearch:
         budget["optimizer_steps"] += int(stage.batches)
         budget["trained_epochs"] += int(stage.epochs)
         budget["trained_stages"] += 1
+        if self.settings.expansion_criterion == "variance_stagnation":
+            trace = state.setdefault("posterior_gate_trace", [])
+            entry = _shadow_best_stage_evidence(stage)
+            trace.append({
+                "stage": kind,
+                "architecture": list(current.hidden_widths),
+                **entry,
+            })
+            state["posterior_gate_trace_complete"] = bool(
+                state.get("posterior_gate_trace_complete", True)
+                and entry["status"] == "BEST_STAGE_OBSERVED"
+                and len(trace) == budget["trained_stages"]
+            )
         if kind == "depth_warmup":
             budget["warmup_stages"] += 1
         if self.track_training_forward_macs:

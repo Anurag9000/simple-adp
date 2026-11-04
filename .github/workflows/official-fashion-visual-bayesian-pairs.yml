@@ -9,6 +9,8 @@ on:
       - 'src/simple_adp/shadow_bgd_variance.py'
       - 'scripts/run_official_fashion_visual_variance_pairs.py'
       - 'tests/test_official_visual_variance_pairs.py'
+      - 'src/simple_adp/visual_search.py'
+      - 'tests/test_visual_shadow_gate_trace.py'
       - '.github/workflows/official-fashion-visual-bayesian-pairs.yml'
   workflow_dispatch:
 
@@ -35,7 +37,7 @@ jobs:
         run: python -m pip install -e '.[vision,dev]'
       - name: Test one-to-one visual pairing contracts
         run: |
-          python -m pytest -q -o addopts='' tests/test_official_visual_variance_pairs.py
+          python -m pytest -q -o addopts='' tests/test_official_visual_variance_pairs.py tests/test_visual_shadow_gate_trace.py
       - name: Execute eight real official Fashion-MNIST production workers
         run: |
           python scripts/run_official_fashion_visual_variance_pairs.py \

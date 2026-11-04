@@ -505,3 +505,25 @@ full source/seed/provenance and scientific limitations are recorded in
 The original `NOT_EXECUTED` planning note is superseded by this
 source-pinned real execution record, but all pretrained-source and
 full-scale generalization gates remain outstanding.
+
+
+## 2026-11-04 — Persistent visual Bayesian stage-gate diagnostics
+
+`VisualResidualSearch._finish_stage` now records a scalar-only
+`posterior_gate_trace` for each completed Bayesian-variance training
+stage (including depth warmups), together with
+`posterior_gate_trace_complete`. The trace is stored in the existing
+atomic search checkpoint and survives the fact that temporary
+`stage_state` is cleared after stage completion. Each entry records
+the actual best-epoch observer count, per-observation MC samples,
+contraction, tolerance, streak/patience, seed, gate decision and
+lower-bound extra forward passes; malformed counters or a disagreement
+with the actual `StageResult.variance_stagnated` fails closed.
+Legacy resumed stages without this evidence are explicitly incomplete.
+
+The official Fashion-MNIST visual source-to-worker receipt now requires
+a complete verified gate trace for all four Bayesian visual arms.
+These are **diagnostic-only** changes: model weights, optimizer, growth
+criterion, candidate acceptance and RNG state are untouched. The
+independently verified source revision for this new trace is pending
+its new full visual CI result.

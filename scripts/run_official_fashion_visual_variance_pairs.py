@@ -105,6 +105,20 @@ def validate_completed_job(job, *, run_signature):
         raise ValueError("visual result has no complete model/checkpoint artifacts")
     if not raw.get("frozen_sha256"):
         raise ValueError("visual result does not record its frozen source weights")
+    import torch
+    saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
+    payload = saved.get("payload", {}) if isinstance(saved, dict) else {}
+    posterior_trace = payload.get("posterior_gate_trace")
+    posterior_complete = payload.get("posterior_gate_trace_complete", False)
+    if alt:
+        if (posterior_complete is not True or not isinstance(posterior_trace, list)
+                or not posterior_trace or any(
+                    item.get("status") != "BEST_STAGE_OBSERVED"
+                    for item in posterior_trace
+                )):
+            raise ValueError("visual Bayesian result lacks complete stage posterior gate evidence")
+    elif posterior_trace is not None:
+        raise ValueError("original visual source unexpectedly recorded a shadow posterior")
     return {
         "model_adapter": job.model_adapter,
         "arm": "bayesian" if alt else "original",
@@ -120,6 +134,10 @@ def validate_completed_job(job, *, run_signature):
         "frozen_sha256": raw["frozen_sha256"],
         "selected_architecture": raw.get("selected_architecture"),
         "history_entries": raw.get("history_entries"),
+        **({
+            "posterior_gate_trace_complete": bool(posterior_complete),
+            "posterior_gate_trace": posterior_trace,
+        } if alt else {}),
         "heldout_metrics": {key: float(metrics[key]) for key in (
             "accuracy", "macro_f1", "top_label_ece_10", "multiclass_brier"
         )},
