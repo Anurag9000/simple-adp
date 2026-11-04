@@ -172,3 +172,14 @@ These guards apply only to the Bayesian observer; original Adam/AdamW
 training and loss-based growth decisions are untouched. Focused tests
 exercise partially connected, fully disconnected and constant-output
 models. Full scientific calibration remains unverified.
+
+
+## 2026-11-04 — Job output namespace binding
+
+The static pair auditor now enforces the planner's actual output namespace
+contract: each `result_dir` must terminate in the identity-derived nested
+`run_id`, and the worker spec command must terminate in
+`<run_id>/run_spec.json`. Unique-but-misbound paths are rejected, so both
+source and variance jobs retain distinguishable, self-consistent artifacts.
+This is still a structural certificate; it is not proof that the paths
+contain real completed training results.

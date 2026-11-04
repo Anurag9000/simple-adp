@@ -155,6 +155,11 @@ def test_result_collision_and_changed_plan_signature_rejected():
         audit_manifest(_manifest([source, alt]))
     source, alt, _ = _jobs()
     alt["identity"]["run_signature"] = "other"
+    # Preserve internal ID/path integrity so this tests the manifest-level
+    # signature check rather than the earlier canonical-ID defense.
+    alt["identity"]["run_id"] = _canonical_id(alt["identity"])
+    alt["result_dir"] = "/results/" + alt["identity"]["run_id"]
+    alt["command"][-1] = "/jobs/" + alt["identity"]["run_id"] + "/run_spec.json"
     with pytest.raises(ValueError, match="run signature"):
         audit_manifest(_manifest([source, alt]))
 
@@ -198,3 +203,15 @@ def test_forged_or_incomplete_run_identity_fails_even_if_manifest_digest_is_reco
         source["identity"]["unexpected"] = "hidden"
     with pytest.raises(ValueError, match="run_id|route label|identity"):
         audit_manifest(_manifest([source, alt]))
+
+
+def test_forged_result_and_spec_namespaces_are_rejected_independently():
+    original, alternative, _ = _jobs()
+    alternative["result_dir"] = "/results/unrelated/collision"
+    with pytest.raises(ValueError, match="result directory"):
+        audit_manifest(_manifest([original, alternative]))
+
+    original, alternative, _ = _jobs()
+    alternative["command"][-1] = "/jobs/unrelated/run_spec.json"
+    with pytest.raises(ValueError, match="worker specification path"):
+        audit_manifest(_manifest([original, alternative]))

@@ -11,6 +11,7 @@ import json
 import os
 from collections import Counter
 from dataclasses import fields
+from pathlib import Path
 from typing import Any
 
 from .plan import RunIdentity
@@ -204,6 +205,15 @@ def audit_manifest(manifest: dict[str, Any], *, require_full: bool = True,
             raise ValueError(f"duplicate or absent result directory: {job_id}")
         if not isinstance(cmd, list) or not cmd or not isinstance(cmd[-1], str) or cmd[-1] in seen_spec_paths:
             raise ValueError(f"duplicate or absent worker spec command path: {job_id}")
+        # Canonical planner output namespaces are anchored to the immutable
+        # RunIdentity ID, not merely unique strings. Otherwise an attacker
+        # can redirect a paired arm to another job's artifacts without
+        # triggering the pair's simple equality check.
+        id_parts = Path(job_id).parts
+        if Path(result_dir).parts[-len(id_parts):] != id_parts:
+            raise ValueError(f"job result directory is not bound to run_id: {job_id}")
+        if Path(cmd[-1]).parts[-len(id_parts) - 1:] != (*id_parts, "run_spec.json"):
+            raise ValueError(f"job worker specification path is not bound to run_id: {job_id}")
         seen_result_dirs.add(result_dir)
         seen_spec_paths.add(cmd[-1])
     originals = {key: job for key, job in by_id.items() if "counterpart_of" not in _settings(job)}
