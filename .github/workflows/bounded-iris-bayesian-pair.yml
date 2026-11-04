@@ -1,0 +1,41 @@
+name: Bounded real Iris original-versus-Bayesian ADP CPU pair
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/simple_adp/**'
+      - 'scripts/run_bounded_iris_bayesian_pair.py'
+      - '.github/workflows/bounded-iris-bayesian-pair.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  iris-real-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      SIMPLE_ADP_DISABLE_GPU_ACCELERATORS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU-only science dependencies
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.6.0
+          python -m pip install -e '.[dev]' --no-deps
+          python -m pip install numpy pandas psutil 'scikit-learn>=1.5'
+      - name: Execute matched real Iris supervised architecture searches
+        run: |
+          python scripts/run_bounded_iris_bayesian_pair.py --seed 73 --output benchmark-results/bounded-iris-paired
+      - name: Retain model checkpoints and source-hashed scientific receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounded-iris-bayesian-pair-${{ github.sha }}
+          path: benchmark-results/bounded-iris-paired/
+          retention-days: 30
+          if-no-files-found: warn

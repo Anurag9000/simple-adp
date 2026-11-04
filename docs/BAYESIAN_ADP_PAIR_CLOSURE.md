@@ -183,3 +183,21 @@ contract: each `result_dir` must terminate in the identity-derived nested
 source and variance jobs retain distinguishable, self-consistent artifacts.
 This is still a structural certificate; it is not proof that the paths
 contain real completed training results.
+
+
+## Bounded genuine dataset pair: sklearn Iris (2026-11-04)
+
+`scripts/run_bounded_iris_bayesian_pair.py` defines a reproducible single-seed
+classification proof on the real Fisher Iris dataset distributed with
+scikit-learn, not synthetic images or FakeData. It creates one train/validation/
+test split, checks legacy/v2 split digests, resets the model RNG before each
+arm, and uses `SimpleADPModelAdapter.fit_predict` on ADP-W-All with loss
+versus shadow-BGD growth only. The two arms have independent checkpoints and
+inference bundles, with an inspectable JSON metric/artifact receipt.
+
+`.github/workflows/bounded-iris-bayesian-pair.yml` executes this proof on a
+CPU GitHub Actions runner and uploads its receipt and model artifacts. Merely
+committing the workflow is **not** evidence that its execution succeeded.
+Until a successful run and verified log/artifact is observed, its status is
+`NOT_EXECUTED`. Even once passed, it remains one dataset/one seed, not the
+full native/visual/provider multi-seed study.
