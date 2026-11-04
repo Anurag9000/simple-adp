@@ -214,3 +214,17 @@ are recorded in [BAYESIAN_ADP_IRIS_REAL_DATA_RECEIPT.md](BAYESIAN_ADP_IRIS_REAL_
 This advances **one bounded real supervised pair** to
 `BOUNDED_REAL_DATA_PASSED`; it does not certify the full planned matrix
 or statistical superiority.
+
+
+## Bounded Iris per-seed paired bootstrap analyzer (2026-11-04)
+
+`scripts/analyze_bounded_iris_pair_results.py` accepts multiple downloaded
+`pair_receipt.json` files with their per-arm model bundles and split archives.
+Before comparison, it verifies each arm's inference-bundle SHA-256, split
+SHA-256, growth trigger, metric finiteness, distinct seed and common dataset,
+source revision, split and route. It reports per-seed paired differences
+and seeded percentile bootstrap intervals over *model seeds only*.
+This is exploratory uncertainty conditional on the **one fixed Iris split**,
+not cross-dataset confidence or a substitute for compute-/capacity-matched
+controls. The five-seed CI run must finish before it can be counted as
+empirical evidence.
