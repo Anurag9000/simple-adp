@@ -267,3 +267,21 @@ one seed, four-epoch bounded training. Exact reproducibility evidence:
 [BAYESIAN_ADP_DIABETES_REAL_DATA_RECEIPT.md](BAYESIAN_ADP_DIABETES_REAL_DATA_RECEIPT.md).
 This proves one bounded real supervised **regression** pair, not full
 statistical or task-family closure.
+
+
+## Real Diabetes five-seed comparison protocol
+
+A five-model-seed CPU workflow now pairs original loss-triggered and
+shadow-BGD variance-triggered ADP using the same real 264/89/89 Diabetes
+partition. Each seed exports both trained model bundles and stage
+checkpoints with SHA-256 receipts. The downstream
+`scripts/analyze_bounded_diabetes_pair_results.py` independently
+checks dataset, source commit, split identity, every model and
+checkpoint digest and finite regression metrics before seed-paired
+RMSE/MAE/R² bootstrap analysis.
+
+The analysis conditions on one fixed Diabetes split; it is not
+cross-dataset science. Source availability, incomplete optimization at
+four epochs, and unmeasured shadow MC compute remain explicit limits.
+The five-seed cohort is NOT_EXECUTED until new GitHub Actions evidence
+is inspected and the artifacts verified.

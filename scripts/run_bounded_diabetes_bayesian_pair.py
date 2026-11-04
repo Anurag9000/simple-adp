@@ -138,6 +138,8 @@ def run(output, *, seed=73):
             "growth_trigger": criterion,
             "model_artifact_sha256": _hash(artifact),
             "model_artifact_size_bytes": Path(artifact).stat().st_size,
+            "checkpoint_sha256": _hash(arm_dir / "checkpoint.pt"),
+            "checkpoint_size_bytes": (arm_dir / "checkpoint.pt").stat().st_size,
         })
         arms[arm] = result
     science = {

@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/simple_adp/**'
       - 'scripts/run_bounded_diabetes_bayesian_pair.py'
+      - 'scripts/analyze_bounded_diabetes_pair_results.py'
       - '.github/workflows/bounded-diabetes-bayesian-pair.yml'
   workflow_dispatch:
 permissions:
@@ -13,6 +14,10 @@ jobs:
   diabetes-real-pair:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [73, 74, 75, 76, 77]
     env:
       OMP_NUM_THREADS: '2'
       MKL_NUM_THREADS: '2'
@@ -30,12 +35,41 @@ jobs:
           python -m pip install numpy pandas psutil 'scikit-learn>=1.5'
       - name: Execute matched real Diabetes regression growth pair
         run: |
-          python scripts/run_bounded_diabetes_bayesian_pair.py --seed 73 --output benchmark-results/bounded-diabetes-pair
+          python scripts/run_bounded_diabetes_bayesian_pair.py --seed ${{ matrix.seed }} --output benchmark-results/bounded-diabetes-pair-seed-${{ matrix.seed }}
       - name: Retain model bundles, checkpoints and actual regression metric receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: bounded-diabetes-bayesian-pair-${{ github.sha }}
-          path: benchmark-results/bounded-diabetes-pair/
+          name: bounded-diabetes-bayesian-pair-seed-${{ matrix.seed }}-${{ github.sha }}
+          path: benchmark-results/bounded-diabetes-pair-seed-${{ matrix.seed }}/
           retention-days: 30
           if-no-files-found: warn
+
+  analyze-diabetes-seeds:
+    needs: diabetes-real-pair
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install numeric comparison dependencies
+        run: python -m pip install 'numpy>=1.26'
+      - name: Download paired regression model artifacts from all seeds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bounded-diabetes-bayesian-pair-seed-*-${{ github.sha }}
+          path: benchmark-results/bounded-diabetes-multiseed-inputs
+      - name: Validate source and model receipts and compute paired seed intervals
+        run: |
+          python scripts/analyze_bounded_diabetes_pair_results.py \
+            benchmark-results/bounded-diabetes-multiseed-inputs/*/pair_receipt.json \
+            --output benchmark-results/bounded-diabetes-multiseed-analysis.json
+      - name: Export verified paired regression analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounded-diabetes-multiseed-analysis-${{ github.sha }}
+          path: benchmark-results/bounded-diabetes-multiseed-analysis.json
+          retention-days: 30
+          if-no-files-found: error
